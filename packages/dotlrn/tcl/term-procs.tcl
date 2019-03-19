@@ -19,7 +19,7 @@
 ad_library {
     @author yon (yon@openforce.net)
     @creation-date Dec 12, 2001
-    @cvs-id $Id: term-procs.tcl,v 1.13.2.2 2017/04/21 20:45:16 gustafn Exp $
+    @cvs-id $Id: term-procs.tcl,v 1.14 2017/08/07 23:48:09 gustafn Exp $
 }
 
 namespace eval dotlrn_term {

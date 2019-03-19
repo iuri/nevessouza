@@ -1,13 +1,10 @@
-# 
-
 ad_library {
     
     Tests for tsearch2-driver
     
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2005-03-07
-    @arch-tag: 17a26a17-9fd6-4ae9-90ae-ce445c020ab7
-    @cvs-id $Id: tsearch2-driver-procs.tcl,v 1.4 2006/11/13 04:06:13 daveb Exp $
+    @cvs-id $Id: tsearch2-driver-procs.tcl,v 1.5 2018/08/15 16:29:24 gustafn Exp $
 }
 
 aa_register_case build_query {

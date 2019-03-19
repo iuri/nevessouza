@@ -19,7 +19,7 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date Dec 13, 2001
-    @version $Id: terms.tcl,v 1.9.2.2 2017/01/26 11:46:02 gustafn Exp $
+    @cvs-id $Id: terms.tcl,v 1.11 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     page:naturalnum,optional
     {orderby:token "start_date_pretty,desc"}

@@ -2,7 +2,7 @@ ad_page_contract {
   Show classes defined in the connection threads
 
   @author Gustaf Neumann
-  @cvs-id $Id: index.tcl,v 1.8.2.3 2016/05/27 08:43:44 gustafn Exp $
+  @cvs-id $Id: index.tcl,v 1.10 2017/08/11 08:15:24 gustafn Exp $
 } -query {
   {all_classes:notnull 0}
 } -properties {
@@ -67,7 +67,7 @@ foreach cl [lsort $classes] {
     continue
   }
   
-  append output "<li><b><a name='$cl'>[::xo::api object_link {} $cl]</b> <ul>"
+  append output "<li><b><a name='$cl'></a>[::xo::api object_link {} $cl]</b> <ul>"
 
   append output [info_classes $cl superclass]
   append output [info_classes $cl subclass 1]

@@ -21,7 +21,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-01-19
-    @version $Id: user-add.tcl,v 1.35.4.2 2017/01/26 11:46:02 gustafn Exp $
+    @cvs-id $Id: user-add.tcl,v 1.37 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {type student}
     {can_browse_p:boolean 0}

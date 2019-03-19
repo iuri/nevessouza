@@ -9,7 +9,7 @@ ad_page_contract {
 
     @author Stefan Deusch (stefan@arsdigita.com)
     @creation-date 12-14-00
-    @cvs-id $Id: process.tcl,v 1.11.2.1 2015/09/12 11:06:43 gustafn Exp $
+    @cvs-id $Id: process.tcl,v 1.13 2018/03/29 23:25:45 gustafn Exp $
     
 } {
     n_items:multiple,notnull
@@ -68,7 +68,7 @@ if {[regexp -nocase {archive|permanent} $action ]} {
 } 
 
 # proceed if no errors
-if { ![info exist halt_p] || $halt_p==0 } {
+if { ![info exists halt_p] || $halt_p==0 } {
 
     template::list::create \
         -name news_items \

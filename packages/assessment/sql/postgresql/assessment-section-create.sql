@@ -25,7 +25,7 @@ create table as_section_display_types (
 	back_button_p		char(1) default 't'
 				constraint as_section_display_types_back_button_p_ck
 				check (back_button_p in ('t','f')),
-	-- whether each answer has to be submitted via a seperate button
+	-- whether each answer has to be submitted via a separate button
 	submit_answer_p		char(1) default 'f'
 				constraint as_section_display_types_submit_answer_p_ck
 				check (submit_answer_p in ('t','f')),
@@ -123,7 +123,7 @@ create table as_assessments (
 	section_navigation varchar(50) default 'default path'
 			constraint as_assessments_section_navigation_ck
 			check (section_navigation in ('default path', 'randomized', 'rule-based branching')),
-	-- differenciate between an assessment and a survey
+	-- differentiate between an assessment and a survey
 	survey_p 	char(1) default 'f'
 			constraint as_assessments_survey_p_ck
 			check (survey_p in ('t', 'f')),
@@ -137,7 +137,7 @@ create table as_assessment_styles (
        custom_header	varchar(500), 
        -- custom footer that will be displayed to the respondee when answering an assessment.
        custom_footer	varchar(500), 
-       -- style (form_template) that will be used for this assesment. 
+       -- style (form_template) that will be used for this assessment. 
        form_template	varchar(500),
        -- what kind of progress bar shall be displayed to the respondee while taking the assessment
        progress_bar 	varchar(20) default 'no'       

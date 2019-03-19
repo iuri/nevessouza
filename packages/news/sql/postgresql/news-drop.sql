@@ -2,7 +2,7 @@
 --
 -- @author stefan@arsdigita.com
 -- @created 2000-12-20
--- $Id: news-drop.sql,v 1.10 2014/10/27 16:41:46 victorg Exp $
+-- $Id: news-drop.sql,v 1.11 2018/01/31 20:27:31 gustafn Exp $
 
 -- unregister content_types from folder
 
@@ -63,7 +63,7 @@ drop function inline_0 ();
 
 
 -- Til: after adding content_type__drop_type above, dropping the table
--- and the index explicitely was not necessary anymore. Leaving the calls
+-- and the index explicitly was not necessary anymore. Leaving the calls
 -- commented out here though, so that they can be reactivated in case the lock
 -- situation mentioned in the original comment below occurs for some reason.
 

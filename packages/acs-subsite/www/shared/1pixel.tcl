@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author Jon Salz <jsalz@mit.edu>
     @creation-date 28 Nov 1999
-    @cvs-id $Id: 1pixel.tcl,v 1.6.2.3 2017/03/27 10:49:05 gustafn Exp $
+    @cvs-id $Id: 1pixel.tcl,v 1.7 2017/08/07 23:47:59 gustafn Exp $
 } {
     r:integer
     g:integer

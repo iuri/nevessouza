@@ -3,7 +3,7 @@
 	
 	@author Gary Jin (gjin@arsidigta.com)
      	@creation-date Dec 14, 2000
-     	@cvs-id $Id: cal-item-create-recurrence.adp,v 1.14.2.2 2017/05/08 13:12:37 antoniop Exp $
+     	@cvs-id $Id: cal-item-create-recurrence.adp,v 1.16 2018/01/19 14:27:14 gustafn Exp $
 -->
 
 
@@ -15,7 +15,7 @@
 <p>
 <strong>#calendar.Date#</strong> @cal_item.start_date@<br>
 <strong>#calendar.Time#</strong>
-<if @cal_item.time_p@>
+<if @cal_item.time_p;literal@ true>
   @cal_item.start_time@ - @cal_item.end_time@
 </if>
 <else>

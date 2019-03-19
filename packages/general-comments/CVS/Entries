@@ -1,3 +1,7 @@
-/PORTING.status/1.2/Thu Jun 14 19:52:22 2001//Topenacs-5-9-compat
-/general-comments.info/1.17.2.10/Sun Aug  6 11:17:32 2017//Topenacs-5-9-compat
-D
+/PORTING.status/1.2/Thu Jun 14 19:52:22 2001//Toacs-5-10
+/general-comments.info/1.18/Mon Aug  7 23:48:12 2017//Toacs-5-10
+D/catalog////
+D/lib////
+D/sql////
+D/tcl////
+D/www////

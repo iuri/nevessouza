@@ -91,7 +91,7 @@ notice.</p><p>
 <span class="phrase">Note:</span> In the alpha release of
 <tt class="computeroutput">general-comments</tt>, the tcl
 procedures were defined within a namespace and encountered problems
-with the api browser not being able to display them properly. These
+with the API browser not being able to display them properly. These
 procedures have now been moved out of the namespace and the old
 ones are marked as deprecated. The final version will completely
 remove all traces of the namespace procedures.</p><p><span class="phrase">PL/SQL API</span></p><p>None. Uses PL/SQL functions provided by ACS Messaging.</p>
@@ -166,7 +166,7 @@ Whom?</em></td>
 <td align="left" valign="middle">0.1</td><td align="left" valign="middle">Creation</td><td align="left" valign="middle">10/26/2000</td><td align="left" valign="middle">Phong Nguyen</td>
 </tr>
 </tbody></table>
-</div><p>Last modified: $&zwnj;Id: design.html,v 1.2.2.2 2017/04/21 20:11:53
+</div><p>Last modified: $&zwnj;Id: design.html,v 1.3 2017/08/07 23:48:12
 gustafn Exp $</p>
 </div>
 </div>

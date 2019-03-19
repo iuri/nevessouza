@@ -1,13 +1,10 @@
-# packages/dotlrn/tcl/test/dotlrn-security-procs.tcl
-
 ad_library {
     
     dotlrn Tcl helper procs for acs-automated-testing
     
     @author Deds Castillo (deds@i-manila.com.ph)
     @creation-date 2004-08-11
-    @arch-tag: 34c82a30-948a-410d-ab15-a58da2eeb3d3
-    @cvs-id $Id: dotlrn-security-procs.tcl,v 1.4.4.2 2017/06/30 17:43:06 gustafn Exp $
+    @cvs-id $Id: dotlrn-security-procs.tcl,v 1.6 2018/08/15 16:43:08 gustafn Exp $
 }
 
 aa_register_case -cats {api} \

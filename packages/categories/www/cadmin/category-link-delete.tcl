@@ -3,7 +3,7 @@ ad_page_contract {
     Ask for confirmation to delete category links
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: category-link-delete.tcl,v 1.9 2018/06/29 17:27:18 hectorr Exp $
 } {
     link_id:naturalnum,multiple
     category_id:naturalnum,notnull

@@ -3,7 +3,7 @@ ad_page_contract {
     Deletes a category
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: category-delete.tcl,v 1.14 2018/06/29 17:27:18 hectorr Exp $
 } {
     tree_id:naturalnum,notnull
     category_id:naturalnum,multiple
@@ -50,13 +50,13 @@ template::list::create \
 	category_name {
 	    label "Name"
 	    display_template {
-		<if @categories.objects_p@ true><a href="@categories.view_url@">@categories.category_name@</a></if>
+		<if @categories.objects_p;literal@ true><a href="@categories.view_url@">@categories.category_name@</a></if>
 		<else>@categories.category_name@</else>
 	    }
 	}
 	objects_p {
 	    display_template {
-		<if @categories.objects_p@ true>(Still mapped to objects)</if>
+		<if @categories.objects_p;literal@ true>(Still mapped to objects)</if>
 	    }
 	}
     }

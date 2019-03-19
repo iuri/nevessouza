@@ -1,7 +1,5 @@
-/faq-admin-portlet.adp/1.10.6.1/Thu Jan 19 08:40:15 2017//Topenacs-5-9-compat
-/faq-admin-portlet.tcl/1.8.6.1/Sat Sep 12 11:06:17 2015//Topenacs-5-9-compat
-/faq-portlet-oracle.xql/1.10/Wed Dec  4 09:53:40 2002//Topenacs-5-9-compat
-/faq-portlet-postgresql.xql/1.2/Wed Dec  4 09:53:40 2002//Topenacs-5-9-compat
-/faq-portlet.adp/1.22.6.1/Thu Jan 19 08:40:15 2017//Topenacs-5-9-compat
-/faq-portlet.tcl/1.18.6.1/Sat Sep 12 11:06:17 2015//Topenacs-5-9-compat
+/faq-admin-portlet.adp/1.11/Mon Aug  7 23:48:11 2017//Toacs-5-10
+/faq-admin-portlet.tcl/1.9.2.1/Thu Feb 14 16:15:01 2019//Toacs-5-10
+/faq-portlet.adp/1.23/Mon Aug  7 23:48:11 2017//Toacs-5-10
+/faq-portlet.tcl/1.19.2.1/Sat Feb 16 09:33:45 2019//Toacs-5-10
 D

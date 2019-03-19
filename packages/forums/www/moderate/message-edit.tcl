@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-25
-    @cvs-id $Id: message-edit.tcl,v 1.9.2.2 2016/05/20 20:38:58 gustafn Exp $
+    @cvs-id $Id: message-edit.tcl,v 1.10 2017/08/07 23:48:12 gustafn Exp $
 
 } {
     message_id:naturalnum,notnull

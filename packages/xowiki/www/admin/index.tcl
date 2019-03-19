@@ -4,7 +4,7 @@
   of wiki pages provides links to delete them
 
   @author Gustaf Neumann neumann@wu-wien.ac.at
-  @cvs-id $Id: index.tcl,v 1.28.4.4 2017/03/27 07:33:18 gustafn Exp $
+  @cvs-id $Id: index.tcl,v 1.31 2018/05/09 15:33:34 hectorr Exp $
 
 } -parameter {
   {-object_type ::xowiki::Page}

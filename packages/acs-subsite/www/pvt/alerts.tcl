@@ -1,5 +1,5 @@
 ad_page_contract {
-    @cvs-id $Id: alerts.tcl,v 1.6.2.2 2016/01/02 20:57:58 gustafn Exp $
+    @cvs-id $Id: alerts.tcl,v 1.9 2018/05/29 09:09:55 antoniop Exp $
 } {
 } -properties {
     title:onevalue
@@ -14,15 +14,13 @@ ad_page_contract {
 
 set user_id [ad_conn user_id]
 
-db_1row name_get {
-    select first_names, last_name, email, url
-    from persons, parties
-    where persons.person_id = parties.party_id and party_id =:user_id
-} -bind [ad_tcl_vars_to_ns_set user_id]
-
-if { $first_names ne "" || $last_name ne "" } {
-    set full_name "$first_names $last_name"
-} else {
+set user [acs_user::get -user_id $user_id]
+set first_names [dict get $user first_names]
+set last_name   [dict get $user last_name]
+set email       [dict get $user email]
+set url         [dict get $user url]
+set full_name   [dict get $user name]
+if { [string trim $full_name] eq "" } {
     set full_name "name unknown"
 }
 
@@ -45,12 +43,13 @@ if { [db_table_exists "bboard_email_alerts"] } {
 	set bboard_keyword_p 0
     }
 	
-    db_foreach alerts_list "
-    select bea.valid_p, bea.frequency, bea.keywords, bt.topic, bea.rowid
-    from bboard_email_alerts bea, bboard_topics bt
-    where bea.user_id = :user_id
-    and bea.topic_id = bt.topic_id
-    order by bea.frequency" {
+    db_foreach alerts_list {
+        select bea.valid_p, bea.frequency, bea.keywords, bt.topic, bea.rowid
+          from bboard_email_alerts bea, bboard_topics bt
+         where bea.user_id = :user_id
+           and bea.topic_id = bt.topic_id
+         order by bea.frequency
+    } {
 	incr rownum
 
 	if { $valid_p == "f" } {
@@ -79,7 +78,7 @@ if { [db_table_exists "classified_email_alerts"] } {
     set gc_system_name [gc_system_name]
     set rownum 0
 
-    db_foreach alerts_list_2 "
+    db_foreach alerts_list_2 {
     select cea.valid_p,
            ad.domain,
            cea.alert_id,
@@ -92,7 +91,8 @@ if { [db_table_exists "classified_email_alerts"] } {
     where  user_id = :user_id
     and    ad.domain_id = cea.domain_id
     and    sysdate <= expires
-    order by expires desc" {
+    order by expires desc
+    } {
 	incr rownum
 	
 	if { $valid_p == "f" } {

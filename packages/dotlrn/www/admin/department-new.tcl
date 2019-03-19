@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2001-01-20
-    @version $Id: department-new.tcl,v 1.12.8.1 2015/09/11 11:40:51 gustafn Exp $
+    @cvs-id $Id: department-new.tcl,v 1.14 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {referer "departments"}
 } -properties {

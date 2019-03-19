@@ -2,7 +2,7 @@ ad_page_contract {
   @author Guenter Ernst guenter.ernst@wu-wien.ac.at, 
   @author Gustaf Neumann neumann@wu-wien.ac.at
   @creation-date 13.07.2004
-  @cvs-id $Id: insert-image.tcl,v 1.7.2.2 2016/11/28 17:17:28 antoniop Exp $
+  @cvs-id $Id: insert-image.tcl,v 1.8 2017/08/07 23:48:31 gustafn Exp $
 } {
   {fs_package_id:naturalnum,optional}
   {folder_id:naturalnum,optional}

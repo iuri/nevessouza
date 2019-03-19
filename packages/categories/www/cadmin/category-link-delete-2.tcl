@@ -3,7 +3,7 @@ ad_page_contract {
     Deletes category links
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: category-link-delete-2.tcl,v 1.9 2018/06/29 17:27:18 hectorr Exp $
 } {
     link_id:naturalnum,multiple
     category_id:naturalnum,notnull
@@ -26,6 +26,7 @@ db_transaction {
 }
 
 ad_returnredirect [export_vars -no_empty -base category-links-view {category_id tree_id locale object_id ctx_id}]
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

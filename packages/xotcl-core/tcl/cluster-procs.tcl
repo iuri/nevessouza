@@ -1,15 +1,15 @@
-ad_library {
+::xo::library doc {
   XOTcl cluster support
 
   @author Gustaf Neumann
   @creation-date 2007-07-19
-  @cvs-id $Id: cluster-procs.tcl,v 1.7.2.1 2015/12/07 16:58:07 gustafn Exp $
+  @cvs-id $Id: cluster-procs.tcl,v 1.13 2018/03/25 22:13:40 hectorr Exp $
 }
 
 namespace eval ::xo {
 
   proc clusterwide args {
-    # first, excute the command on the local server
+    # first, execute the command on the local server
     eval $args
     # then, distribute the command in the cluster
     ::xo::Cluster broadcast {*}$args
@@ -40,6 +40,7 @@ namespace eval ::xo {
     nsv_incr ""
     bgdelivery ""
     ns_cache "^ns_cache\s+eval"
+    ns_cache_flush ""
     xo::cache_flush_all ""
   }
   #
@@ -53,16 +54,16 @@ namespace eval ::xo {
   # handling the ns_filter methods
   #
   Cluster proc trace args {
-    my log ""
+    :log ""
     return filter_return
   }
   Cluster proc preauth args {
-    my log ""
-    my incoming_request
+    :log ""
+    :incoming_request
     return filter_return
   }
   Cluster proc postauth args {
-    my log ""
+    :log ""
     return filter_return
   }
   #
@@ -73,19 +74,21 @@ namespace eval ::xo {
     set addr [lindex [ns_set iget [ns_conn headers] x-forwarded-for] end]
     if {$addr eq ""} {set addr [ns_conn peeraddr]}
     #ns_log notice "--cluster got cmd='$cmd' from $addr"
-    if {[catch {set result [::xo::Cluster execute [ns_conn peeraddr] $cmd]} errorMsg]} {
+    ad_try {
+      set result [::xo::Cluster execute [ns_conn peeraddr] $cmd]
+    } on error {errorMsg} {
       ns_log notice "--cluster error: $errorMsg"
       ns_return 417 text/plain $errorMsg
-    } else {
+    } on ok {r} {
       #ns_log notice "--cluster success $result"
       ns_return 200 text/plain $result
     }
   }
 
   Cluster proc execute {host cmd} {
-    if {![my exists allowed_host($host)]} {
+    if {![info exists :allowed_host($host)]} {
       set ok 0
-      foreach g [my set allowed_host_patterns] {
+      foreach g ${:allowed_host_patterns} {
         if {[string match $g $host]} {
           set ok 1
           break
@@ -97,9 +100,9 @@ namespace eval ::xo {
     }
     set cmd_name [lindex $cmd 0]
     set key allowed_command($cmd_name)
-    #ns_log notice "--cluster $key exists ? [my exists $key]"
-    if {[my exists $key]} {
-      set except_RE [my set $key]
+    #ns_log notice "--cluster $key exists ? [info exists :$key]"
+    if {[info exists :$key]} {
+      set except_RE [set :$key]
       #ns_log notice "--cluster [list regexp $except_RE $cmd] -> [regexp $except_RE $cmd]"
       if {$except_RE eq "" || ![regexp $except_RE $cmd]} {
         ns_log notice "--cluster executes command '$cmd' from host $host"
@@ -112,29 +115,30 @@ namespace eval ::xo {
   # handline outgoing request issues
   #
   Cluster proc broadcast args {
-    foreach server [my info instances] {
+    foreach server [:info instances] {
       $server message {*}$args
     }
   }
   Cluster instproc message args {
-    my log "--cluster outgoing request to [my host]:[my port] // $args" 
+    :log "--cluster outgoing request to [:host]:[:port] // $args" 
     #     set r [::xo::HttpRequest new -volatile \
-    #                -host [my host] -port [my port] \
+    #                -host [:host] -port [:port] \
     #                -path [Cluster set url]?cmd=[ns_urlencode $args]]
     #     return [$r set data]
 
     set r [::xo::AsyncHttpRequest new -volatile \
-               -host [my host] -port [my port] \
+               -host [:host] -port [:port] \
                -path [Cluster set url]?cmd=[ns_urlencode $args]]
     
     #     ::bgdelivery do ::xo::AsyncHttpRequest new \
-    #         -host [my host] -port [my port] \
+    #         -host [:host] -port [:port] \
     #         -path [Cluster set url]?cmd=[ns_urlencode $args] \
     #         -mixin ::xo::AsyncHttpRequest::SimpleListener \
-    #         -proc finalize {obj status value} { my destroy }
+    #         -proc finalize {obj status value} { :destroy }
 
   }
 }
+::xo::library source_dependent
 
 #
 # Local variables:

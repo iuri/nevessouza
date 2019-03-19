@@ -3,7 +3,7 @@
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 22, 2000
-    @cvs-id $Id: moderator-revoke.adp,v 1.6.2.1 2016/06/20 08:40:23 gustafn Exp $
+    @cvs-id $Id: moderator-revoke.adp,v 1.8 2017/08/07 23:48:07 gustafn Exp $
 -->
 <master>
 <property name="context">@context_bar;literal@</property>

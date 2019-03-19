@@ -3,7 +3,7 @@ ad_page_contract {
   
   @author Gustaf Neumann (gustaf.neumann@wu-wien.ac.at)
   @creation-date Oct 23, 2005
-  @cvs-id $Id: flush-url-statistics.tcl,v 1.2.4.1 2015/09/10 08:10:46 gustafn Exp $
+  @cvs-id $Id: flush-url-statistics.tcl,v 1.3 2017/08/07 23:48:30 gustafn Exp $
 } {
 }
 

@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Thu Dec  7 18:09:49 2000
-    @cvs-id $Id: index.tcl,v 1.4.6.2 2016/06/06 18:28:20 gustafn Exp $
+    @cvs-id $Id: index.tcl,v 1.6 2018/11/28 11:28:14 antoniop Exp $
 
 } {
     {view_by "group_type"}
@@ -37,9 +37,7 @@ db_1row subsite_info {
       and ag.package_id = :package_id
 }
 
-set intro_text [lang::util::localize [_ acs-subsite.Currently_the_instance_name_has_the_following_groups]]
-
-ad_return_template
+set intro_text [_ acs-subsite.Currently_the_instance_name_has_the_following_groups]
 
 # Local variables:
 #    mode: tcl

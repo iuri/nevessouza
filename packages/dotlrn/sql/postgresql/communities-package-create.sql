@@ -22,7 +22,7 @@
 -- @author arjun (arjun@openforce.net)
 -- @author dan chak (chak@openforce.net)
 -- @creation-date September 20th, 2001 (redone)
--- @version $Id: communities-package-create.sql,v 1.11.4.2 2016/08/03 10:08:23 gustafn Exp $
+-- @version $Id: communities-package-create.sql,v 1.12 2017/08/07 23:48:09 gustafn Exp $
 --
 
 select define_function_args ('dotlrn_community_type__new','community_type,parent_type;dotlrn_community,pretty_name,pretty_plural,description,package_id,creation_date,creation_user,creation_ip,context_id');

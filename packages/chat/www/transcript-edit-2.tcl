@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 28, 2000
-    @cvs-id $Id: transcript-edit-2.tcl,v 1.7.6.1 2016/06/20 08:40:23 gustafn Exp $
+    @cvs-id $Id: transcript-edit-2.tcl,v 1.10.2.1 2019/02/14 16:15:01 gustafn Exp $
 } {
     transcript_id:notnull,naturalnum
     transcript_name:trim,notnull
@@ -17,6 +17,14 @@ permission::require_permission -object_id $transcript_id -privilege chat_transcr
 
 if { [catch {chat_transcript_edit $transcript_id $transcript_name $description $contents} errmsg] } {
     ad_return_complaint 1 "[_ chat.Could_not_update_transcript]: $errmsg"
+    ad_script_abort
 }
 
 ad_returnredirect "transcript-view?transcript_id=$transcript_id&room_id=$room_id"
+ad_script_abort
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Peter Marklund
     @creation-date 28 January 2003
-    @cvs-id $Id: version-callback-add-edit.tcl,v 1.11.2.2 2016/01/02 21:14:09 gustafn Exp $  
+    @cvs-id $Id: version-callback-add-edit.tcl,v 1.12 2017/08/07 23:47:45 gustafn Exp $  
 } {
     version_id:naturalnum,notnull    
     {type ""}

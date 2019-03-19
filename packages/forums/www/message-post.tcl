@@ -1,10 +1,10 @@
 ad_page_contract {
-    
+
     Form to create message and insert it
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-25
-    @cvs-id $Id: message-post.tcl,v 1.43.2.5 2017/02/02 15:15:10 gustafn Exp $
+    @cvs-id $Id: message-post.tcl,v 1.48 2018/06/07 18:08:11 hectorr Exp $
 
 } -query {
     {forum_id:integer ""}
@@ -12,16 +12,16 @@ ad_page_contract {
 } -validate {
     forum_id_or_parent_id {
         if {$forum_id eq "" && $parent_id eq ""} {
-          ad_complain [_ forums.lt_You_either_have_to]
-        }
-        if {$forum_id ne "" && ![string is integer $forum_id]} {
-            ad_complain [_ acs-templating.Invalid_integer]
+            ad_complain [_ forums.lt_You_either_have_to]
         }
         if {$forum_id ne "" && ![forum::valid_forum_id_p -forum_id $forum_id]} {
             ad_complain [_ acs-templating.Invalid_integer]
         }
-        if {$parent_id ne "" && ![string is integer $parent_id]} {
-            ad_complain [_ acs-templating.Invalid_integer]
+        if {$parent_id ne ""} {
+            forum::message::get -message_id $parent_id -array parent_message
+            if {![info exists parent_message]} {
+                ad_complain [_ acs-templating.Invalid_integer]
+            }
         }
     }
 }
@@ -40,21 +40,28 @@ set user_id [auth::refresh_login]
 
 ##############################
 # Pull out required forum and parent data and
-# perform security checks 
+# perform security checks
 #
 if {$parent_id eq ""} {
     # no parent_id, therefore new thread
     # require thread creation privs
-    forum::security::require_post_forum -forum_id $forum_id
-
     forum::get -forum_id $forum_id -array forum
+
+    if { ![permission::permission_p -object_id $forum_id -privilege "forum_moderate"] } {
+        forum::security::require_post_forum -forum_id $forum_id
+        # check if we can post new threads
+        if {!$forum(new_questions_allowed_p)} {
+            forum::security::do_abort
+        }
+    }
 } else {
     # get the parent message information
-    forum::message::get -message_id $parent_id -array parent_message
     set parent_message(tree_level) 0
 
     # see if they're allowed to add to this thread
-    forum::security::require_post_message -message_id $parent_id
+    if { ![permission::permission_p -object_id $forum_id -privilege "forum_moderate"] } {
+        forum::security::require_post_forum -forum_id $parent_message(forum_id)
+    }
 
     forum::get -forum_id $parent_message(forum_id) -array forum
 }
@@ -66,8 +73,8 @@ set anonymous_allowed_p [expr {($forum_id eq ""
                                 || [forum::security::can_post_forum_p \
                                         -forum_id $forum_id -user_id 0])
                                && ($parent_id eq ""
-                                   || [forum::security::can_post_message_p \
-                                           -message_id $parent_id -user_id 0])}]
+                                   || [forum::security::can_post_forum_p \
+                                           -forum_id $parent_message(forum_id) -user_id 0])}]
 
 set attachments_enabled_p [forum::attachments_enabled_p]
 

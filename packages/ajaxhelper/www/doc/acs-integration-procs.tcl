@@ -5,7 +5,7 @@
 # Copyright (C) 1999-2000 ArsDigita Corporation
 # Authors: Christian Brechbuehler <christian@arsdigita.com
 
-# $Id: acs-integration-procs.tcl,v 1.3.2.2 2017/06/30 17:35:25 gustafn Exp $
+# $Id: acs-integration-procs.tcl,v 1.4 2017/08/07 23:48:03 gustafn Exp $
 
 # This is free software distributed under the terms of the GNU Public
 # License.  Full text of the license is available from the GNU Project:

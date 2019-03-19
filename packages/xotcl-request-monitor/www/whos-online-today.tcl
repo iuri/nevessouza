@@ -1,9 +1,9 @@
 ad_page_contract {
   Displays who was online today
-  
+
   @author Gustaf Neumann
-  
-  @cvs-id $id: whos-online.tcl,v 1.1.1.1 2004/03/16 16:11:51 nsadmin exp $
+
+  @cvs-id $Id: whos-online-today.tcl,v 1.9 2018/06/29 17:27:19 hectorr Exp $
 } -query {
   {orderby:token,optional "date,desc"}
   {all:optional 0}
@@ -47,8 +47,8 @@ set now_ansi  [clock_to_ansi [clock seconds]]
 foreach element $elements {
   lassign $element user_id timestamp
   if {[string is integer $user_id]} {
-    acs_user::get -user_id $user_id -array user
-    set user_label "$user(last_name), $user(first_names)" 
+    set person [person::get_person_info -person_id $user_id]
+    set user_label "[dict get $person last_name], [dict get $person first_names]"
     set user_url [acs_community_member_url -user_id $user_id]
   } else {
     # it was an IP address

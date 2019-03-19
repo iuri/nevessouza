@@ -17,10 +17,10 @@ ad_page_contract {
     The display logic for the calendar portlet
 
     @author Arjun Sanyal (arjun@openforce.net)
-    @cvs_id $Id: calendar-list-portlet.tcl,v 1.15.2.5 2017/02/20 09:07:52 gustafn Exp $
+    @cvs-id $Id: calendar-list-portlet.tcl,v 1.20 2018/07/12 09:02:29 gustafn Exp $
 } {
     {view ""}
-    {page_num:naturalnum ""}
+    {page_num:naturalnum 0}
     {date ""}
     {julian_date ""}
     {period_days:naturalnum,optional ""}
@@ -52,7 +52,7 @@ set list_of_calendar_ids $config(calendar_id)
 set calendar_id [lindex $list_of_calendar_ids 0]
 
 #
-# Get the package_id of the calender_id
+# Get the package_id of the calendar_id
 #
 db_0or1row select_calendar_package_id {select package_id from calendars where calendar_id = :calendar_id}
 if {![info exists package_id]} {
@@ -83,7 +83,8 @@ if {$date eq ""} {
     if {$julian_date eq ""} {
         set date [dt_sysdate]
     } else {
-        set date [db_string select_from_julian "select to_date(:julian_date ,'J') from dual"]
+        set date [clock scan [expr {int($julian_date)}] -format "%J"]
+        set date [clock format $date -format %Y-%m-%d]        
     }
 }
 
@@ -91,17 +92,12 @@ set current_date $date
 set date_format "YYYY-MM-DD HH24:MI"
 set return_url "[ns_conn url]?[ns_conn query]"
 
-# List view only
-set sort_by [ns_queryget sort_by]
-
 set start_date [ns_fmttime [expr [ns_time]] "%Y-%m-%d 00:00"]
 set end_date [ns_fmttime [expr {[ns_time] + 60*60*24*$period_days}] "%Y-%m-%d 00:00"]
 
 # Stylesheet
 template::head::add_css -href "/resources/calendar/calendar.css"
 template::head::add_css -alternate -href "/resources/calendar/calendar-hc.css" -title "highContrast"
-
-ad_return_template
 
 # Local variables:
 #    mode: tcl

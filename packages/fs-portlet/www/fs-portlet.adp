@@ -26,7 +26,7 @@
 
 <div id="fscontainer">
 <if @scoped_p;literal@ true>
-<include src="@scope_fs_url;literal@" &="folder_id" root_folder_id="@root_folder_id;literal@"
+<include src="@scope_fs_url;literal@" &="folder_id"
 	 viewing_user_id="@user_id;literal@" &="n_past_days" allow_bulk_actions="1"
 	 fs_url="@url;literal@" &="page_num">
 </if>
@@ -46,7 +46,7 @@
 
 <p><include src="/packages/notifications/lib/notification-widget" type="fs_fs_notif"
 	 object_id="@folder_id;literal@"
-	 pretty_name="@folder_name@"
+	 pretty_name="@folder_name;literal@"
 	 url="@folder_url;literal@" >
 	 
 <if @webdav_url@ not nil>

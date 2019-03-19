@@ -270,12 +270,12 @@ author the HTML template files will still find it easier to use
 legacy tools that author in their "native" character
 sets, such as ShiftJIS in Japan, or BIG5 in China.</p>
 <p>So we make the convention that the template file is authored in
-it&#39;s <em>effective locale</em>'s character set. For
-multilingual templates, we will load the template in the site
-default character set as specified by the AOLserver
-<kbd>OutputCharset</kbd> initializatoin parameter. For now, we will
-say that authoring generic multilingual adp files can and should be
-done in ASCII. Eventually we can switch to using UTF8.</p>
+its <em>effective locale</em>'s character set. For multilingual
+templates, we will load the template in the site default character
+set as specified by the AOLserver <kbd>OutputCharset</kbd>
+initializatoin parameter. For now, we will say that authoring
+generic multilingual adp files can and should be done in ASCII.
+Eventually we can switch to using UTF8.</p>
 <p>A character set corresponding to a locale can be found using the
 <kbd>[<strong>ad_locale charset</strong><em>$locale</em>]</kbd>
 command. The templating system should call this right after it
@@ -413,7 +413,7 @@ A message catalog is defined by placing a file in the
 <kbd>catalog</kbd>
  subdirectory of a package. Each file defines a
 set of messages in different locales, and the file is written in a
-character set specified by it&#39;s file suffix:
+character set specified by its file suffix:
 <pre>
 /packages/bboard/catalog/
                          bboard.iso-8859-1
@@ -485,7 +485,7 @@ previous section, since our system precompiles adp templates, we
 can get a performance improvement if we can cache the message
 lookups at template compile time.
 <p>The &lt;TRN&gt; tag is a call to lang_message_lookup that can be
-used inside of an ADP file. Here is the documention:</p>
+used inside of an ADP file. Here is the documentation:</p>
 <blockquote>Procedure that gets called when the &lt;trn&gt; tag is
 encountered on an ADP page. The purpose of the procedure is to
 register the text string enclosed within a pair of &lt;trn&gt; tags
@@ -504,7 +504,7 @@ English.</li><li>
 translation is made. If omitted, type is user which means that the
 translation is provided in the user&#39;s preferred language.</li><li>
 <code>static</code> specifies that this tag should be
-translated once at templat compile time, rather than dynamically
+translated once at template compile time, rather than dynamically
 every time the page is run. This will be unneccessaru and will be
 deprecated once we have implemented <em>effective locale</em> based
 cacheing for templates.</li>
@@ -513,25 +513,22 @@ Example 1: Display the text string <em>Hello</em> on an ADP page
 (i.e. do nothing special):
 <pre>
     &lt;trn&gt;Hello&lt;/trn&gt;
-    
-</pre>
+    </pre>
 Example 2: Assign the key key <em>hello</em> to the text string
 <em>Hello</em> and display the translated string in the user&#39;s
 preferred language:
 <pre>
     &lt;trn key="hello"&gt;Hello&lt;/trn&gt;
-    
-</pre>
+    </pre>
 Example 3: Specify that <em>Bonjour</em> needs to be registered as
 the French translation for the key <em>hello</em> (in addition to
 displaying the translation in the user&#39;s preferred language):
 <pre>
     &lt;trn key="hello" lang="fr"&gt;Bonjour&lt;/trn&gt;
-    
-</pre>
+    </pre>
 Example 4: Register the string and display it in the preferred
 language of the current user. Note that the possible values for the
-<code>type</code> paramater are determined by what has been
+<code>type</code> parameter are determined by what has been
 implemented in the <code>ad_locale</code> procedure. By default,
 only the <code>user</code> type is implemented. An example of a
 type that could be implemented is <code>subsite</code>, for
@@ -539,12 +536,10 @@ displaying strings in the language of the subsite that owns the
 current web page.
 <pre>
     &lt;trn key="hello" type="user"&gt;Hello&lt;/trn&gt;
-    
-</pre><p>Example 5: Translates the string once at template compile time,
+    </pre><p>Example 5: Translates the string once at template compile time,
 using the effective local of the page.</p><pre>
     &lt;trn key="hello" static&gt;Hello&lt;/trn&gt;
-    
-</pre>
+    </pre>
 </blockquote>
 <h3>VII. Data Model Discussion</h3>
 <h4>Internationalizing the Data Models</h4>

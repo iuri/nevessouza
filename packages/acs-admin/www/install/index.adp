@@ -9,7 +9,7 @@
 
 <p>Download and install/upgrade packages from the <a href="http://openacs.org/repository/">OpenACS.org repository</a>.
 <br>When using this option, the existing code of the currently installed packages is moved
-away <br>and replaced by the chosen packages from the OpenACS respository.
+away <br>and replaced by the chosen packages from the OpenACS repository.
 
 <p><a href="/acs-admin/@remote_install_url@" class="button">Install</a> or
 <a href="/acs-admin/@remote_upgrade_url@" class="button">upgrade</a> from repository.</p>
@@ -26,7 +26,7 @@ custom code or your packages are kept in a local code repository.
 
 <li><h3>Install from URL or Local Path</h3>
 <p>Load a single package an archive stored an a non-standard place on
-your local file system or from an URL.</p>
+your local file system or from a URL.</p>
 <p><a href="/acs-admin/apm/package-load" class="button">Load</a> from URL or Local Path</p>
 </ul>
 <hr>

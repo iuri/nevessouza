@@ -282,7 +282,7 @@ is referred to as the weight. You have three choices.
   <msg key="lt_Check_this_if_you_wan_2">Check this if you want to add the assignment to other class(es) that you administer </msg>
   <msg key="lt_Click_here_to_go_to_t">Click here to go to the Assignments Page</msg>
   <msg key="lt_Click_on_the_task_tha">Click on the task that you want the groups to be copy from</msg>
-  <msg key="lt_Commentedit_reason_on">Comment/edit reason on party_id %party_id% is larger than 4,000 characters long, which is our max lenght. Please make this comment/edit reason shorter. </msg>
+  <msg key="lt_Commentedit_reason_on">Comment/edit reason on party_id %party_id% is larger than 4,000 characters long, which is our max length. Please make this comment/edit reason shorter. </msg>
   <msg key="lt_Confirm_Your_Evaluati">Confirm Your Evaluation </msg>
   <msg key="lt_Confirm_your_evaluati">Confirm your evaluation(s) on &quot;%task_name%&quot;</msg>
   <msg key="lt_Currently_content_is_">Currently %content% is associated to this task solution, but you can associate a different url/file just by adding it here </msg>
@@ -327,11 +327,11 @@ is referred to as the weight. You have three choices.
   <msg key="lt_Group_administration_">Group administration </msg>
   <msg key="lt_Groups_administration">Groups administration </msg>
   <msg key="lt_Groups_for_task_task_">Groups for task %task_name% </msg>
-  <msg key="lt_If_you_administer_mor">If you administer more than one community and you want to upload an assigment in more than one community, you must set the same name for each of the assignment types in each community so the system can identify where to store the assignment.</msg>
+  <msg key="lt_If_you_administer_mor">If you administer more than one community and you want to upload an assignment in more than one community, you must set the same name for each of the assignment types in each community so the system can identify where to store the assignment.</msg>
   <msg key="lt_If_you_click_on_the_s">Click on a student's name to see their detailed grade report.</msg>
   <msg key="lt_If_you_do_not_want_to">If you do not want to grade or edit the grade of a student/group, just leave intact the fields of that row, or you can delete the whole row.</msg>
   <msg key="lt_if_you_do_not_want_to">if you do not want to see the portraits of the students</msg>
-  <msg key="lt_If_you_enter_the_net_">If you enter the net value, it must be less than %grade_weight%, which is the net value of %grade_plural_name% over the 100 points of the class. &lt;br&gt; After uploading the %grade_name%, the system will do the convertion and the net value will be represented as a percentage. </msg>
+  <msg key="lt_If_you_enter_the_net_">If you enter the net value, it must be less than %grade_weight%, which is the net value of %grade_plural_name% over the 100 points of the class. &lt;br&gt; After uploading the %grade_name%, the system will do the conversion and the net value will be represented as a percentage. </msg>
   <msg key="lt_if_you_want_to_downlo">to download all submissions in one file.</msg>
   <msg key="lt_if_you_want_to_see_th">if you want to see the portraits of the students</msg>
   <msg key="lt_In_order_to_generate_">In order to generate this file there must be some parties assigned to this task. </msg>
@@ -413,7 +413,7 @@ set page_title &quot;&lt;#_ Confirm Evaluation </msg>
 			if { ![ad_var_type_check_number_p $max_grade] } {
 				ad_return_error &quot;&lt;#_ Invalid Max Grade </msg>
   <msg key="lt_The_file_is_too_large_1">The file is too large. (The maximun file size is %pretty_maxnbytes% bytes) </msg>
-  <msg key="lt_The_file_should_have_">The file should have a pre-defined format so the system can parse it and obtain the information. If you want to use this functionallity you must follow the following steps:</msg>
+  <msg key="lt_The_file_should_have_">The file should have a pre-defined format so the system can parse it and obtain the information. If you want to use this functionality you must follow the following steps:</msg>
   <msg key="lt_The_grade_most_be_a_v">The grade most be a valid number: %wrong_grade% </msg>
   <msg key="lt_The_grade_must_be_a_R">The grade must be a REAL NUMBER.</msg>
   <msg key="lt_The_grade_must_be_a_v">The grade must be a valid number: %wrong_grade% </msg>
@@ -460,7 +460,7 @@ set page_title &quot;&lt;#_ Confirm Evaluation </msg>
   <msg key="lt_These_are_the_student_1">These are the students that have not answered yet (if the task is online) and have not been evaluated yet.</msg>
   <msg key="lt_This_funcionallity_al">This funcionallity allows you to upload a CSV (Comma Separated Value) file with the grades of the students. This CSV file can be edited with MS Excell and many other text editors.</msg>
   <msg key="lt_This_is_the_grades_re">The following is a summary of student grades for this course. </msg>
-  <msg key="lt_This_is_the_grades_re_1">This is the grades report of the students acording to one assignment type and the evaluations that you have made in this assignment type.</msg>
+  <msg key="lt_This_is_the_grades_re_1">This is the grades report of the students according to one assignment type and the evaluations that you have made in this assignment type.</msg>
   <msg key="lt_This_task_can_not_be_">This task can not be submitted after the due date </msg>
   <msg key="lt_This_task_is_not_in_g">This task is not in groups </msg>
   <msg key="lt_This_was_the_error___">This was the error:
@@ -520,7 +520,7 @@ set page_title &quot;&lt;#_ Confirm Evaluation </msg>
   <msg key="lt_Yes_I_really_want_to__1">Yes, I really want to remove this grade </msg>
   <msg key="lt_Yes_I_really_want_to__2">Yes, I really want to remove this group </msg>
   <msg key="lt_Yes_I_really_want_to__3">Yes, I really want to remove this task </msg>
-  <msg key="lt_You_can_also_add_a_st">You can also add a student to an existing group by clicking on the &quot;Associate to group...&quot; link. Here you will be asked to select the group to wich you want to add the user.</msg>
+  <msg key="lt_You_can_also_add_a_st">You can also add a student to an existing group by clicking on the &quot;Associate to group...&quot; link. Here you will be asked to select the group to which you want to add the user.</msg>
   <msg key="lt_You_can_associate_a_l">You can associate a link to this task by entering the absolute url here (also optional) </msg>
   <msg key="lt_You_can_enter_the_wei">You can enter the weight over %grade_weight%% of %grade_plural_name% or you can enter the net value of it in the field below. </msg>
   <msg key="lt_You_can_order_the_gra">To sort by student name, total grade, or any of the assignment types, click on the column headers.&lt;br&gt;

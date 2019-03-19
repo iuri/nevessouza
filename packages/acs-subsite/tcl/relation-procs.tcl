@@ -6,21 +6,25 @@ ad_library {
 
     @author mbryzek@arsdigita.com
     @creation-date Sun Dec 10 16:46:11 2000
-    @cvs-id $Id: relation-procs.tcl,v 1.16.2.5 2017/05/19 16:55:48 gustafn Exp $
+    @cvs-id $Id: relation-procs.tcl,v 1.20 2018/06/07 16:52:40 hectorr Exp $
 
 }
 
 namespace eval relation {}
 
-ad_proc -public relation_permission_p {
+ad_proc -deprecated -public relation_permission_p {
     { -user_id "" }
     { -privilege "read" }
     rel_id
 } {
     Wrapper for ad_permission_p that lets us default to read permission
 
+    Deprecated: just another wrapper for permission::permission_p
+
     @author Michael Bryzek (mbryzek@arsdigita.com)
     @creation-date 12/2000
+
+    @see permission::permission_p
 
 } {
     return [permission::permission_p -party_id $user_id -object_id $rel_id -privilege $privilege]
@@ -232,7 +236,7 @@ ad_proc relation_types_valid_to_group_multirow {
     {-group_id ""}
 } {
     creates multirow datasource containing relationship types starting with
-    the $start_with relationship type.  The datasource has columns that are 
+    the $start_with relationship type.  The datasource has columns that are
     identical to the party::types_allowed_in_group_multirow, which is why
     the columns are broadly named "object_*" instead of "rel_*".  A common
     template can be used for generating select widgets etc. for both
@@ -256,22 +260,22 @@ ad_proc relation_types_valid_to_group_multirow {
 
     @author Oumi Mehrotra (oumi@arsdigita.com)
     @creation-date 2000-02-07
-    
+
     @param datasource_name
     @param start_with
     @param group_id - if unspecified, then 
-                      [applcation_group::group_id_from_package_id] is used.
+                      [application_group::group_id_from_package_id] is used.
 } {
 
     if {$group_id eq ""} {
-	set group_id [application_group::group_id_from_package_id]
+        set group_id [application_group::group_id_from_package_id]
     }
 
     template::multirow create $datasource_name \
-	    object_type object_type_enc indent pretty_name valid_p
+        object_type object_type_enc indent pretty_name valid_p
 
     db_foreach select_sub_rel_types {} {
-	template::multirow append $datasource_name $object_type [ad_urlencode $object_type] $indent $pretty_name $valid_p
+        template::multirow append $datasource_name $object_type [ad_urlencode $object_type] $indent $pretty_name $valid_p
     }
 
 }
@@ -358,7 +362,10 @@ ad_proc -public relation::get_objects {
 } {
     if {$object_id_one eq ""} {
 	if {$object_id_two eq ""} {
-	    ad_return_error "[_ acs-subsite.Missing_argument]" "[_ acs-subsite.lt_You_have_to_provide_a]"
+            ad_return_error \
+                [_ acs-subsite.Missing_argument] \
+                [_ acs-subsite.lt_You_have_to_provide_a]
+            ad_script_abort
 	} else {
 	    return [relation::get_object_one -object_id_two $object_id_two -rel_type $rel_type -multiple]
 	}

@@ -2,11 +2,11 @@ ad_page_contract {
 
     Displays information about a type.
 
-    @cvs-id $Id: type-view.tcl,v 1.4.2.1 2015/09/10 08:21:12 gustafn Exp $
+    @cvs-id $Id: type-view.tcl,v 1.8 2018/05/23 06:57:54 gustafn Exp $
 
 } {
     version_id:naturalnum,optional
-    type
+    type:token
 } -properties {
     title:onevalue
     context:onevalue

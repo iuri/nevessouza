@@ -105,12 +105,12 @@ each question be shown to the subject.</msg>
   <msg key="as_Number_Tries_help">How often can a subject retake the test. 0 for infinite.</msg>
   <msg key="as_parameter_description_help">Purpouse of the variable (short desc.)</msg>
   <msg key="as_parameter_help">Name of the variable that you going to call on the tcl code (ie. student_id) without &quot;$&quot;</msg>
-  <msg key="as_parameter_query_help">Just put the query that retrive the info desired (Syntax: select name,id from table_name where condition)</msg>
+  <msg key="as_parameter_query_help">Just put the query that retrieve the info desired (Syntax: select name,id from table_name where condition)</msg>
   <msg key="as_parameter_type_help">Select the type of variable you spect to use. It it is a query you have to put your query below</msg>
   <msg key="as_password_help">Enter a password for the assessment</msg>
   <msg key="as_password_user_help">In order to take this assessment you need to enter the password.</msg>
   <msg key="as_Return_Url_help">URL to go to after the assessment has been finished by a subject</msg>
-  <msg key="as_Reuse_Responses_help">If yes, the system will look for previous responses to the the questions and prefill the last answer the respondee has given in the assessment form of the respondee</msg>
+  <msg key="as_Reuse_Responses_help">If yes, the system will look for previous responses to the questions and prefill the last answer the respondee has given in the assessment form of the respondee</msg>
   <msg key="as_Secure_Access_help">Is https:// method required to access this assessment?</msg>
   <msg key="as_Show_Item_Name_help">If yes, the respondee will see the name of the question&lt;br&gt;
 in addition to the question itself when taking the survey.</msg>
@@ -126,7 +126,7 @@ in addition to the question itself when taking the survey.</msg>
   <msg key="Assessment_Imported_Correctly">Assessment Imported Correctly</msg>
   <msg key="assessment_Name_help">This allows you to give a special unique identifier to your assessment, which might be a code.</msg>
   <msg key="assessment_not_public">Assessment is not public.</msg>
-  <msg key="Assessment_porlet">Assessments</msg>
+  <msg key="Assessment_portlet">Assessments</msg>
   <msg key="assessment_restricted_ips">Access restricted, wrong IP.</msg>
   <msg key="Assessment_Title">Title</msg>
   <msg key="assessment_too_many_tries">Only %number_tries% tries allowed.</msg>
@@ -165,7 +165,7 @@ in addition to the question itself when taking the survey.</msg>
   <msg key="Change_type">Change type</msg>
   <msg key="Choice">Choice</msg>
   <msg key="choice_Content">Upload File</msg>
-  <msg key="choice_Content_help">Upload a file with the content of the anwser</msg>
+  <msg key="choice_Content_help">Upload a file with the content of the answer</msg>
   <msg key="choice_Delete_Content">Delete File</msg>
   <msg key="choice_display_Content">Choice File</msg>
   <msg key="choice_Feedback_help">Feedback text given with this choice (in addition to the feedback given with the question itself)</msg>
@@ -224,7 +224,7 @@ in addition to the question itself when taking the survey.</msg>
   <msg key="data_type_timestamp">Time</msg>
   <msg key="data_type_varchar">Short Text</msg>
   <msg key="date_request">Date request since ...</msg>
-  <msg key="Deafult_Value_help">Enter a Default Value for this Answer.</msg>
+  <msg key="Default_Value_help">Enter a Default Value for this Answer.</msg>
   <msg key="Default_Path">Default Path</msg>
   <msg key="Default_Selected">Default: Selected</msg>
   <msg key="Default_Selected_help">Is this choice selected by default</msg>
@@ -371,7 +371,7 @@ in addition to the question itself when taking the survey.</msg>
   <msg key="Keywords">Search Keywords</msg>
   <msg key="Keywords_help">Keywords which will be used to search for a section.</msg>
   <msg key="Label_Orientation">Label Orientation</msg>
-  <msg key="Label_Orientation_help">Positioning of the choice label in correspondance with the choice button.</msg>
+  <msg key="Label_Orientation_help">Positioning of the choice label in correspondence with the choice button.</msg>
   <msg key="last_month">Last Month</msg>
   <msg key="Last_Updated">Last Updated</msg>
   <msg key="last_week">Last Week</msg>
@@ -634,8 +634,8 @@ Only useful if you display less than the total number of sections.</msg>
   <msg key="Subject">Subject</msg>
   <msg key="Subject_Name">Subject Name</msg>
   <msg key="Submit">Submit</msg>
-  <msg key="Submit_Answer">Seperate submit for each question</msg>
-  <msg key="submit_answer_help">Does the respondee have to submit the answer for each question seperately.</msg>
+  <msg key="Submit_Answer">Separate submit for each question</msg>
+  <msg key="submit_answer_help">Does the respondee have to submit the answer for each question separately.</msg>
   <msg key="Subtext">Subtext&lt;br&gt;(Optional)</msg>
   <msg key="Summary">Summary</msg>
   <msg key="survey_section">Section 1</msg>

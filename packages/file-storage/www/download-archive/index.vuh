@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author <a href="mailto:yon@openforce.net">yon@openforce.net</a>
     @creation-date 2002-05-21
-    @version $Id: index.vuh,v 1.7.2.1 2016/06/09 09:13:26 gustafn Exp $
+    @version $Id: index.vuh,v 1.8 2017/08/07 23:48:11 gustafn Exp $
 
 } -query {
     {object_id:naturalnum,optional}

@@ -5,11 +5,10 @@ ad_page_contract {
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 22, 2000
-    @cvs-id $Id: room-enter.tcl,v 1.7.6.2 2016/10/28 18:57:36 antoniop Exp $
+    @cvs-id $Id: room-enter.tcl,v 1.13 2018/10/01 12:27:32 hectorr Exp $
 } {
     room_id:naturalnum,notnull
-    client:trim
-} 
+}
 
 set user_id [ad_conn user_id]
 
@@ -25,21 +24,10 @@ if { ($read_p == 0 && $write_p == 0) || ($ban_p == 1) || ($active == "f") } {
     ad_script_abort
 }
 
-set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
+ad_returnredirect [export_vars -base "chat" {room_id}]
 
-if {$default_client eq "java"} {
-	chat_start_server
-}
-
-switch $client {
-    "html" - "ajax" - "html-chat-script" {
-        ns_log Notice "YY room-enter: has_entered_the room"
-	# apisano: I don't think this code should be here anymore, as
-	# message about user entering the room is already issued by
-	# the parent chat class in xotcl-core when we issue the login
-	# method	
-        # chat_message_post $room_id $user_id "[_ chat.has_entered_the_room]." "1"
-    }
-}
-
-ad_returnredirect "chat?room_id=$room_id&client=$client"
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

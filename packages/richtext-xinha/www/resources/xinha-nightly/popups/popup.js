@@ -9,7 +9,7 @@
 // Version 3.0 developed by Mihai Bazon.
 //   http://dynarch.com/mishoo
 //
-// $Id: popup.js,v 1.1.2.1 2016/01/03 20:52:47 gustafn Exp $
+// $Id: popup.js,v 1.2 2017/08/07 23:48:29 gustafn Exp $
 if(typeof Xinha == 'undefined')
   Xinha = window.opener.Xinha;
 

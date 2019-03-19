@@ -3,7 +3,7 @@ ad_library {
 
     @author Lars Pind (lars@collaobraid.biz)
     @creation-date 2003-05-13
-    @cvs-id $Id: apm-callback-procs.tcl,v 1.19.10.1 2015/09/10 08:21:12 gustafn Exp $
+    @cvs-id $Id: apm-callback-procs.tcl,v 1.21 2018/03/27 12:22:17 hectorr Exp $
 }
 
 namespace eval auth {}
@@ -385,7 +385,7 @@ ad_proc -private auth::registration::create_contract {} {
                     parameters:string,multiple
                 }
                 output {
-                    requiered:string,multiple
+                    required:string,multiple
                     optional:string,multiple
                 }
             }

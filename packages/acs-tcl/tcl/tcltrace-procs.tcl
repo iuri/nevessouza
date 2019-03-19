@@ -6,7 +6,7 @@ ad_library {
 
     @author Gustaf Neumann (neumann@wu-wien.ac.at)
     @creation-date 2015-06-11
-    @cvs-id $Id: tcltrace-procs.tcl,v 1.2.2.4 2017/05/31 11:48:36 gustafn Exp $
+    @cvs-id $Id: tcltrace-procs.tcl,v 1.4 2017/12/12 10:27:11 gustafn Exp $
 }
 
 
@@ -73,10 +73,22 @@ namespace eval ::tcltrace {
 	}
     }
 
-    ad_proc -private before { cmd op } {
-        Simple trace proc for arbitraty commands. simply reports traces to error.log.
+    ad_proc -private before {
+        {-details:boolean false}
+        cmd
+        op
     } {
-        ns_log notice "trace: $cmd"
+        
+        Generic trace proc for arbitraty commands. Simply reports
+        calls to function (optionally with full context) to the error.log.
+
+        @param details when set, use ad_log for reporting with full context
+        @param cmd the full command as executed by Tcl
+	@param op the trace operation 
+
+    } {
+        set cmd [expr {$details_p ? "ad_log" : "ns_log"}]
+        $cmd notice "trace: $cmd"
     }
    
 }

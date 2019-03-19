@@ -235,7 +235,7 @@ create or replace package body news
     end new;
 
 
-    -- deletes a news item along with all its revisions and possibnle attachements
+    -- deletes a news item along with all its revisions and possibnle attachments
     procedure delete (
         item_id in cr_items.item_id%TYPE
     ) is
@@ -352,7 +352,7 @@ create or replace package body news
 
 
 
-    -- the status function returns information on the puplish or archive status
+    -- the status function returns information on the publish or archive status
     -- it does not make any checks on the order of publish_date and archive_date
     function status (
         news_id in cr_news.news_id%TYPE

@@ -23,9 +23,15 @@
     </div>
     <div class="attribution">
 	#forums.Posted_by# 
-      <if @useScreenNameP;literal@>@message.screen_name@</if>
-      <else><a href="user-history?user_id=@message.user_id@"
-      title="#forums.show_posting_history_message_username#">@message.user_name@</a></else> #forums.on# <span class="post-date">@message.posting_date_pretty@</span>
+	<if @useScreenNameP;literal@ true>
+      	  @message.user_name@
+	</if>
+	<else>
+	  <if @message.user_id;literal@ ne 0>
+              <a href="user-history?user_id=@message.user_id@" title="#forums.show_posting_history_message_username#"></if>
+	    @message.user_name@
+	  <if @message.user_id;literal@ ne 0></a></if>
+	</else> #forums.on# <span class="post-date">@message.posting_date_pretty@</span>
   </div>
   </div>
 
@@ -51,7 +57,7 @@
       </if>
       <if @moderate_p;literal@ true>
         <li><a href="moderate/message-edit?message_id=@message.message_id@" class="button" title="#forums.edit#">#forums.edit#</a></li>
-        <li><a href="moderate/message-delete?message_id=@message.message_id@" class="button" title="#forums.delete#">#forums.delete#</a></li>	
+        <li><a href="@delete_url@" class="button" title="#forums.delete#">#forums.delete#</a></li>	
 	<if @message.parent_id@ nil>
 	  <li><a href="moderate/thread-move?message_id=@message.message_id@" class="button" title="#forums.Move_thread_to_other_forum#">#forums.Move_thread_to_other_forum#</a></li>
 	  <li><a href="moderate/thread-move-thread?message_id=@message.message_id@" class="button" title="#forums.Move_thread_to_other_thread#">#forums.Move_thread_to_other_thread#</a></li>

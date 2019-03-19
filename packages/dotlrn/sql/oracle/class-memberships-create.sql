@@ -20,7 +20,7 @@
 -- @author Ben Adida (ben@openforce.net)
 -- @author yon (yon@openforce.net)
 -- @creation-date 2001-08-18
--- @version $Id: class-memberships-create.sql,v 1.3.10.1 2017/04/21 20:45:16 gustafn Exp $
+-- @version $Id: class-memberships-create.sql,v 1.4 2017/08/07 23:48:09 gustafn Exp $
 --
 
 create table dotlrn_student_rels (

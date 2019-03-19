@@ -39,7 +39,7 @@ set subsite_logo "/resources/openacs-bootstrap3-theme/images/logo_dotlrn_xs.png"
 # dotLRN stuff            #
 ###########################
 
-# $Id: dotlrn-master.tcl,v 1.1.2.1 2017/02/20 21:31:42 gustafn Exp $
+# $Id: dotlrn-master.tcl,v 1.2 2017/08/07 23:48:09 gustafn Exp $
 
 set user_id [ad_conn user_id] 
 set untrusted_user_id [ad_conn untrusted_user_id]

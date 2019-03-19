@@ -1,7 +1,7 @@
 ad_page_contract {
     Displays procs in a Tcl library file.
 
-    @cvs-id $Id: procs-file-view.tcl,v 1.8.2.8 2016/05/23 10:56:49 gustafn Exp $
+    @cvs-id $Id: procs-file-view.tcl,v 1.12 2018/05/09 15:33:28 hectorr Exp $
 } {
     version_id:naturalnum,optional,notnull
     { public_p:boolean "" }
@@ -42,11 +42,13 @@ if {![file readable ${::acs::rootdir}$path] || [file isdirectory ${::acs::rootdi
     } else {
 	set link [subst {<p>Go back to <a href="[ns_quotehtml [ad_conn package_url]]">API Browser</a>.}]
     }
-    ad_return_warning "No such library file" [subst {
-	The file '$path' was not found. Maybe the url contains a typo.
-	$link
-    }]
-    return
+    ad_return_warning \
+        "No such library file" \
+        [subst {
+            The file '$path' was not found. Maybe the url contains a typo.
+            $link
+        }]
+    ad_script_abort
 }
 
 

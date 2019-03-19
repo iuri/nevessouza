@@ -20,7 +20,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-10-06
-    @version $Id: register.tcl,v 1.17.4.5 2017/04/21 20:45:16 gustafn Exp $
+    @cvs-id $Id: register.tcl,v 1.22.2.1 2019/02/14 16:15:01 gustafn Exp $
 } -query {
     {user_id:integer ""}
     {community_id:integer ""}
@@ -31,9 +31,9 @@ if { ![parameter::get -parameter SelfRegistrationP -package_id [dotlrn::get_pack
     set redirect_to [parameter::get -parameter SelfRegistrationRedirectTo -package_id [dotlrn::get_package_id] -default ""]
 
     if { $redirect_to ne "" } {
-	ad_returnredirect $redirect_to
+        ad_returnredirect $redirect_to
     } else {
-	ad_returnredirect "not-allowed"
+        ad_returnredirect "not-allowed"
     }
     ad_script_abort
 }
@@ -61,11 +61,11 @@ set join_policy [db_string select_join_policy {
 # This should prevent most double clicks, leaving
 # the catch below to trap the rest.
 
-if { [dotlrn_community::member_p $community_id $user_id] || 
-     ($join_policy eq "needs approval" 
+if { [dotlrn_community::member_p $community_id $user_id] ||
+     ($join_policy eq "needs approval"
       && [dotlrn_community::member_pending_p -community_id $community_id -user_id $user_id]
       )
- } {
+} {
     ad_returnredirect $referer
     ad_script_abort
 }
@@ -75,27 +75,27 @@ if {[catch {
     switch -exact $join_policy {
         "open" {
             dotlrn_community::add_user -member_state approved $community_id $user_id
-	    dotlrn_community::send_member_email -community_id $community_id -to_user $user_id
+            dotlrn_community::send_member_email -community_id $community_id -to_user $user_id
         }
         "needs approval" {
             dotlrn_community::add_user -member_state "needs approval" $community_id $user_id
-            
-            
+
+
             # Following the same process as spam.tcl to email
             # admins in bulk.
-            
+
             set segment_id [db_string select_admin_rel_segment_id {}]
             set community_name [dotlrn_community::get_community_name $community_id]
             set community_url "[parameter::get -package_id [ad_acs_kernel_id] -parameter SystemURL][dotlrn_community::get_community_url $community_id]"
-            
+
             set query [db_map bulk_mail_query]
 
-            set full_name [acs_user::get_element -user_id $user_id -element name]
+            set full_name [person::name -person_id $user_id]
             set email [party::email -party_id $user_id]
             set subject "$full_name ($email) has requested to join $community_name."
-            
+
             set message "$full_name ($email) has requested to join $community_name.
-            
+
 Visit this link to approve or reject this request:
 $community_url/members
 
@@ -111,25 +111,28 @@ $community_url/members
                     -subject $subject \
                     -message $message \
                     -query $query
-
         }
     }
 } errmsg]} {
 
-    # Check to see if they are already a member 
+    # Check to see if they are already a member
     # (in which case this was likely a double click)
-        
+
     if {[dotlrn_community::member_p $community_id $user_id]} {
         ad_returnredirect $referer
         ad_script_abort
     } else {
         ns_log Error "register.tcl failed: $errmsg\n$::errorInfo"
-        
-        ad_return_error "Error adding user to community"  "An error occurred while trying to add a user to a community.  This error has been logged."
+
+        ad_return_error \
+            "Error adding user to community"  \
+            "An error occurred while trying to add a user to a community.  This error has been logged."
+        ad_script_abort
     }
 }
 
 ad_returnredirect $referer
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

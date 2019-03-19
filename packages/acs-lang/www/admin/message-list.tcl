@@ -5,14 +5,14 @@ ad_page_contract {
     @author Lars Pind (lars@collaboraid.biz)
 
     @creation-date 26 October 2001
-    @cvs-id $Id: message-list.tcl,v 1.17.2.2 2015/09/10 08:21:29 gustafn Exp $
+    @cvs-id $Id: message-list.tcl,v 1.19 2018/05/28 13:36:18 gustafn Exp $
 } {
     locale
     package_key
     {show "all"}
 } -validate {
     show_valid -requires { show } {
-        if { [lsearch { all deleted translated untranslated } $show] == -1 } {
+        if {$show ni { all deleted translated untranslated }} {
             ad_complain "Show must be one of 'all', 'deleted', 'translated', or 'untranslated'."
         }
     }

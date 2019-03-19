@@ -21,7 +21,7 @@ ad_page_contract {
     delete an empty department
 
     @author arjun (arjun@openforce.net)
-    @version $Id: department-delete.tcl,v 1.7.4.1 2015/09/11 11:40:51 gustafn Exp $
+    @cvs-id $Id: department-delete.tcl,v 1.9 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {referer "departments"}
     {department_key:notnull}

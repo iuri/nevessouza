@@ -3,7 +3,7 @@ ad_library {
 
   @author Gustaf Neumann
   @creation-date 2007-10-11
-  @cvs-id $Id: 04-library-procs.tcl,v 1.3.8.4 2017/04/21 14:00:24 gustafn Exp $
+  @cvs-id $Id: 04-library-procs.tcl,v 1.6 2017/10/21 11:42:23 gustafn Exp $
 }
 
 #
@@ -13,7 +13,7 @@ ad_library {
 # Top of file:
 #
 #     ::xo::library doc {
-#         .....your comment goes here .... 
+#         .....your comment goes here ....
 #     }
 #
 # Load a required file:
@@ -23,7 +23,7 @@ ad_library {
 #
 #     ::xo::library require filename
 #
-#   The library to be loaded must be defined with a 
+#   The library to be loaded must be defined with a
 #   ::xo::library doc {...}
 #
 # Source files extending classes of the current file.
@@ -80,7 +80,7 @@ namespace eval ::xo {
     #my log "--loaded = [lsort [nsv_array names [self]-loaded]]"
 
     if {![nsv_exists [self]-loaded $otherfile]} {
-      my log "--sourcing $otherfile"
+      :log "--sourcing $otherfile"
       apm_source $otherfile
       nsv_set [self]-loaded $otherfile 1
     }
@@ -104,7 +104,7 @@ namespace eval ::xo {
     #my log "--check nsv_exists $vn $dirname/$myfile [nsv_exists $vn $dirname/$myfile]"
     if {[nsv_exists $vn $dirname/$myfile]} {
       foreach file [nsv_get $vn $dirname/$myfile] {
-        my log "--sourcing dependent $file"
+        :log "--sourcing dependent $file"
         apm_source $file
       }
     }

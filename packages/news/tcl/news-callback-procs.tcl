@@ -5,7 +5,7 @@ ad_library {
 
     @author Dirk Gomez <openacs@dirkgomez.de>
     @creation-date 2005-06-12
-    @cvs-id $Id: news-callback-procs.tcl,v 1.3.12.2 2016/01/02 20:34:49 gustafn Exp $
+    @cvs-id $Id: news-callback-procs.tcl,v 1.4 2017/08/07 23:48:12 gustafn Exp $
 }
 
 ad_proc -callback merge::MergeShowUserInfo -impl news {

@@ -1,13 +1,10 @@
-# 
-
 ad_library {
     
     Install and upgrade callbacks
     
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2004-08-05
-    @arch-tag: 97132c7c-a38d-4974-b11e-85ca4acb735f
-    @cvs-id $Id: dotlrn-fs-install-procs.tcl,v 1.2.14.1 2015/09/11 11:40:57 gustafn Exp $
+    @cvs-id $Id: dotlrn-fs-install-procs.tcl,v 1.4 2018/08/15 16:37:50 gustafn Exp $
 }
 
 namespace eval dotlrn_fs::install {}

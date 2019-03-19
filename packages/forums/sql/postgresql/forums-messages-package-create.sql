@@ -4,7 +4,7 @@
 --
 -- @author gwong@orchardlabs.com,ben@openforce.biz
 -- @creation-date 2002-05-16
--- @cvs-id $Id: forums-messages-package-create.sql,v 1.19.4.1 2016/05/14 17:33:02 gustafn Exp $
+-- @cvs-id $Id: forums-messages-package-create.sql,v 1.21 2018/04/04 04:18:44 gustafn Exp $
 --
 -- The Package for Messages
 --
@@ -107,7 +107,7 @@ BEGIN
           last_child_post = current_timestamp
         where message_id = forums_message__root_message_id(v_message_id);
       else
-        -- dont update last_poster, last_child_post when not approved
+        -- don't update last_poster, last_child_post when not approved
         update forums_messages
         set reply_count = reply_count + 1
         where message_id = forums_message__root_message_id(v_message_id);

@@ -21,7 +21,7 @@
 -- @author yon (yon@openforce.net)
 -- @author chak (chak@openforce.net)
 -- @creation-date 2002-07-01
--- @version $Id: class-memberships-create.sql,v 1.4.4.2 2017/04/21 20:45:16 gustafn Exp $
+-- @version $Id: class-memberships-create.sql,v 1.5 2017/08/07 23:48:09 gustafn Exp $
 --
 
 create table dotlrn_student_rels (

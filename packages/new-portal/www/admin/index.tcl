@@ -20,7 +20,7 @@ ad_page_contract {
 
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 
-    @cvs-id $Id: index.tcl,v 1.5.24.1 2015/09/12 11:06:39 gustafn Exp $
+    @cvs-id $Id: index.tcl,v 1.6 2017/08/07 23:48:12 gustafn Exp $
 } { }
 
 

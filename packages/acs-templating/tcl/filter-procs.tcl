@@ -2,8 +2,8 @@ ad_library {
     Filter procedures for the ArsDigita Templating System
 
     @author Karl Goldstein    (karlg@arsdigita.com)
-    
-    @cvs-id $Id: filter-procs.tcl,v 1.16.2.5 2016/10/03 18:52:07 antoniop Exp $
+
+    @cvs-id $Id: filter-procs.tcl,v 1.21 2018/04/27 14:52:54 hectorr Exp $
 }
 
 # Copyright (C) 1999-2000 ArsDigita Corporation
@@ -32,26 +32,24 @@ ad_proc -public template::forward { url args } {
     set cache_p [lindex $args 0]
 
     if {$cache_p == "t"} {
-        set persistent_p [lindex $args 1]
-	set excluded_vars [lindex $args 2]
+        lassign $args . persistent_p excluded_vars
 
         ad_cache_returnredirect $url $persistent_p $excluded_vars
     } else {
-	ad_returnredirect $url
+        ad_returnredirect $url
     }
     ad_script_abort
 }
 
 ad_proc -public template::filter { command args } {
     Run any filter procedures that have been registered with the
-    templating system.  The signature of a filter procedure is 
+    templating system.  The signature of a filter procedure is
     a reference (not the value) to a variable containing the URL of
     the template to parse.  The filter procedure may modify this.
 } {
     variable filter_list
 
-    set arg1 [lindex $args 0]
-    set arg2 [lindex $args 1]
+    lassign $args arg1 arg2
 
     switch -exact $command {
 
@@ -76,7 +74,7 @@ ad_proc -public template::filter { command args } {
 ad_proc -public cmp_page_filter { why } {
     Show the compiled template (for debugging)
 } {
-    if { [catch {
+    ad_try {
         set url [ns_conn url]
         regsub {.cmp} $url {} url_stub
         regexp {^/([^/]*)(.*)} $url_stub all package_key rest
@@ -85,10 +83,10 @@ ad_proc -public cmp_page_filter { why } {
 
         set output "<pre>[ns_quotehtml [template::adp_compile -file $file_stub.adp]]</pre>"
 
-        set timeElapsed [expr ([clock clicks -milliseconds] - $beginTime)]
+        set timeElapsed [expr {[clock clicks -milliseconds] - $beginTime}]
         ns_log debug "cmp_page_filter: Time elapsed: $timeElapsed"
 
-    } errMsg] } {
+    } on error {errorMsg} {
         set output <html><body><pre>[ns_quotehtml $::errorInfo]</pre></body></html>
     }
 
@@ -100,22 +98,22 @@ ad_proc -public cmp_page_filter { why } {
 ad_proc -public dat_page_filter { why } {
     Show the comments for the template (for designer)
 } {
-    if { [catch {
+    ad_try {
         set url [ns_conn url]
         regsub {.dat} $url {} url_stub
         regexp {^/([^/]*)(.*)} $url_stub all package_key rest
         set code_stub "$::acs::rootdir/packages/$package_key/www$rest"
         set beginTime [clock clicks -milliseconds]
 
-	set file_stub [template::resource_path -type messages -style $datasources]
+        set file_stub [template::resource_path -type messages -style $datasources]
 
         set output [template::adp_parse $file_stub [list code_stub $code_stub]]
 
-        set timeElapsed [expr ([clock clicks -milliseconds] - $beginTime)]
+        set timeElapsed [expr {[clock clicks -milliseconds] - $beginTime}]
         ns_log debug " dat_page_filter: Time elapsed: $timeElapsed"
 
-    } errMsg] } {
-        set output <html><body><pre>$::errorInfo</pre></body></html>
+    } on error {errorMsg} {
+        set output <html><body><pre>[ns_quotehtml $::errorInfo]</pre></body></html>
     }
 
     ns_return 200 text/html $output
@@ -152,15 +150,15 @@ namespace eval template {
 ad_proc -private frm_page_filter { why } {
     Return the form data for a request for .frm
 } {
-    if { [catch {
+    ad_try {
         set beginTime [clock clicks -milliseconds]
 
         set output [template::frm_page_handler]
 
-        set timeElapsed [expr ([clock clicks -milliseconds] - $beginTime)]
+        set timeElapsed [expr {[clock clicks -milliseconds] - $beginTime}]
         ns_log debug "frm_page_filter: Time elapsed: $timeElapsed"
 
-    } errMsg] } {
+    } on error {errorMsg} {
         set output $::errorInfo
     }
 

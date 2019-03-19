@@ -2,7 +2,7 @@ ad_page_contract {
     Views dependency information about a version.
     @author Jon Salz [jsalz@arsdigita.com]
     @creation-date 17 April 2000
-    @cvs-id $Id: version-dependencies.tcl,v 1.9.2.1 2015/09/10 08:21:03 gustafn Exp $
+    @cvs-id $Id: version-dependencies.tcl,v 1.11 2017/10/01 12:16:05 gustafn Exp $
 } {
     {version_id:naturalnum,notnull}
 }
@@ -51,7 +51,7 @@ foreach dependency_type { provide require extend embed } {
 	    if { $counter == 1 } {
 		append body "<ul>\n"
 	    }
-            switch $dep_type {
+            switch -- $dep_type {
                 provides { set dep_d provided }
                 requires { set dep_d required }
                 extends { set dep_d extended }

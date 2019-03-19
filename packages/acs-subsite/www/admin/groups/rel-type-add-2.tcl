@@ -7,10 +7,10 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Tue Jan  2 12:10:17 2001
-    @cvs-id $Id: rel-type-add-2.tcl,v 1.6.2.4 2016/05/20 20:02:44 gustafn Exp $
+    @cvs-id $Id: rel-type-add-2.tcl,v 1.10 2018/07/03 13:26:27 michaela Exp $
 
 } {
-    group_id:naturalnum,notnull
+    group_id:integer,notnull
     rel_type:notnull
     { return_url:localurl "" }
 } -validate {
@@ -40,7 +40,7 @@ if { [catch {
     # Does this pair already exists?
     if { ![db_string exists_p {}] } {
 	ad_return_error "Error inserting to database" $err_msg
-	return
+	ad_script_abort
     }
 }
 
@@ -53,6 +53,8 @@ if { [db_string segment_exists_p {}] } {
 } else {
     ad_returnredirect [export_vars -base constraints-create {group_id rel_type return_url}]
 }
+ad_script_abort
+
 
 
 # Local variables:

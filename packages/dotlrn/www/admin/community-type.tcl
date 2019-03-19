@@ -1,13 +1,10 @@
-# packages/dotlrn/www/admin/community-type.tcl
-
 ad_page_contract {
     
     Add / Edit a community type
     
     @author Roel Canicula (roelmc@aristoi.biz)
     @creation-date 2004-06-26
-    @arch-tag: 371b5e20-5a3c-4669-b1d6-acfe381ad20e
-    @cvs-id $Id: community-type.tcl,v 1.2.8.1 2015/09/11 11:40:51 gustafn Exp $
+    @cvs-id $Id: community-type.tcl,v 1.7 2018/08/15 16:43:08 gustafn Exp $
 } {
     {community_type:notnull,optional}
 } -properties {
@@ -16,12 +13,9 @@ ad_page_contract {
 } -validate {
 } -errors {
 }
- 
-if { [info exists community_type] } {
-    set edit_p [dotlrn_community::type_exists $community_type]
-} else {
-    set edit_p 0
-}
+
+set edit_p [expr {[info exists community_type] &&
+                  [db_0or1row community_type_exists {}]}]
 
 if { $edit_p } {
     set title "[_ dotlrn.edit_community_type]"
@@ -45,13 +39,13 @@ ad_form -extend -name "new_community_type" -form {
     {description:text(textarea),optional {label "[_ dotlrn.Description]"} {html {rows 5 cols 60}}}
 } -validate {
     {community_type
-	{ ![dotlrn_community::type_exists $community_type] || 
+	{ ![db_0or1row community_type_exists {}] || 
 	    [info exists original_community_type] }
 	"[_ community_type_exists]"
     }
 } -on_request {
     if { $edit_p } {
-	db_1row get_community_type { *SQL* }
+        db_1row get_community_type {}
     }
 } -on_submit {
     if { ![info exists original_community_type] } {
@@ -61,7 +55,7 @@ ad_form -extend -name "new_community_type" -form {
 	    -pretty_name $pretty_name
     } else {
 	# Update type
-	db_dml set_community_type { *SQL* }	
+	db_dml set_community_type {}
     }
 } -after_submit {
     ad_returnredirect "community-types"

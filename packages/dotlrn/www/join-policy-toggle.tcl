@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-01-18
-    @version $Id: join-policy-toggle.tcl,v 1.10.4.2 2017/01/26 11:46:02 gustafn Exp $
+    @cvs-id $Id: join-policy-toggle.tcl,v 1.13 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {community_id:integer ""}
     policy:notnull
@@ -45,7 +45,7 @@ dotlrn::require_user_admin_community -community_id $community_id
 db_dml update_join_policy {}
 
 ad_returnredirect $referer
-
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

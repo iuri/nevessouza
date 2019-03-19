@@ -17,7 +17,7 @@
     #
 
 %>
-<if @n_communities@ gt 0>
+<if @communities_p;literal@ true>
   <h3><if @title@ nil>#dotlrn.Communities#</if><else>@title@</else></h3>
 
   <p>@filter_bar;noquote@</p>

@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Don Baccus (dhogaza@pacifier.com)
     @creation-date 7 Nov 2000
-    @cvs-id $Id: folder-create.tcl,v 1.4.2.2 2016/05/20 20:26:15 gustafn Exp $
+    @cvs-id $Id: folder-create.tcl,v 1.5 2017/08/07 23:48:10 gustafn Exp $
 } {
     parent_id:integer,notnull
     return_url:localurl,notnull

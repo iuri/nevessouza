@@ -10,7 +10,7 @@
 --
 -- @creation-date 2000-05-18
 --
--- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.3.22.1 2017/04/21 15:59:20 gustafn Exp $
+-- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.7 2018/05/01 10:45:43 gustafn Exp $
 --
 
 -- Should have been added earlier, at least now we save the 4.6.3 - 5.0 upgrade
@@ -971,7 +971,7 @@ show errors
 -- @author Bryan Quinn (bquinn@arsdigita.com)
 -- @author Jon Salz (jsalz@mit.edu)
 -- @creation-date 2000/04/30
--- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.3.22.1 2017/04/21 15:59:20 gustafn Exp $
+-- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.7 2018/05/01 10:45:43 gustafn Exp $
 
 
 
@@ -2757,7 +2757,7 @@ show errors
 --
 -- @creation-date 2000-05-18
 --
--- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.3.22.1 2017/04/21 15:59:20 gustafn Exp $
+-- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.7 2018/05/01 10:45:43 gustafn Exp $
 --
 
 -------------------
@@ -3910,7 +3910,7 @@ show errors
 --
 -- @author Lars Pind (lars@pinds.com)
 -- @creation-date 2000-22-18
--- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.3.22.1 2017/04/21 15:59:20 gustafn Exp $
+-- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.7 2018/05/01 10:45:43 gustafn Exp $
 --
 -- Copyright (C) 1999-2000 ArsDigita Corporation
 --
@@ -4626,7 +4626,7 @@ show errors
 --
 -- @author rhs@mit.edu
 -- @creation-date 2000-09-05
--- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.3.22.1 2017/04/21 15:59:20 gustafn Exp $
+-- @cvs-id $Id: upgrade-5.0d9-5.0d13.sql,v 1.7 2018/05/01 10:45:43 gustafn Exp $
 --
 
 
@@ -4653,7 +4653,7 @@ as
     node_id             in site_nodes.node_id%TYPE
   );
 
-  -- Return the node_id of a url. If the url begins with '/' then the
+  -- Return the node_id of a URL. If the url begins with '/' then the
   -- parent_id must be null. This will raise the no_data_found
   -- exception if there is no mathing node in the site_nodes table.
   -- This will match directories even if no trailing slash is included
@@ -5120,7 +5120,7 @@ select r.rel_type as viol_rel_type, r.rel_id as viol_rel_id,
 --
 --           What are all the segments in the system that a party has to 
 --           be in if the party were to be on side :rel_side of a relation
---           in segement :rel_segment?  
+--           in segment :rel_segment?  
 --
 --           We want not only the direct required_segments (which we could
 --           get from the rel_constraints table directly), but also the 
@@ -5170,7 +5170,7 @@ where rc.rel_segment in (
 -- This view only returns segments S that have at least one rel_constraints row
 -- where rel_segment = S.  Segments that have no constraints defined on them
 -- can be said to have dependency_level=0, hence the outer join and nvl in the
--- example query above (see "Answer:").  I could have embeded that logic into
+-- example query above (see "Answer:").  I could have embedded that logic into
 -- this view, but that would unnecessarily degrade performance.
 --
 create or replace view rc_segment_dependency_levels as

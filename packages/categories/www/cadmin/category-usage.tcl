@@ -3,7 +3,7 @@ ad_page_contract {
     Show all objects mapped to a category.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: category-usage.tcl,v 1.10 2018/06/29 17:27:18 hectorr Exp $
 } {
     category_id:naturalnum,notnull
     tree_id:naturalnum,notnull

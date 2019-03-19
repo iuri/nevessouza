@@ -21,7 +21,7 @@ ad_page_contract {
     It laysout the elements with portal::layout_elements and hands off rendering
     of the individual portlets to the template in the "element_src" var
 
-    @version $Id: simple2.tcl,v 1.14.4.1 2015/09/12 11:06:40 gustafn Exp $
+    @cvs-id $Id: simple2.tcl,v 1.16 2018/06/29 17:27:19 hectorr Exp $
 } -properties {
     element_list:onevalue
     element_src:onevalue

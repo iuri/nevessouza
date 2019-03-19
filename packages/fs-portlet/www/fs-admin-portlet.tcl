@@ -20,7 +20,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-05-13
-    @version $Id: fs-admin-portlet.tcl,v 1.6.2.1 2015/09/12 11:06:32 gustafn Exp $
+    @cvs-id $Id: fs-admin-portlet.tcl,v 1.8 2018/06/29 17:27:19 hectorr Exp $
 
 } -query {
 } -properties {

@@ -7,7 +7,7 @@ ad_page_contract {
     @author Roel Canicula (roel@solutiongrove.com)
     @creation-date 2006-06-09
     @arch-tag: d97c0cf0-0f43-4958-86ca-2a3d2816f31d
-    @cvs-id $Id: view-item-responses.tcl,v 1.3.2.2 2016/05/20 20:07:42 gustafn Exp $
+    @cvs-id $Id: view-item-responses.tcl,v 1.4 2017/08/07 23:48:04 gustafn Exp $
 } {
     item_id:naturalnum,notnull
     section_id:naturalnum,notnull

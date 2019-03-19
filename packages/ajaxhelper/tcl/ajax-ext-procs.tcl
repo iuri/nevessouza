@@ -41,7 +41,7 @@ ad_proc -public ah::ext::onready {
     @author Hamilton Chua (ham@solutiongrove.com)
     @creation-date 2007-09-07
 
-    @param body The javascript to be executed inside the onReady funciton
+    @param body The javascript to be executed inside the onReady function
     
 
 } {

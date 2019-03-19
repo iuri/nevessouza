@@ -4,8 +4,7 @@
 <!--  -->
 <!-- @author Dave Bauer (dave@thedesignexperience.org) -->
 <!-- @creation-date 2006-01-28 -->
-<!-- @arch-tag: 33e3dcb8-30e3-445e-a6f7-7fc8e00c2301 -->
-<!-- @cvs-id $Id: forums-callback-procs-oracle.xql,v 1.2 2007/10/07 22:37:01 donb Exp $ -->
+<!-- @cvs-id $Id: forums-callback-procs-oracle.xql,v 1.3 2018/08/15 17:03:48 gustafn Exp $ -->
 
 <queryset>
 

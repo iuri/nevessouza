@@ -2,7 +2,7 @@ ad_page_contract {
     Let the user toggle the site-wide status of a category tree.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: permission-manage.tcl,v 1.9 2018/06/29 17:27:18 hectorr Exp $
 } {
     tree_id:naturalnum,notnull
     object_id:naturalnum,optional

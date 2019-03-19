@@ -21,14 +21,14 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-11-10
-    @version $Id: control-panel.tcl,v 1.16.4.1 2015/09/11 11:40:42 gustafn Exp $
+    @cvs-id $Id: control-panel.tcl,v 1.19 2018/08/12 12:14:47 gustafn Exp $
 
 }
 
 
 # Make sure user is logged in
 set user_id [auth::require_login]
-acs_user::get -array user -include_bio -user_id $user_id
+acs_user::get -array user -user_id $user_id
 
 # General data
 set dotlrn_url [dotlrn::get_url]

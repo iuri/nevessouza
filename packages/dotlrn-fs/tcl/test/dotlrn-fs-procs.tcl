@@ -6,7 +6,7 @@ ad_library {
     
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2006-04-17
-    @cvs-id $Id: dotlrn-fs-procs.tcl,v 1.2.10.1 2015/09/11 11:40:57 gustafn Exp $
+    @cvs-id $Id: dotlrn-fs-procs.tcl,v 1.4 2018/07/19 12:21:05 gustafn Exp $
 }
 
 aa_register_case -cats {api smoke db} dotlrn_fs_user_folders {
@@ -68,17 +68,17 @@ aa_register_case -cats {api smoke db} dotlrn_fs_user_folders {
                        root_err_msg
                 aa_log $root_err_msg
                          
-                aa_true "User root folder OK" [expr {
+                aa_true "User root folder OK" {
                              $check_user_root_folder_id \
-                                 == $user_root_folder_id}]
+                                 == $user_root_folder_id}
                 catch {set check_user_shared_folder_id \
                            [dotlrn_fs::get_user_shared_folder \
                            -user_id $creation_info(user_id)]} shared_err_msg
                     
                 aa_log $shared_err_msg
-                aa_true "User shared folder OK" [expr {
+                aa_true "User shared folder OK" {
                              $check_user_shared_folder_id \
-                                 == $user_shared_folder_id}]                
+                                 == $user_shared_folder_id}                
         } 
 }
 

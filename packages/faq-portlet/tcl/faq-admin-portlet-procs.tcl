@@ -21,7 +21,7 @@ ad_library {
     @creation-date January 19 2002
     @author Arjun Sanyal (arjun@openforce.net)
     @author Ben Adida (ben@openforce.net)
-    @cvs-id $Id: faq-admin-portlet-procs.tcl,v 1.9.2.1 2015/09/12 11:06:16 gustafn Exp $
+    @cvs-id $Id: faq-admin-portlet-procs.tcl,v 1.10.2.1 2019/02/14 16:15:01 gustafn Exp $
 
 }
 
@@ -34,6 +34,8 @@ namespace eval faq_admin_portlet {
 
     ad_proc -public get_pretty_name {
     } {
+        Get the pretty name.
+    } {
         return "#faq-portlet.admin_pretty_name#"
     }
 
@@ -44,6 +46,8 @@ namespace eval faq_admin_portlet {
 
     ad_proc -public link {
     } {
+        Get the link. This is currently empty.
+    } {
         return ""
     }
 
@@ -52,7 +56,7 @@ namespace eval faq_admin_portlet {
         {-package_id:required}
     } {
         Adds a faq admin PE to the given admin portal. There should only
-        ever be one of these portals on an admin page with only one faq_package_id
+        ever be one of these portals on an admin page with only one faq_package_id.
 
         @param portal_id The page to add self to
         @param package_id the id of the faq package
@@ -70,7 +74,7 @@ namespace eval faq_admin_portlet {
     ad_proc -public remove_self_from_page {
         portal_id
     } {
-        Removes a faq admin PE from the given portal
+        Removes a faq admin PE from the given portal.
     } {
         portal::remove_element -portal_id $portal_id -portlet_name [get_my_name]
     }
@@ -78,6 +82,7 @@ namespace eval faq_admin_portlet {
     ad_proc -public show {
         cf
     } {
+        Show the FAQ admin portlet.
     } {
         portal::show_proc_helper \
             -package_key [my_package_key] \

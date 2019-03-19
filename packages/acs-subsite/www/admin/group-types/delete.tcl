@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Wed Nov  8 18:22:04 2000
-    @cvs-id $Id: delete.tcl,v 1.5.2.4 2016/05/20 20:02:44 gustafn Exp $
+    @cvs-id $Id: delete.tcl,v 1.7 2018/01/21 00:35:29 gustafn Exp $
 
 } {
     group_type:notnull
@@ -38,8 +38,10 @@ if { ![db_0or1row select_pretty_name {
       from acs_object_types t
      where t.object_type = :group_type
 }] } {
-    ad_return_error "Group type doesn't exist" "Group type \"$group_type\" doesn't exist"
-    return
+    ad_return_error \
+        "Group type doesn't exist" \
+        "Group type \"$group_type\" doesn't exist"
+    ad_script_abort
 }
 
 set subtypes_exist_p [db_string number_subtypes {}]

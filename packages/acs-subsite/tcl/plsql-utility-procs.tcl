@@ -6,7 +6,7 @@ ad_library {
 
     @author mbryzek@arsdigita.com
     @creation-date Thu Dec  7 10:31:56 2000
-    @cvs-id $Id: plsql-utility-procs.tcl,v 1.3.2.3 2016/01/02 20:57:57 gustafn Exp $
+    @cvs-id $Id: plsql-utility-procs.tcl,v 1.9 2018/07/25 01:28:26 gustafn Exp $
     
 }
 
@@ -50,13 +50,13 @@ namespace eval plsql_utility {
 	@author Michael Bryzek (mbryzek@arsdigita.com)
 	@creation-date 11/2000
     } {
-	return [db_string object_type_exists_p {
-	    select case when exists (select 1 from acs_object_types where object_type=:object_type)
-                        then 1
-                        else 0
-                   end
-              from dual            
-        }]
+ 	return [db_string object_type_exists_p {
+ 	    select case when exists (select 1 from acs_object_types where object_type=:object_type)
+                         then 1
+                         else 0
+                    end
+            from dual            
+        }]       
     }
 
 
@@ -204,7 +204,7 @@ would write the following to the browser:
 	    if { ![info exists $var] } {
 		error "Cannot find value for bind variable \"$var\"\n\n"
 	    }
-	    regsub -- "\:$var" $sql_query '[DoubleApos [set $var]]' sql_query
+	    regsub -- "\:$var" $sql_query [::ns_dbquotevalue [set $var]] sql_query
 	}
 	return $sql_query
     }

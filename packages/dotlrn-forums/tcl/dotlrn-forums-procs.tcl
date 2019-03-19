@@ -22,7 +22,7 @@ ad_library {
     @author yon (yon@openforce.net)
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 2002-05-29
-    @cvs-id $Id: dotlrn-forums-procs.tcl,v 1.15.2.1 2015/09/11 11:40:56 gustafn Exp $
+    @cvs-id $Id: dotlrn-forums-procs.tcl,v 1.16 2017/08/07 23:48:10 gustafn Exp $
 
 }
 

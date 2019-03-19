@@ -1,7 +1,7 @@
 ad_page_contract {
      
     @author Anny Flores (annyflores@viaro.net) Viaro Networks (www.viaro.net)
-    @date 2005-01-07
+    @creation-date 2005-01-07
     
     This page allows to relate an action to the check.    
 } {
@@ -116,8 +116,9 @@ ad_form -name get_action -export {edit_p action_perform_value action_value retur
     
     
 } -on_submit {
-    set url "action-params?assessment_id=$assessment_id&inter_item_check_id=$inter_item_check_id&action_id=$action_id&section_id=$section_id"
+    set url [export_vars -base action-params {assessment_id inter_item_check_id action_id section_id}]
     ad_returnredirect "${url}$return_url"
+    ad_script_abort
     
 } -after_submit {
     if {  $action_perform eq "m" } {

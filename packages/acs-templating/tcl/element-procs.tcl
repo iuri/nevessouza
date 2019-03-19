@@ -4,7 +4,7 @@ ad_library {
     @author Karl Goldstein    (karlg@arsdigita.com)
     @author Stanislav Freidin (sfreidin@arsdigita.com)
 
-    @cvs-id $Id: element-procs.tcl,v 1.33.2.4 2017/04/21 16:50:29 gustafn Exp $
+    @cvs-id $Id: element-procs.tcl,v 1.37 2018/05/18 07:56:07 gustafn Exp $
 }
 
 # Copyright (C) 1999-2000 ArsDigita Corporation
@@ -20,7 +20,7 @@ namespace eval template::element {}
 ad_proc -public element { command form_id element_id args } {
     element is really template::element although when in the
     "template" namespace you may omit the template:: qualifier.
-    See the template::form api for creating the form element container.
+    See the template::form API for creating the form element container.
 
     @see template::element
     @see template::form

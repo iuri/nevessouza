@@ -2,7 +2,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-05-13
-    @cvs-id $Id: index.tcl,v 1.15.2.2 2017/02/02 14:09:22 gustafn Exp $
+    @cvs-id $Id: index.tcl,v 1.16 2017/08/07 23:48:04 gustafn Exp $
 
 } -query {
     {orderby:token "send_date"}

@@ -1,24 +1,24 @@
-ad_library {
-  XOTcl API for policies 
+xo::library doc {
+  XOTcl API for policies
 
   @author Gustaf Neumann
   @creation-date 2007-03-09
-  @cvs-id $Id: policy-procs.tcl,v 1.23.2.2 2017/06/01 09:42:53 gustafn Exp $
+  @cvs-id $Id: policy-procs.tcl,v 1.29 2018/05/15 21:41:34 hectorr Exp $
 }
 
 namespace eval ::xo {
-  
+
   Class create Policy
 
   Policy instproc defined_methods {class} {
     set c [self]::$class
-    expr {[my isclass $c] ? [$c array names require_permission] : [list]}
+    expr {[:isclass $c] ? [$c array names require_permission] : [list]}
   }
-  
+
   Policy instproc check_privilege {
-    {-login true} 
-    -user_id:required 
-    -package_id 
+    {-login true}
+    -user_id:required
+    -package_id
     privilege object method
   } {
     #my log "--p [self proc] [self args]"
@@ -59,7 +59,7 @@ namespace eval ::xo {
 
     set allowed -1   ;# undecided
     # try object specific privileges. These have the signature:
-    # 
+    #
     # <class> instproc privilege=<name> {{-login true} user_id package_id method}
     #
     if {[$object info methods privilege=$privilege] ne ""} {
@@ -73,7 +73,7 @@ namespace eval ::xo {
   Policy instproc get_privilege {{-query_context "::xo::cc"} permission object method} {
     # the privilege might by primitive (one word privilege)
     # or it might be complex (attribute + privilege)
-    # or it might be conditional (primitive or complex) in a list of privilges
+    # or it might be conditional (primitive or complex) in a list of privileges
 
     foreach p $permission {
       #my msg "checking permission '$p'"
@@ -82,7 +82,7 @@ namespace eval ::xo {
         # we have a condition
         lassign $condition cond value
         if {[$object condition=$cond $query_context $value]} {
-          return [my get_privilege [list [lrange $p 1 end]] $object $method]
+          return [:get_privilege [list [lrange $p 1 end]] $object $method]
         }
       } else {
         # we have no condition
@@ -100,9 +100,9 @@ namespace eval ::xo {
     set permission ""
     set o [self]::[namespace tail $object]
     set key require_permission($method)
-    if {[my isobject $o] && [$o exists $key]} {
+    if {[:isobject $o] && [$o exists $key]} {
       set permission [$o set $key]
-    } elseif {[my isobject $o] && [$o exists default_permission]} {
+    } elseif {[:isobject $o] && [$o exists default_permission]} {
       set permission [$o set default_permission]
     } elseif {$check_classes} {
       # we have no object specific policy information, check the classes
@@ -110,14 +110,14 @@ namespace eval ::xo {
       set c [$object info class]
       foreach class [concat $c [$c info heritage]] {
         set c [self]::[namespace tail $class]
-        if {![my isclass $c]} continue
-        set permission [my get_permission -check_classes false $class $method]
+        if {![:isclass $c]} continue
+        set permission [:get_permission -check_classes false $class $method]
         if {$permission ne ""} break
       }
     }
     return $permission
   }
-  
+
   Policy ad_instproc check_permissions {-user_id -package_id {-link ""} object method} {
 
     This method checks whether the current user is allowed
@@ -128,28 +128,40 @@ namespace eval ::xo {
 
     @see enforce_permissions
     @return 0 or 1
-    
+
   } {
-    if {![info exists user_id]} {set user_id [::xo::cc user_id]}
-    if {![info exists package_id]} {set package_id [::xo::cc package_id]}
-    #my msg [info exists package_id]=>$package_id-[my exists logical_package_id]
+    if {![info exists user_id]} {
+      set user_id [::xo::cc user_id]
+    }
+    if {![info exists package_id]} {
+      set package_id [::xo::cc package_id]
+    }
+    #my msg [info exists package_id]=>$package_id-[info exists :logical_package_id]
     set ctx "::xo::cc"
     if {$link ne ""} {
-      set query [lindex [split $link ?] 1]
+      #
+      # Extract the query parameter from the link
+      #
+      set questionMarkPos [string first ? $link]
+      if {$questionMarkPos > -1} {
+        set query [string range $link $questionMarkPos+1 end]
+      } else {
+        set query ""
+      }
       set ctx [::xo::Context new -destroy_on_cleanup -actual_query $query]
       $ctx process_query_parameter
     }
-    
+
     set allowed 0
-    set permission [my get_permission $object $method]
+    set permission [:get_permission $object $method]
     #my log "--permission for o=$object, m=$method => $permission"
 
     #my log "--     user_id=$user_id uid=[::xo::cc user_id] untrusted=[::xo::cc set untrusted_user_id]"
     if {$permission ne ""} {
-      lassign [my get_privilege -query_context $ctx $permission $object $method] kind p
+      lassign [:get_privilege -query_context $ctx $permission $object $method] kind p
       #my msg "--privilege = $p kind = $kind"
       switch -- $kind {
-        primitive {set allowed [my check_privilege -login false \
+        primitive {set allowed [:check_privilege -login false \
                                     -package_id $package_id -user_id $user_id \
                                     $p $object $method]}
         complex {
@@ -171,18 +183,18 @@ namespace eval ::xo {
 
     @see check_permissions
     @return 0 or 1
-    
+
   } {
     if {![info exists user_id]} {set user_id [::xo::cc user_id]}
     if {![info exists package_id]} {set package_id [::xo::cc package_id]}
 
     set allowed 0
-    set permission [my get_permission $object $method]
+    set permission [:get_permission $object $method]
     if {$permission ne ""} {
-      lassign [my get_privilege $permission $object $method] kind p
+      lassign [:get_privilege $permission $object $method] kind p
       switch -- $kind {
         primitive {
-          set allowed [my check_privilege \
+          set allowed [:check_privilege \
                            -user_id $user_id -package_id $package_id \
                            $p $object $method]
           set privilege $p
@@ -212,12 +224,13 @@ namespace eval ::xo {
       ad_return_forbidden  "[_ xotcl-core.permission_denied]" [_ xotcl-core.policy-error-insufficient_permissions]
       ad_script_abort
     }
-    
+
     return $allowed
   }
 
 }
 
+::xo::library source_dependent
 #
 # Local variables:
 #    mode: tcl

@@ -19,7 +19,7 @@
 ad_page_contract {
     @author yon (yon@milliped.com)
     @creation-date Jan 08, 2002
-    @version $Id: dotlrn-members-staff-portlet.tcl,v 1.13.2.1 2015/09/11 11:41:00 gustafn Exp $
+    @cvs-id $Id: dotlrn-members-staff-portlet.tcl,v 1.15 2018/06/29 17:27:19 hectorr Exp $
 } -query {
 } -properties {
     users:multirow

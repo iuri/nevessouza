@@ -15,11 +15,11 @@
 #
 
 ad_page_contract {
-    create a new subcommunity (aka subgroup)
+    create a new subcommunity (a.k.a. subgroup)
 
     @author arjun (arjun@openforce.net)
     @creation-date 2001-02-12
-    @version $Id: subcommunity-new.tcl,v 1.26.4.1 2015/09/11 11:40:47 gustafn Exp $
+    @cvs-id $Id: subcommunity-new.tcl,v 1.29 2018/07/24 19:04:34 gustafn Exp $
 } -query {
     {referer "one-community-admin"}
 } -properties {

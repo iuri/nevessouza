@@ -5,7 +5,7 @@ ad_page_contract {
     to contained objects. 
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: object-map.tcl,v 1.11 2018/06/29 17:27:18 hectorr Exp $
 } {
     object_id:naturalnum,notnull
     ctx_id:naturalnum,optional
@@ -30,7 +30,7 @@ set context_bar [list $context_bar $page_title]
 template::multirow create mapped_trees tree_name tree_id \
     site_wide_p assign_single_p require_category_p widget view_url unmap_url edit_url
 
-db_foreach get_mapped_trees "" {
+db_foreach get_mapped_trees {} {
     set tree_name [category_tree::get_name $tree_id $locale]
     if {$subtree_category_id ne ""} {
       append tree_name " :: [category::get_name $subtree_category_id $locale]"
@@ -69,10 +69,10 @@ template::list::create \
 	}
         flags {
 	    display_template {
-		(<if @mapped_trees.site_wide_p@ eq t>#categories.#SiteWide_tree#, </if>
-                 <if @mapped_trees.widget@>@mapped_trees.widget@, </if>
-		 <if @mapped_trees.assign_single_p@ eq t>#categories.single#, </if><else>#categories.multiple#, </else>
-		 <if @mapped_trees.require_category_p@ eq t>#categories.required#) </if><else>#categories.optional#) </else>
+		(<if @mapped_trees.site_wide_p;literal@ true>#categories.#SiteWide_tree#, </if>
+                 <if @mapped_trees.widget@ ne "">@mapped_trees.widget@, </if>
+		 <if @mapped_trees.assign_single_p;literal@ true>#categories.single#, </if><else>#categories.multiple#, </else>
+		 <if @mapped_trees.require_category_p;literal@ true>#categories.required#) </if><else>#categories.optional#) </else>
 	    }
 	}
 	action {
@@ -94,7 +94,7 @@ template::list::create \
 	}
 	site_wide_p {
 	    display_template {
-		<if @unmapped_trees.site_wide_p@ eq t> (#categories.SiteWide_tree#) </if>
+		<if @unmapped_trees.site_wide_p;literal@ true> (#categories.SiteWide_tree#) </if>
 	    }
 	}
 	action {

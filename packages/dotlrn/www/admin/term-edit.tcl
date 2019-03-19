@@ -22,7 +22,7 @@ ad_page_contract {
     @author Don Baccus (dhogaza@pacifier.com)
 
     @creation-date 2002-03-14
-    @version $Id: term-edit.tcl,v 1.14.2.2 2016/10/14 17:59:24 gustafn Exp $
+    @cvs-id $Id: term-edit.tcl,v 1.16 2018/06/29 17:27:19 hectorr Exp $
 
 } -query {
     term_id:naturalnum,notnull

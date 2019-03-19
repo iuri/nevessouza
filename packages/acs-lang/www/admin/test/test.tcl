@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author John Lowry (lowry@ardigita.com)
     @creation-date 29 September 2000
-    @cvs-id $Id: test.tcl,v 1.3.12.3 2017/04/22 18:21:46 gustafn Exp $
+    @cvs-id $Id: test.tcl,v 1.5 2017/11/16 13:21:59 antoniop Exp $
 } { }
 
 set title "Test lang package"
@@ -53,7 +53,7 @@ set tz_sql "SELECT tz as timezone
 db_multirow tz_results lang_tz_get_data $tz_sql
 
 # Test 4 checks that we can convert from local time to UTC
-db_1row lang_system_time_select "SELECT to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') AS system_time FROM dual"
+db_1row lang_system_time_select {}
 
 set paris_time [lc_time_utc_to_local $system_time "Europe/Paris"]
 set local_time [lc_time_local_to_utc $paris_time "Europe/Paris"]

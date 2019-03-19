@@ -4,7 +4,7 @@ ad_library {
 
     @author swoodcock@scholastic.co.uk
     @creation-date Sun Jul 22 13:51:26 BST 2001
-    @cvs-id $Id: plpgsql-utility-procs.tcl,v 1.6.2.1 2015/09/10 08:21:36 gustafn Exp $
+    @cvs-id $Id: plpgsql-utility-procs.tcl,v 1.11 2019/01/25 23:49:04 antoniop Exp $
     
 }
 
@@ -55,6 +55,16 @@ namespace eval plpgsql_utility {
 	    set user_supplied([string toupper $attr]) $attr
 	}
 
+        # This list of reserved default values is needed so we don't
+        # try to quote them. A better alternative might be to use some
+        # notion of datatype (e.g. using
+        # information_schema.parameters) and take an informed decision
+        # based on this.
+        set reserved_default_values {
+            current_date
+            current_timestamp
+        }
+
 	# For each real arg, append default or supplied arg value
 	set pieces [list]
 	foreach row $real_args {
@@ -62,29 +72,31 @@ namespace eval plpgsql_utility {
 
 	    if { [info exists user_supplied($arg_name)] } {
 		lappend pieces "${prepend}$user_supplied($arg_name)"
+	    } elseif { $arg_default eq "" || $arg_default eq "null"} {
+                lappend pieces "NULL"
+            } elseif { [string tolower $arg_default] ni $reserved_default_values } {
+                lappend pieces "'[db_quote $arg_default]'"
 	    } else {
-		if { $arg_default eq "" || $arg_default eq "null"} {
-		    lappend pieces "NULL"
-		} else {
-		    lappend pieces "'[db_quote $arg_default]'"
-		}
-	    }
+                lappend pieces $arg_default
+            }
 	}
 
 	return [join $pieces ","]
     }
 
-    ad_proc -public table_column_type {
+    ad_proc -deprecated table_column_type {
 	table
 	column
     } {
 	Returns the datatype for column in table
 
+        @see db_column_type
+
 	@author Steve Woodcock (swoodcock@scholastic.co.uk)
 	@creation-date 07/2001
 
     } {
-	return [db_string fetch_type {}]
+        return [db_column_type -complain $table $column]
     }
 
     ad_proc -public generate_attribute_parameters { 
@@ -122,7 +134,7 @@ namespace eval plpgsql_utility {
 	foreach triple $attr_list {
 	    set table [string toupper [string trim [lindex $triple 0]]]
 	    set attr [string toupper [string trim [lindex $triple 1]]]
-	    set datatype [table_column_type $table $attr]
+	    set datatype [db_column_type -complain $table $attr]
 	    lappend pieces $datatype
 	}
 	return [join $pieces ","]

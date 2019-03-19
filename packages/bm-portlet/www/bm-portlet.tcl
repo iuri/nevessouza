@@ -20,7 +20,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-05-13
-    @version $Id: bm-portlet.tcl,v 1.6.20.1 2015/09/10 08:30:13 gustafn Exp $
+    @cvs-id $Id: bm-portlet.tcl,v 1.7.2.1 2019/02/14 16:15:01 gustafn Exp $
 
 } -query {
 } -properties {

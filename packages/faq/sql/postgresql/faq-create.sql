@@ -2,7 +2,7 @@
 --
 -- @author @jennie.ybos.net,@wirth.ybos.net,openacs port @samir.symphinity.com
 -- 
--- @cvs-id $Id: faq-create.sql,v 1.7.4.2 2016/06/07 09:43:50 hectorr Exp $
+-- @cvs-id $Id: faq-create.sql,v 1.9.2.1 2019/02/14 16:15:01 gustafn Exp $
 --
 CREATE OR REPLACE FUNCTION inline_0 () RETURNS integer AS $$
 BEGIN
@@ -11,8 +11,8 @@ BEGIN
 	'FAQ',			-- pretty_name
 	'FAQs',			-- pretty_plural
 	'acs_object',		-- supertype
-	'FAQS',			-- table_name
-	'FAQ_ID',		-- id_column
+	'faqs',			-- table_name
+	'faq_id',		-- id_column
 	null,				-- package_name
 	'f',				-- abstract_p
 	null,				-- type_extension_table
@@ -30,6 +30,7 @@ drop function inline_0 ();
 create table faqs (
 		faq_id    integer constraint faqs_faq_id_fk
 			  references acs_objects(object_id)
+                          on delete cascade
 			  constraint faqs_pk
 			  primary key,
 		faq_name  varchar (250)
@@ -46,8 +47,8 @@ BEGIN
 	'FAQ_Q_and_A',			-- pretty_name
 	'FAQ_Q_and_As',			-- pretty_plural
 	'acs_object',		-- supertype
-	'FAQ_Q_AND_AS',			-- table_name
-	'ENTRY_ID',		-- id_column
+	'faq_q_and_as',			-- table_name
+	'entry_id',		-- id_column
 	null,				-- package_name
 	'f',				-- abstract_p
 	null,				-- type_extension_table
@@ -66,9 +67,10 @@ drop function inline_1 ();
 create table faq_q_and_as (
 	entry_id  integer constraint faq_q_and_as_entry_id_fk
 		  references acs_objects (object_id)
+                  on delete cascade
 		  constraint faq_q_sand_a_pk
          	  primary key,
-	faq_id	  integer references faqs not null,
+	faq_id	  integer  not null references faqs on delete cascade,
 	question  varchar (4000) not null,
 	answer    varchar (4000) not null,
 	-- determines the order of questions in a FAQ

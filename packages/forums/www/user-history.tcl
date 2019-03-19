@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-29
-    @cvs-id $Id: user-history.tcl,v 1.14.2.3 2017/02/11 18:09:27 gustafn Exp $
+    @cvs-id $Id: user-history.tcl,v 1.16 2018/06/28 08:26:35 antoniop Exp $
 
 } {
     user_id:naturalnum,notnull
@@ -18,12 +18,10 @@ ad_page_contract {
     }
 }
 
-# Get user information
-acs_user::get -user_id $user_id -array user
+# Get user name
+set user_name [person::name -person_id $user_id]
 
 set context [list [_ forums.Posting_History]]
-
-ad_return_template
 
 # Local variables:
 #    mode: tcl

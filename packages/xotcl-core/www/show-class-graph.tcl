@@ -2,7 +2,7 @@ ad_page_contract {
   Show an xotcl class or object
   
   @author Gustaf Neumann
-  @cvs-id $Id: show-class-graph.tcl,v 1.11.2.1 2017/03/27 10:37:42 gustafn Exp $
+  @cvs-id $Id: show-class-graph.tcl,v 1.12 2017/08/07 23:48:30 gustafn Exp $
 } -query {
   {classes}
   {documented_only:boolean 1}

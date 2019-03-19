@@ -19,7 +19,7 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date Jan 10, 2002
-    @version $Id: add-instructor-3.tcl,v 1.15.2.1 2015/09/11 11:40:48 gustafn Exp $
+    @cvs-id $Id: add-instructor-3.tcl,v 1.18 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     user_id:naturalnum,notnull
     community_id:naturalnum,notnull
@@ -40,8 +40,10 @@ if {!${is_dotlrn_user}} {
 # Add the relation
 dotlrn_community::add_user -rel_type dotlrn_instructor_rel $community_id $user_id
 
-ad_returnredirect [export_vars -base ../member-email-confirm {{return_url $referer} community_id user_id}]
-
+ad_returnredirect [export_vars -base ../member-email-confirm {
+    {return_url $referer} community_id user_id
+}]
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

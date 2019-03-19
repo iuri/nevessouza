@@ -7,7 +7,7 @@ ad_page_contract {
 
     @author Don Baccus (dhogaza@pacifier.com)
     @creation-date 2002-07-25
-    @cvs-id $Id: toggle-homework-alert.tcl,v 1.4.2.2 2016/05/20 20:26:15 gustafn Exp $
+    @cvs-id $Id: toggle-homework-alert.tcl,v 1.6 2018/01/21 00:38:37 gustafn Exp $
 } {
     folder_id:integer,notnull
     request_id:integer
@@ -34,6 +34,7 @@ if { $subscribe_p } {
 
     if { [llength $intervals] != 1 || [llength $delivery_methods] != 1 } {
         ad_return_error "[_ dotlrn-homework.lt_internal_error]" "[_ dotlrn-homework.lt_interval_or_del]"
+        ad_script_abort
     }
 
     # The get routines return a list of name/id pairs so extract the ids

@@ -2,7 +2,7 @@
 /**
  * Show a list of images in a long horizontal table.
  * @author $Author: gustafn $
- * @version $Id: youtube.php,v 1.1.2.1 2016/01/03 20:48:36 gustafn Exp $
+ * @version $Id: youtube.php,v 1.2 2017/08/07 23:48:24 gustafn Exp $
  * @package ImageManager
  */
 

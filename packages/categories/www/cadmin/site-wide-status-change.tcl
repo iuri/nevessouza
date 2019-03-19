@@ -2,7 +2,7 @@ ad_page_contract {
     Toggle the site-wide status of a category tree.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: site-wide-status-change.tcl,v 1.9 2018/06/29 17:27:18 hectorr Exp $
 } {
     tree_id:naturalnum,notnull
     action:integer
@@ -17,6 +17,7 @@ permission::require_permission -object_id $package_id -privilege category_admin
 db_dml toggle_site_wide_status ""
 
 ad_returnredirect [export_vars -no_empty -base permission-manage {tree_id locale object_id}]
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

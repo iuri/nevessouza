@@ -1,19 +1,19 @@
 # /packages/calendar/www/admin/calendar-create.tcl
 
 ad_page_contract {
-    
+
     generation of new group calendar
     when a party_wide calendar is generated
     the default permission is that this calendar is 
-    
+
     @author Gary Jin (gjin@arsdigita.com)
-    
-    @party_id  key to owner id
-    @calendar_name  the name of the calendar
-    @calendar_permission the permissions of the calendar
+
+    @param  party_id  key to owner id
+    @param  calendar_name  the name of the calendar
+    @param  calendar_permission the permissions of the calendar
 
     @creation-date Dec 14, 2000
-    @cvs-id $Id: calendar-create.tcl,v 1.2.2.1 2015/09/10 08:30:16 gustafn Exp $
+    @cvs-id $Id: calendar-create.tcl,v 1.5 2018/06/30 22:04:28 hectorr Exp $
 } {
     {party_id:naturalnum,notnull}
     {calendar_name:notnull}
@@ -44,12 +44,7 @@ if {$calendar_permission eq "public"} {
     # This would be a special case where they'd have to select their audience first
     ad_returnredirect  "one?action=permission&calendar_id=$calendar_id&calendar_permission=private"
 }
-
-
-
-
-
-
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

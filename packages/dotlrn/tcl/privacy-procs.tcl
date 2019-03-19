@@ -3,7 +3,7 @@ ad_library {
 
     @author aegrumet@alum.mit.edu
     @creation-date 2000-12-02
-    @cvs-id $Id: privacy-procs.tcl,v 1.4.4.1 2015/09/11 11:40:40 gustafn Exp $
+    @cvs-id $Id: privacy-procs.tcl,v 1.5 2017/08/07 23:48:09 gustafn Exp $
 }
 
 namespace eval dotlrn_privacy {

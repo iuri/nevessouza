@@ -5,7 +5,7 @@ ad_include_contract {
     @author yon (yon@openforce.net)
     @author arjun (arjun@openforce.net)
     @creation-date 2002-06-02
-    @cvs-id $Id: row.tcl,v 1.12.2.5 2016/09/27 10:58:07 gustafn Exp $
+    @cvs-id $Id: row.tcl,v 1.16.2.3 2019/02/15 13:25:58 gustafn Exp $
 
 } {
     {rownum:integer 1}
@@ -21,22 +21,17 @@ ad_include_contract {
 set viewer_id [ad_conn user_id]
 set useScreenNameP [parameter::get -parameter "UseScreenNameP" -default 0]
 
-if {0 && [info exists message(message_id)]} {
-    set message(content) [::util::disk_cache_eval \
-                          -call [list ad_html_text_convert -from $message(format) -to text/html -- $message(content)] \
-                          -key fragments \
-                          -id $message(message_id)]
-} else {
-    set message(content) [ad_html_text_convert -from $message(format) -to text/html -- $message(content)]
-}
+set message(content) [ad_html_text_convert -from $message(format) -to text/html -- $message(content)]
 
-if {$useScreenNameP} {
-    acs_user::get -user_id $viewer_id -array user_info
-    set message(screen_name) $user_info(screen_name)
-} else {
-    set message(screen_name) ""
+if {$message(user_id) > 0} {
+    set message(user_name) [acs_user::get_element \
+                                -user_id $message(user_id) \
+                                -element [expr {$useScreenNameP ? "screen_name" : "name"}]]
+    set message(user_url) user-history?user_id=$message(user_id)
+} else {    
+    set message(user_name) [_ acs-kernel.Unregistered_Visitor]
+    set message(user_url)  ""
 }
-
 
 # convert emoticons to images if the parameter is set
 if { [string is true [parameter::get -parameter DisplayEmoticonsAsImagesP -default 0]] } {
@@ -64,6 +59,10 @@ if { $preview } {
     set notflat_p          [expr {$presentation_type ne "flat"}]
     set post_and_notflat_p [expr {$post_p && $notflat_p}]
     set any_action_p       [expr {$post_and_notflat_p || $viewer_id || $moderate_p}]
+
+    set delete_url [export_vars -base "moderate/message-delete" {
+        {message_id:sign(csrf) $message(message_id)}
+    }]
 }
 
 template::add_body_script -script [subst {

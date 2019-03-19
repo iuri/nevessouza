@@ -245,11 +245,11 @@ should give encouraging text.<br>
 The computer science department has a final exam for the students.
 The exam consists of 3 sections. The exam is passed, if the student
 achieves at least 50% total score. In addition the student has to
-achive at least 40% in each of the sections. The first section is
-deemed more important, therefore it gets a weigth of 40%, the other
+achieve at least 40% in each of the sections. The first section is
+deemed more important, therefore it gets a weight of 40%, the other
 two sections only 30% towards the total score. Each section
-consists of multiple questions that have a different weigth (in
-percent) for the total score of the section. The sum of the weigths
+consists of multiple questions that have a different weight (in
+percent) for the total score of the section. The sum of the weights
 has to be 100%, otherwise the author of the section get&#39;s a
 warning. Some of the questions are multiple choice questions, that
 get different percentages for each answer. As the computer science
@@ -322,7 +322,7 @@ Assessment or set of Assessments to a specific set of subjects,
 students or other data entry personnel. These actions potentially
 will involve interfacing with other Workflow management tools (e.g.
 an "Enrollment" package that would handle creation of new
-Parties (aka clinical trial subjects) in the database.</p>
+Parties (a.k.a. clinical trial subjects) in the database.</p>
 <p>Schedulers could also be teachers, curriculum designers, site
 coordinators in clinical trials, etc.</p>
 <h3>Analyst</h3>
@@ -364,7 +364,7 @@ adjustors, accountants, tax preparation staff, etc.</p>
 series of questions (called "Items") into Sections
 (defined logically in terms of branch points and literally in terms
 of "Items presented together on a page"), along with all
-other parameters that define the nature and fuction of all
+other parameters that define the nature and function of all
 Assessment components.</li><li>Create, edit and delete Assessments, the highest level in the
 structure hierarchy. Configure Assessment attributes:
 <ul>
@@ -488,7 +488,7 @@ concepts of scoring, each of which the Assessment package should
 support and have varying levels of importance in different
 contexts. Consider:</p><ul>
 <li>Questions may have a "correct" answer against which a
-subject&#39;s reponse should be compared, yielding some measure of
+subject&#39;s response should be compared, yielding some measure of
 a "score" for that question varying from completely
 "wrong" to completely "correct". The package
 should allow Editors to specify the nature of the scoring continuum

@@ -6,7 +6,7 @@ ad_library {
     @creation-date 16 Feb 2000
     @author Jon Salz (jsalz@arsdigita.com)
     @author Richard Li (richardl@arsdigita.com)
-    @cvs-id $Id: security-init.tcl,v 1.5.10.4 2017/08/01 08:50:23 gustafn Exp $
+    @cvs-id $Id: security-init.tcl,v 1.6 2017/08/07 23:47:59 gustafn Exp $
 
 }
 

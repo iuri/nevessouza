@@ -3,7 +3,7 @@
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 28, 2000
-    @cvs-id $Id: transcript-delete.adp,v 1.8.4.2 2016/11/23 19:51:16 antoniop Exp $
+    @cvs-id $Id: transcript-delete.adp,v 1.10 2017/08/07 23:48:07 gustafn Exp $
 -->
 <master>
 <property name="context">@context;literal@</property>

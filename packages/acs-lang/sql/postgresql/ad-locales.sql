@@ -3,7 +3,7 @@
 --
 -- @author Jeff Davis (davis@xarg.net)
 -- @creation-date 2000-09-10
--- @cvs-id $Id: ad-locales.sql,v 1.33.6.3 2017/04/21 16:06:05 gustafn Exp $
+-- @cvs-id $Id: ad-locales.sql,v 1.34 2017/08/07 23:47:56 gustafn Exp $
 --
 
 -- ****************************************************************************

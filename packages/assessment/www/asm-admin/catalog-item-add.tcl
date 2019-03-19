@@ -7,8 +7,8 @@ ad_page_contract {
     @param  as_item_id list of integers specifying items
 
     @author timo@timohentschel.de
-    @date   2004-12-08
-    @cvs-id $Id:
+    @creation-date   2004-12-08
+    @cvs-id $Id: catalog-item-add.tcl,v 1.9 2018/06/29 17:27:18 hectorr Exp $
 } {
     assessment_id:naturalnum,notnull
     section_id:naturalnum,notnull

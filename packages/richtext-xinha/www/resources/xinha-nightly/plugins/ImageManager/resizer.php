@@ -7,7 +7,7 @@ header('Content-Type: text/javascript; charset=UTF-8');
  * relative to the base_dir given in config.inc.php
  * This is pretty much just thumbs.php with some mods, I'm too lazy to do it properly
  * @author $Author: gustafn $
- * @version $Id: resizer.php,v 1.1.2.1 2016/01/03 20:48:35 gustafn Exp $
+ * @version $Id: resizer.php,v 1.2 2017/08/07 23:48:24 gustafn Exp $
  * @package ImageManager
  */
 

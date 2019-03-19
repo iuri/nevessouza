@@ -1,8 +1,8 @@
 ad_page_contract {
     This page delete the action
-    @authos vivian@viaro.net Viaro Networks (www.viaro.net)
-    @date 07-01-2005
-    @cvs-id $Id:
+    @author vivian@viaro.net Viaro Networks (www.viaro.net)
+    @creation-date 07-01-2005
+    @cvs-id $Id: asm-action-delete.tcl,v 1.10 2018/06/29 17:27:18 hectorr Exp $
 } {
     action_id:naturalnum,notnull
 }
@@ -20,14 +20,11 @@ ad_form -name action_delete -form {
     {submit:text(submit) {label "delete"}}
     {back:text(submit) {label "back"}}
 }  -on_submit {
-    if { $back eq "back" } {
-	ad_returnredirect "asm-action-admin"
-    } else {
+    if { $back ne "back" } {
 	as::actionparam::actiondelete $action_id
-	ad_returnredirect "asm-action-admin"	
-
-
     }
+    ad_returnredirect "asm-action-admin"
+    ad_script_abort
 
 }
 # Local variables:

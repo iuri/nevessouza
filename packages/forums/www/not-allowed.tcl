@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Lars Pind (lars@pinds.com)
     @creation-date 2002-10-14
-    @cvs-id $Id: not-allowed.tcl,v 1.2.20.1 2015/09/12 11:06:28 gustafn Exp $
+    @cvs-id $Id: not-allowed.tcl,v 1.3 2017/08/07 23:48:11 gustafn Exp $
 }
 
 set context [list "Not Allowed"]

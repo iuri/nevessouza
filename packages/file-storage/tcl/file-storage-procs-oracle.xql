@@ -129,22 +129,6 @@
         </querytext>
     </fullquery>
 
-   <fullquery name="fs::do_notifications.get_owner_name">
-        <querytext>
-	  select person.name(o.creation_user) as owner
-		 from acs_objects o where o.object_id = :item_id
-        </querytext>
-    </fullquery>
-
-    <fullquery name="fs::do_notifications.path1">
-       <querytext>
-		select site_node.url(node_id) as path1 from site_nodes
-		where object_id = (select package_id
-				   from fs_root_folders where
-				   fs_root_folders.folder_id = :root_folder)
-       </querytext>
-    </fullquery>
-
     <fullquery name="fs::publish_versioned_object_to_file_system.select_object_content">
         <querytext>
             select content
@@ -161,15 +145,6 @@
         </querytext>
     </fullquery>
   
-    <fullquery name="fs::get_item_id.get_item_id">
-      <querytext>
-        begin
-          :1 := content_item.get_id ( :name, :folder_id, 'f' );
-	end;
-      </querytext>
-    </fullquery>
-
-
   <fullquery name="fs::add_file.create_item">
     <querytext>
       	begin 
@@ -213,10 +188,7 @@
 
   <fullquery name="fs::delete_folder.delete_folder">      
       <querytext>
-
-	begin
-	        file_storage.delete_folder(:folder_id, :cascade_p );
-	end;
+	select file_storage.delete_folder(:folder_id, :cascade_p ) from dual
       </querytext>
   </fullquery>
   
@@ -242,14 +214,6 @@
     </querytext>
   </fullquery>
 
-    <fullquery name="fs::get_object_prettyname.select_object_prettyname">
-        <querytext>
-            select nvl(title,name) as prettyname
-            from fs_objects
-            where object_id = :object_id
-        </querytext>
-    </fullquery>
-
     <fullquery name="fs::get_folder_objects.select_folder_contents">
         <querytext>
 
@@ -265,6 +229,5 @@
 
         </querytext>
     </fullquery>
-
     
 </queryset>

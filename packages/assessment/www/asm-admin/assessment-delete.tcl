@@ -2,7 +2,7 @@ ad_page_contract {
     Confirmation form to remove an assessment.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: assessment-delete.tcl,v 1.8 2018/06/29 17:27:18 hectorr Exp $
 } {
     assessment_id:naturalnum,notnull
 } -properties {

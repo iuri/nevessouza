@@ -4,9 +4,9 @@ ad_page_contract {
 
     @author Bryan Quinn (bquinn@arsdigita.com)
     @creation-date Mon Oct  9 00:13:43 2000
-    @cvs-id $Id: packages-install-2.tcl,v 1.14.2.3 2017/05/31 13:47:43 michaela Exp $
+    @cvs-id $Id: packages-install-2.tcl,v 1.17 2018/02/02 00:04:50 gustafn Exp $
 } {
-    {package_key:multiple ""}
+    {package_key:token,multiple ""}
     {force_p:boolean "f"}
 }
 
@@ -43,7 +43,7 @@ if {$package_key eq ""} {
 
         array set failed $result(failed)
       
-        switch $result(status) {
+        switch -- $result(status) {
             ok {
                 set title "Confirm"
             }

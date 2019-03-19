@@ -1,4 +1,4 @@
-# $Id: zz-postload.tcl,v 1.2.2.3 2017/06/30 17:24:16 gustafn Exp $
+# $Id: zz-postload.tcl,v 1.3 2017/08/07 23:47:46 gustafn Exp $
 # Name:        00-ad-postload.tcl
 # Author:      Jon Salz <jsalz@mit.edu>
 # Date:        24 Feb 2000

@@ -6,7 +6,7 @@ ad_page_contract {
     
     @author Enrique Catalan (enrique.catalan@quest.ie)
     @creation-date 2007-08-21
-    @cvs-id $Id: record-test.tcl,v 1.2.12.5 2017/06/30 17:23:07 gustafn Exp $
+    @cvs-id $Id: record-test.tcl,v 1.5 2018/07/23 11:42:56 gustafn Exp $
 } {
     package_key
     {return_url:localurl ""}
@@ -102,13 +102,13 @@ ad_form -name new_test -method post -export {package_key return_url} \
 
     if {$login_id eq ""} {
         if {$login_type == -2} {
-#	    set login_code "twt::user:::create"
+#	    set login_code "twt::user::create"
 	    set login_code "
-     array set user_info \[twt::user:::create\]
+     array set user_info \[twt::user::create\]
      twt::user::login \$user_info(email) \$user_info(password)
  "
         } elseif {$login_type == -1} {
-#	    set login_code "twt::user:::create -admin"
+#	    set login_code "twt::user::create -admin"
 	    set login_code "
      array set user_info \[twt::user::create -admin\]
      twt::user::login \$user_info(email) \$user_info(password)
@@ -197,6 +197,7 @@ aa_register_case \
         set version_id [apm_version_id_from_package_key $package_key]
         apm_mark_version_for_reload $version_id files
         ad_returnredirect $return_url
+        ad_script_abort
     }
 
 

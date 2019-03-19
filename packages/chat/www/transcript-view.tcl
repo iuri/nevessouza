@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 28, 2000
-    @cvs-id $Id: transcript-view.tcl,v 1.3.12.1 2016/06/20 08:40:23 gustafn Exp $
+    @cvs-id $Id: transcript-view.tcl,v 1.6.2.1 2019/02/14 16:15:01 gustafn Exp $
 } {
     transcript_id:naturalnum,notnull
 } -properties {
@@ -29,3 +29,9 @@ db_1row get_transcript {
 }
 
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

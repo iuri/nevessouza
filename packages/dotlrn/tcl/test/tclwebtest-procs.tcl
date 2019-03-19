@@ -8,7 +8,7 @@ ad_library {
 
 namespace eval dotlrn::twt {}
 
-ad_proc dotlrn::twt::term_new {term_name start_date end_date} {
+ad_proc -private dotlrn::twt::term_new {term_name start_date end_date} {
 
         set response 0
 	
@@ -27,7 +27,7 @@ ad_proc dotlrn::twt::term_new {term_name start_date end_date} {
 	tclwebtest::field fill $end_date
 	tclwebtest::form submit
 	
-	aa_log "Add Term form submited"
+	aa_log "Add Term form submitted"
 
 	set response_url [tclwebtest::response url]
 
@@ -45,7 +45,7 @@ ad_proc dotlrn::twt::term_new {term_name start_date end_date} {
 	return $response
 } 
 
-ad_proc dotlrn::twt::term_edit { term_name new_term_name term_year start_date end_date} {
+ad_proc -private dotlrn::twt::term_edit { term_name new_term_name term_year start_date end_date} {
 
         set response 0
 
@@ -67,7 +67,7 @@ ad_proc dotlrn::twt::term_edit { term_name new_term_name term_year start_date en
 	tclwebtest::field find ~n "end_date"
 	tclwebtest::field fill $end_date
 	tclwebtest::form submit
-	aa_log "Edit Term form submited"
+	aa_log "Edit Term form submitted"
 
 	set response_url [tclwebtest::response url]
 
@@ -85,7 +85,7 @@ ad_proc dotlrn::twt::term_edit { term_name new_term_name term_year start_date en
 	return $response
 }
   
-ad_proc dotlrn::twt::department_new  {department_name description external_url department_key } {
+ad_proc -private dotlrn::twt::department_new  {department_name description external_url department_key } {
 
         set response 0
 
@@ -106,7 +106,7 @@ ad_proc dotlrn::twt::department_new  {department_name description external_url d
 	tclwebtest::field find ~n "department_key"
 	tclwebtest::field fill $department_key			
 	tclwebtest::form submit
-	aa_log "Add Department form submited"
+	aa_log "Add Department form submitted"
 
 	set response_url [tclwebtest::response url]	
 	
@@ -124,7 +124,7 @@ ad_proc dotlrn::twt::department_new  {department_name description external_url d
 	return $response
 } 
 
-ad_proc dotlrn::twt::department_delete { department_name department_key } {
+ad_proc -private dotlrn::twt::department_delete { department_name department_key } {
 
         set response 0
 
@@ -138,7 +138,7 @@ ad_proc dotlrn::twt::department_delete { department_name department_key } {
 	
 	tclwebtest::form find ~n "delete_department"	
 	tclwebtest::form submit ~n "yes_button"
-	aa_log "Delete Department form submited"
+	aa_log "Delete Department form submitted"
 
 	set response_url [tclwebtest::response url]	
 
@@ -146,7 +146,7 @@ ad_proc dotlrn::twt::department_delete { department_name department_key } {
 	    if { ![catch {tclwebtest::link find $department_name} errmsg] } { 
 		aa_error "dotlrn::twt::department_delete failed $errmsg : Didn't Delete a Department"
 	    } else {
-		aa_log "Dorlrn Department Deleted"
+		aa_log "Dotlrn Department Deleted"
 		set response 1
 	    }
 	} else {
@@ -156,7 +156,7 @@ ad_proc dotlrn::twt::department_delete { department_name department_key } {
 	return $response
 } 
 
-ad_proc dotlrn::twt::subject_new  { department_name subject_name description subject_key } {
+ad_proc -private dotlrn::twt::subject_new  { department_name subject_name description subject_key } {
         set response 0
 
 	# The admin dotlrn page url
@@ -175,7 +175,7 @@ ad_proc dotlrn::twt::subject_new  { department_name subject_name description sub
 	tclwebtest::field find ~n description 
 	tclwebtest::field fill $description
 	tclwebtest::form submit
-	aa_log "Add Subject Form submited"
+	aa_log "Add Subject Form submitted"
 
 	set response_url [tclwebtest::response url]	
 	
@@ -193,7 +193,7 @@ ad_proc dotlrn::twt::subject_new  { department_name subject_name description sub
 	return $response
 } 
 
-ad_proc dotlrn::twt::subject_delete  { department_name } {
+ad_proc -private dotlrn::twt::subject_delete  { department_name } {
 
         set response 0
 
@@ -207,7 +207,7 @@ ad_proc dotlrn::twt::subject_delete  { department_name } {
 
 	tclwebtest::form find ~n "delete_class"	
 	tclwebtest::form submit ~n "formbutton:ok"
-	aa_log "Delete Subject Form submited"
+	aa_log "Delete Subject Form submitted"
 
 	set response_url [tclwebtest::response url]	
 	
@@ -225,7 +225,7 @@ ad_proc dotlrn::twt::subject_delete  { department_name } {
 	return $response
 } 
 
-ad_proc dotlrn::twt::subject_edit  { department_name subject_name new_subject_name new_description } {
+ad_proc -private dotlrn::twt::subject_edit  { department_name subject_name new_subject_name new_description } {
 
         set response 0
 
@@ -244,7 +244,7 @@ ad_proc dotlrn::twt::subject_edit  { department_name subject_name new_subject_na
 	tclwebtest::field find ~n description 
 	tclwebtest::field fill $new_description
 	tclwebtest::form submit
-	aa_log "Edit Subject Form submited"
+	aa_log "Edit Subject Form submitted"
 
         set response_url [tclwebtest::response url]
 
@@ -262,7 +262,7 @@ ad_proc dotlrn::twt::subject_edit  { department_name subject_name new_subject_na
 	return $response
 }
 
-ad_proc dotlrn::twt::class_new  { department_name class_name description class_key } {
+ad_proc -private dotlrn::twt::class_new  { department_name class_name description class_key } {
 
         set response 0
 
@@ -284,7 +284,7 @@ ad_proc dotlrn::twt::class_new  { department_name class_name description class_k
 	tclwebtest::field find ~n class_instance_key 
 	tclwebtest::field fill $class_key
 	tclwebtest::form submit
-	aa_log "Add Class Form submited"
+	aa_log "Add Class Form submitted"
 
 	set response_url [tclwebtest::response url]	
 	
@@ -302,7 +302,7 @@ ad_proc dotlrn::twt::class_new  { department_name class_name description class_k
 	return $response
 } 
 
-ad_proc dotlrn::twt::community_new { community_name description } {
+ad_proc -private dotlrn::twt::community_new { community_name description } {
 
         set response 0
 
@@ -320,7 +320,7 @@ ad_proc dotlrn::twt::community_new { community_name description } {
 	tclwebtest::field fill $description
 	tclwebtest::form submit	
 
-	aa_log "Add Community Form submited"		
+	aa_log "Add Community Form submitted"		
 
 	set response_url [tclwebtest::response url]	
 	

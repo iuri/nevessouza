@@ -19,7 +19,7 @@
 --
 -- @author Ben Adida (ben@openforce.net)
 -- @creation-date 2001-09-25
--- @version $Id: dotlrn-init.sql,v 1.32 2006/08/08 21:26:21 donb Exp $
+-- @version $Id: dotlrn-init.sql,v 1.34 2018/07/12 11:13:31 antoniop Exp $
 --
 -- @note We remember September 11th, 2001
 --
@@ -112,9 +112,11 @@ begin
         description => '#dotlrn.dotlrn_club_description#'
     );
 
-    update acs_object_types set table_name = 'dotlrn_community', package_name = 'dotlrn_community' where object_type = 'dotlrn_community';
-    update acs_object_types set table_name = 'dotlrn_class_instance', package_name = 'dotlrn_class_instance' where object_type = 'dotlrn_class_instance';
-    update acs_object_types set table_name = 'dotlrn_club', package_name = 'dotlrn_club' where object_type = 'dotlrn_club';
+    -- dotlrn_communities is a view and cannot be used as
+    -- table_name.
+    update acs_object_types set table_name = 'dotlrn_communities_all', package_name = 'dotlrn_community' where object_type = 'dotlrn_community';
+    update acs_object_types set table_name = 'dotlrn_class_instances', package_name = 'dotlrn_class_instance' where object_type = 'dotlrn_class_instance';
+    update acs_object_types set table_name = 'dotlrn_clubs', package_name = 'dotlrn_club' where object_type = 'dotlrn_club';
 
     bar := acs_attribute.create_attribute(
         object_type => 'dotlrn_community',
@@ -328,15 +330,6 @@ begin
         min_n_rels_one => 0, max_n_rels_one => null,
         object_type_two => 'user', role_two => 'admin',
         min_n_rels_two => 0, max_n_rels_two => null
-    );
-
-    -- all rels to communities must have a portal_id
-    bar := acs_attribute.create_attribute(
-        object_type => 'dotlrn_member_rel',
-        attribute_name => 'portal_id',
-        datatype => 'integer',
-        pretty_name => 'Page ID',
-        pretty_plural => 'Page IDs'
     );
 
 end;

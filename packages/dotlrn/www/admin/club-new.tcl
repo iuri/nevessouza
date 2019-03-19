@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2001-12-03
-    @version $Id: club-new.tcl,v 1.22.6.1 2015/09/11 11:40:50 gustafn Exp $
+    @cvs-id $Id: club-new.tcl,v 1.24 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {referer "clubs"}
 } -properties {

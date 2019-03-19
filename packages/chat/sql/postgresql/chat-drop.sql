@@ -3,7 +3,7 @@
 --
 -- @author ddao@arsdigita.com
 -- @creation-date November 09, 2000
--- @cvs-id $Id: chat-drop.sql,v 1.4.6.2 2016/11/23 19:51:16 antoniop Exp $
+-- @cvs-id $Id: chat-drop.sql,v 1.5 2017/08/07 23:48:07 gustafn Exp $
 --
 
       --drop objects

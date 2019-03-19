@@ -3,7 +3,7 @@
 
   @author Gustaf Neumann (gustaf.neumann@wu-wien.ac.at)
   @creation-date Aug 16, 2006
-  @cvs-id $Id: permissions.tcl,v 1.7.2.3 2016/11/17 18:23:48 antoniop Exp $
+  @cvs-id $Id: permissions.tcl,v 1.8 2017/08/07 23:48:31 gustafn Exp $
 
 } -parameter {
   {-item_id:naturalnum,optional}

@@ -3,7 +3,7 @@ ad_page_contract {
     Let the user select a category tree which will be copied into the current category tree
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: tree-copy.tcl,v 1.15 2018/06/29 17:27:18 hectorr Exp $
 } {
     tree_id:naturalnum,notnull
     {locale ""}
@@ -53,7 +53,7 @@ template::list::create \
 	}
 	site_wide_p {
 	    display_template {
-		<if @trees.site_wide_p@ eq t> (#categories.SiteWide_tree#) </if>
+		<if @trees.site_wide_p;literal@ true> (#categories.SiteWide_tree#) </if>
 	    }
 	}
 	copy {

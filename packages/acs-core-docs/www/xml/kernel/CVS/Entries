@@ -1,0 +1,22 @@
+/apm-design.xml/1.14/Thu May 17 12:12:32 2018//Toacs-5-10
+/apm-requirements.xml/1.11/Wed Jul  4 10:20:42 2018//Toacs-5-10
+/bootstrap-acs.xml/1.7/Mon Jul 17 05:38:38 2006//Toacs-5-10
+/db-api.xml/1.12.2.1/Thu Feb 14 16:15:00 2019//Toacs-5-10
+/ext-auth-design.xml/1.13/Wed Jul  4 10:20:42 2018//Toacs-5-10
+/ext-auth.xml/1.8/Wed Apr 25 08:38:28 2018//Toacs-5-10
+/groups-design.xml/1.8/Mon Oct 27 16:39:32 2014//Toacs-5-10
+/groups-requirements.xml/1.8/Wed Apr 25 08:38:28 2018//Toacs-5-10
+/i18n-requirements.xml/1.12/Wed Jul  4 10:20:42 2018//Toacs-5-10
+/object-system-design.xml/1.11/Wed Jul  4 10:20:42 2018//Toacs-5-10
+/object-system-req.xml/1.8/Wed Apr 25 08:38:28 2018//Toacs-5-10
+/permissions-design.xml/1.8/Mon Aug  7 23:47:55 2017//Toacs-5-10
+/permissions-requirements.xml/1.6/Mon Jul 17 05:38:38 2006//Toacs-5-10
+/rp-design.xml/1.11/Mon Aug  7 23:47:55 2017//Toacs-5-10
+/rp-requirements.xml/1.7/Sun Aug  5 21:26:03 2018//Toacs-5-10
+/security-design.xml/1.7/Mon Jul 17 05:38:38 2006//Toacs-5-10
+/security-notes.xml/1.7/Mon Oct 27 16:39:32 2014//Toacs-5-10
+/security-requirements.xml/1.6/Mon Jul 17 05:38:38 2006//Toacs-5-10
+/subsites-design.xml/1.9/Sun Aug  5 21:26:03 2018//Toacs-5-10
+/subsites-requirements.xml/1.8/Thu May 17 14:42:03 2018//Toacs-5-10
+/tcl-doc.xml/1.7/Mon Jul 17 05:38:38 2006//Toacs-5-10
+D

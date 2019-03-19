@@ -5,7 +5,9 @@ if {![info exists subsite_link]} {
     set subsite_link "/"
 }
 
-if {![info exists title]}     { set title     [ad_system_name]   }
-if {![info exists doc(title)]}     { set doc(title)     $title   }
-if {[info exists context]}      { set context_bar [ad_context_bar {*}$context]}
+if {![info exists title]}      { set title       [ad_system_name]   }
+if {![info exists doc(title)]} { set doc(title)  $title   }
+if {[info exists context]}     { set context_bar [ad_context_bar {*}$context]}
 
+set subsite_url [subsite::get_element -element url]
+set subsite_name [lang::util::localize [subsite::get_element -element instance_name]]

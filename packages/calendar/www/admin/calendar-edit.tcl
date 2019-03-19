@@ -3,7 +3,7 @@ ad_page_contract {
     Add/Edit calendar
 
     @creation-date Dec 14, 2000
-    @cvs-id $Id: calendar-edit.tcl,v 1.5.2.1 2015/09/10 08:30:16 gustafn Exp $
+    @cvs-id $Id: calendar-edit.tcl,v 1.6 2017/08/07 23:48:05 gustafn Exp $
 } {
     {calendar_id:naturalnum,optional}
 }

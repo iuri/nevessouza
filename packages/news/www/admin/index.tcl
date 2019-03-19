@@ -6,11 +6,11 @@ ad_page_contract {
 
     @author Stefan Deusch (stefan@arsdigita.com)
     @creation-date 2000-12-20
-    @cvs-id $Id: index.tcl,v 1.8.16.1 2015/09/12 11:06:43 gustafn Exp $
+    @cvs-id $Id: index.tcl,v 1.11 2018/02/02 00:17:02 gustafn Exp $
 
 } {
-  {orderby: "item_id"}
-  {view: "published"}
+  {orderby:token "item_id"}
+  {view:word "published"}
   {column_names:array ""}
 } -properties {
     title:onevalue
@@ -39,7 +39,7 @@ set view_link [ad_dimensional $view_slider]
 set view_option [ad_dimensional_sql $view_slider]
 
 # define action on selected views, unapproved, archived, approved need restriction
-switch $view {
+switch -- $view {
     "unapproved" { 
         set select_actions "<option value=\"publish\">[_ news.Publish]" 
     }

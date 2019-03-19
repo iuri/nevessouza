@@ -3,8 +3,7 @@
 -- 
 -- @author Roel Canicula (roel@solutiongrove.com)
 -- @creation-date 2006-02-02
--- @arch-tag: 8de76e8b-1890-4c1f-947c-a40849ff685d
--- @cvs-id $Id: upgrade-5.2.0d5-5.2.0d6.sql,v 1.3 2014/10/27 16:41:47 victorg Exp $
+-- @cvs-id $Id: upgrade-5.2.0d5-5.2.0d6.sql,v 1.4 2018/08/15 16:53:10 gustafn Exp $
 --
 
 

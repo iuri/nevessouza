@@ -19,7 +19,7 @@ ad_page_contract {
     Revert the properties for a community
 
     @author <a href="mailto:arjun@openforce.net">arjun@openforce.net</a>
-    @version $Id: community-edit-revert.tcl,v 1.9.4.1 2015/09/11 11:40:42 gustafn Exp $
+    @cvs-id $Id: community-edit-revert.tcl,v 1.12 2018/06/29 17:27:19 hectorr Exp $
 
 } -query {
     {referer "community-edit"}
@@ -54,7 +54,7 @@ if { $item_id ne "" }  {
 }
 
 ad_returnredirect $referer
-
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

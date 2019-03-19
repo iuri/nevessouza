@@ -20,7 +20,7 @@
 -- distributed under the GNU GPL v2
 --
 -- @author Arjun Sanyal (arjun@openforce.net)
--- @version $Id: api-create.sql,v 1.44 2007/10/07 22:37:02 donb Exp $
+-- @version $Id: api-create.sql,v 1.45 2018/04/12 07:47:22 hectorr Exp $
 --
 
 create or replace package portal_page
@@ -251,7 +251,7 @@ as
 
         else
 
-            -- we have a portal as our template. copy it's theme, pages, layouts,
+            -- we have a portal as our template. copy its theme, pages, layouts,
             -- elements, and element params.
             select theme_id
             into v_theme_id

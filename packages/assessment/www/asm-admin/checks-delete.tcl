@@ -1,7 +1,7 @@
 ad_page_contract {
     This page deletes checks
     @author Anny Flores (annyflores@viaro.net) Viaro Networks
-    @date 2005-01-17
+    @creation-date 2005-01-17
 } {
     inter_item_check_id:naturalnum,multiple
     section_id:naturalnum,notnull
@@ -30,6 +30,8 @@ if {$by_item_p == 1} {
 } else {
     ad_returnredirect "checks-admin?section_id=$section_id&assessment_id=$assessment_id&by_item_p=$by_item_p"
 }
+ad_script_abort
+
 # Local variables:
 #    mode: tcl
 #    tcl-indent-level: 4

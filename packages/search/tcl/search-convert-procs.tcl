@@ -4,7 +4,7 @@ ad_library {
 
     @author Dirk Gomez <openacs@dirkgomez.de>
     @creation-date 2005-06-25
-    @cvs-id $Id: search-convert-procs.tcl,v 1.4.2.4 2017/03/27 10:41:51 gustafn Exp $
+    @cvs-id $Id: search-convert-procs.tcl,v 1.5 2017/08/07 23:48:29 gustafn Exp $
 }
 
 

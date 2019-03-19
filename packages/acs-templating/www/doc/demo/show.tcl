@@ -3,7 +3,7 @@ ad_page_contract {
 
     @author unknown
     @creation-date unknown
-    @cvs-id $Id: show.tcl,v 1.3.2.4 2016/05/28 09:51:22 gustafn Exp $
+    @cvs-id $Id: show.tcl,v 1.4 2017/08/07 23:48:02 gustafn Exp $
 } {
     file:trim,notnull
 } -validate {

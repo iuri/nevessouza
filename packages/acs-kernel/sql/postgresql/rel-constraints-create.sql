@@ -5,7 +5,7 @@
 --
 -- @author Oumi Mehrotra (oumi@arsdigita.com)
 -- @creation-date 2000-11-22
--- @cvs-id $Id: rel-constraints-create.sql,v 1.18 2011/07/07 10:46:02 gustafn Exp $
+-- @cvs-id $Id: rel-constraints-create.sql,v 1.20 2018/03/27 12:22:17 hectorr Exp $
 
 -- Copyright (C) 1999-2000 ArsDigita Corporation
 -- This is free software distributed under the terms of the GNU Public
@@ -450,7 +450,7 @@ select r.rel_type as viol_rel_type, r.rel_id as viol_rel_id,
 --
 --           What are all the segments in the system that a party has to 
 --           be in if the party were to be on side :rel_side of a relation
---           in segement :rel_segment?  
+--           in segment :rel_segment?  
 --
 --           We want not only the direct required_segments (which we could
 --           get from the rel_constraints table directly), but also the 
@@ -633,7 +633,7 @@ execute procedure rel_constraints_del_tr ();
 -- This view only returns segments S that have at least one rel_constraints row
 -- where rel_segment = S.  Segments that have no constraints defined on them
 -- can be said to have dependency_level=0, hence the outer join and nvl in the
--- example query above (see "Answer:").  I could have embeded that logic into
+-- example query above (see "Answer:").  I could have embedded that logic into
 -- this view, but that would unnecessarily degrade performance.
 --
 -- create view rc_segment_dependency_levels as

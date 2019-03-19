@@ -1,13 +1,10 @@
-# packages/dotlrn/www/member-email.tcl
-
 ad_page_contract {
     
     Email to send users when they join this community
     
     @author Roel Canicula (roel@solutiongrove.com)
     @creation-date 2004-09-05
-    @arch-tag: 64bff694-7a52-40ae-94f6-17d853356ccb
-    @cvs-id $Id: member-email.tcl,v 1.3.8.2 2016/09/12 11:16:15 gustafn Exp $
+    @cvs-id $Id: member-email.tcl,v 1.6 2018/08/15 16:43:08 gustafn Exp $
 } {
 
 } -properties {
@@ -18,7 +15,7 @@ ad_page_contract {
 set community_id [dotlrn_community::get_community_id]
 dotlrn::require_user_admin_community -community_id $community_id
 
-db_0or1row member_email { }
+db_0or1row member_email {}
 
 ad_form -name "member_email" -form {
     {email_id:key}
@@ -36,17 +33,17 @@ ad_form -name "member_email" -form {
 
 } -new_data {
     
-    db_dml new_email { }
+    db_dml new_email {}
 
 } -edit_request {
 
-    db_1row member_email_values { }
+    db_1row member_email_values {}
 
     set email [list $email ""]
 
 } -edit_data {
 
-    db_dml update_email { }
+    db_dml update_email {}
 
 } -after_submit {
     

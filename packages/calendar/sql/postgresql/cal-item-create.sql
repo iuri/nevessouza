@@ -2,17 +2,17 @@
 --
 -- @author Gary Jin (gjin@arsdigita.com)
 -- @creation-date Nov 17, 2000
--- @cvs-id $Id: cal-item-create.sql,v 1.14.2.1 2017/04/22 12:25:25 gustafn Exp $
+-- @cvs-id $Id: cal-item-create.sql,v 1.19 2018/04/30 13:54:38 gustafn Exp $
 --
 
 -- ported by Lilian Tong (tong@ebt.ee.usyd.edu.au)
 
 ---------------------------------------------------------- 
---  cal_item_ojbect 
+--  cal_item_object
 ----------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION inline_0 () RETURNS integer AS $$
-BEGIN
+create or replace function inline_0 () returns integer AS $$
+begin
     PERFORM acs_object_type__create_type (
 	'cal_item',		-- object_type
  	'Calendar Item',	-- pretty_name
@@ -26,15 +26,15 @@ BEGIN
 	null			-- name_method
 	);
     return 0;
-END;
+end;
 $$ LANGUAGE plpgsql;
 
 SELECT inline_0 (); 
 
 DROP FUNCTION inline_0 ();
 
-CREATE OR REPLACE FUNCTION inline_1 ()  RETURNS integer AS $$
-BEGIN
+create or replace function inline_1 ()  returns integer AS $$
+begin
     PERFORM acs_attribute__create_attribute (
 	'cal_item',		-- object_type
 	'on_which_calendar',	-- attribute_name
@@ -51,7 +51,7 @@ BEGIN
  	'f'			-- static_p (default)
  	);
     return 0;
-END;
+end;
 $$ LANGUAGE plpgsql;
 
 SELECT inline_1 ();
@@ -97,19 +97,53 @@ comment on column cal_items.on_which_calendar is '
 ';
 
 create index cal_items_on_which_calendar_idx on cal_items (on_which_calendar);
- 
+
+
+-------------------------------------------------------------
+CREATE TABLE cal_uids (
+        -- primary key
+        cal_uid          text 
+                         constraint cal_uid_pk 
+                         primary key,            
+        on_which_activity integer
+                          constraint cal_uid_fk
+                          not null
+                          references acs_activities
+                          on delete cascade,
+       ical_vars varchar
+);
+
+comment on table cal_uids is '
+        Table cal_uids maps a unique (external) key to an
+        activity. This is needed for syncing calendars via
+        ical; the field uid should go into acs_activities
+';
+
+
+comment on column cal_uids.cal_uid is '
+        Primary Key
+';
+
+comment on column cal_uids.on_which_activity is '
+        Reference to an activity, for which the key is used
+';
+
+comment on column cal_uids.ical_vars is '
+        List with attributes and values from external ical calendar programs
+';
+
+
 -------------------------------------------------------------
 -- create package cal_item
 -------------------------------------------------------------
 
 
 --
--- procedure cal_item__new/14
+-- procedure cal_item__new/15-16
 --
-select define_function_args('cal_item__new','cal_item_id;null,on_which_calendar;null,name,description,html_p;null,status_summary;null,timespan_id;null,activity_id;null,recurrence_id;null,object_type;"cal_item",context_id;null,creation_date;now(),creation_user;null,creation_ip;null');
+select define_function_args('cal_item__new','cal_item_id;null,on_which_calendar;null,name,description,html_p;null,status_summary;null,timespan_id;null,activity_id;null,recurrence_id;null,object_type;"cal_item",context_id;null,creation_date;now(),creation_user;null,creation_ip;null,package_id;null,location;null');
 
-
-CREATE OR REPLACE FUNCTION cal_item__new(
+create or replace function cal_item__new(
    new__cal_item_id integer,       -- default null
    new__on_which_calendar integer, -- default null
    new__name varchar,
@@ -122,40 +156,46 @@ CREATE OR REPLACE FUNCTION cal_item__new(
    new__object_type varchar,       -- default "cal_item"
    new__context_id integer,        -- default null
    new__creation_date timestamptz, -- default now()
-   new__creation_user              -- creation_date	acs_objects.creation_date%TYPE
-    integer,                       -- default null
-   new__creation_ip varchar        -- default null
+   new__creation_user integer,     -- acs_objects.creation_date%TYPE default null
+   new__creation_ip varchar,       -- default null
+   new__package_id integer,        -- default null
+   new__location varchar default NULL,
+   new__related_link_url varchar default NULL,
+   new__related_link_text varchar default NULL,
+   new__redirect_to_rel_link_p boolean default NULL
 
-) RETURNS integer AS $$
-DECLARE
-    v_cal_item_id		cal_items.cal_item_id%TYPE;
-
-BEGIN
+) returns integer AS $$
+declare
+    v_cal_item_id        cal_items.cal_item_id%TYPE;
+begin
     v_cal_item_id := acs_event__new(
-	new__cal_item_id,	-- event_id
-	new__name,		-- name
-	new__description,	-- description
-        new__html_p,		-- html_p
-        new__status_summary,    -- status_summary
-	new__timespan_id,	-- timespan_id
-	new__activity_id,	-- activity_id
-	new__recurrence_id,	-- recurrence_id
-	new__object_type,	-- object_type
-	new__creation_date,	-- creation_date
-	new__creation_user,	-- creation_user
-	new__creation_ip,	-- creation_ip
-	new__context_id		-- context_id
-	);
+        new__cal_item_id,    -- event_id
+    	new__name,           -- name
+        new__description,    -- description
+        new__html_p,         -- html_p
+        new__status_summary, -- status_summary
+        new__timespan_id,    -- timespan_id
+        new__activity_id,    -- activity_id
+        new__recurrence_id,  -- recurrence_id
+        new__object_type,    -- object_type
+        new__creation_date,  -- creation_date
+        new__creation_user,  -- creation_user
+        new__creation_ip,    -- creation_ip
+        new__context_id,     -- context_id
+        new__package_id,     -- package_id
+	new__location,        -- location
+	new__related_link_url,
+	new__related_link_text,
+	new__redirect_to_rel_link_p
+    );
 
-    insert into cal_items
-	(cal_item_id, on_which_calendar)
-    values          
-	(v_cal_item_id, new__on_which_calendar);
+    insert into cal_items (cal_item_id,   on_which_calendar)
+    values                (v_cal_item_id, new__on_which_calendar);
 
     return v_cal_item_id;
-
-END;
+end;
 $$ LANGUAGE plpgsql;
+
 
 
 ------------------------------------------------------------
@@ -167,23 +207,44 @@ $$ LANGUAGE plpgsql;
 --
 select define_function_args('cal_item__delete','cal_item_id');
 
-CREATE OR REPLACE FUNCTION cal_item__delete(
+create or replace function cal_item__delete(
    delete__cal_item_id integer
-) RETURNS integer AS $$
-DECLARE
-BEGIN
-	-- Erase the cal_item associated with the id
+) returns integer AS $$
+declare
+   v_activity_id   integer;
+   v_recurrence_id integer;
+begin
+
+    select activity_id, recurrence_id into v_activity_id, v_recurrence_id
+    from   acs_events
+    where  event_id = delete__cal_item_id;
+
+    -- Erase the cal_item associated with the id
     delete from 	cal_items
     where		cal_item_id = delete__cal_item_id;
- 	
-	-- Erase all the privileges
-    delete from 	acs_permissions
-    where		object_id = delete__cal_item_id;
+
+    -- Erase all individual permissions Should be handled via CASCADE;
+    -- not sure, why this is here.
+    --
+    -- delete from 	acs_permissions
+    -- where		object_id = delete__cal_item_id;
 
     PERFORM acs_event__delete(delete__cal_item_id);
 
+    IF NOT acs_event__instances_exist_p(v_recurrence_id) THEN
+        --
+	-- There are no more events for the activity, we can clean up
+	-- both, the activity and - if given - the recurrence.
+	--
+        PERFORM acs_activity__delete(v_activity_id);
+	
+        IF v_recurrence_id is not null THEN
+	    PERFORM recurrence__delete(v_recurrence_id);
+	END IF;
+    END IF;
+
     return 0;
-END;
+end;
 $$ LANGUAGE plpgsql;
 
 
@@ -193,12 +254,12 @@ $$ LANGUAGE plpgsql;
 --
 select define_function_args('cal_item__delete_all','recurrence_id');
 
-CREATE OR REPLACE FUNCTION cal_item__delete_all(
+create or replace function cal_item__delete_all(
    delete__recurrence_id integer
-) RETURNS integer AS $$
-DECLARE
+) returns integer AS $$
+declare
     v_event                             RECORD;
-BEGIN
+begin
     for v_event in 
 	select event_id from acs_events
         where recurrence_id= delete__recurrence_id
@@ -210,5 +271,47 @@ BEGIN
 
     return 0;
 
+end;
+$$ LANGUAGE plpgsql;
+
+
+
+
+select define_function_args('cal_uid__upsert','cal_uid,activity_id,ical_vars');
+
+CREATE OR REPLACE FUNCTION cal_uid__upsert(
+       p_cal_uid     text,
+       p_activity_id integer,
+       p_ical_vars   text
+) RETURNS void as
+$$
+BEGIN
+    LOOP
+    --
+    -- We might have duplicates on the activity_id and on the cal_uid,
+    -- both should be unique.
+    --
+    update cal_uids
+        set   ical_vars = p_ical_vars
+	where cal_uid = p_cal_uid;
+        IF found THEN
+            return;
+        END IF;
+        -- not there, so try to insert the key
+        -- if someone else inserts the same key concurrently,
+        -- we could get a unique-key failure
+        BEGIN
+	    -- Try to delete entry to avoid duplicates (might fail)
+	    delete from cal_uids where on_which_activity = p_activity_id;
+	    -- Insert value
+	    insert into cal_uids 
+                (cal_uid, on_which_activity, ical_vars)
+            values
+                (p_cal_uid, p_activity_id,  p_ical_vars);
+            RETURN;
+            EXCEPTION WHEN unique_violation THEN
+            -- Do nothing, and loop to try the UPDATE again.
+        END;
+    END LOOP;
 END;
 $$ LANGUAGE plpgsql;

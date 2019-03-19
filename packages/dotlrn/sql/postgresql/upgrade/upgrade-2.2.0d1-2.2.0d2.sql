@@ -3,8 +3,7 @@
 -- 
 -- @author Victor Guerra (guerra@galileo.edu)
 -- @creation-date 2005-10-26
--- @arch-tag: 8c6601f5-4351-4295-8d55-bb9f711e23f0
--- @cvs-id $Id: upgrade-2.2.0d1-2.2.0d2.sql,v 1.3.4.1 2017/04/21 20:45:16 gustafn Exp $
+-- @cvs-id $Id: upgrade-2.2.0d1-2.2.0d2.sql,v 1.5 2018/08/15 16:55:08 gustafn Exp $
 --
 
 -- Creating table for site templates                                                                                                           

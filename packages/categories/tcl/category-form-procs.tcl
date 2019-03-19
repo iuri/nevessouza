@@ -4,7 +4,7 @@ ad_library {
     @author Branimir Dolicki (bdolicki@branimir.com)
 
     @creation-date 06 February 2004
-    @cvs-id $Id: category-form-procs.tcl,v 1.7.2.1 2015/09/10 08:30:18 gustafn Exp $
+    @cvs-id $Id: category-form-procs.tcl,v 1.8 2017/08/07 23:48:05 gustafn Exp $
 }
 
 namespace eval category::ad_form {}

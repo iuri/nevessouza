@@ -19,13 +19,13 @@
 %>
 
 
-  <if @user_can_browse_p@ and @self_registration_p@>
+  <if @user_can_browse_p;literal@ true and @self_registration_p;literal@ true>
     <div style="text-align: right">
       <a href="@dotlrn_url@/manage-memberships" title="#dotlrn.lt_JoinDrop_a_Class_or_C#" class="button">#dotlrn.lt_JoinDrop_a_Class_or_C#</a>
     </div>
   </if>
 
-  <if @communities:rowcount@ gt 0>
+  <if @communities:rowcount;literal@ gt 0>
 
     <multiple name="communities">
       @communities.previous_type_ul_tags;noquote@

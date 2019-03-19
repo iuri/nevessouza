@@ -1,13 +1,10 @@
-# packages/dotlrn/tcl/test/community-procs.tcl
-
 ad_library {
     
     Automated tests for security hole found on cloned communities
     
     @author Roel Canicula (roel@solutiongrove.com)
     @creation-date 2006-02-08
-    @arch-tag: 0fe80025-b3ae-4e64-884c-4d8de30bdde5
-    @cvs-id $Id: community-procs.tcl,v 1.2.10.1 2015/09/11 11:40:40 gustafn Exp $
+    @cvs-id $Id: community-procs.tcl,v 1.5 2018/08/15 16:43:08 gustafn Exp $
 }
 
 aa_register_case -cats { api } \
@@ -21,7 +18,7 @@ aa_register_case -cats { api } \
 				      -pretty_name $community_name \
 				      -community_type "dotlrn_club"]
 		aa_log "created community: $community_name, $community_id"
-		aa_false "comunity_inherits_permissions" [permission::inherit_p \
+		aa_false "community_inherits_permissions" [permission::inherit_p \
 							      -object_id $community_id]
 
 		set clone_id [dotlrn_community::clone \

@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Caroline Meeks (cmeeks@mit.edu)
     @creation-date 2002-09-12
-    @version $Id: weblog-new.tcl,v 1.6.4.2 2017/04/21 20:45:16 gustafn Exp $
+    @cvs-id $Id: weblog-new.tcl,v 1.11 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {referer "control-panel"}
 } -validate {
@@ -34,7 +34,7 @@ set existing_forum_ids [db_list weblog_forum_id {select forum_id from forums_for
 if {![llength $existing_forum_ids]} {
     #No existing weblog lets make them one.
 
-    set user_name [acs_user::get_element -user_id $user_id -element name]
+    set user_name [person::name -person_id $user_id]
     set name "[_ dotlrn.lt_Web_Log_for_user_name]"
     set charter "[_ dotlrn.Public_Web_Log]"
     set presentation_type "weblog"
@@ -69,12 +69,7 @@ if {![llength $existing_forum_ids]} {
 }
 
 ad_returnredirect "[dotlrn_community::get_url -package_id $weblog_package_id]/forum-view?forum_id=$forum_id"
-
-
-
-
-
-
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

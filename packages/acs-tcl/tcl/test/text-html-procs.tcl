@@ -6,7 +6,10 @@ ad_library {
 }
 
 
-aa_register_case -cats {api smoke} ad_dom_sanitize_html {
+aa_register_case \
+    -cats {web api smoke} \
+    -procs {ad_dom_sanitize_html} \
+    ad_dom_sanitize_html {
 
     Test if it HTML sanitization works as expected
 
@@ -89,7 +92,7 @@ aa_register_case -cats {api smoke} ad_dom_sanitize_html {
                             -allowed_protocols *]
             set result [string trim $result]
             set test_result [string trim $test_result]
-            aa_true "$msg trivial?" [expr {$result eq $test_result}]
+            aa_true "$msg trivial?" {$result eq $test_result}
         }
 
     # Try test cases not allowing js
@@ -104,10 +107,10 @@ aa_register_case -cats {api smoke} ad_dom_sanitize_html {
                             -no_js]
             set result [string trim $result]
             set test_result [string trim $test_result]
-            aa_true "$msg no js?" [expr {$result eq $test_result}]
+            aa_true "$msg no js?" {$result eq $test_result}
         }
 
-    # Try test cases not allowing outer urls
+    # Try test cases not allowing outer URLs
     foreach \
         msg          $test_msgs \
         test_case    $test_cases \
@@ -119,7 +122,7 @@ aa_register_case -cats {api smoke} ad_dom_sanitize_html {
                             -no_outer_urls]
             set result [string trim $result]
             set test_result [string trim $test_result]
-            aa_true "$msg no outer urls?" [expr {$result eq $test_result}]
+            aa_true "$msg no outer URLs?" {$result eq $test_result}
         }
 
     # Try test cases fixing markup
@@ -134,12 +137,13 @@ aa_register_case -cats {api smoke} ad_dom_sanitize_html {
                             -fix]
             set result [string trim $result]
             set test_result [string trim $test_result]
-            aa_true "$msg fixing markup?" [expr {$result eq $test_result}]
+            aa_true "$msg fixing markup?" {$result eq $test_result}
         }
+    
+    set d [acs::test::http /]
+    aa_equals "Start page of current server: Status code valid" [dict get $d status] 200
 
-    aa_log "trying to get start page from [util::configured_location]/"
-    array set r [util::http::get -url [util::configured_location]/]
-    set test_case $r(page)
+    set test_case [dict get $d body]
 
     set msg "Test case 6: in our index page is removing tags ok"
     set unallowed_tags {div style script}
@@ -201,12 +205,115 @@ aa_register_case -cats {api smoke} ad_dom_sanitize_html {
                      -allowed_protocols * \
                      -no_outer_urls \
                      -validate]
-    aa_true "$msg with validate?" $valid_p    
+    aa_true "$msg with validate?" $valid_p
     aa_false $msg? [regexp {<([a-z]\w*)\s+[^>]*(href|src|content|action)="(http|https|//):.*"[^>]*>} $result]
 
 }
 
+aa_register_case \
+    -cats {api smoke} \
+    -procs {ad_js_escape} \
+    ad_js_escape {
 
+    Test if ad_js_escape is working as expected
+
+} {
+    set string "\"\"\"\"\"\'"
+    aa_true " - String of only quotes " {[ad_js_escape $string] eq {\"\"\"\"\"\'}}
+
+    set string   "\n\r\t  \n\n\n \t\t \b \v\v\v  \f"
+    set expected {\n\r\t  \n\n\n \t\t \b \v\v\v  \f}
+    
+    aa_true " - String of only escape sequences " {[ad_js_escape $string] eq $expected}
+
+    set string   "\n\r\t  \na word  \'\n\n \t\"\" aaaaa\' \'\'\'\b \v\v\v  \f"
+    set expected {\n\r\t  \na word  \'\n\n \t\"\" aaaaa\' \'\'\'\b \v\v\v  \f}
+
+    ns_log notice EXP:<$expected>
+    ns_log notice GOT:<[ad_js_escape $string]>
+
+    aa_true " - String of escape sequences, quotes and text (with some quotes already escaped)" \
+        {[ad_js_escape $string] eq $expected}
+}
+
+aa_register_case \
+    -cats {api smoke} \
+    -procs {ad_pad} \
+    ad_pad {
+
+    Test if ad_pad is working as expected
+
+} {
+    
+    aa_section "Testing left pad"
+
+    set string [ad_generate_random_string]
+    set length [expr {int(rand()*1000)}]
+    set padstring [ad_generate_random_string]
+
+    aa_log " - string: $string"
+    aa_log " - length: $length"
+    aa_log " - padstring: $padstring"
+    
+    set result [ad_pad -left $string $length $padstring]
+
+    aa_true " - Result is exactly $length long " {[string length $result] == $length}
+    aa_true " - String is at right end " [regexp "^.*${string}\$" $result]
+
+    aa_section "Testing right pad"
+
+    set string [ad_generate_random_string]
+    set length [expr {int(rand()*1000)}]
+    set padstring [ad_generate_random_string]
+
+    aa_log " - string: $string"
+    aa_log " - length: $length"
+    aa_log " - padstring: $padstring"
+    
+    set result [ad_pad -right $string $length $padstring]
+
+    aa_true " - Result is exactly $length long " {[string length $result] == $length}
+    aa_true " - String is at left end " [regexp "^${string}.*\$" $result]
+    
+}
+
+aa_register_case \
+    -cats {api smoke} \
+    -procs {ad_html_qualify_links} \
+    ad_html_qualify_links {
+
+        Test if ad_html_qualify_links is working as expected.
+        
+        @author Gustaf Neumann
+} {
+    
+    aa_section "Testing without path"
+
+    set rURL "relative/r.txt"
+    set aURL "/dotlrn/clubs/club1/mytext.docx"
+    set fqURL "https://openacs.org/doc/"
+    
+    set html [subst {<div><div class="table">
+        A relative URL <a href="$rURL">relative/r.txt</a>
+        An absolute URL <a href="$aURL">mytext.docx</a>
+        A fully qualified URL <a href="$fqURL">Documentation</a>        
+    }]
+    set result [ad_html_qualify_links -location {http://myhost/} $html]
+
+    aa_true "result contains relative URL NOT expanded" {[string match *href=\"$rURL* $result]}
+    aa_true "result contains absolute URL location-prefixed" {[string match *http://myhost$aURL* $result]}
+    aa_true "result contains fully qualified URL" {[string match *$fqURL* $result]}
+
+    aa_section "Testing with path"
+
+    set pretty_link "/dotlrn/clubs/club2/uploads/mytext.docx"
+    set result [ad_html_qualify_links -location {http://myhost/} -path /somepath $html]
+
+    aa_true "result contains relative URL expanded" {[string match */somepath/$rURL* $result]}
+    aa_true "result contains absolute URL location-prefixed" {[string match *http://myhost$aURL* $result]}
+    aa_true "result contains fully qualified URL" {[string match *$fqURL* $result]}
+
+}
 
 # Local variables:
 #    mode: tcl

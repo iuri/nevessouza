@@ -2,7 +2,7 @@ ad_page_contract {
   @author Guenter Ernst guenter.ernst@wu-wien.ac.at
   @author Gustaf Neumann neumann@wu-wien.ac.at
   @creation-date 13.10.2005
-  @cvs-id $Id: file-selector.tcl,v 1.1.2.5 2016/11/17 16:19:57 antoniop Exp $
+  @cvs-id $Id: file-selector.tcl,v 1.4 2018/06/12 09:21:11 gustafn Exp $
 } {	
   {fs_package_id:naturalnum,notnull,optional}
   {folder_id:naturalnum,optional}
@@ -159,7 +159,7 @@ template::list::create \
       name {
 	label "[_ file-storage.Name]"
 	display_template {
-	  <if @contents.folder_p@ eq 0>
+	  <if @contents.folder_p;literal@ false>
 	  <input type="radio" name="linktarget" value="@contents.object_id@" 
             id="oi@contents.object_id@" />
 	  <input type="hidden" name="@contents.object_id@_file_url" 
@@ -242,9 +242,9 @@ db_multirow -extend {
   if {$title eq ""} {
     set title $name
   }
-  set file_upload_name [fs::remove_special_file_system_characters \
-			    -string $file_upload_name]
-  
+  set file_upload_name [ad_sanitize_filename \
+                            -tolower \
+                            $file_upload_name]
   if { $content_size ne "" } {
     incr content_size_total $content_size
   }

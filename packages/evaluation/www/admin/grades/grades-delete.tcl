@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author jopez@galileo.edu
     @creation-date Mar 2004
-    @cvs-id $Id: grades-delete.tcl,v 1.11.2.2 2016/05/20 20:30:12 gustafn Exp $
+    @cvs-id $Id: grades-delete.tcl,v 1.12 2017/08/07 23:48:10 gustafn Exp $
 
 } {
 	grade_id:naturalnum,notnull

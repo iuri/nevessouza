@@ -6,7 +6,7 @@
 -- @author Bruno Mattarollo (bruno.mattarollo@ams.greenpeace.org)
 --
 -- @creation-date 2000-09-10
--- @cvs-id $Id: message-catalog.sql,v 1.14.14.1 2017/04/21 16:06:05 gustafn Exp $
+-- @cvs-id $Id: message-catalog.sql,v 1.15 2017/08/07 23:47:56 gustafn Exp $
 --
 
 create table lang_user_timezone (

@@ -2,8 +2,7 @@ ad_library {
 
     Automated functions for acs-admin
 
-    @cvs-id $Id: apm-admin-init.tcl,v 1.3.2.2 2016/01/02 13:50:15 gustafn Exp $
-
+    @cvs-id $Id: apm-admin-init.tcl,v 1.5 2018/08/15 16:59:53 gustafn Exp $
 }
 
 # Only run this if this is openacs.org
@@ -59,10 +58,6 @@ if {0} {
     }
 
 }
-
-
-
-
 
 # Local variables:
 #    mode: tcl

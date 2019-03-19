@@ -3,8 +3,7 @@
 <!--  -->
 <!-- @author Victor Guerra (guerra@galileo.edu) -->
 <!-- @creation-date 2005-05-20 -->
-<!-- @arch-tag: 492df596-a892-4f9a-bea4-31850ba161aa -->
-<!-- @cvs-id $Id: add-edit-site-template.xql,v 1.2 2006/08/08 21:26:28 donb Exp $ -->
+<!-- @cvs-id $Id: add-edit-site-template.xql,v 1.3 2018/08/15 17:02:02 gustafn Exp $ -->
 
 <queryset>
   <fullquery name="select_site_template_info">

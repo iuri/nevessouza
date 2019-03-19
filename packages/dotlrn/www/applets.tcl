@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-01-19
-    @version $Id: applets.tcl,v 1.19.4.1 2015/09/11 11:40:41 gustafn Exp $
+    @cvs-id $Id: applets.tcl,v 1.21 2018/06/29 17:27:19 hectorr Exp $
 } -query {
 }
 

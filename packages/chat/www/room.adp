@@ -3,7 +3,7 @@
 
      @author David Dao (ddao@arsdigita.com)
      @creation-date November 13, 2000
-     @cvs-id $Id: room.adp,v 1.9.4.4 2017/01/18 18:24:23 gustafn Exp $
+     @cvs-id $Id: room.adp,v 1.11.2.1 2019/02/14 16:15:01 gustafn Exp $
 -->
 <master>
 <property name="context">@context_bar;literal@</property>
@@ -72,4 +72,27 @@
 <h2>#chat.Transcripts#</h2>
 <if @transcript_create_p;literal@ true>
 <include src="/packages/chat/lib/transcripts" room_id=@room_id@>
+</if>
+
+<if @room_edit_p;literal@ true>
+  <h2>XoWiki Includelet</h2>
+  <span id="xowiki-includelet">
+    <input id="xowiki-includelet-code"
+           type="text"
+           size="@xowiki_includelet_size;literal@"
+           readonly="true"
+           value="@xowiki_includelet_code@">
+  </span>
+  <script nonce="@::__csp_nonce;literal@">
+    if (document.execCommand != undefined) {
+        var button = document.createElement("button");
+        button.textContent = "#xowiki.menu-Clipboard-Copy#";
+        button.addEventListener("click", function () {
+           document.getElementById("xowiki-includelet-code").select();
+           document.execCommand("copy");
+           this.textContent = "#acs-admin.Success#!";
+        });
+        document.getElementById("xowiki-includelet").appendChild(button);
+    }
+  </script>
 </if>

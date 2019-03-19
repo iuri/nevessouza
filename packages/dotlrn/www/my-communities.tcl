@@ -19,7 +19,7 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date Dec 07, 2001
-    @version $Id: my-communities.tcl,v 1.11.4.1 2015/09/11 11:40:45 gustafn Exp $
+    @cvs-id $Id: my-communities.tcl,v 1.13 2018/06/29 17:27:19 hectorr Exp $
 } -query {
 } -properties {
     communities:multirow

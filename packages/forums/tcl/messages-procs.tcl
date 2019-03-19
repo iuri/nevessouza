@@ -4,7 +4,7 @@ ad_library {
 
     @creation-date 2002-05-20
     @author Ben Adida <ben@openforce.biz>
-    @cvs-id $Id: messages-procs.tcl,v 1.46.2.4 2017/04/27 12:12:53 hectorr Exp $
+    @cvs-id $Id: messages-procs.tcl,v 1.59 2018/10/23 20:18:41 gustafn Exp $
 
 }
 
@@ -20,7 +20,7 @@ ad_proc -public forum::message::new {
     {-user_id ""}
     -no_callback:boolean
 } {
-    create a new message
+    Create a new message.
 } {
     # If no user_id is provided, we set it
     # to the currently logged-in user
@@ -52,45 +52,56 @@ ad_proc -public forum::message::new {
     }  on_error {
 
         db_abort_transaction
-        
+
         # Check to see if the message with a message_id matching the
         # message_id argument was in the database before calling
         # this procedure.  If so, the error is due to a double click 
         # and we should continue without returning an error.
-        
+
         if {$original_message_id ne ""} {
-    	# The was a non-null message_id argument
+            # The was a non-null message_id argument
             if {[db_string message_exists_p {}]} {
-    	    return $message_id
+                return $message_id
             } else {
                 # OK - it wasn't a simple double-click, so bomb
                 ad_return_error \
                     "OACS Internal Error" \
-                    "Error in forums::message::new - $errmsg"
+                    "Error in forum::message::new - $errmsg"
+                ad_script_abort
             }
         }
     }
 
+    forum::flush_cache \
+        -forum_id $forum_id    
+
     return $message_id
 }
-    
+
 ad_proc -public forum::message::do_notifications {
     {-message_id:required}
     {-user_id ""}
+} {
+    Perform the notifications.
 } {
     # Select all the important information
     forum::message::get -message_id $message_id -array message
 
     set forum_id $message(forum_id)
-    set url "[ad_url][db_string select_forums_package_url {}]"
+    set package_id [db_string get_package_id {
+        select package_id from forums_forums
+        where forum_id = :forum_id}]
+    set url [lindex [site_node::get_url_from_object_id -object_id $package_id] 0]
+    set url [ad_url]$url
 
     set useScreenNameP [parameter::get -parameter "UseScreenNameP" -default 0]
-    if {($useScreenNameP eq 0) && ($user_id ne 0)} {
+    if {$useScreenNameP eq 0 && $user_id ne 0} {
         if { $user_id eq "" } {
             set user_id $message(user_id)
         }
     } else {
-        set user_id [party::get_by_email -email [parameter::get -package_id [ad_acs_kernel_id] -parameter HostAdministrator]]
+        set user_id [party::get_by_email \
+                         -email [ad_host_administrator]]
     }
     set notif_user $user_id
 
@@ -102,7 +113,7 @@ ad_proc -public forum::message::do_notifications {
     set SecureOutboundP [parameter::get -parameter "SecureOutboundP" -default 0]
     if { $SecureOutboundP && [ns_conn isconnected] && [security::secure_conn_p] } {
 	set href ${url}message-view?message_id=$message(root_message_id)
-        set message_html "<p>#forums.Message_content_witheld# #forums.To_view_message_follow_link# <a href=\"[ns_quotehtml $href]\">[ns_quotehtml $href]</a></p>"
+        set message_html "<p>#forums.Message_content_withheld# #forums.To_view_message_follow_link# <a href=\"[ns_quotehtml $href]\">[ns_quotehtml $href]</a></p>"
         set message_text [ad_html_text_convert -from text/html -to text/plain -- $message_html]
     }
 
@@ -116,6 +127,16 @@ ad_proc -public forum::message::do_notifications {
     }
     append html_version "#forums.Posted#: $message(posting_date)<br>"
     append html_version "\n<br>\n"
+    #
+    # The resulting HTML messages is sent in total by
+    # notifications::send through [lang::util::localize...].  In case
+    # a forums message contains something looking like a localized
+    # message key, it will be substituted. One rough attempt is to add
+    # a zero width space after the "#" signs to make the regular
+    # expression searching for the message keys fail....
+    #
+    regsub -all "#" $message_html "#\\&#8203;" message_html
+    
     append html_version $message_html
     append html_version "<p>   "
 
@@ -197,17 +218,17 @@ ad_proc -public forum::message::set_format {
     {-message_id:required}
     {-format:required}
 } {
-    set whether a message is HTML or not
+    Set whether a message is HTML or not.
 } {
     # Straight update to the DB
-    db_dml update_message_format
+    db_dml update_message_format {}
 }
 
 ad_proc -public forum::message::get {
     {-message_id:required}
     {-array:required}
 } {
-    get the fields for a message
+    Get the fields for a message.
 } {
     # Select the info into the upvar'ed Tcl Array
     upvar $array row
@@ -223,6 +244,14 @@ ad_proc -public forum::message::get {
             array unset row
         }
     } else {
+        set user [acs_user::get -user_id $row(user_id)]
+        set row(user_name)   [dict get $user name]
+        set row(user_email)  [dict get $user email]
+        set row(screen_name) [dict get $user screen_name]
+        
+        forum::get -forum_id $row(forum_id) -array forum
+        set row(forum_name) $forum(name)
+        
         # Convert to user's date/time format
         set row(posting_date_ansi) [lc_time_system_to_conn $row(posting_date_ansi)]
         set row(posting_date_pretty) [lc_time_fmt $row(posting_date_ansi) "%x %X"]
@@ -233,19 +262,23 @@ ad_proc -private forum::message::set_state {
     {-message_id:required}
     {-state:required}
 } {
-    Set the new state for a message
-    Usually used for approval
+    Set the new state for a message.<br>
+    Usually used for approval.
 } {
     set var_list [list \
         [list message_id $message_id] \
         [list state $state]]
     package_exec_plsql -var_list $var_list forums_message set_state
+    # flush the forum cache to update the thread count
+    forum::flush_cache -forum_id [db_string get_forum {
+        select forum_id from forums_messages where message_id = :message_id
+    }]
 }
 
 ad_proc -public forum::message::reject {
     {-message_id:required}
 } {
-    Reject a message
+    Reject a message.
 } {
     set_state -message_id $message_id -state rejected
 }
@@ -253,7 +286,7 @@ ad_proc -public forum::message::reject {
 ad_proc -public forum::message::approve {
     {-message_id:required}
 } {
-    approve a message
+    Approve a message.
 } {
     db_transaction {
         set_state -message_id $message_id -state approved
@@ -265,16 +298,18 @@ ad_proc -public forum::message::delete {
     {-message_id:required}
     -no_callback:boolean
 } {
-    delete a message and obviously all of its descendents
+    Delete a message and obviously all of its descendents.
 } {
     db_transaction {
 	if {!$no_callback_p} {
 	    callback forum::message_delete -package_id [ad_conn package_id] -message_id $message_id
 	}
 
-	if { [forum::use_ReadingInfo_p] 
-	     && [db_string is_root "select parent_id from forums_messages where message_id = :message_id" -default ""] eq ""
-	 } {
+        forum::message::get -message_id $message_id -array msg
+        set forum_id  $msg(forum_id)
+        set is_root_p [expr {$msg(parent_id) eq ""}]
+
+	if { $is_root_p && [forum::use_ReadingInfo_p] } {
 	    set db_antwort [db_string forums_reading_info__remove_msg {
 		select forums_reading_info__remove_msg (:message_id);
 	    }]
@@ -286,14 +321,17 @@ ad_proc -public forum::message::delete {
         # Remove the message
         set var_list [list [list message_id $message_id]]
         package_exec_plsql -var_list $var_list forums_message delete_thread
+
+        # flush the forum cache to update the thread count
+        forum::flush_cache -forum_id $forum_id
     }
 }
 
 ad_proc -public forum::message::close {
     {-message_id:required}
 } {
-    close a thread
-    This is not exactly a cheap operation if the thread is long
+    Close a thread.<br>
+    This is not exactly a cheap operation if the thread is long.
 } {
     db_exec_plsql thread_close {}
 }
@@ -301,16 +339,16 @@ ad_proc -public forum::message::close {
 ad_proc -public forum::message::open {
     {-message_id:required}
 } {
-    reopen a thread
-    This is not exactly a cheap operation if the thread is long
+    Reopen a thread.<br>
+    This is not exactly a cheap operation if the thread is long.
 } {
     db_exec_plsql thread_open {}
 }
-    
+
 ad_proc -public forum::message::get_attachments {
     {-message_id:required}
 } {
-    get the attachments for a message
+    Get the attachments for a message.
 } {
     # If attachments aren't enabled, then we stop
     if {![forum::attachments_enabled_p]} {
@@ -324,9 +362,9 @@ ad_proc -public forum::message::subject_sort_filter {
     -forum_id:required
     -order_by:required
 } {
-    Return a piece of HTML for toggling the sort order of threads (subjects)
-    in a forum. The user can either sort by the first postings in subjects
-    (the creation date of the subjects) or the last one.
+    @return A piece of HTML for toggling the sort order of threads (subjects)
+            in a forum. The user can either sort by the first postings in
+            subjects (the creation date of the subjects) or the last one.
 
     @author Peter Marklund
 } {
@@ -355,7 +393,7 @@ ad_proc -public forum::message::initial_message {
     {-parent {}}
     {-message:required}
 } {
-    Create an array with values initialised for a new message.
+    Create an array with values initialized for a new message.
 } {
     upvar $message init_msg
 

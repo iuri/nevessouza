@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2001-10-05
-    @version $Id: class-term-change.tcl,v 1.2.10.1 2015/09/11 11:40:41 gustafn Exp $
+    @cvs-id $Id: class-term-change.tcl,v 1.5 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {referer "one-community-admin"}
     {pretty_name ""}
@@ -52,6 +52,7 @@ ad_form -name change_class_term -form {
     db_dml update_term_info "update dotlrn_class_instances set term_id = :term_id where class_instance_id = :class_instance_id"
     
     ad_returnredirect "$referer"
+    ad_script_abort
 }
 
 set class_name $pretty_name

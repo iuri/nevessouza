@@ -1,6 +1,6 @@
-/bulk-mail-init.tcl/1.4.8.1/Thu Sep 10 08:30:13 2015//Topenacs-5-9-compat
-/bulk-mail-procs-oracle.xql/1.3/Thu Aug 28 09:41:53 2003//Topenacs-5-9-compat
-/bulk-mail-procs-postgresql.xql/1.4/Fri Oct 24 13:27:18 2003//Topenacs-5-9-compat
-/bulk-mail-procs.tcl/1.12.2.4/Fri Jun 30 17:41:28 2017//Topenacs-5-9-compat
-/bulk-mail-procs.xql/1.2/Thu Aug 28 09:41:53 2003//Topenacs-5-9-compat
+/bulk-mail-init.tcl/1.5/Mon Aug  7 23:48:04 2017//Toacs-5-10
+/bulk-mail-procs-oracle.xql/1.4/Tue Nov 21 13:14:58 2017//Toacs-5-10
+/bulk-mail-procs-postgresql.xql/1.5/Tue Nov 21 13:14:58 2017//Toacs-5-10
+/bulk-mail-procs.tcl/1.18/Wed May  9 15:33:29 2018//Toacs-5-10
+/bulk-mail-procs.xql/1.3/Tue Nov 21 13:14:58 2017//Toacs-5-10
 D

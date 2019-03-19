@@ -7,7 +7,7 @@ ad_page_contract {
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2005-05-15
     @arch-tag: 1aaf171d-3d71-4e10-86e8-66731a80a1a5
-    @cvs-id $Id: item-add-swcat.tcl,v 1.4.2.1 2015/09/10 08:28:04 gustafn Exp $
+    @cvs-id $Id: item-add-swcat.tcl,v 1.5 2017/08/07 23:48:04 gustafn Exp $
 } {
     assessment_id:naturalnum,notnull
     section_id:naturalnum,notnull

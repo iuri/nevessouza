@@ -3,7 +3,7 @@ ad_page_contract {
     Let user decide from which category tree to add a category link.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: category-link-add.tcl,v 1.7 2018/06/29 17:27:18 hectorr Exp $
 } {
     category_id:naturalnum,notnull
     tree_id:naturalnum,notnull

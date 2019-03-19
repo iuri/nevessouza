@@ -4,17 +4,18 @@ ad_page_contract {
     makes heavy use of procedures in /tcl/ad-user-contributions-summary.tcl
     modified by mobin January 27, 2000 5:08 am
     
-    @cvs-id $Id: one.tcl,v 1.17.2.6 2017/04/21 15:17:23 gustafn Exp $
+    @cvs-id $Id: one.tcl,v 1.20 2018/06/27 16:50:00 antoniop Exp $
 } {
     user_id:naturalnum,notnull
 }
 
-with_catch errmsg {
-    acs_user::get -user_id $user_id -array user_info
-} {
+
+acs_user::get -user_id $user_id -array user_info
+if {[array size user_info] == 0} {
     ad_return_complaint 1 "<li>We couldn't find user #$user_id; perhaps this person was deleted?"
-    return
+    ad_script_abort
 }
+
 set user_info(last_visit_pretty) [lc_time_fmt $user_info(last_visit_ansi) "%q %X"]
 set user_info(creation_date_pretty) [lc_time_fmt $user_info(creation_date) "%q"]
 set user_info(url) [acs_community_member_url -user_id $user_id]

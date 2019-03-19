@@ -18,7 +18,7 @@ ad_library {
     Procedures to support the static ADMIN portlet
 
     @author arjun@openforce.net
-    @cvs-id $Id: static-admin-portlet-procs.tcl,v 1.15.20.1 2015/09/12 19:00:46 gustafn Exp $
+    @cvs-id $Id: static-admin-portlet-procs.tcl,v 1.16.2.1 2019/02/14 16:15:01 gustafn Exp $
 }
 
 namespace eval static_admin_portlet {
@@ -30,6 +30,8 @@ namespace eval static_admin_portlet {
 
     ad_proc -public get_pretty_name {
     } {
+        Get pretty name.
+    } {
         return [parameter::get_from_package_key -package_key [my_package_key] -parameter static_admin_portlet_pretty_name]
     }
 
@@ -40,6 +42,8 @@ namespace eval static_admin_portlet {
 
     ad_proc -public link {
     } {
+        Get link. This is currently empty.
+    } {
 	return ""
     }
 
@@ -47,7 +51,7 @@ namespace eval static_admin_portlet {
 	{-portal_id:required}
 	{-package_id:required}
     } {
-	Adds a static admin PE to the given portal
+	Adds a static admin PE to the given portal.
     } {
         return [portal::add_element_parameters \
             -portal_id $portal_id \
@@ -61,7 +65,7 @@ namespace eval static_admin_portlet {
     ad_proc -public remove_self_from_page {
 	{-portal_id:required}
     } {
-	Removes static PE from the given page
+	Removes static PE from the given page.
     } {
         # This is easy since there's one and only one instace_id
         portal::remove_element \
@@ -72,7 +76,7 @@ namespace eval static_admin_portlet {
     ad_proc -public show {
 	cf
     } {
-	Display the PE
+	Display the PE.
     } {
         portal::show_proc_helper \
             -package_key [my_package_key] \

@@ -6,8 +6,8 @@ ad_page_contract {
     @param  section_id integer specifying section
 
     @author timo@timohentschel.de
-    @date   2004-12-08
-    @cvs-id $Id: 
+    @creation-date   2004-12-08
+    @cvs-id $Id: catalog-search.tcl,v 1.7 2018/06/29 17:27:18 hectorr Exp $ 
 } {
     assessment_id:naturalnum,notnull
     section_id:naturalnum,optional

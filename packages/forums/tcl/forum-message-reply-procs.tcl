@@ -4,29 +4,35 @@ ad_library {
 
     @creation-date 2002-05-17
     @author Ben Adida <ben@openforce.biz>
-    @cvs-id $Id: forum-message-reply-procs.tcl,v 1.2.20.1 2015/09/12 11:06:25 gustafn Exp $
+    @cvs-id $Id: forum-message-reply-procs.tcl,v 1.5 2018/07/10 10:32:02 antoniop Exp $
 
 }
 
 namespace eval forum::message::notification {
 
-    ad_proc -public get_url {
+    ad_proc -deprecated -public get_url {
         object_id
     } {
+        NotificationType.GetURL Service Contract implementation..<br>
+        This proc was always empty and is currently not used anywhere
+        in upstream code. Is most likely superseded by its
+        forum::notification counterpart.
 
-    }
+        @see forum::notification::get_url
+    } -
 
-    ad_proc -public process_reply {
+    ad_proc -deprecated -public process_reply {
         reply_id
     } {
+        NotificationType.ProcessReply Service Contract implementation.<br>
+        This proc was always empty and is currently not used anywhere
+        in upstream code. Is most likely superseded by its
+        forum::notification counterpart.
 
-    }
-        
+        @see forum::notification::process_reply
+    } -
     
 }
-
-
-
 
 # Local variables:
 #    mode: tcl

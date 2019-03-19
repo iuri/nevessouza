@@ -3,7 +3,7 @@ ad_page_contract {
     Changes the parent category of a category.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: category-parent-change.tcl,v 1.8 2018/06/29 17:27:18 hectorr Exp $
 } {
     tree_id:naturalnum,notnull
     category_id:naturalnum,notnull

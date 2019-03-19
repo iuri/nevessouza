@@ -5,7 +5,7 @@
 --
 -- @author Jon Salz (jsalz@mit.edu)
 -- @creation-date 12 Aug 2000
--- @cvs-id $Id: utilities-create.sql,v 1.8.2.3 2017/10/05 10:25:28 antoniop Exp $
+-- @cvs-id $Id: utilities-create.sql,v 1.13 2019/01/29 11:30:22 gustafn Exp $
 --
 
 
@@ -80,22 +80,23 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- added
-select define_function_args('util__table_column_exists','t_name,c_name');
+
 
 --
 -- procedure util__table_column_exists/1
 --
+select define_function_args('util__table_column_exists','p_table,p_column');
+
 CREATE OR REPLACE FUNCTION util__table_column_exists(
-   t_name  text,
-   c_name text
+   p_table  text,
+   p_column text
 ) RETURNS boolean AS $$
 DECLARE
 BEGIN
       return exists (
        select 1 from information_schema.columns c
-         where c.table_name  = t_name
-           and c.column_name = c_name);
+         where c.table_name  = lower(p_table)
+           and c.column_name = lower(p_column));
 END;
 $$ LANGUAGE plpgsql;
 
@@ -164,10 +165,10 @@ BEGIN
         and ccu.table_catalog = kcu.table_catalog
         and ccu.table_schema = kcu.table_schema
         and tc.constraint_type = 'FOREIGN KEY'
-        and tc.table_name   = p_table
-        and kcu.column_name = p_column
-        and ccu.table_name  = p_reftable
-        and ccu.column_name = p_refcolumn);
+        and tc.table_name   = lower(p_table)
+        and kcu.column_name = lower(p_column)
+        and ccu.table_name  = lower(p_reftable)
+        and ccu.column_name = lower(p_refcolumn));
 END;
 $$ LANGUAGE plpgsql;
 
@@ -194,8 +195,8 @@ BEGIN
         and tc.table_catalog      = kcu.table_catalog
         and tc.table_schema       = kcu.table_schema
         and tc.constraint_type    = 'UNIQUE'
-        and tc.table_name   = p_table
-        and kcu.column_name = p_column
+        and tc.table_name   = lower(p_table)
+        and kcu.column_name = lower(p_column)
 	and (not p_single_p or (
 	   -- this to ensure the constraint involves only one
 	   -- column
@@ -229,8 +230,8 @@ BEGIN
         and tc.table_catalog      = kcu.table_catalog
         and tc.table_schema       = kcu.table_schema
         and tc.constraint_type    = 'PRIMARY KEY'
-        and tc.table_name   = p_table
-        and kcu.column_name = p_column
+        and tc.table_name   = lower(p_table)
+        and kcu.column_name = lower(p_column)
 	and (not p_single_p or (
 	   -- this to ensure the constraint involves only one
 	   -- column
@@ -258,8 +259,8 @@ BEGIN
         coalesce((
 	select is_nullable = 'NO'
 	  from information_schema.columns
-	 where table_name  = p_table
-	   and column_name = p_column), false));
+	 where table_name  = lower(p_table)
+	   and column_name = lower(p_column)), false));
 END;
 $$ LANGUAGE plpgsql;
 
@@ -278,8 +279,8 @@ BEGIN
       return (
 	select column_default
 	  from information_schema.columns
-	 where table_name  = p_table
-	   and column_name = p_column);
+	 where table_name  = lower(p_table)
+	   and column_name = lower(p_column));
 END;
 $$ LANGUAGE plpgsql;
 

@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author Gary Jin (gjin@arsdigita.com)
     @creation-date Dec 14, 2000
-    @cvs-id $Id: index.tcl,v 1.8.8.1 2015/09/10 08:30:16 gustafn Exp $
+    @cvs-id $Id: index.tcl,v 1.11 2018/05/09 15:33:29 hectorr Exp $
 }
 
 # find out the user_id 

@@ -29,7 +29,7 @@
       href="/api-doc/proc-view?proc=aa%5fregister%5fcase">more info</a>)
                 </div>
 
-<p><if @stress@ eq 1>                
+<p><if @stress;literal@ true>                
       <a href="index?stress=0&amp;security_risk=@security_risk@&amp;by_package_key=@by_package_key@&amp;view_by=@view_by@&amp;by_category=@by_category@&amp;quiet=0" style="padding-top: 2px; padding-bottom: -2px;">
         <img src="/resources/acs-subsite/checkboxchecked.gif" style="border:0" height="13" width="13">
       </a>
@@ -41,7 +41,7 @@
     </else>
     Include Stress tests
 </p>
-<p><if @security_risk@ eq 1>                
+<p><if @security_risk;literal@ true>                
       <a href="index?stress=@stress@&amp;security_risk=0&amp;by_package_key=@by_package_key@&amp;view_by=@view_by@&amp;by_category=@by_category@&amp;quiet=0" style="padding-top: 2px; padding-bottom: -2px;">
         <img src="/resources/acs-subsite/checkboxchecked.gif" style="border:0" height="13" width="13">
       </a>
@@ -56,7 +56,7 @@
     </td>
 
     <td align="center" valign="top"> [
-      <if @quiet@ eq "1">
+      <if @quiet;literal@ true>
          <strong> quiet </strong> | 
          <a href="index?stress=@stress@&amp;security_risk=@security_risk@&amp;by_package_key=@by_package_key@&amp;view_by=@view_by@&amp;by_category=@by_category@&amp;quiet=0">verbose</a>
       </if><else>
@@ -105,6 +105,7 @@
         <th>Testcases run</th>
         <th>Passes</th>
         <th>Fails</th>
+        <th>Warnings</th>
         <th>Result</th>
     </tr>
     <multiple name="packageinfo">
@@ -115,8 +116,9 @@
           <tr class="even">
         </else>
         <td> <a href="index?stress=@stress@&amp;security_risk=@security_risk@&amp;by_package_key=@packageinfo.key@&amp;view_by=testcase&amp;quiet=@quiet@">@packageinfo.key@</a></td>
-        <if @packageinfo.total@ eq "0">
+        <if @packageinfo.total;literal@ eq 0>
           <td align="right">No data</td>
+          <td align="right">-</td>
           <td align="right">-</td>
           <td align="right">-</td>
           <td align="right">-</td>
@@ -124,10 +126,15 @@
           <td align="right"> @packageinfo.total@ </td>
           <td align="right"> @packageinfo.passes@ </td>
           <td align="right"> @packageinfo.fails@ </td>
+          <td align="right"> @packageinfo.warnings@ </td>
           <td align="right">
             <if @packageinfo.fails@ gt 0>
                <span style="background-color: red; color: white; font-weight: bold;">FAILED</span>
-            </if><else>
+            </if>
+            <elseif @packageinfo.warnings@ gt 0>
+              <span style="background-color: yellow; font-weight: bold;">WARNING</span>
+            </elseif>
+            <else>
               OK
             </else>
           </td>
@@ -146,10 +153,11 @@
         <th>Timestamp</th>
         <th>Passes</th>
         <th>Fails</th>
+        <th>Warnings</th>
     </tr>
     <multiple name="tests">
-      <if @tests.marker@ eq 1>
-        <tr><td colspan="8" align="center" bgcolor="#c0f0c0"><strong>@tests.package_key@</strong></td></tr>
+      <if @tests.marker;literal@ true>
+        <tr><td colspan="9" align="center" bgcolor="#c0f0c0"><strong>@tests.package_key@</strong></td></tr>
       </if>
         <if @tests.rownum@ odd>
           <tr class="odd">
@@ -170,13 +178,18 @@
           <td>
             <if @tests.fails@ gt 0>
                <span style="background-color: red; color: white; font-weight: bold; padding: 4px;">FAILED</span>
-            </if><else>
+            </if>
+            <elseif @tests.warnings@ gt 0>
+               <span style="background-color: yellow; font-weight: bold; padding: 4px;">WARNING</span>
+            </elseif>
+            <else>
               OK
             </else>
           </td>
           <td> @tests.timestamp@ </td>
           <td align="right"> @tests.passes@ </td>
           <td align="right"> @tests.fails@ </td>
+          <td align="right"> @tests.warnings@ </td>
         </else>
       </tr>
     </multiple>

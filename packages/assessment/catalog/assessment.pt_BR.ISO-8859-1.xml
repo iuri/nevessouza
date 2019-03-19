@@ -108,7 +108,7 @@
   <msg key="Assessment_Imported_Correctly">Avaliação Importada Corretamente</msg>
   <msg key="assessment_Name_help">Permite fornecer um identificador especial único para a sua avaliação, que pode ser um código.</msg>
   <msg key="assessment_not_public">Avaliação não é pública</msg>
-  <msg key="Assessment_porlet">Avaliações</msg>
+  <msg key="Assessment_portlet">Avaliações</msg>
   <msg key="assessment_restricted_ips">Acesso restrito, endereço IP equivocado.</msg>
   <msg key="Assessment_Title">Título</msg>
   <msg key="assessment_too_many_tries">Apenas %number_tries% são permitidas.</msg>
@@ -194,7 +194,7 @@
   <msg key="data_type_timestamp">Tempo</msg>
   <msg key="data_type_varchar">Texto Curto</msg>
   <msg key="date_request">Pedido de data desde...</msg>
-  <msg key="Deafult_Value_help">Entre com o valor padrão para esta pergunta.</msg>
+  <msg key="Default_Value_help">Entre com o valor padrão para esta pergunta.</msg>
   <msg key="Default_Path">Caminho Padrão</msg>
   <msg key="Default_Selected">Padrão:Selecionado</msg>
   <msg key="Default_Selected_help">Esta escolha é selecionada por padrão</msg>

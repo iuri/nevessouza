@@ -7,7 +7,7 @@ ad_page_contract {
     @author philg@mit.edu
     @author nstrug@arsdigita.com
     @date   28th September 2000
-    @cvs-id $Id: survey-preview.tcl,v 1.7.2.1 2016/05/21 11:04:16 gustafn Exp $
+    @cvs-id $Id: survey-preview.tcl,v 1.10 2018/04/26 08:56:38 hectorr Exp $
 
 } {
     
@@ -43,7 +43,7 @@ permission::require_permission -object_id $survey_id -privilege survey_take_surv
     set display_type $survey_info(display_type)
 
    if {$description_html_p != "t"} {
-       set description [ad_text_to_html $description]
+       set description [ad_text_to_html -- $description]
    } 
    
 
@@ -52,7 +52,7 @@ set context [list "[_ survey.Preview] $name"]
 # build a list containing the HTML (generated with survey_question_display) for each question
 set rownum 0
     
-set questions [list]
+set questions {}
 
 db_foreach survey_sections {} {
 

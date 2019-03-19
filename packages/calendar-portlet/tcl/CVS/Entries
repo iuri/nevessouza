@@ -1,8 +1,8 @@
-/apm-callback-procs.tcl/1.2.8.1/Thu Sep 10 08:30:16 2015//Topenacs-5-9-compat
-/apm-callback-procs.xql/1.2/Tue May 15 20:14:22 2007//Topenacs-5-9-compat
-/calendar-admin-portlet-procs.tcl/1.10.16.1/Thu Sep 10 08:30:16 2015//Topenacs-5-9-compat
-/calendar-full-portlet-procs.tcl/1.12.2.1/Thu Sep 10 08:30:16 2015//Topenacs-5-9-compat
-/calendar-list-portlet-procs.tcl/1.6.2.1/Thu Sep 10 08:30:17 2015//Topenacs-5-9-compat
-/calendar-portlet-display-procs.tcl/1.3.24.1/Thu Sep 10 08:30:17 2015//Topenacs-5-9-compat
-/calendar-portlet-procs.tcl/1.33.2.1/Thu Sep 10 08:30:17 2015//Topenacs-5-9-compat
+/apm-callback-procs.tcl/1.3/Mon Aug  7 23:48:05 2017//Toacs-5-10
+/apm-callback-procs.xql/1.2/Tue May 15 20:14:22 2007//Toacs-5-10
+/calendar-admin-portlet-procs.tcl/1.12/Tue Jul 10 15:52:04 2018//Toacs-5-10
+/calendar-full-portlet-procs.tcl/1.14/Tue Jul 10 15:53:42 2018//Toacs-5-10
+/calendar-list-portlet-procs.tcl/1.8/Tue Jul 10 15:55:14 2018//Toacs-5-10
+/calendar-portlet-display-procs.tcl/1.5/Tue Jul 10 16:03:55 2018//Toacs-5-10
+/calendar-portlet-procs.tcl/1.35/Tue Jul 10 15:59:00 2018//Toacs-5-10
 D

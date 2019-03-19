@@ -3,7 +3,7 @@
 -- 
 -- @author Emmanuelle Raffenne (eraffenne@innova.uned.es)
 -- @creation-date 2005-12-27
--- @cvs-id $Id: upgrade-2.2.0d1-2.2.0d2.sql,v 1.2.10.1 2017/04/21 20:45:16 gustafn Exp $
+-- @cvs-id $Id: upgrade-2.2.0d1-2.2.0d2.sql,v 1.3 2017/08/07 23:48:09 gustafn Exp $
 --
 
 -- Creating table for site templates                                                                                                           

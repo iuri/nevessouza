@@ -2,7 +2,7 @@
 
 # Copyright (C) 1999-2000 ArsDigita Corporation
 # Author: Karl Goldstein (karlg@arsdigita.com)
-# $Id: template-init.tcl,v 1.3.10.1 2015/09/10 08:22:08 gustafn Exp $
+# $Id: template-init.tcl,v 1.4 2017/08/07 23:48:02 gustafn Exp $
 
 # This is free software distributed under the terms of the GNU Public
 # License.  Full text of the license is available from the GNU Project:

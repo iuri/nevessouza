@@ -3,7 +3,7 @@ ad_page_contract {
 
     @author Lars Pind (lars@collaboraid.biz)
     @creation-date 2003-05-28
-    @cvs-id $Id: application-add.tcl,v 1.12.2.4 2016/05/20 20:02:44 gustafn Exp $
+    @cvs-id $Id: application-add.tcl,v 1.14 2018/01/21 00:35:29 gustafn Exp $
 } {
     node_id:naturalnum,optional
     {return_url:localurl "."}
@@ -80,17 +80,22 @@ ad_form -name application -cancel_url . -form {
         form set_error application folder "This folder name is already used"
         break
     }
+    
 } -new_data {
-    if { [catch {
+    ad_try {
         site_node::instantiate_and_mount \
             -parent_node_id [ad_conn node_id] \
             -node_name $folder \
             -package_name $instance_name \
             -package_key $package_key
-    } errmsg] } {
-        ns_log Error "Error creating application: $errmsg\n$::errorInfo"
-        ad_return_error "Problem Creating Application" "We had a problem creating the application."
+    } on error {errorMsg} {
+        ad_log warning "Problem creating application: $errorMsg"
+        ad_return_error \
+            "Problem Creating Application" \
+            "We had a problem creating the application."
+        ad_script_abort
     }
+    
 } -edit_data {
     # this is where we would rename ...
     
@@ -102,6 +107,7 @@ ad_form -name application -cancel_url . -form {
         
         site_node::rename -node_id $node_id -name $folder
     }
+
 } -after_submit {
     ad_returnredirect $return_url
     ad_script_abort

@@ -1,9 +1,9 @@
-ad_library {
+::xo::library doc {
   Definition of a package manager for creating XOTcl package objects
   
   @author Gustaf Neumann (neumann@wu-wien.ac.at)
   @creation-date 2007-09-24
-  @cvs-id $Id: 06-package-procs.tcl,v 1.31.2.8 2017/04/21 14:00:24 gustafn Exp $
+  @cvs-id $Id: 06-package-procs.tcl,v 1.41 2018/06/22 20:11:55 gustafn Exp $
 }
 
 namespace eval ::xo {
@@ -20,7 +20,7 @@ namespace eval ::xo {
   PackageMgr ad_instproc first_instance {-privilege -party_id} {
     @return return first mounted instance of this type
   } {
-    my instvar package_key
+    set package_key ${:package_key}
     if {[info exists privilege]} {
       set sql [::xo::dc select -vars package_id \
                    -from "apm_packages, site_nodes s" \
@@ -40,17 +40,18 @@ namespace eval ::xo {
     @param closure include instances of subclasses of the package 
     @return list of package_ids of xowiki instances
   } {
-    my instvar package_key
+    set package_key ${:package_key}
     if {$include_unmounted} {
       set result [::xo::dc list get_xowiki_packages {select package_id \
                                                          from apm_packages where package_key = :package_key}]
     } else {
       set result [::xo::dc list get_mounted_packages {select package_id \
-                                                          from apm_packages p, site_nodes s  \
-                                                          where package_key = :package_key and s.object_id = p.package_id}]
+                                                          from apm_packages p, site_nodes s \
+                                                          where package_key = :package_key \
+                                                          and s.object_id = p.package_id}]
     }
     if {$closure} {
-      foreach subclass [my info subclass] {
+      foreach subclass [:info subclass] {
         foreach id [$subclass instances -include_unmounted $include_unmounted -closure true] {
           lappend result $id
         }
@@ -120,9 +121,9 @@ namespace eval ::xo {
 
     # create package object if necessary
     if {$keep_cc} {
-      my require $package_id
+      :require $package_id
     } else {
-      my require -url $url $package_id
+      :require -url $url $package_id
     }
     
     #
@@ -152,13 +153,12 @@ namespace eval ::xo {
     foreach p [::xo::PackageMgr allinstances] {
       # Sanity check for old apps, having not set the package key.
       # TODO: remove this in future versions, when package_keys are enforced
-      if {![$p exists package_key]} {
-        ns_log notice "!!! You should provide a package_key for $p [$p info class] !!!"
-        continue
-      }
+      #if {![$p exists package_key]} {
+      #  ns_log notice "!!! You should provide a package_key for $p [$p info class] !!!"
+      #  continue
+      #}
       if {[$p package_key] eq $package_key} {
-        set $key $p
-        return $p
+        return [set $key $p]
       }
     }
 
@@ -173,9 +173,9 @@ namespace eval ::xo {
       error "package_id must not be empty"
     }
 
-    #my log "--R $package_id exists? [my isobject ::$package_id] url='$url'"
+    #my log "--R $package_id exists? [:isobject ::$package_id] url='$url'"
 
-    if {![my isobject ::$package_id]} {
+    if {![:isobject ::$package_id]} {
       #my log "--R we have to create ::$package_id //url='$url'"
       #
       # To make initialization code generic, we obtain from the
@@ -234,14 +234,14 @@ namespace eval ::xo {
         {force_refresh_login false}
       }
 
-  ::xo::Package instforward query_parameter        {%my set context} %proc
-  ::xo::Package instforward exists_query_parameter {%my set context} %proc
-  ::xo::Package instforward form_parameter         {%my set context} %proc
-  ::xo::Package instforward exists_form_parameter  {%my set context} %proc
-  ::xo::Package instforward returnredirect         {%my set context} %proc
+  ::xo::Package instforward query_parameter        {%set :context} %proc
+  ::xo::Package instforward exists_query_parameter {%set :context} %proc
+  ::xo::Package instforward form_parameter         {%set :context} %proc
+  ::xo::Package instforward exists_form_parameter  {%set :context} %proc
+  ::xo::Package instforward returnredirect         {%set :context} %proc
 
   ::xo::Package instproc get_parameter {attribute {default ""}} {
-    set package_id [my id]
+    set package_id ${:id}
     set parameter_obj [::xo::parameter get_parameter_object \
                            -parameter_name $attribute \
                            -package_id $package_id \
@@ -267,59 +267,59 @@ namespace eval ::xo {
       }
     }
     return [parameter::get_global_value \
-                   -package_key [my set package_key] \
+                   -package_key ${:package_key} \
                    -parameter $attribute \
                    -default $default]
   }
   
   ::xo::Package instproc init args {
-    my instvar id url
+    set id ${:id}
     set package_url [lindex [site_node::get_url_from_object_id -object_id $id] 0]
     #my log "--R creating package_url='$package_url'"
     if {$package_url ne ""} {
       array set info [site_node::get -url $package_url]
       #set package_url $info(url)
-      my package_key $info(package_key)
-      my instance_name $info(instance_name)
+      :package_key $info(package_key)
+      :instance_name $info(instance_name)
     } else {
       ::xo::dc 1row package_info {
         select package_key, instance_name from apm_packages where package_id = :id
       }
-      my package_key $package_key
-      my instance_name $instance_name
+      :package_key $package_key
+      :instance_name $instance_name
     }
 
     if {[ns_conn isconnected]} {
-      # in case of of host-node map, simplify the url to avoid redirects
+      # in case of host-node map, simplify the url to avoid redirects
       # .... but ad_host works only, when we are connected.... 
       # TODO: solution for syndication
       set root [root_of_host [ad_host]]
       regexp "^${root}(.*)$" $package_url _ package_url
     }
     #my log "--R package_url= $package_url (was $info(url))"
-    my package_url $package_url
+    :package_url $package_url
 
-    if {[my exists url] && [info exists root]} {
-      regexp "^${root}(.*)$" $url _ url
-    } elseif {![my exists url]} {
+    if {[info exists :url] && [info exists root]} {
+      regexp "^${root}(.*)$" ${:url} _ :url
+    } elseif {![info exists :url]} {
       #my log "--R we have no url, use package_url '$package_url'"
       # if we have no more information, we use the package_url as actual url
-      set url $package_url
+      set :url $package_url
     }
-    my set_url -url $url
-    my set mime_type text/html
-    my set delivery ns_return
-    set target_class ::[my package_key]::Package
-    if {[my info class] ne $target_class && [my isclass $target_class]} {
-      my class $target_class
+    :set_url -url ${:url}
+    set :mime_type text/html
+    set :delivery ns_return
+    set target_class ::${:package_key}::Package
+    if {[:info class] ne $target_class && [:isclass $target_class]} {
+      :class $target_class
     }
     
     #
     # Save the relation between class and package_key for fast lookup
     #
-    set ::xo::package_class([my set package_key]) [my info class]
+    set ::xo::package_class(${:package_key}) [:info class]
 
-    my initialize
+    :initialize
   }
 
   ::xo::Package instproc initialize {} { 
@@ -336,18 +336,16 @@ namespace eval ::xo {
 
     @return folder_id
   } {
-    my instvar id
-
-    set folder_id [ns_cache eval xotcl_object_type_cache root_folder-$id {
+    set folder_id [::xo::xotcl_package_cache eval root_folder-${:id} {
       
       set folder_id [::xo::db::CrClass lookup -name $name -parent_id $parent_id]
       if {$folder_id == 0} {
-        my log "folder with name '$name' and parent $parent_id does NOT EXIST"
+        :log "folder with name '$name' and parent $parent_id does NOT EXIST"
         set folder_id [::xo::db::sql::content_folder new \
                            -name $name -label $name \
                            -parent_id $parent_id \
-                           -package_id $id -context_id $id]
-        my log "CREATED folder '$name' and parent $parent_id ==> $folder_id"
+                           -package_id ${:id} -context_id ${:id}]
+        :log "CREATED folder '$name' and parent $parent_id ==> $folder_id"
       }
 
       # register all specified content types
@@ -362,9 +360,9 @@ namespace eval ::xo {
   }
 
   ::xo::Package instproc set_url {-url} {
-    my url $url
-    my set object [string range [my url] [string length [my package_url]] end]
-    #my msg "--R object set to [my set object], url=$url, [my serialize]"
+    :url $url
+    set :object [string range [:url] [string length [:package_url]] end]
+    #my msg "--R object set to ${:object}, url=$url, [:serialize]"
   }
 
   ::xo::Package instproc handle_http_caching {} {
@@ -386,18 +384,21 @@ namespace eval ::xo {
 
   ::xo::Package instproc reply_to_user {text} {
 
-    my handle_http_caching
+    :handle_http_caching
 
-    #my log "REPLY [::xo::cc exists __continuation]"
+    #:log "REPLY [::xo::cc exists __continuation]"
     if {[::xo::cc exists __continuation]} {
-      #my log "REPLY [::xo::cc set __continuation]"
+      #:log "REPLY [::xo::cc set __continuation]"
       eval [::xo::cc set __continuation]
     } else {
       if {[string length $text] > 1} {
-        set status_code [expr {[::xo::cc exists status_code] ? [::xo::cc set status_code] : 200}]
-        #my log "REPLY [my set delivery] 200 [my set mime_type]"
-        [my set delivery] $status_code [my set mime_type] $text
+        set default_status_code 200
+      } else {
+        set default_status_code 204
       }
+      set status_code [expr {[::xo::cc exists status_code] ? [::xo::cc set status_code] : $default_status_code}]
+      #:log "REPLY ${:delivery} $status_code ${:mime_type} - length: [string length $text] - [ad_conn peeraddr]"
+      ${:delivery} $status_code ${:mime_type} $text
     }
   }
 
@@ -451,7 +452,7 @@ namespace eval ::xo {
   #ns_log notice [::xo::Package serialize]
 
 }
-
+::xo::library source_dependent
 #
 # Local variables:
 #    mode: tcl

@@ -7,7 +7,7 @@ ad_page_contract {
     @author jsc@arsdigita.com
     @author nstrug@arsdigita.com
     @date   February 11, 2000
-    @cvs-id $Id: one-respondent.tcl,v 1.7 2014/10/27 16:41:56 victorg Exp $
+    @cvs-id $Id: one-respondent.tcl,v 1.9 2018/01/21 00:39:44 gustafn Exp $
 } {
 
     user_id:naturalnum,notnull
@@ -25,7 +25,7 @@ set type $survey_info(type)
 
 
 if {$description_html_p != "t"} {
-    set description [ad_text_to_html $description]
+    set description [ad_text_to_html -- $description]
 } 
 
 # survey_name and description are now set 
@@ -33,8 +33,10 @@ if {$description_html_p != "t"} {
 set user_exists_p [db_0or1row user_name_from_id "select first_names, last_name from persons where person_id = :user_id" ]
 
 if { !$user_exists_p } {
-    ad_return_error "[_ survey.Not_Found]" "[_ survey.Could_not_find_user] #$user_id"
-    return
+    ad_return_error \
+	"[_ survey.Not_Found]" \
+	"[_ survey.Could_not_find_user] #$user_id"
+    ad_script_abort
 }
 
 set context [_ survey.One_Respondent]

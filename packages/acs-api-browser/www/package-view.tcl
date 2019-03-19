@@ -7,7 +7,7 @@ ad_page_contract {
         <code>procs</code> or <code>content</code>.
     @author Jon Salz (jsalz@mit.edu)
     @creation-date 3 Jul 2000
-    @cvs-id $Id: package-view.tcl,v 1.9.2.5 2015/12/30 12:54:34 gustafn Exp $
+    @cvs-id $Id: package-view.tcl,v 1.18 2018/09/19 00:59:56 gustafn Exp $
 } {
     version_id:naturalnum,notnull
     { public_p:boolean "" }
@@ -62,6 +62,8 @@ set title "$pretty_name $version_name"
 set context [list $title]
 set dimensional_slider [ad_dimensional $dimensional_list "" \
                             [ad_tcl_vars_to_ns_set version_id kind public_p about_package_key]]
+
+set doc_pages [lindex [glob -nocomplain "[acs_package_root_dir $package_key]/www/doc/index.*"] 0]
 
 switch $kind {
     procs_files {
@@ -133,7 +135,7 @@ switch $kind {
                 unset doc_elements
             }
             # don't stop completely if the page is gone
-            if { [catch {
+            ad_try {
                 set full_path "packages/$package_key/$path"
                 array set doc_elements [api_read_script_documentation $full_path]
 
@@ -164,12 +166,16 @@ switch $kind {
                     } else {
                         set content_type directory
                     }
-                    multirow append content_pages $indentation $full_path $content_type $name $type $first_sentence
+                    multirow append content_pages \
+                        $indentation $full_path $content_type $name $type $first_sentence
                 }
                 set last_components $components
-            } error] } {
-                ns_log Error "API Broswer: Package View: $error"
-                # couldn't read info from the file. it probably doesn't exist.
+            } on error {errorMsg} {
+                #
+                # Couldn't read info from the file. It probably doesn't exist.
+                #
+                ad_log Error "API Browser: Package View: $errorMsg\n$::errorInfo"
+
             }
         }
     }

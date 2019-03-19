@@ -4,7 +4,7 @@ ad_library {
 
     @creation-date jan 2006
     @author jopez@inv.it.uc3m.es
-    @cvs-id $Id: as-sc-procs.tcl,v 1.1.12.1 2015/09/10 08:27:59 gustafn Exp $
+    @cvs-id $Id: as-sc-procs.tcl,v 1.2 2017/08/07 23:48:03 gustafn Exp $
 }
 
 namespace eval as {}

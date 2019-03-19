@@ -3,10 +3,12 @@ ad_library {
 
     @author Simon Carstensen
     @creation-date 15 November 2003
-    @cvs-id $Id: categories-procs.tcl,v 1.1.20.3 2017/04/22 18:20:26 gustafn Exp $
+    @cvs-id $Id: categories-procs.tcl,v 1.3 2018/07/22 11:47:03 gustafn Exp $
 }
 
-aa_register_case category_tree_add {
+aa_register_case \
+    -procs {category_tree::add} \
+    category_tree_add {
     Test the category_tree::add proc.
 } {    
 
@@ -25,7 +27,12 @@ aa_register_case category_tree_add {
         }
 }
 
-aa_register_case category_add {
+aa_register_case \
+    -procs {
+        category_tree::add
+        category::add
+    } \
+    category_add {
     Test the category::add proc.
 } {    
 
@@ -50,7 +57,13 @@ aa_register_case category_add {
         }
 }
 
-aa_register_case category_delete {
+aa_register_case \
+    -procs {
+        category::add
+        category::delete
+        category_tree::add
+    } \
+    category_delete {
     Test the category::delete proc.
 } {    
 

@@ -1,11 +1,11 @@
 # /Users/matthewburke/development/web/bitdojo/packages/categories/tcl/tagcloud-procs.tcl
 ad_library {
-     
+
      Procs to generate a tag cloud for a given category tree.
 
      @author Matthew Burke (matt-oacs@bluedino.net)
      @creation-date Sun Oct  2 16:58:34 2005
-     @cvs-id
+     @cvs-id $Id: tagcloud-procs.tcl,v 1.8 2018/11/01 08:50:20 gustafn Exp $
 }
 
 
@@ -60,7 +60,7 @@ ad_proc -public category::tagcloud::tagcloud {
     Generate a tag cloud for the categories in the given category
     tree.
 
-    @option tree_id tree_id of the tree fro which to generate the cloud.
+    @option tree_id tree_id of the tree for which to generate the cloud.
     @return HTML fragment for the tag cloud.
     @author Matthew Burke (matt-oacs@bluedino.net)
 } {

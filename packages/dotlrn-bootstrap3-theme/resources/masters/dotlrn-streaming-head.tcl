@@ -18,7 +18,7 @@ if {[info exists context]} {
 # dotLRN stuff            #
 ###########################
 
-# $Id: dotlrn-streaming-head.tcl,v 1.1.2.1 2017/02/22 12:58:34 gustafn Exp $
+# $Id: dotlrn-streaming-head.tcl,v 1.2 2017/08/07 23:48:09 gustafn Exp $
 
 set user_id [ad_conn user_id] 
 set untrusted_user_id [ad_conn untrusted_user_id]

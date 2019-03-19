@@ -4,7 +4,7 @@ ad_library {
 
     @creation-date 2002-07-24
     @author Don Baccus (dhogaza@pacifier.com)
-    @cvs-id $Id: dotlrn-homework-notifications.tcl,v 1.1.1.1.24.1 2015/09/11 11:40:57 gustafn Exp $
+    @cvs-id $Id: dotlrn-homework-notifications.tcl,v 1.2 2017/08/07 23:48:10 gustafn Exp $
 
 }
 

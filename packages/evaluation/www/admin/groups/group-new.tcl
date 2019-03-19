@@ -4,8 +4,8 @@ ad_page_contract {
 	Creates a evaluation group for a task.
 
 	@author jopez@galileo.edu
-	@createion-date Mar 2004
-	@cvs-id $Id: group-new.tcl,v 1.9.2.1 2015/09/12 11:06:07 gustafn Exp $
+	@creation-date Mar 2004
+	@cvs-id $Id: group-new.tcl,v 1.11 2018/03/08 08:18:44 gustafn Exp $
 } {
 	student_ids:array,integer,notnull
 	task_id:naturalnum,notnull

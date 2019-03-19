@@ -20,7 +20,7 @@ ad_library {
     Used for the "handouts", "assignments", etc. portlets 
 
     @author Arjun Sanyal (arjun@openforce.net)
-    @cvs-id $Id: fs-contents-portlet-procs.tcl,v 1.4.2.1 2015/09/12 11:06:32 gustafn Exp $
+    @cvs-id $Id: fs-contents-portlet-procs.tcl,v 1.7 2018/07/11 15:05:09 antoniop Exp $
 
 }
 
@@ -37,12 +37,15 @@ namespace eval fs_contents_portlet {
     }
 
     ad_proc -public get_pretty_name {
+    } {
         We want the pretty_name to be passed in from the applet. 
     } {
-        error
+        error "pretty_name must be passed in from the applet."
     }
 
     ad_proc -public link {
+    } {
+        Get link. This is currently empty.
     } {
         return ""
     }
@@ -55,8 +58,8 @@ namespace eval fs_contents_portlet {
         {-page_name ""}
         {-hide_p ""}
     } {
-        Adds a fs PE to the given page. If there's already and fs pe,
-        it appends the values to the pe's params.
+        Adds a fs PE to the given page. If there's already a fs PE,
+        it appends the values to PE's params.
 
         @param portal_id The page to add self to
         @param folder_id The folder to show
@@ -65,7 +68,7 @@ namespace eval fs_contents_portlet {
     } {
         db_transaction {
             # Generate the element, don't use add_element_parameters here, 
-            # since it dosen't do the right thing for multiple elements with
+            # since it doesn't do the right thing for multiple elements with
             # the same datasource on a page. so we just use the more low level
             # portal::add_element
             set element_id [portal::add_element \
@@ -90,7 +93,7 @@ namespace eval fs_contents_portlet {
         {-package_id:required}
         {-folder_id:required}
     } {
-          Removes a fs PE from the given page
+        Removes a fs PE from the given page.
     } {
         set extra_params [list package_id $package_id]
 
@@ -103,9 +106,10 @@ namespace eval fs_contents_portlet {
     }
 
     ad_proc -public show {
-         cf
+        cf
     } {
-        Note: we use the fs_portlet's pk here
+        Show file-storage content portlet.
+        Note: we use the fs_portlet's package key here.
     } {
         portal::show_proc_helper \
             -package_key [fs_portlet::my_package_key] \

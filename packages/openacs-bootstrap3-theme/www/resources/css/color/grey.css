@@ -1,0 +1,20 @@
+.main-nav,
+div.logo-wrapper {
+    background-color: #999;
+}
+span.invisible {
+    color:#bbb;
+}
+a:link,
+a:visited,
+a:hover {
+    color:#777;
+}
+.main-nav .navbar-nav > li.active > a,
+.main-nav .navbar-nav > .active > a, 
+.main-nav .navbar-nav > .active > a:hover,
+.main-nav .dropdown-menu > li > a, 
+.main-nav .navbar-nav > .active > a:focus {
+    color:#777;
+}
+

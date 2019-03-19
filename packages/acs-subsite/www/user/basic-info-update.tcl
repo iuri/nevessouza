@@ -3,7 +3,7 @@ ad_page_contract {
 
     @author Unknown
     @creation-date Unknown
-    @cvs-id $Id: basic-info-update.tcl,v 1.16.2.4 2016/05/20 20:02:44 gustafn Exp $
+    @cvs-id $Id: basic-info-update.tcl,v 1.17 2017/08/07 23:47:59 gustafn Exp $
 } {
     {return_url:localurl ""}
     {user_id:naturalnum ""}

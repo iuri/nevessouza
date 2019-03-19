@@ -1,5 +1,5 @@
 
-<property name="context">{/doc/news {News}} {News Design Document}</property>
+<property name="context">{/doc/news/ {News}} {News Design Document}</property>
 <property name="doc(title)">News Design Document</property>
 <master>
 <h2>News Design Document</h2>
@@ -49,13 +49,7 @@ hyperlinked list. Single news items are presented by taking
 advantage of the ACS Templating system. The default news template
 is in the file news.adp which takes
 <ul>
-<li><pre>
-\@publish_title\@
-</pre></li><li><pre>
-\@publish_body\@
-</pre></li><li><pre>
-\@creator_link\@
-</pre></li>
+<li><pre>\@publish_title\@</pre></li><li><pre>\@publish_body\@</pre></li><li><pre>\@creator_link\@</pre></li>
 </ul>
 
 as input. Publishers may wish to provide their own templates,
@@ -87,7 +81,7 @@ procedures.
 when the general public can submit news items). Approving means
 setting the publish date.</li><li>news.status: returns info as to permanent, when it will
 archive, when it will be released</li><li>news.revision_add: add a new revision to an existing news
-item</li><li>news.revision_delete: delete a revision from an exisiting news
+item</li><li>news.revision_delete: delete a revision from an existing news
 item (not used)</li><li>news.revision_activate: make a revision the active
 revision</li>
 </ul>
@@ -101,7 +95,7 @@ items</li><li>news_items_delete: deletes news items</li>
 </ul>
 <h3>VII. Data Model Discussion</h3>
 
-The News application makes use of the exisiting ACS Content
+The News application makes use of the existing ACS Content
 Repository service. A news item consists of a row-entry in the
 table cr_item, where all of the meta-information that isn&#39;t
 already stored in acs_objects concerning these items is placed, one
@@ -146,7 +140,7 @@ cr_revisions,</li><li>The archive_date is supplemented by cr_news.</li>
 </ul>
 
 A reminder to the column release_date is necessary here: Its
-granularity is only one day, i.e. the relase date is for instance
+granularity is only one day, i.e. the release date is for instance
 2001-01-01 00:00 (always at midnight). If someone wants to present
 a view of 'new items' since last login (which can be more
 than once since 00:00), one can use cr_news.approval_date for
@@ -198,7 +192,7 @@ privilege check is needed in the news/admin/ directory.
 <strong>Create news item</strong> only appear for parties which
 possess the appropriate privileges. Viewers not authorized to view
 the index page (i.e. parties who were denied the
-<code>news_read</code> permission) are shown the the site-wide
+<code>news_read</code> permission) are shown the site-wide
 'not-authorized' template.</p>
 <p>The news gateway defaults to serving the parameter
 <code>DisplayMax</code>, see sec. XI below, number of news items or
@@ -249,8 +243,7 @@ hours.
         sws_service.rebuild_index;
      end; 
      /
-     
-</pre>
+     </pre>
 </li>
 </ol>
 <p>To drop an instance of the News application correctly, follow
@@ -287,7 +280,7 @@ picture attachments are dropped.</p>
 The news application has three customizable parameters which have
 to be set for each package instance through the site-map manager.
 <ul>
-<li>ActiveDays...number of days between relase and archival</li><li>DisplayMax ... how many items are shown on the index page
+<li>ActiveDays...number of days between release and archival</li><li>DisplayMax ... how many items are shown on the index page
 (valid for live and archived items)</li><li>ApprovalPolicy...[open|wait] if open, submitted items are
 approved immediately, wait means approval by the
 administrator.</li><li>ShowSearchInterfaceP...[0,1] whether we show a 'Search
@@ -319,8 +312,8 @@ entering the news body is used as a formatting editor.
 <ul>
 <li>Use e-mail notification on submission and release, such as
 supplied by ACS Notification in PL/SQL only.</li><li>Allow for more MIME types, especially Microsoft Word, and use
-the corresponding Intermedia filter to render as HTML.</li><li>Add news categorization to the data model that allows to order
-news articles by categories without creating new application
+the corresponding Intermedia filter to render as HTML.</li><li>Add news categorization to the data model that allows one to
+order news articles by categories without creating new application
 instances (e.g. sports, education, health, literature, music ,
 politics, ...) - this also needs a UI to create categories and a
 mapping table.</li>

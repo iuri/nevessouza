@@ -5,7 +5,7 @@ ad_page_contract {
     @author Dirk Gomez (openacs@dirkgomez.de)
     @author Ben Adida (ben@openforce.net)
     @creation-date May 29, 2002
-    @cvs-id $Id: view.tcl,v 1.31.2.9 2017/06/30 17:42:16 gustafn Exp $
+    @cvs-id $Id: view.tcl,v 1.32 2017/08/07 23:48:05 gustafn Exp $
 } {
     {view:word {[parameter::get -parameter DefaultView -default day]}}
     {date ""}

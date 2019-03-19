@@ -18,7 +18,7 @@
 -- The New Portal Package
 --
 -- @author arjun@openforce.net
--- @version $Id: objects-create.sql,v 1.8 2007/05/15 20:14:47 donb Exp $
+-- @version $Id: objects-create.sql,v 1.9 2018/07/09 16:36:44 antoniop Exp $
 --
 
 -- datasources
@@ -54,14 +54,6 @@ begin
         attribute_name => 'DESCRIPTION', 
         pretty_name    => 'Description', 
         pretty_plural  => 'Descriptions', 
-        datatype       => 'string' 
-    ); 
-
-    attr_id := acs_attribute.create_attribute ( 
-        object_type    => 'portal_datasource', 
-        attribute_name => 'CONTENT', 
-        pretty_name    => 'Content', 
-        pretty_plural  => 'Contents', 
         datatype       => 'string' 
     ); 
 
@@ -102,14 +94,6 @@ begin
         attribute_name => 'DESCRIPTION', 
         pretty_name    => 'Description', 
         pretty_plural  => 'Descriptions', 
-        datatype       => 'string' 
-    ); 
-
-    attr_id := acs_attribute.create_attribute ( 
-        object_type    => 'portal_layout', 
-        attribute_name => 'TYPE', 
-        pretty_name    => 'Type', 
-        pretty_plural  => 'Types', 
         datatype       => 'string' 
     ); 
 
@@ -166,14 +150,6 @@ begin
         attribute_name => 'DESCRIPTION', 
         pretty_name    => 'Description', 
         pretty_plural  => 'Descriptions', 
-        datatype       => 'string' 
-    ); 
-
-    attr_id := acs_attribute.create_attribute ( 
-        object_type    => 'portal_element_theme', 
-        attribute_name => 'TYPE', 
-        pretty_name    => 'Type', 
-        pretty_plural  => 'Types', 
         datatype       => 'string' 
     ); 
 

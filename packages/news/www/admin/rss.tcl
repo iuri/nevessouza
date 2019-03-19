@@ -1,13 +1,10 @@
-# 
-
 ad_page_contract {
     
     Setup or remove rss feed
     
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2005-01-23
-    @arch-tag: 4ff5628c-77f1-40ef-86c7-ef247a1ffe4f
-    @cvs-id $Id: rss.tcl,v 1.2.16.1 2015/09/12 11:06:44 gustafn Exp $
+    @cvs-id $Id: rss.tcl,v 1.5 2018/08/15 16:29:24 gustafn Exp $
 } {
 } -properties {
 } -validate {
@@ -42,6 +39,8 @@ if {[rss_support::subscription_exists \
 }
 
 ad_returnredirect -message $message "./"
+ad_script_abort
+
 # Local variables:
 #    mode: tcl
 #    tcl-indent-level: 4

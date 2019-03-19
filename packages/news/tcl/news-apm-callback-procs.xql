@@ -3,8 +3,7 @@
 <!-- packages/news/tcl/news-apm-callback-procs.xql -->
 <!-- @author Stan Kaufman (skaufman@epimetrics.com) -->
 <!-- @creation-date 2005-08-03 -->
-<!-- @arch-tag: 5AB8567C-0484-11DA-9C6A-000A95C482A6 -->
-<!-- @cvs-id $Id: news-apm-callback-procs.xql,v 1.1 2005/08/04 02:10:32 skaufman Exp $ -->
+<!-- @cvs-id $Id: news-apm-callback-procs.xql,v 1.2 2018/08/15 17:03:48 gustafn Exp $ -->
 
 <queryset>
 

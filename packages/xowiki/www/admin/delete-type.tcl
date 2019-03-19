@@ -3,7 +3,7 @@
 
   @author Gustaf Neumann (gustaf.neumann@wu-wien.ac.at)
   @creation-date Aug 11, 2006
-  @cvs-id $Id: delete-type.tcl,v 1.13.2.2 2016/09/13 07:09:54 gustafn Exp $
+  @cvs-id $Id: delete-type.tcl,v 1.15 2018/01/19 13:48:24 gustafn Exp $
 
   @param object_type 
   @param query
@@ -22,6 +22,7 @@ xo::dc foreach retrieve_instances $sql {
 # foreach type [$object_type object_types -subtypes_first true] {$type drop_object_type}
 
 ad_returnredirect $return_url
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

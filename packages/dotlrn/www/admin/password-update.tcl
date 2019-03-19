@@ -2,7 +2,7 @@ ad_page_contract {
     Let's the admin change a user's password.
    
 
-    @version $Id: password-update.tcl,v 1.5.2.2 2016/05/20 20:17:34 gustafn Exp $
+    @cvs-id $Id: password-update.tcl,v 1.7 2018/06/29 17:27:19 hectorr Exp $
 } {
     {user_id:naturalnum,notnull}
     {return_url:localurl ""}

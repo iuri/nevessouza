@@ -21,7 +21,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-11-10
-    @version $Id: courses.tcl,v 1.6.4.1 2015/09/11 11:40:42 gustafn Exp $
+    @cvs-id $Id: courses.tcl,v 1.8 2018/06/29 17:27:19 hectorr Exp $
 
 } -query {
 } -properties {

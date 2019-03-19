@@ -3,7 +3,7 @@ ad_page_contract {
 
     @author Lars Pind (lars@collaboraid.biz)
     @creation-date 2003-06-13
-    @cvs-id $Id: permissions-user-add.tcl,v 1.2.2.1 2015/09/10 08:28:06 gustafn Exp $
+    @cvs-id $Id: permissions-user-add.tcl,v 1.4 2018/01/20 22:38:28 gustafn Exp $
 } {
     object_id:naturalnum,notnull
     
@@ -34,8 +34,10 @@ if {[template::form is_valid permissions]} {
 	    
     } on_error {
 	ad_return_complaint 1 "We had a problem adding the users you selected. Sorry."
+        ad_script_abort
     }
-    ad_returnredirect "permissions?object_id=$object_id"    
+    ad_returnredirect [export_vars -base permissions {object_id}]
+    ad_script_abort
 }
 
 # Local variables:

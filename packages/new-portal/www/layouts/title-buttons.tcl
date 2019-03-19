@@ -21,7 +21,7 @@ ad_page_contract {
 
     @author Ian Baker (ibaker@arsdigita.com)
     @creation-date 2/14/2001
-    @cvs_id $Id: title-buttons.tcl,v 1.4.4.1 2015/09/12 11:06:40 gustafn Exp $
+    @cvs-id $Id: title-buttons.tcl,v 1.6 2018/06/29 17:27:19 hectorr Exp $
 }
 
 # should this come from the template or something?  how does it work?

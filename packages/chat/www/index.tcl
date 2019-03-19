@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 13, 2000
-    @cvs-id $Id: index.tcl,v 1.11.4.1 2016/06/20 08:40:23 gustafn Exp $
+    @cvs-id $Id: index.tcl,v 1.18 2018/10/01 12:17:00 hectorr Exp $
 } {
 } -properties {
     context_bar:onevalue
@@ -18,27 +18,20 @@ set package_id [ad_conn package_id]
 set user_id [ad_conn user_id]
 set actions [list]
 set room_create_p [permission::permission_p -object_id $package_id -privilege chat_room_create]
-set default_client [parameter::get -parameter "DefaultClient" -default "ajax"]
 set warning ""
-
-if { $default_client eq "ajax" && ![apm_package_installed_p xotcl-core] } {
-    set warning "[_ chat.xotcl_missing]"
-}
 
 if { $room_create_p } {
     lappend actions "#chat.Create_a_new_room#" room-edit "#chat.Create_a_new_room#"
 }
 
-db_multirow -extend { active_users last_activity room_url room_html_url} rooms rooms_list {} {
+db_multirow -extend { active_users last_activity room_url} rooms rooms_list {} {
     set room [::chat::Chat create new -volatile -chat_id $room_id]
     set active_users [$room nr_active_users]
     set last_activity [$room last_activity]
 
     if { $active_p } {
-        set room_url [export_vars -base "room-enter" {room_id {client $default_client}}]
+        set room_url [export_vars -base "room-enter" {room_id}]
         set room_url [ns_quotehtml $room_url]
-        set room_html_url [export_vars -base "room-enter" {room_id {client html}}]
-        set room_html_url [ns_quotehtml $room_html_url]
     }
 }
 
@@ -55,7 +48,7 @@ list::create \
             label "#chat.Active#"
             html { style "text-align: center" }
             display_template {
-                <if @rooms.active_p@ eq t>
+                <if @rooms.active_p;literal@ true>
                 <img src="/resources/chat/active.png" alt="#chat.Room_active#">
                 </if>
                 <else>
@@ -66,8 +59,8 @@ list::create \
         pretty_name {
             label "#chat.Room_name#"
             display_template {
-                <if @rooms.active_p@ eq t>
-                <a href="@rooms.room_url;noquote@">@rooms.pretty_name@</a>&nbsp;\[<a href="@rooms.room_html_url;noquote@">#chat.HTML_chat#</a>\]
+                <if @rooms.active_p;literal@ true>
+                <a href="@rooms.room_url;noquote@">@rooms.pretty_name@</a>
                 </if>
                 <else>
                 @rooms.pretty_name@
@@ -89,7 +82,7 @@ list::create \
             label "#chat.actions#"
             display_template {
                 <a href="chat-transcripts?room_id=@rooms.room_id@" class=button>#chat.Transcripts#</a>
-                <if @room_create_p@ eq 1>
+                <if @room_create_p;literal@ true>
                 <a href="@rooms.base_url@room?room_id=@rooms.room_id@" class=button>#chat.room_admin#</a>
                 </if>
             }
@@ -101,3 +94,9 @@ list::create \
 set doc(title) [_ chat.Chat_main_page]
 
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

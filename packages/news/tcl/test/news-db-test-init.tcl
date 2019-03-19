@@ -10,7 +10,7 @@ ad_library {
 
     @author peter.harper@open-msg.com
     @creation-date 2001-11-18
-    @cvs-id $Id: news-db-test-init.tcl,v 1.12.2.3 2017/04/21 20:00:51 gustafn Exp $
+    @cvs-id $Id: news-db-test-init.tcl,v 1.18.2.1 2019/02/14 16:15:01 gustafn Exp $
 }
 
 
@@ -69,8 +69,9 @@ aa_register_init_class "mount-news-package" {
         }
         # If an old news package exists, delete it.
         if {$_news_node_id != -1} {
-            aa_log "Deleting existing node instance."
-            site_map_unmount_application -delete_p t -sync_p t $_news_node_id 
+            aa_log "Unmont and delete existing node instance."
+            site_node::unmount -node_id $_news_node_id
+            site_node::delete -node_id $_news_node_id
             if {$_news_package_id != -1} {
                 aa_log "Deleting existing package instance."
                 set p_package_id $_news_package_id
@@ -90,7 +91,7 @@ aa_register_init_class "mount-news-package" {
                                   -package_name "News test" \
                                   -package_key news]
 
-        set _news_node_id [site_node_id "/_test/news/"]
+        set _news_node_id [site_node::get_node_id -url "/_test/news/"]
     } _news_package_mounted_err]} {
         set _news_node_id -1
         set _test_node_id -1
@@ -104,7 +105,8 @@ aa_register_init_class "mount-news-package" {
     # Unmount the news package and delete its directory.
     #
     if {$_news_package_mounted_p} {
-        site_map_unmount_application -delete_p t $_news_node_id 
+        site_node::unmount -node_id $_news_node_id
+        site_node::delete -node_id $_news_node_id
         site_node::delete -node_id $_test_node_id
         set p_package_id $_news_package_id
         rss_support::del_subscription -summary_context_id $p_package_id -owner news -impl_name news
@@ -134,7 +136,7 @@ aa_register_component "db-news-globals" {
     _news_cr_news_root_folder_id
 } {
     aa_export_vars {_news_cr_root_folder_id _news_cr_news_root_folder_id}
-    
+
     set _news_cr_root_folder_id [content::item::get_root_folder]
     set p_parent_id $_news_cr_root_folder_id
     set _news_cr_news_root_folder_id [db_string get-cr-news-root-folder {
@@ -161,7 +163,7 @@ aa_register_component "db-news-item-create" {
     news_id
 } {
     aa_export_vars {p_full_details p_title p_text p_package_id p_is_live
-        p_approval_user p_approval_ip p_approval_date p_archive_date 
+        p_approval_user p_approval_ip p_approval_date p_archive_date
         news_id}
     if {$p_full_details == "t"} {
         set p_approval_user [ad_conn "user_id"]
@@ -169,10 +171,10 @@ aa_register_component "db-news-item-create" {
         set p_approval_date [dt_sysdate]
         set p_archive_date  [dt_sysdate]
     } else {
-        set p_approval_user [db_null]
-        set p_approval_ip   [db_null]
-        set p_approval_date [db_null]
-        set p_archive_date  [db_null]
+        set p_approval_user ""
+        set p_approval_ip   ""
+        set p_approval_date ""
+        set p_archive_date  ""
     }
     set news_id [db_exec_plsql item-create {
         begin
@@ -222,10 +224,10 @@ aa_register_component "db-news-revision-create" {
     Populates:<br>
     revision_id
 } {
-    aa_export_vars {p_item_id 
+    aa_export_vars {p_item_id
         p_full_details p_title p_text p_package_id p_make_active_revision_p
         p_description
-        p_approval_user p_approval_ip p_approval_date p_archive_date 
+        p_approval_user p_approval_ip p_approval_date p_archive_date
         revision_id}
     if {$p_full_details == "t"} {
         set p_approval_user [ad_conn "user_id"]
@@ -233,10 +235,10 @@ aa_register_component "db-news-revision-create" {
         set p_approval_date [dt_sysdate]
         set p_archive_date  [dt_sysdate]
     } else {
-        set p_approval_user [db_null]
-        set p_approval_ip   [db_null]
-        set p_approval_date [db_null]
-        set p_archive_date  [db_null]
+        set p_approval_user ""
+        set p_approval_ip   ""
+        set p_approval_date ""
+        set p_archive_date  ""
     }
     set revision_id [db_exec_plsql revision-create {
         begin
@@ -313,25 +315,9 @@ aa_register_component "db-news-set-approve" {
         p_live_revision_p}
 
     if {$p_approve_p == "f"} {
-        db_exec_plsql set-approve-default {
-            begin
-            content_item.set_approve-default(revision_id =>     :p_revision_id,
-                                             approve_p =>       :p_approve_p);
-            end;
-        }
+        db_exec_plsql set-approve-default {}
     } else {
-        db_exec_plsql set-approve {
-            begin
-            content_item.set_approve(revision_id =>     :p_revision_id,
-                                     approve_p =>       :p_approve_p,
-                                     publish_date =>    :p_publish_date
-                                     archive_date =>    :p_archive_date,
-                                     approval_user =>   :p_approval_user,
-                                     approval_date =>   :p_approval_date,
-                                     approvel_ip   =>   :p_approval_id,
-                                     live_revision_p => :p_live_revision_ip);
-            end;
-        }
+        db_exec_plsql set-approve {}
     }
 }
 
@@ -385,7 +371,7 @@ aa_register_component "db-get-cr-news-row" {
     set retrieval_ok_p 1
     if {![db_0or1row get-cr-news-row {
         select package_id, archive_date,
-        approval_user, approval_date, approval_ip 
+        approval_user, approval_date, approval_ip
         from cr_news
         where news_id = :p_news_id
     }]} {
@@ -519,10 +505,10 @@ aa_register_case -cats {
 } "check-permissions" {
     Checks the news related permissions.
     Checks that the permissions exist, and that they have the correct
-    heirachy.
+    hierarchy.
 } {
     #
-    # Extract the list of all privileges and privilege heirachies.
+    # Extract the list of all privileges and privilege hierarchies.
     #
     set priv_list {}
     db_foreach get-privileges {
@@ -543,7 +529,7 @@ aa_register_case -cats {
         aa_true "Check $priv privilege exists" {[lsearch $priv_list $priv] != -1}
     }
 
-    aa_log "Check the news privilege heirachies are correct"
+    aa_log "Check the news privilege hierarchies are correct"
     foreach priv_pair {"read,news_read"
         "delete,news_delete"
         "news_admin,news_read"
@@ -569,13 +555,13 @@ aa_register_case -cats {
 
 ################################################################################
 #
-# Testcase check-views
+# Testcase check_views
 #
 aa_register_case -cats {
     db
     config
 } -on_error {
-} "check-views" {
+} "check_views" {
     Checks the news related views.
     Checks that the views are valid by performing a select from each of them.
 } {
@@ -654,16 +640,16 @@ aa_register_case -cats {
 
 ################################################################################
 #
-# Testcase check-object-type
+# Testcase check_object_type
 #
 aa_register_case -cats {
     db
     config
 } -on_error {
-    The "news" object type doesn't exist, or has isn't configured correctly. 
+    The "news" object type doesn't exist, or has isn't configured correctly.
     The most probable cause of this is that the news package datamodel hasn't been
     installed.
-} "check-object-type" {
+} "check_object_type" {
     Checks the news object type.
 } {
     set news_type_exists_p [db_0or1row get-news-type-info {
@@ -703,14 +689,14 @@ aa_register_case -cats {
 
 ################################################################################
 #
-# Testcase check-package-mount
+# Testcase check_package_mount
 #
 aa_register_case -cats {
     db
 } -init_classes {
     mount-news-package
 } -on_error {
-} "check-package-mount" {
+} "check_package_mount" {
     Checks the mountability of the news package.
 } {
     aa_true "Check that the news package mount properly" $_news_package_mounted_p
@@ -718,20 +704,20 @@ aa_register_case -cats {
         aa_log "News node_id    :$_news_node_id"
         aa_log "News package_id :$_news_package_id"
     } else {
-        aa_error "Error from initialiser: $_news_package_mounted_err"
+        aa_error "Error from initializer: $_news_package_mounted_err"
     }
 }
 
 
 ################################################################################
 #
-# Testcase db-check-news_create
+# Testcase db_check_news_create
 #
 aa_register_case -cats {
     db
 } -init_classes {
     mount-news-package
-} "db-check-news-create" {
+} "db_check_news_create" {
     Creates and deletes a simple news article.  Checks contents of cr_news,
     cr_items and cr_revisions table after insert. Calls the news name function to retrieve
     the article name.  Tests <tt>news.new</tt>, <tt>news.delete</tt> and <tt>news.name</tt>.
@@ -739,7 +725,7 @@ aa_register_case -cats {
     set news_id -1
 
     if {!$_news_package_mounted_p} {
-        aa_error "News package not mounted, error from initialiser: $_news_package_mounted_err"
+        aa_error "News package not mounted, error from initializer: $_news_package_mounted_err"
     } else {
         #
         # Attempt to create the article
@@ -812,11 +798,7 @@ aa_register_case -cats {
                 #
                 aa_log "Call news.name function to retrieve title of content revision"
                 set p_news_id $news_id
-                set name [db_exec_plsql news-name {
-                    begin
-                    :1 := news.name(news_id => :p_news_id);
-                    end;
-                }]
+                set name [db_exec_plsql news-name {}]
                 aa_equals "Check the return from news.name is correct" $name $p_title
             }
         }
@@ -838,7 +820,7 @@ aa_register_case -cats {
         set p_item_id $item_id
         aa_call_component db-get-cr-items-row
         aa_false "Check the cr_items row was deleted" {$retrieval_ok_p}
-        
+
         set p_revision_id $news_id
         aa_call_component db-get-cr-revisions-row
         aa_false "Check the cr_revisions row was deleted" {$retrieval_ok_p}
@@ -848,7 +830,7 @@ aa_register_case -cats {
 
 ################################################################################
 #
-# Testcase check-news-revision
+# Testcase db_check_news_revision
 #
 aa_register_case -cats {
     db
@@ -864,7 +846,7 @@ aa_register_case -cats {
     <p>
     A posting <a href="http://openacs.org/bboard/q-and-a-fetch-msg.tcl?msg_id=0003CM&topic_id=14&topic=OpenACS%204%2e0%20Testing">
     here</a> at the OpenACS bboard was started concerning this problem.
-} "db-check-news-revision" {
+} "db_check_news_revision" {
     Checks the news database functions for revision creation, deletion and management.
     Tests <tt>news.revison_new</tt>, <tt>news.revision_delete</tt>,
     <tt>news.revision_set_active</tt> functions.
@@ -872,7 +854,7 @@ aa_register_case -cats {
     set news_id -1
 
     if {!$_news_package_mounted_p} {
-        aa_error "News package not mounted, error from initialiser: $_news_package_mounted_err"
+        aa_error "News package not mounted, error from initializer: $_news_package_mounted_err"
     } else {
         #
         # Create the article
@@ -1012,19 +994,19 @@ aa_register_case -cats {
 
 ################################################################################
 #
-# Testcase check-news-archive
+# Testcase db_check_news_archive
 #
 aa_register_case -cats {
     db
 } -init_classes {
     mount-news-package
-} "db-check-news-archive" {
+} "db_check_news_archive" {
     Checks the news database functions make_permanent and news_archive.
 } {
     set news_id -1
 
     if {!$_news_package_mounted_p} {
-        aa_error "News package not mounted, error from initialiser: $_news_package_mounted_err"
+        aa_error "News package not mounted, error from initializer: $_news_package_mounted_err"
     } else {
         #
         # Attempt to create the article
@@ -1059,7 +1041,7 @@ aa_register_case -cats {
         #
         set p_news_id $news_id
         aa_call_component db-get-cr-news-row
-        aa_equals "Check the archive_date is null" $archive_date [db_null]
+        aa_equals "Check the archive_date is null" $archive_date ""
 
         #
         # Set the archive period, providing an explicit archive date.
@@ -1113,20 +1095,20 @@ aa_register_case -cats {
 
 ################################################################################
 #
-# Testcase check-news-set-approve
+# Testcase db_check_news_set_approve
 #
 aa_register_case -cats {
     db
 } -init_classes {
     mount-news-package
-} "db-check-news-set-approve" {
+} "db_check_news_set_approve" {
     Checks the news database function for approving/unapproving news articles.
     Tests <tt>news.set_approve</tt> function.
 } {
     set news_id -1
 
     if {!$_news_package_mounted_p} {
-        aa_error "News package not mounted, error from initialiser: $_news_package_mounted_err"
+        aa_error "News package not mounted, error from initializer: $_news_package_mounted_err"
     } else {
         #
         # Create the article
@@ -1180,10 +1162,10 @@ aa_register_case -cats {
         if {!$retrieval_ok_p} {
             aa_error "cr_news row not found for new revision news_id $revision2_id"
         } else {
-            aa_equals "Check the archive_date is null"  $archive_date  [db_null]
-            aa_equals "Check the approval_date is null" $approval_date [db_null]
-            aa_equals "Check the aprroval_user is null" $approval_user [db_null]
-            aa_equals "Check the approval_ip is null"   $approval_ip   [db_null]
+            aa_equals "Check the archive_date is null"  $archive_date  ""
+            aa_equals "Check the approval_date is null" $approval_date ""
+            aa_equals "Check the aprroval_user is null" $approval_user ""
+            aa_equals "Check the approval_ip is null"   $approval_ip   ""
         }
 
         #
@@ -1194,7 +1176,7 @@ aa_register_case -cats {
         if {!$retrieval_ok_p} {
             aa_error "cr_revisions row not found for new revision revision_id $revision2_id"
         } else {
-            aa_equals "Check revision 2 publish_date is null" $publish_date [db_null]
+            aa_equals "Check revision 2 publish_date is null" $publish_date ""
         }
 
         #
@@ -1267,13 +1249,13 @@ aa_register_case -cats {
 
 ################################################################################
 #
-# Testcase check-news-status
+# Testcase db_check_news_status
 #
 aa_register_case -cats {
     db
 } -init_classes {
     mount-news-package
-} "db-check-news-status" {
+} "db_check_news_status" {
     Checks the news database function that returns information about a news article publish
     and archive status.
     Tests <tt>news.status</tt> function.
@@ -1281,7 +1263,7 @@ aa_register_case -cats {
     set news_id -1
 
     if {!$_news_package_mounted_p} {
-        aa_error "News package not mounted, error from initialiser: $_news_package_mounted_err"
+        aa_error "News package not mounted, error from initializer: $_news_package_mounted_err"
     } else {
         #
         # Create the article
@@ -1313,10 +1295,10 @@ aa_register_case -cats {
         aa_log "Unapproving revision 1, setting publish_date null, archive_date null"
         set p_revision_id $revision1_id
         set p_approve_p "t"
-        set p_publish_date  [db_null]
-        set p_archive_date  [db_null]
+        set p_publish_date  ""
+        set p_archive_date  ""
         set p_approval_user [ad_conn "user_id"]
-        set p_approval_date [db_null]
+        set p_approval_date ""
         set p_approval_ip   [ad_conn "peeraddr"]
         set p_live_revision_p "t"
         aa_call_component db-news-set-approve
@@ -1334,8 +1316,8 @@ aa_register_case -cats {
         aa_log "Approving revision 1, setting archive date as null"
         set p_revision_id $revision1_id
         set p_approve_p "t"
-        set p_publish_date  "2005-11-01"
-        set p_archive_date  [db_null]
+        set p_publish_date  [clock format [clock scan "+ 1 year"] -format %Y-%m-%d] ; # in the future
+        set p_archive_date  ""
         set p_approval_user [ad_conn "user_id"]
         set p_approval_date "2001-11-03"
         set p_approval_ip   [ad_conn "peeraddr"]
@@ -1355,7 +1337,7 @@ aa_register_case -cats {
         aa_log "Approving revision 1, setting archive date as future value"
         set p_revision_id $revision1_id
         set p_approve_p "t"
-        set p_publish_date  "2005-11-01"
+        set p_publish_date  [clock format [clock scan "+ 1 year"] -format %Y-%m-%d] ; # in the future
         set p_archive_date  "2005-11-10"
         set p_approval_user [ad_conn "user_id"]
         set p_approval_date "2001-11-03"
@@ -1377,7 +1359,7 @@ aa_register_case -cats {
         set p_revision_id $revision1_id
         set p_approve_p "t"
         set p_publish_date  "2000-11-01"
-        set p_archive_date  [db_null]
+        set p_archive_date  ""
         set p_approval_user [ad_conn "user_id"]
         set p_approval_date "2001-11-03"
         set p_approval_ip   [ad_conn "peeraddr"]
@@ -1419,7 +1401,7 @@ aa_register_case -cats {
         set p_revision_id $revision1_id
         set p_approve_p "t"
         set p_publish_date  "2000-11-01"
-        set p_archive_date  "2005-11-01"
+        set p_archive_date [clock format [clock scan "+ 1 year"] -format %Y-%m-%d] ; # in the future
         set p_approval_user [ad_conn "user_id"]
         set p_approval_date "2001-11-03"
         set p_approval_ip   [ad_conn "peeraddr"]

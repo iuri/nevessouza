@@ -3,8 +3,8 @@
      Show the result of a session.
 
      @author timo@timohentschel.de
-     @date   2004-12-24
-     @cvs-id $Id: 
+     @creation-date   2004-12-24
+     @cvs-id $Id: session.tcl,v 1.44 2018/06/29 17:27:18 hectorr Exp $
  } {
     {session_id:naturalnum,notnull 0}
     {assessment_id:naturalnum,notnull 0}
@@ -20,10 +20,12 @@ if {$session_id == 0} {
     # require assessment_id if session_id is blank
     if {$assessment_id == 0} {
 	ad_return_complaint 1 "Session_id or Assessment_id is required"
+        ad_script_abort
     }
     #find the latest session
     if {![db_0or1row get_latest_session "" -column_array latest_session]} {
 	ad_return_complaint 1 "You have not completed this assessment yet."
+        ad_script_abort
     }
     set session_id $latest_session(session_id)
 }

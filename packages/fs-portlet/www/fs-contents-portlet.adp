@@ -18,14 +18,14 @@
 
 %>
 
-<if @config.shaded_p@ ne "t">
+<if @config.shaded_p;literal@ false>
 
 <include src="@scope_fs_url;literal@" &="folder_id" &="root_folder_id" viewing_user_id="@user_id;literal@"
 	 &="n_past_days" fs_url="@url;literal@">
 
 <p><include src="/packages/notifications/lib/notification-widget" type="fs_fs_notif"
 	 object_id="@folder_id;literal@"
-	 pretty_name="@folder_name@"
+	 pretty_name="@folder_name;literal@"
 	 url="@folder_url;literal@" >
 
 <if @webdav_url@ not nil>

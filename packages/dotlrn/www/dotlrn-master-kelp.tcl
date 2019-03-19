@@ -28,9 +28,9 @@
 # from "/www/default-master" to "/www/dotlrn-master"
 # at http://yoursite.com/admin/site-map
 #
-# This tells OpenACS to to use these files instead of the "default-master"
+# This tells OpenACS to use these files instead of the "default-master"
 #
-# 3. Edit these files to chage the look of the site including the banner
+# 3. Edit these files to change the look of the site including the banner
 # at the top of the page, the title of the pages, the fonts of the portlets, etc.
 #
 # WARNING: All current portlet themes (table, deco, nada, etc) depend on some
@@ -40,7 +40,7 @@
 #
 # Author: Arjun Sanyal (arjun@openforce.net), yon@openforce.net
 #
-# $Id: dotlrn-master-kelp.tcl,v 1.9.2.4 2017/06/30 17:43:06 gustafn Exp $
+# $Id: dotlrn-master-kelp.tcl,v 1.13 2018/07/11 20:45:30 hectorr Exp $
 
 set user_id [ad_conn user_id] 
 set community_id [dotlrn_community::get_community_id]
@@ -154,7 +154,7 @@ set user_id [ad_conn user_id]
 if { [ad_conn untrusted_user_id] == 0 } {
     set user_name {}
 } else {
-    set user_name [acs_user::get_element -user_id [ad_conn untrusted_user_id] -element name]
+    set user_name [person::name -person_id [ad_conn untrusted_user_id]]
 }
 
 if {(![info exists title] || $title eq "")} {

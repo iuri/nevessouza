@@ -73,22 +73,34 @@
       </querytext>
 </partialquery>
 
- 
-<fullquery name="group_type::new.create_table">      
-      <querytext>
+<partialquery name="group_type::delete.package_exists">
+  <querytext>
+    select case when exists (select 1
+    from pg_proc
+    where proname like :package_name || '%')
+    then 1 else 0 end
+  </querytext>
+</partialquery>
 
-begin      
-  create table $table_name ( 
-    $id_column   integer 
-                 constraint $constraint(pk) primary key
-                 constraint $constraint(fk) 
-                   references $references_table ($references_column)
-  );
-  return null;
-end;
+<partialquery name="group_type::delete.package_drop">
+  <querytext>
+    select drop_package(:group_type)
+  </querytext>
+</partialquery>
 
-      </querytext>
+<partialquery name="group_type::delete.drop_type">
+  <querytext>
+    select acs_object_type__drop_type(:group_type, 'f')
+  </querytext>
+</partialquery>
+
+<fullquery name="group_type::delete.select_group_ids">
+  <querytext>
+    select o.object_id
+    from acs_objects o
+    where o.object_type = :group_type
+    and   acs_permission__permission_p(o.object_id, :user_id, 'delete')
+  </querytext>
 </fullquery>
 
- 
 </queryset>

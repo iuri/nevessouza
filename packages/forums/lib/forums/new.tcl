@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-25
-    @cvs-id $Id: new.tcl,v 1.6.2.1 2015/09/12 11:06:22 gustafn Exp $
+    @cvs-id $Id: new.tcl,v 1.9 2017/11/08 12:05:55 antoniop Exp $
 
 }
 
@@ -26,26 +26,22 @@ forums::form::forum forum
 
 if {[form is_valid forum]} {
     template::form get_values forum \
-        forum_id name charter presentation_type posting_policy new_threads_p
+        forum_id name charter presentation_type posting_policy new_threads_p anonymous_allowed_p
 
-    set forum_id [forum::new -forum_id $forum_id \
-        -name $name \
-        -charter [template::util::richtext::get_property contents $charter] \
-        -presentation_type $presentation_type \
-        -posting_policy $posting_policy \
-        -package_id $package_id \
-    ]
-
-    forum::posting_policy_set -posting_policy $posting_policy \
-        -forum_id $forum_id
-    
     # Users can create new threads?
-    if { $new_threads_p && $posting_policy ne "closed" } {
-        forum::new_questions_allow -forum_id $forum_id
-    } else {
-        forum::new_questions_deny -forum_id $forum_id
-    }
+    set new_questions_allowed_p [expr {$new_threads_p && $posting_policy ne "closed" ? t : f}]
 
+    db_transaction {
+        set forum_id [forum::new -forum_id $forum_id \
+                          -name                    $name \
+                          -charter                 [template::util::richtext::get_property contents $charter] \
+                          -presentation_type       $presentation_type \
+                          -posting_policy          $posting_policy \
+                          -package_id              $package_id \
+                          -new_questions_allowed_p $new_questions_allowed_p \
+                          -anonymous_allowed_p     $anonymous_allowed_p]
+    }
+    
     ad_returnredirect $return_url
     ad_script_abort
 }
@@ -54,12 +50,13 @@ if { [form is_request forum] } {
     # Pre-fetch the forum_id
     set forum_id [db_nextval acs_object_id_seq]
     element set_properties forum forum_id -value $forum_id
-    element set_value forum new_threads_p 1
+    element set_value forum new_threads_p t
+    element set_value forum anonymous_allowed_p f
     element set_value forum name $name
 }
 
-if {([info exists alt_template] && $alt_template ne "")} {
-  ad_return_template $alt_template
+if {[info exists alt_template] && $alt_template ne ""} {
+    ad_return_template $alt_template
 }
 
 # Local variables:

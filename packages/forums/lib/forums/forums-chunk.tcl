@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-24
-    @cvs-id $Id: forums-chunk.tcl,v 1.14.2.1 2015/09/12 11:06:22 gustafn Exp $
+    @cvs-id $Id: forums-chunk.tcl,v 1.24 2018/05/09 15:33:31 hectorr Exp $
 
 }
 
@@ -43,7 +43,7 @@ template::list::create \
             label {\#forums.Forum_Name\#}
             link_url_col forum_view_url
             display_template {
-                <if @useReadingInfo@>
+                <if @useReadingInfo;literal@ true>
                   <if @forums.count_unread@ gt 0>
                     <strong>
                   </if>
@@ -53,11 +53,11 @@ template::list::create \
                   </if>
                 </if>
                 <else>
-                  <if @forums.new_p@ and @forums.n_threads@ gt 0>
+                  <if @forums.new_p;literal@ true and @forums.n_threads@ gt 0>
                     <strong>
                   </if>
                   @forums.name@
-                  <if @forums.new_p@ and @forums.n_threads@ gt 0>
+                  <if @forums.new_p;literal@ true and @forums.n_threads@ gt 0>
                     </strong>
                   </if>
                 </else>
@@ -71,7 +71,7 @@ template::list::create \
             label {\#forums.Threads\#}
             display_col n_threads_pretty
             display_template {
-                <if @useReadingInfo@>
+                <if @useReadingInfo;literal@ true>
                   <if  @forums.count_unread@ gt 0>
                     <strong>@forums.count_unread@ new</strong> of
                   </if>
@@ -99,7 +99,7 @@ db_multirow -extend { forum_view_url last_modified_pretty n_threads_pretty forum
     set statistic "[_ forums.Statistics]"
 }
 
-if {([info exists alt_template] && $alt_template ne "")} {
+if {[info exists alt_template] && $alt_template ne ""} {
     ad_return_template $alt_template
 }
 

@@ -1,1 +1,0 @@
-alter table evaluation_answers rename column comment to comments;

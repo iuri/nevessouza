@@ -1,7 +1,7 @@
 ad_page_contract {
 
     @author Anny Flores (annyflores@viaro.net) Viaro Networks (www.viaro.net)
-    @create-date 2005-01-19
+    @creation-date 2005-01-19
 
 } {
   inter_item_check_id:naturalnum,notnull
@@ -62,26 +62,24 @@ if {[template::form is_valid notify]} {
             -interval_id $interval_id \
             -delivery_method_id $delivery_method_id
 
-
-
-    ad_returnredirect "request-notification?assessment_id=$assessment_id&section_id=$section_id&inter_item_check_id=$inter_item_check_id"
+    ad_returnredirect [export_vars -base request-notification {assessment_id section_id inter_item_check_id}]
+    ad_script_abort
 }
 
 template::list::create -name notify_users\
--multirow notify_users\
--key request_id\
--bulk_actions\
-    {
+    -multirow notify_users \
+    -key request_id \
+    -bulk_actions {
 	"\#assessment.unsubscribe\#" "unsubscribe" "\#assessment.unsubscribe_user\#"
-    }\
+    } \
     -bulk_action_method post -bulk_action_export_vars {
 	inter_item_check_id
 	type_id
 	assessment_id
 	section_id
-    }\
-    -no_data "\#assessment.there_are_no_users\#"\
-    -row_pretty_plural "notify_users"\
+    } \
+    -no_data "\#assessment.there_are_no_users\#" \
+    -row_pretty_plural "notify_users" \
     -elements {
 	name {
 	    label "[_ assessment.User_ID] [_ assessment.Name]"
@@ -93,7 +91,18 @@ template::list::create -name notify_users\
 	    label "[_ notifications.Delivery_Method]"
 	}
     }
-db_multirow notify_users notify_users {}
+
+db_multirow -extend {name} notify_users notify_users {
+    select nr.user_id,
+           (select name from notification_intervals
+             where interval_id = nr.interval_id) as interval_name,
+           (select short_name from notification_delivery_methods
+             where delivery_method_id = nr.delivery_method_id) as delivery_name
+      from notification_requests nr
+     where nr.object_id = :inter_item_check_id
+} {
+    set name [person::name -person_id $user_id]
+}
 
 # Local variables:
 #    mode: tcl

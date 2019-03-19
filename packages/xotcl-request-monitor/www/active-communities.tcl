@@ -1,9 +1,9 @@
 ad_page_contract {
   Displays active commnities
 
-    @author Gustaf Neumann 
+    @author Gustaf Neumann
 
-    @cvs-id $id$
+    @cvs-id $Id: active-communities.tcl,v 1.4 2018/06/29 17:27:19 hectorr Exp $
 } -query {
   {orderby:token,optional "count,desc"}
 } -properties {

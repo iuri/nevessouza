@@ -108,7 +108,7 @@
         </mediaobject>
       </screenshot>
 
-      <para>Both links will lead the user to a page where the necesary
+      <para>Both links will lead the user to a page where the necessary
       permissions can be set.</para>
 
       <screenshot>
@@ -192,7 +192,7 @@
         </listitem>
 
         <listitem>
-          <para>Description: short explaination of what the action do, and how
+          <para>Description: short explanation of what the action do, and how
           its done.</para>
         </listitem>
 
@@ -551,11 +551,11 @@
         </mediaobject>
       </screenshot>If the Assessment Package is installed and mounted, the
     link can be follow and will lead to a page that shows all the assessment
-    that can be responded for anonymous users created in all of the diferent
+    that can be responded for anonymous users created in all of the different
     instances of the assessment package that could exist. If the option "None"
     is selected, it means that the registration process will be the same as
     always has been, if any other option is selected, the assessment will be
-    diplayed when a user creates a new account.</para>
+    displayed when a user creates a new account.</para>
 
     <screenshot>
       <mediaobject>

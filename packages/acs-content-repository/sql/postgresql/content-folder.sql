@@ -4,7 +4,7 @@
 -- Copyright (C) 1999-2000 ArsDigita Corporation
 -- Author: Karl Goldstein (karlg@arsdigita.com)
 
--- $Id: content-folder.sql,v 1.51.4.2 2017/04/21 17:14:16 antoniop Exp $
+-- $Id: content-folder.sql,v 1.53 2018/03/25 20:56:30 hectorr Exp $
 
 -- This is free software distributed under the terms of the GNU Public
 -- License.  Full text of the license is available from the GNU Project:
@@ -403,7 +403,7 @@ BEGIN
 
   select parent_id into v_parent_id from cr_items 
     where item_id = delete__folder_id;
-  raise notice 'deleteing folder %',delete__folder_id;
+  raise notice 'deleting folder %',delete__folder_id;
   PERFORM content_item__delete(delete__folder_id);
 
   -- check if any folders are left in the parent

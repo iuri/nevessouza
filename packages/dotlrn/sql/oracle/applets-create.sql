@@ -21,7 +21,7 @@
 -- @author yon (yon@openforce.net
 -- @author arjun (arjun@openforce.net)
 -- @creation-date September 20th, 2001 (redone)
--- @version $Id: applets-create.sql,v 1.4.10.1 2017/02/23 19:04:15 gustafn Exp $
+-- @version $Id: applets-create.sql,v 1.5 2017/08/07 23:48:09 gustafn Exp $
 --
 
 create table dotlrn_applets (

@@ -5,7 +5,7 @@ ad_page_contract {
 
 	@author jopez@galileo.edu
 	@creation-date Mar 2004
-	@cvs-id $Id: group-rename.tcl,v 1.8.2.1 2015/09/12 11:06:07 gustafn Exp $
+	@cvs-id $Id: group-rename.tcl,v 1.9 2017/08/07 23:48:10 gustafn Exp $
 } {
 	evaluation_group_id:naturalnum,notnull
 	task_id:naturalnum,notnull

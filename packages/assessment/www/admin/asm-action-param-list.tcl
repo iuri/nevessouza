@@ -1,8 +1,8 @@
 ad_page_contract {
     This page display the parameters that receive the actions
-    @authos vivian@viaro.net Viaro Networks (www.viaro.net)
-    @date 07-01-2005
-    @cvs-id $Id:
+    @author vivian@viaro.net Viaro Networks (www.viaro.net)
+    @creation-date 07-01-2005
+    @cvs-id $Id: asm-action-param-list.tcl,v 1.8 2018/06/29 17:27:18 hectorr Exp $
 } {
 
 }

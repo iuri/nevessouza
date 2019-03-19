@@ -1,1 +1,0 @@
-alter table as_assessments add column type integer;

@@ -22,7 +22,7 @@ ad_library {
     @author Arjun Sanyal (arjun@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-09-28
-    @cvs-id $Id: community-procs.tcl,v 1.211.2.6 2017/06/30 17:43:06 gustafn Exp $
+    @cvs-id $Id: community-procs.tcl,v 1.234.2.1 2019/02/14 16:15:01 gustafn Exp $
 
 }
 
@@ -31,7 +31,7 @@ namespace eval dotlrn_community {
     ad_proc -public is_initialized {
         {-community_type:required}
     } {
-        is this dotlrn_community type initialized correctly?
+        Is this dotlrn_community type initialized correctly?
     } {
         return [db_string is_dotlrn_community_type_initialized {
             select count(*)
@@ -46,7 +46,7 @@ namespace eval dotlrn_community {
         {-community_type_url_part:required}
         {-pretty_name ""}
     } {
-        create base community_type for dotlrn_community type
+        Create base community_type for dotlrn_community type.
     } {
         db_transaction {
             set package_id [dotlrn::mount_package \
@@ -65,11 +65,19 @@ namespace eval dotlrn_community {
         }
     }
 
-    ad_proc -public one_community_package_key {} {
+    ad_proc -public one_community_package_key {
+    } {
+        Get one community package key. This proc is trivial and might
+        be replaced by e.g. a namespaced variable.
+    } {
         return dotlrn
     }
 
-    ad_proc -public one_community_type_package_key {} {
+    ad_proc -public one_community_type_package_key {
+    } {
+        Get one community package key. This proc is trivial and might
+        be replaced by e.g. a namespaced variable.
+    } {
         return dotlrn
     }
 
@@ -85,8 +93,8 @@ namespace eval dotlrn_community {
         # Figure out parent_node_id
         set parent_node_id [get_type_node_id $parent_type]
         array set parent_node [site_node::get -node_id $parent_node_id]
-	
-	db_transaction {
+
+        db_transaction {
             set community_type_key [db_exec_plsql create_community_type {}]
 
             set package_id [site_node::instantiate_and_mount \
@@ -95,7 +103,7 @@ namespace eval dotlrn_community {
                 -package_name $pretty_name \
                 -package_key [one_community_type_package_key] \
                 -context_id $parent_node(object_id)]
-            
+
             # Set some parameters
             parameter::set_value -package_id $package_id -parameter dotlrn_level_p -value 0
             parameter::set_value -package_id $package_id -parameter community_type_level_p -value 1
@@ -113,7 +121,7 @@ namespace eval dotlrn_community {
     ad_proc -public delete_type {
         {-community_type_key:required}
     } {
-        delete a community type
+        Delete a community type.
     } {
         db_transaction {
             # Get the package_id for the type
@@ -134,7 +142,7 @@ namespace eval dotlrn_community {
         {-community_type:required}
         {-package_id:required}
     } {
-        map the type's name to it's package_id
+        Map the type's name to its package_id.
     } {
         db_dml update_package_id {}
     }
@@ -142,7 +150,7 @@ namespace eval dotlrn_community {
     ad_proc -public get_type_package_id {
         {-community_type:required}
     } {
-        get the type's package_id 
+        Get the type's package_id.
     } {
         return [db_string select_package_id {}]
     }
@@ -150,17 +158,21 @@ namespace eval dotlrn_community {
     ad_proc -public get_type_node_id {
         community_type
     } {
-        get the node ID of a community type
+        Get the node ID of a community type.
     } {
-        return [db_string select_node_id {}]
+        set package_id [dotlrn_community::get_type_package_id -community_type $community_type]
+        array set node [site_node::get_from_object_id -object_id $package_id]
+        return $node(node_id)
     }
 
     ad_proc -public get_community_node_id {
         community_id
     } {
-        get the node ID of a community
+        Get the node ID of a community.
     } {
-        return [db_string select_node_id {}]
+        set package_id [dotlrn_community::get_package_id $community_id]
+        array set node [site_node::get_from_object_id -object_id $package_id]
+        return $node(node_id)
     }
 
     ad_proc -public new {
@@ -172,7 +184,7 @@ namespace eval dotlrn_community {
         {-pretty_name:required}
         {-extra_vars ""}
     } {
-        create a new community
+        Create a new community.
     } {
 
         if {$community_key eq ""} {
@@ -185,7 +197,7 @@ namespace eval dotlrn_community {
             -parent_community_id $parent_community_id
 
         set package_id [dotlrn::get_package_id]
-	set dotlrn_package_id $package_id
+        set dotlrn_package_id $package_id
 
         # Set up extra vars
         if {$extra_vars eq ""} {
@@ -254,7 +266,7 @@ namespace eval dotlrn_community {
             } else {
                 set parent_node_id [get_community_node_id $parent_community_id]
             }
-	    
+
 
             set package_id [site_node::instantiate_and_mount \
                 -parent_node_id $parent_node_id \
@@ -271,12 +283,12 @@ namespace eval dotlrn_community {
 
             # Set up the node
             dotlrn_community::set_package_id $community_id $package_id
-            
+
             # update the portal_id and non_member_portal_id
             db_dml update_portal_ids {}
 
             # Add the default applets based on the community type
-            # 2. the the list of default applets for this type
+            # 2. the list of default applets for this type
             if {$community_type eq "dotlrn_community"} {
                 set default_applets [parameter::get \
                     -package_id $dotlrn_package_id \
@@ -305,14 +317,14 @@ namespace eval dotlrn_community {
             foreach applet_key $default_applets_list {
                 if {[dotlrn_applet::applet_exists_p -applet_key $applet_key]} {
                     dotlrn_community::add_applet_to_community $community_id $applet_key
-		    ns_log Notice "Added applet:::: $applet_key"
+                    ns_log Notice "Added applet: $applet_key"
                 }
             }
         }
 
-	# Assign default community site template
-	dotlrn_community::set_site_template_id -community_id $community_id \
-	    -site_template_id [parameter::get -package_id [dotlrn::get_package_id] -parameter "CommDefaultSiteTemplate_p"]
+        # Assign default community site template
+        dotlrn_community::set_site_template_id -community_id $community_id \
+            -site_template_id [parameter::get -package_id [dotlrn::get_package_id] -parameter "CommDefaultSiteTemplate_p"]
 
         # This new community should _not_ inherit it's permissions
         # from the root dotlrn instance. Why? All dotlrn users
@@ -338,7 +350,7 @@ namespace eval dotlrn_community {
 
         # Grant read_private_data permission to "non guest" users.
         dotlrn_privacy::grant_read_private_data_to_non_guests -object_id $community_id
-        
+
         #this block sets permissions for subcommunities
         while {1} {
             if {$parent_community_id ne ""} {
@@ -349,10 +361,10 @@ namespace eval dotlrn_community {
                     where group_id = :parent_community_id and rel_type='dotlrn_admin_rel'
                 }]
                 permission::grant -party_id $parent_admin_party -object_id $community_id -privilege "admin"
-                
+
                 #if this community has a parent we need to work up the chain.
                 set parent_community_id [get_parent_id -community_id $parent_community_id]
-                
+
             } else {
                 return $community_id
             }
@@ -364,7 +376,7 @@ namespace eval dotlrn_community {
         {-start_date:required}
         {-end_date:required}
     } {
-        set the community active begin and end dates
+        Set the community active begin and end dates.
     } {
         set start_date "[template::util::date::get_property year $start_date] [template::util::date::get_property month $start_date] [template::util::date::get_property day $start_date]"
         set end_date "[template::util::date::get_property year $end_date] [template::util::date::get_property month $end_date] [template::util::date::get_property day $end_date]"
@@ -377,37 +389,52 @@ namespace eval dotlrn_community {
         community_id
         package_id
     } {
-        Update the node ID for the community
+        Update the node ID for the community.
     } {
         db_dml update_package_id {}
         db_dml update_application_group_package_id {}
-	util_memoize_flush "dotlrn_community::get_package_id_not_cached $community_id"
+
+        ::dotlrn::dotlrn_community_cache flush -partition_key $community_id \
+            $community_id-package_id
     }
 
     ad_proc -public get_url {
         {-current_node_id ""}
         {-package_id ""}
     } {
-        This gets the relative URL for a package_id under a particular node_id
+        Get URL of specified package under give node_id (assuming
+        package_id is mounted under one of the children of this node).
+
+        @param current_node_id defaults to current node when not specified
     } {
-        if {$current_node_id eq ""} {
-            set current_node_id [site_node::get_node_id -url [ad_conn url]]
+        if {$package_id eq ""} {
+            return
         }
 
-        return [db_string select_node_url {} -default ""]
+        if {$current_node_id eq ""} {
+            set current_node_id [ad_conn node_id]
+        }
+
+        return [lindex [site_node::get_children \
+                            -filters [list object_id $package_id] \
+                            -element url \
+                            -node_id $current_node_id] 0]
     }
 
     ad_proc -public get_default_roles {
         {-community_id ""}
     } {
-        get default rel_type data for this community
+        Get default rel_type data for this community.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
         }
         set community_type [get_community_type_from_community_id $community_id]
 
-        return [util_memoize "dotlrn_community::get_default_roles_not_cached -community_type $community_type"]
+        ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-default_roles {
+                dotlrn_community::get_default_roles_not_cached -community_type $community_type
+            }
     }
 
     ad_proc -private get_default_roles_not_cached {
@@ -462,7 +489,7 @@ namespace eval dotlrn_community {
         {-community_id ""}
         {-rel_type:required}
     } {
-        get the pretty name for the role associated with this rel_type
+        Get the pretty name for the role associated with this rel_type.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
@@ -472,7 +499,7 @@ namespace eval dotlrn_community {
         set i [lsearch -exact $roles $rel_type]
         if {$i > -1} {
             set pretty_name [lindex $roles $i+2]
-	    return [lang::util::localize $pretty_name]
+            return [lang::util::localize $pretty_name]
         }
 
         return ""
@@ -482,7 +509,7 @@ namespace eval dotlrn_community {
         {-community_id ""}
         {-rel_type:required}
     } {
-        get the pretty plural for the role associated with this rel_type
+        Get the pretty plural for the role associated with this rel_type.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
@@ -492,16 +519,19 @@ namespace eval dotlrn_community {
         set i [lsearch -exact $roles $rel_type]
         if {$i > -1} {
             set pretty_plural [lindex $roles $i+3]
-	    return [lang::util::localize $pretty_plural]
+            return [lang::util::localize $pretty_plural]
         }
 
-	return ""
+        return ""
     }
 
     ad_proc -public get_all_roles {} {
-        return the list of roles used in dotLRN
+        Return the list of roles used in dotLRN.
     } {
-        return [util_memoize {dotlrn_community::get_all_roles_not_cached}]
+
+        ::dotlrn::dotlrn_cache eval get_all_roles {
+            dotlrn_community::get_all_roles_not_cached
+        }
     }
 
     ad_proc -private get_all_roles_not_cached {} {
@@ -509,7 +539,7 @@ namespace eval dotlrn_community {
     }
 
     ad_proc -public get_all_roles_as_options {} {
-        return the list of roles used in dotLRN
+        Return the list of roles used in dotLRN.
     } {
         set role_options [list]
 
@@ -524,7 +554,7 @@ namespace eval dotlrn_community {
         {-community_id ""}
         {-roles_data:required}
     } {
-        set the pretty_name and pretty_plural for several roles
+        Set the pretty_name and pretty_plural for several roles.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
@@ -547,7 +577,7 @@ namespace eval dotlrn_community {
         {-pretty_name:required}
         {-pretty_plural:required}
     } {
-        set the pretty_name and pretty_plural of a role for a community
+        Set the pretty_name and pretty_plural of a role for a community.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
@@ -579,7 +609,7 @@ namespace eval dotlrn_community {
         {-community_id:required}
         {-rel_type:required}
     } {
-        get the relational segment ID for a community and a rel type
+        Get the relational segment ID for a community and a rel type.
     } {
         return [db_string select_rel_segment_id {} -default ""]
     }
@@ -599,7 +629,7 @@ namespace eval dotlrn_community {
     ad_proc -private rel_segments_grant_permission {
         {-community_id:required}
     } {
-        Grant the standard set of privileges on the rel_segments of a community
+        Grant the standard set of privileges on the rel_segments of a community.
     } {
         set member_segment_id [get_members_rel_id -community_id $community_id]
         set admin_segment_id [get_admin_rel_id -community_id $community_id]
@@ -625,7 +655,7 @@ namespace eval dotlrn_community {
     ad_proc -private rel_segments_revoke_permission {
         {-community_id:required}
     } {
-        Revoke the standard set of privileges on the rel_segments of a community
+        Revoke the standard set of privileges on the rel_segments of a community.
     } {
         set member_segment_id [get_members_rel_id -community_id $community_id]
         set admin_segment_id [get_admin_rel_id -community_id $community_id]
@@ -647,7 +677,7 @@ namespace eval dotlrn_community {
     ad_proc -public create_rel_segments {
         {-community_id:required}
     } {
-        create all the relational segments for a community
+        Create all the relational segments for a community.
     } {
         set community_name [get_community_name $community_id]
 
@@ -669,7 +699,7 @@ namespace eval dotlrn_community {
     ad_proc -public delete_rel_segments {
         {-community_id:required}
     } {
-        remove the rel segments for a community
+        Remove the rel segments for a community.
     } {
         set member_segment_id [get_members_rel_id -community_id $community_id]
         set admin_segment_id [get_admin_rel_id -community_id $community_id]
@@ -682,7 +712,7 @@ namespace eval dotlrn_community {
     ad_proc -public list_admin_users {
         community_id
     } {
-        Returns list of admin users
+        Returns list of admin users.
     } {
         return [list_users -rel_type dotlrn_admin_rel $community_id]
     }
@@ -692,8 +722,9 @@ namespace eval dotlrn_community {
         community_id
     } {
         Returns the list of users with a membership_id, a user_id, first name,
-        last name, email, and role. 
+        last name, email, and role.
     } {
+        # TODO: Where is the caching??
         return [dotlrn_community::list_users_not_cached \
             -rel_type $rel_type \
             -community_id $community_id
@@ -706,6 +737,8 @@ namespace eval dotlrn_community {
     } {
         Memoizing helper
     } {
+        # All of this is awkward just to return whether we have a
+        # bio...
         set bio_attribute_id [db_string bio_attribute_id {
             select attribute_id
             from acs_attributes
@@ -713,6 +746,10 @@ namespace eval dotlrn_community {
             and attribute_name = 'bio'
         }]
 
+        # TODO: this query could be streamlined thanks to current
+        # api... on the other hand, returning a ns_set is not the
+        # current best practice for returning values, so I don't know
+        # if this is worth the effort.
         return [db_list_of_ns_sets select_users {}]
     }
 
@@ -721,7 +758,7 @@ namespace eval dotlrn_community {
     } {
         Returns the list of users from the subcomm's parent group that
         are not already in the subcomm with a membership_id, a user_id,
-        first name, last name, email, and role
+        first name, last name, email, and role.
     } {
         return [db_list_of_ns_sets select_possible_users {}]
     }
@@ -740,16 +777,21 @@ namespace eval dotlrn_community {
         community_id
         user_id
     } {
-        check membership
+        Check membership.
     } {
-        return [db_string select_count_membership {}]
+
+        ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-member-$user_id {
+                db_string select_count_membership {} -default 0
+            }
+
     }
 
     ad_proc -public member_pending_p {
         {-community_id:required}
         {-user_id:required}
     } {
-        is this user awaiting membership in this community?
+        Is this user awaiting membership in this community?
     } {
         return [db_string is_pending_membership {}]
     }
@@ -760,7 +802,7 @@ namespace eval dotlrn_community {
         community_id
         user_id
     } {
-        add a user to a particular community based on the community type
+        Add a user to a particular community based on the community type.
     } {
         set toplevel_community_type \
                 [get_toplevel_community_type_from_community_id $community_id]
@@ -788,8 +830,9 @@ namespace eval dotlrn_community {
                 -member_state $member_state
         }
 
-        util_memoize_flush "dotlrn_community::list_users_not_cached -rel_type $rel_type -community_id $community_id"
-        util_memoize_flush_regexp  $user_id
+        # there is no such entry in the util_memoize cache
+        # we keep it as a reminder to add caching for it later
+        #util_memoize_flush "dotlrn_community::list_users_not_cached -rel_type $rel_type -community_id $community_id"
     }
 
     ad_proc -public add_user_to_community {
@@ -800,9 +843,9 @@ namespace eval dotlrn_community {
         {-extra_vars ""}
     } {
         Assigns a user to a particular role for that class.
-        Roles in DOTLRN can be student, prof, ta, admin
+        Roles in dotLRN can be student, prof, ta, admin.
     } {
-	ns_log debug "dotlrn_community::add_user_to_community community_id '${community_id}' user_id '${user_id}'"
+        ns_log debug "dotlrn_community::add_user_to_community community_id '${community_id}' user_id '${user_id}'"
 
         if {[member_p $community_id $user_id]} {
             return
@@ -839,6 +882,14 @@ namespace eval dotlrn_community {
                 membership_approve -user_id $user_id -community_id $community_id
             }
         }
+        #
+        # Flush all permission checks pertaining to this user.
+        #
+        permission::cache_flush -party_id $user_id
+
+        # Remove record of this membership in the cache
+        ::dotlrn::dotlrn_community_cache flush -partition_key $community_id \
+            $community_id-member-$user_id
 
     }
 
@@ -846,9 +897,9 @@ namespace eval dotlrn_community {
         {-user_id:required}
         {-community_id:required}
     } {
-        Approve membership to a community
+        Approve membership to a community.
     } {
-        db_1row select_rel_info {}
+        set rel_id [db_string select_rel_info {}]
 
         db_transaction {
             membership_rel::approve -rel_id $rel_id
@@ -868,7 +919,7 @@ namespace eval dotlrn_community {
         {-user_id:required}
         {-community_id:required}
     } {
-        Reject membership to a community
+        Reject membership to a community.
     } {
         # This is the *right* thing to do, but for now we'll just remove them
         # (ben)
@@ -885,7 +936,7 @@ namespace eval dotlrn_community {
         community_id
         user_id
     } {
-        Removes a user from a community (and all subcomms she's a member of)
+        Removes a user from a community (and all subcomms she's a member of).
     } {
         db_transaction {
             # recursively drop membership from subgroups of this comm
@@ -907,16 +958,24 @@ namespace eval dotlrn_community {
             # Remove it
             relation_remove $rel_id
 
-            # flush the list_users cache
-            util_memoize_flush "dotlrn_community::list_users_not_cached -rel_type $rel_type -community_id $community_id"
+            # there is no such entry in the util_memoize cache
+            # we keep it as a reminder to add caching for it later
+            # util_memoize_flush "dotlrn_community::list_users_not_cached -rel_type $rel_type -community_id $community_id"
         }
-        util_memoize_flush_regexp $user_id
+        #
+        # Flush all permission checks pertaining to this user.
+        #
+        permission::cache_flush -party_id $user_id
+
+        # Remove record of this membership in the cache
+        ::dotlrn::dotlrn_community_cache flush -partition_key $community_id \
+            $community_id-member-$user_id
     }
 
     ad_proc -public remove_user_from_all {
         {-user_id:required}
     } {
-        Remove a user from all communities
+        Remove a user from all communities.
     } {
         foreach community_ns_set [dotlrn_community::get_all_communities_by_user $user_id] {
             set community_id [ns_set get $community_ns_set community_id]
@@ -929,7 +988,7 @@ namespace eval dotlrn_community {
     ad_proc -public get_all_communities_by_user {
         user_id
     } {
-        returns all communities for a user
+        Returns all communities for a user.
     } {
         return [db_list_of_ns_sets select_communities_by_user {}]
     }
@@ -938,7 +997,7 @@ namespace eval dotlrn_community {
         community_type
         user_id
     } {
-        Return a datasource of the communities that a user belongs to in a particular type
+        Return a datasource of the communities that a user belongs to in a particular type.
     } {
         set list_of_communities [list]
 
@@ -960,8 +1019,8 @@ namespace eval dotlrn_community {
     ad_proc -public get_toplevel_community_type {
         {-community_type:required}
     } {
-        returns the toplevel community_type which is the ancestor of this
-        community_type
+        Returns the toplevel community_type which is the ancestor of this
+        community_type.
     } {
         return [db_string select_community_type {}]
     }
@@ -969,7 +1028,7 @@ namespace eval dotlrn_community {
     ad_proc -public get_toplevel_community_type_from_community_id {
         community_id
     } {
-        returns the community type from community_id
+        Returns the community type from community_id.
     } {
         set type [get_community_type_from_community_id $community_id]
 
@@ -983,31 +1042,37 @@ namespace eval dotlrn_community {
     ad_proc -public get_community_type_from_community_id {
         community_id
     } {
-        returns the community type from community_id
+        Returns the community type from community_id.
     } {
-        return [util_memoize "dotlrn_community::get_community_type_from_community_id_not_cached -community_id $community_id"]
+        ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-community_type {
+                dotlrn_community::get_community_type_from_community_id_not_cached -community_id $community_id
+            }
     }
 
     ad_proc -private get_community_type_from_community_id_not_cached {
         {-community_id:required}
     } {
-        returns the community type from community_id
+        Returns the community type from community_id.
     } {
         return [db_string select_community_type {}]
     }
 
     ad_proc -public get_community_type {
     } {
-        Returns the community type key depending on the node we're at
+        Returns the community type key depending on the node we're at.
     } {
         set package_id [ad_conn package_id]
-        return [util_memoize "dotlrn_community::get_community_type_not_cached -package_id $package_id"]
+
+        ::dotlrn::dotlrn_cache eval pkg_id-$package_id-community_type {
+            dotlrn_community::get_community_type_not_cached -package_id $package_id
+        }
     }
 
     ad_proc -private get_community_type_not_cached {
         {-package_id:required}
     } {
-        Returns the community type key depending on the node we're at
+        Returns the community type key depending on the node we're at.
     } {
         return [db_string select_community_type {} -default ""]
     }
@@ -1015,7 +1080,7 @@ namespace eval dotlrn_community {
     ad_proc -public get_community_id_from_url {
         {-url ""}
     } {
-        returns the community from a URL
+        Returns the community from a URL.
     } {
         if {$url eq ""} {
             set url [ad_conn url]
@@ -1032,33 +1097,38 @@ namespace eval dotlrn_community {
         Returns the community id depending on the package_id
         we're at, or the package_id passed in.
 
-	If no community_id found, return empty_string
+        If no community_id found, return empty_string.
 
-	@param package_id PackageID for which to search the community_id for
-	@return community_id of the community where the package is mounted, empty string if not found
+        @param package_id PackageID for which to search the community_id for
+        @return community_id of the community where the package is mounted, empty string if not found
     } {
         if {$package_id eq ""} {
             set package_id [site_node::closest_ancestor_package \
                                 -url [ad_conn url] \
                                 -include_self \
                                 -package_key dotlrn]
-	    if {$package_id eq ""} {
-		set package_id [ad_conn package_id]
-	    }
+            if {$package_id eq ""} {
+                set package_id [ad_conn package_id]
+            }
         }
 
-	if {$package_id ne ""} {
-	    return [util_memoize [list dotlrn_community::get_community_id_not_cached -package_id $package_id]]
-	} else {
-	    return ""
-	}
+        if {$package_id ne ""} {
+            set key ::dotlrn::community_id($package_id)
+            if {[info exists $key]} {
+                return [set $key]
+            } else {
+                return [set $key [dotlrn_community::get_community_id_not_cached -package_id $package_id]]
+            }
+        } else {
+            return ""
+        }
     }
 
     ad_proc -private get_community_id_not_cached {
         {-package_id:required}
     } {
         Returns the community id depending on the package_id
-        we're at, or the package_id passed in
+        we're at, or the package_id passed in.
     } {
         return [db_string select_community {} -default ""]
     }
@@ -1075,7 +1145,9 @@ namespace eval dotlrn_community {
             set package_id [ad_conn package_id]
         }
 
-        return [util_memoize "dotlrn_community::get_parent_community_id_not_cached -package_id $package_id"]
+        ::dotlrn::dotlrn_cache eval pkg_id-$package_id-parent_community_id {
+            dotlrn_community::get_parent_community_id_not_cached -package_id $package_id
+        }
     }
 
     ad_proc -private get_parent_community_id_not_cached {
@@ -1094,15 +1166,18 @@ namespace eval dotlrn_community {
     ad_proc -public get_parent_id {
         {-community_id:required}
     } {
-        Returns the parent community's id or null
+        Returns the parent community's id or null.
     } {
-        return [util_memoize "dotlrn_community::get_parent_id_not_cached -community_id $community_id"]
+       ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-parent_id {
+                dotlrn_community::get_parent_id_not_cached -community_id $community_id
+            }
     }
 
     ad_proc -private get_parent_id_not_cached {
         {-community_id:required}
     } {
-        Returns the parent community's id or null
+        Returns the parent community's id or null.
     } {
         return [db_string select_parent_id {} -default ""]
     }
@@ -1110,7 +1185,7 @@ namespace eval dotlrn_community {
     ad_proc -public get_parent_name {
         {-community_id:required}
     } {
-        Returns the parent community's name or null string
+        Returns the parent community's name or null string.
     } {
         set parent_id [get_parent_id -community_id $community_id]
 
@@ -1146,12 +1221,7 @@ namespace eval dotlrn_community {
         community by checking that it's not the same as an existing (possible)
         sibling's name.
     } {
-        if {$parent_community_id ne ""} {
-            set valid_p [ad_decode [db_string collision_check_with_parent {}] 0 1 0]
-        } else {
-            # LARS 2003-10-21: Should this check only against communities with null parent_id?
-            set valid_p [ad_decode [db_string collision_check_simple {}] 0 1 0]
-        }
+        set valid_p [expr {![db_0or1row collision_check {}]}]
 
         if {$complain_if_invalid_p && !$valid_p} {
             ns_log notice "The name '$community_key' is already in use either by an active or archived group. \n Please go back and select a different name."
@@ -1167,27 +1237,26 @@ namespace eval dotlrn_community {
     ad_proc -public subcommunity_p {
         {-community_id:required}
     } {
-        Returns 1 if the community is a subcommunity, else 0
+        Returns 1 if the community is a subcommunity, else 0.
     } {
-        if {[get_parent_id -community_id $community_id] eq ""} {
-            return 0
-        } else {
-            return 1
-        }
+        return [expr {[get_parent_id -community_id $community_id] ne ""}]
     }
 
     ad_proc -public has_subcommunity_p {
         {-community_id:required}
     } {
-        Returns 1 if the community has a subcommunity, memoized for 1 min
+        Returns 1 if the community has a subcommunity, memoized for 1 min.
     } {
-        return [util_memoize "dotlrn_community::has_subcommunity_p_not_cached -community_id $community_id" 60]
+       ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-has_subcommunity_p {
+                dotlrn_community::has_subcommunity_p_not_cached -community_id $community_id
+            }
     }
 
     ad_proc -private has_subcommunity_p_not_cached {
         {-community_id:required}
     } {
-        Returns 1 if the community has a subcommunity
+        Returns 1 if the community has a subcommunity.
     } {
         return [db_0or1row select_subcomm_check {}]
     }
@@ -1196,7 +1265,7 @@ namespace eval dotlrn_community {
         {-community_id:required}
     } {
         Returns a Tcl list of the subcommunities of this community or
-        if none, the empty list
+        if none, the empty list.
     } {
         return [db_list select_subcomms {}]
     }
@@ -1204,8 +1273,10 @@ namespace eval dotlrn_community {
     ad_proc -public get_subcomm_info_list {
         {-community_id:required}
     } {
-        Returns a Tcl list of ns_sets with info about each subcomm. The keys
-        are: community_id, community_key, pretty_name, archived_p and url. Returns both archived and unarchived subcommunities.
+        Returns a Tcl list of ns_sets with info about each
+        subcomm. The keys are: community_id, community_key,
+        pretty_name, archived_p and url. Returns both archived and
+        unarchived subcommunities.
     } {
         return [db_list_of_ns_sets select_subcomms_info {}]
     }
@@ -1221,7 +1292,7 @@ namespace eval dotlrn_community {
         Returns a html fragment of the subcommunity hierarchy of this
         community or if none, the empty list.
 
-        Brief notes: his proc always shows the subgroups of the
+        Brief notes: this proc always shows the subgroups of the
         passed-in group, but shows deeper groups _only if_ you are a
         member of all the supergroups to the leaf subgroup. Not even
         admins see the whole tree.
@@ -1246,22 +1317,22 @@ namespace eval dotlrn_community {
 
         foreach sc_id [get_subcomm_list -community_id $community_id] {
 
-	    set url [get_community_url $sc_id]
-	    set subgroup_name [get_community_name $sc_id]
+            set url [get_community_url $sc_id]
+            set subgroup_name [get_community_name $sc_id]
 
-            if {[has_subcommunity_p -community_id $sc_id] 
-		&& [member_p $sc_id $user_id]} {
+            if {[has_subcommunity_p -community_id $sc_id]
+                && [member_p $sc_id $user_id]} {
                 # Shows the subcomms of this subcomm ONLY IF I'm a
                 # member of the current comm
                 append chunk [subst {$pretext
-		    <a href="[ns_quotehtml $url]" title="[_ dotlrn.goto_subgroup_name]">$subgroup_name</a>
-		}]
+                    <a href="[ns_quotehtml $url]" title="[_ dotlrn.goto_subgroup_name]">$subgroup_name</a>
+                }]
 
                 if {$show_drop_link_p} {
-		    set href [export_vars -base ${url}${drop_target} {{referer {[ad_conn url]}}}]
+                    set href [export_vars -base ${url}${drop_target} {{referer {[ad_conn url]}}}]
                     append chunk [subst {
-			(<a href="[ns_quotehtml $href]" title="[_ dotlrn.Drop_from_subgroup_name]">[_ dotlrn.Drop]</a>)
-		    }]
+                        (<a href="[ns_quotehtml $href]" title="[_ dotlrn.Drop_from_subgroup_name]">[_ dotlrn.Drop]</a>)
+                    }]
                 }
 
                 append chunk "<ul>\n[get_subcomm_chunk -community_id $sc_id -user_id $user_id -only_member_p $only_member_p]</ul>\n"
@@ -1286,8 +1357,8 @@ namespace eval dotlrn_community {
                 set parent_url [get_community_url $community_id]
 
                 append chunk [subst {$pretext
-		    <a href="[ns_quotehtml $url]" title="[_ dotlrn.goto_subgroup_name]">$subgroup_name</a>
-		}]
+                    <a href="[ns_quotehtml $url]" title="[_ dotlrn.goto_subgroup_name]">$subgroup_name</a>
+                }]
 
                 if {![member_p $sc_id $user_id] && [not_closed_p -community_id $sc_id]} {
                       append chunk "<nobr>"
@@ -1295,15 +1366,15 @@ namespace eval dotlrn_community {
                       if {[member_pending_p -community_id $sc_id -user_id $user_id]} {
                           append chunk "[_ dotlrn.Pending_Approval]"
                       } elseif {[needs_approval_p -community_id $sc_id]} {
-			  set href [export_vars -base ${parent_url}${join_target} {{community_id $sc_id} {referer {[ad_conn url]}}}]
+                          set href [export_vars -base ${parent_url}${join_target} {{community_id $sc_id} {referer {[ad_conn url]}}}]
                           append chunk [subst {
-			      <a href="[ns_quotehtml $href]" title="[_ dotlrn.Request_Membership_for_subgroup_name]">[_ dotlrn.Request_Membership]</a>
-			  }]
+                              <a href="[ns_quotehtml $href]" title="[_ dotlrn.Request_Membership_for_subgroup_name]">[_ dotlrn.Request_Membership]</a>
+                          }]
                       } else {
-			  set href [export_vars -base ${parent_url}${join_target} {{community_id $sc_id} {referer {[ad_conn url]}}}]
+                          set href [export_vars -base ${parent_url}${join_target} {{community_id $sc_id} {referer {[ad_conn url]}}}]
                           append chunk [subst {
-			      (<a href="[ns_quotehtml $href]" title="[_ dotlrn.Join_subgroup_name]">[_ dotlrn.Join]</a>)
-			  }
+                              (<a href="[ns_quotehtml $href]" title="[_ dotlrn.Join_subgroup_name]">[_ dotlrn.Join]</a>)
+                          }
                       }
 
                       append chunk "\n"
@@ -1311,10 +1382,10 @@ namespace eval dotlrn_community {
 
                     # User is a member.
                     if {$show_drop_link_p} {
-			set href [export_vars -base ${url}${drop_target} {{referer {[ad_conn url]}}}]
+                        set href [export_vars -base ${url}${drop_target} {{referer {[ad_conn url]}}}]
                         append chunk [subst {
-			    (<a href="[ns_quotehtml $href]" title="[_ dotlrn.Drop_from_subgroup_name]">[_ dotlrn.Drop]</a>)
-			}]
+                            (<a href="[ns_quotehtml $href]" title="[_ dotlrn.Drop_from_subgroup_name]">[_ dotlrn.Drop]</a>)
+                        }]
                     }
                 }
             }
@@ -1326,15 +1397,16 @@ namespace eval dotlrn_community {
     ad_proc -public get_community_type_url {
         community_type
     } {
-        Get the URL for a community type
+        Get the URL for a community type.
     } {
-        return [lindex [site_node::get_url_from_object_id -object_id [get_community_type_package_id $community_type]] 0]
+        return [lindex [site_node::get_url_from_object_id \
+                            -object_id [get_community_type_package_id $community_type]] 0]
     }
 
     ad_proc -public get_community_url {
         community_id
     } {
-        Get the URL for a community
+        Get the URL for a community.
     } {
         return [lindex [site_node::get_url_from_object_id -object_id [get_package_id $community_id]] 0]
     }
@@ -1342,7 +1414,7 @@ namespace eval dotlrn_community {
     ad_proc -public get_community_type_package_id {
         community_type
     } {
-        get the package id for a particular community type
+        Get the package id for a particular community type.
     } {
         return [db_string select_package_id {} -default [dotlrn::get_package_id]]
     }
@@ -1351,16 +1423,19 @@ namespace eval dotlrn_community {
     ad_proc -public get_package_id {
         community_id
     } {
-        get the package ID for a particular community.
-	This is cached as the package ID is not going to change
+        Get the package ID for a particular community.
+        This is cached as the package ID is not going to change.
     } {
-        return [util_memoize [list dotlrn_community::get_package_id_not_cached $community_id]]
+       ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-package_id {
+                dotlrn_community::get_package_id_not_cached $community_id
+            }
     }
 
     ad_proc -public get_package_id_not_cached {
         community_id
     } {
-        get the package ID for a particular community
+        Get the package ID for a particular community.
     } {
         return [db_string select_package_id {} -default [dotlrn::get_package_id]]
     }
@@ -1369,7 +1444,7 @@ namespace eval dotlrn_community {
         {-community_id:required}
         {-applet_key:required}
     } {
-        get the package ID for a particular community
+        Get the package ID for a particular community.
     } {
         return [db_string select_package_id {} -default ""]
     }
@@ -1377,7 +1452,7 @@ namespace eval dotlrn_community {
     ad_proc -public get_community_type_name {
         community_type
     } {
-        get the name for a community type
+        Get the name for a community type.
     } {
         return [db_string select_community_type_name {} -default ""]
     }
@@ -1386,7 +1461,7 @@ namespace eval dotlrn_community {
         {-community_id:required}
         {-pretty_name:required}
     } {
-        update the name for a community
+        Update the name for a community.
     } {
         set old_value [get_community_name $community_id]
 
@@ -1398,7 +1473,7 @@ namespace eval dotlrn_community {
         set package_id [dotlrn_community::get_package_id $community_id]
         apm_package_rename -package_id $package_id -instance_name $pretty_name
 
-        util_memoize_flush "dotlrn_community::get_community_name_not_cached $community_id"
+        ::dotlrn::dotlrn_community_cache flush -partition_key $community_id $community_id-name
 
         # generate "rename" event
         raise_change_event \
@@ -1406,20 +1481,27 @@ namespace eval dotlrn_community {
             -event rename \
             -old_value $old_value \
             -new_value $pretty_name
+
+        callback dotlrn_community::set_community_name \
+            -community_id $community_id \
+            -pretty_name  $pretty_name
     }
 
     ad_proc -public get_community_name {
         community_id
     } {
-        get the name for a community
+        Get the name for a community.
     } {
-        return [util_memoize "dotlrn_community::get_community_name_not_cached $community_id"]
+       ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-name {
+                dotlrn_community::get_community_name_not_cached $community_id
+            }
     }
 
     ad_proc -private get_community_name_not_cached {
         community_id
     } {
-        memo helper
+        Memo helper.
     } {
         return [db_string select_community_name {} -default ""]
     }
@@ -1427,7 +1509,7 @@ namespace eval dotlrn_community {
     ad_proc -public get_community_header_name {
         community_id
     } {
-        get the name for a community for the header
+        Get the name for a community for the header.
     } {
         if {[subcommunity_p -community_id $community_id]} {
             set parent_name [get_parent_name -community_id $community_id]
@@ -1441,7 +1523,7 @@ namespace eval dotlrn_community {
     ad_proc -public navigation_context {
         community_id
     } {
-        Get the navigation context (list of url and name pairs) 
+        Get the navigation context (list of url and name pairs)
         of the given community. Used for generating context bar.
 
         @author Peter Marklund
@@ -1466,7 +1548,7 @@ namespace eval dotlrn_community {
     ad_proc -public get_community_description {
         {-community_id:required}
     } {
-        get the description for a community
+        Get the description for a community.
     } {
         return [db_string select_community_description {} -default ""]
     }
@@ -1475,7 +1557,7 @@ namespace eval dotlrn_community {
         {-community_id:required}
         {-description:required}
     } {
-        update the description for a community
+        Update the description for a community.
     } {
         db_dml update_community_description {}
     }
@@ -1483,15 +1565,19 @@ namespace eval dotlrn_community {
     ad_proc -public get_community_key {
         {-community_id:required}
     } {
-        Get the key for a community
+        Get the key for a community.
     } {
-        return [db_string select_community_key {} -default ""]
+
+       ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-community_key {
+                db_string select_community_key {} -default ""
+            }
     }
 
     ad_proc -public not_closed_p {
         {-community_id:required}
     } {
-        returns 1 if the community's join policy is not closed
+        Returns 1 if the community's join policy is not closed.
     } {
         return [db_string check_community_not_closed {} -default 0]
     }
@@ -1499,7 +1585,7 @@ namespace eval dotlrn_community {
     ad_proc -public open_p {
         {-community_id:required}
     } {
-        returns 1 if the community's join policy is 'open'
+        Returns 1 if the community's join policy is 'open'.
     } {
         return [db_string check_community_open {} -default 0]
     }
@@ -1507,7 +1593,7 @@ namespace eval dotlrn_community {
     ad_proc -public needs_approval_p {
         {-community_id:required}
     } {
-        returns 1 if the community's join policy is 'needs approval' aka "request approval"
+        Returns 1 if the community's join policy is 'needs approval' a.k.a. "request approval".
     } {
         return [db_string check_community_needs_approval {} -default 0]
     }
@@ -1515,19 +1601,21 @@ namespace eval dotlrn_community {
     ad_proc -public get_portal_id {
         {-community_id ""}
     } {
-        get the id of the comm's portal
+        Get the id of the comm's portal.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
         }
-
-        return [util_memoize "dotlrn_community::get_portal_id_not_cached -community_id $community_id"]
+       ::dotlrn::dotlrn_community_cache eval -partition_key  $community_id \
+            $community_id-portal_id {
+                dotlrn_community::get_portal_id_not_cached -community_id $community_id
+            }
     }
 
     ad_proc -private get_portal_id_not_cached {
         {-community_id:required}
     } {
-        get the id of the comm's portal
+        Get the id of the comm's portal.
     } {
         return [db_string select_portal_id {} -default ""]
     }
@@ -1535,19 +1623,21 @@ namespace eval dotlrn_community {
     ad_proc -public get_non_member_portal_id {
         {-community_id ""}
     } {
-        Get the community portal_id for non-members
+        Get the community portal_id for non-members.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
         }
-
-        return [util_memoize "dotlrn_community::get_non_member_portal_id_not_cached -community_id $community_id"]
+        ::dotlrn::dotlrn_community_cache eval -partition_key  $community_id \
+            $community_id-non_member_portal_id {
+                dotlrn_community::get_non_member_portal_id_not_cached -community_id $community_id
+            }
     }
 
     ad_proc -private get_non_member_portal_id_not_cached {
         {-community_id:required}
     } {
-        Get the community portal_id for non-members
+        Get the community portal_id for non-members.
     } {
         return [db_string select_non_member_portal_id {}]
     }
@@ -1555,13 +1645,15 @@ namespace eval dotlrn_community {
     ad_proc -public get_admin_portal_id {
         {-community_id ""}
     } {
-        Get the community Admin portal_id
+        Get the community Admin portal_id.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
         }
-
-        return [util_memoize "dotlrn_community::get_admin_portal_id_not_cached -community_id $community_id"]
+        ::dotlrn::dotlrn_community_cache eval -partition_key  $community_id \
+            $community_id-admin_portal_id {
+                dotlrn_community::get_admin_portal_id_not_cached -community_id $community_id
+            }
     }
 
     ad_proc -private get_admin_portal_id_not_cached {
@@ -1578,7 +1670,7 @@ namespace eval dotlrn_community {
         {-applet_key:required}
     } {
         Helper proc for add_applet_to_community and clone, since
-        they both need to set up the community <-> applet map
+        they both need to set up the community <-> applet map.
     } {
         set applet_id [dotlrn_applet::get_applet_id_from_key -applet_key $applet_key]
 
@@ -1591,14 +1683,14 @@ namespace eval dotlrn_community {
         community_id
         applet_key
     } {
-        Adds an applet to the community
+        Adds an applet to the community.
     } {
         db_transaction {
             set package_id [applet_call \
                 $applet_key \
                 AddAppletToCommunity \
                 [list $community_id]]
-            
+
             register_applet \
                 -community_id $community_id \
                 -package_id $package_id \
@@ -1621,7 +1713,7 @@ namespace eval dotlrn_community {
         community_id
         applet_key
     } {
-        Removes an applet from a community
+        Removes an applet from a community.
     } {
         # Get the package_id
         set package_id [get_package_id $community_id]
@@ -1641,6 +1733,10 @@ namespace eval dotlrn_community {
             # Delete from the DB
             set applet_id [dotlrn_applet::get_applet_id_from_key -applet_key $applet_key]
             db_dml delete_applet_from_community {}
+
+            # flush "applet_active" entry from the cache
+            ::dotlrn::dotlrn_community_cache flush -partition_key $community_id \
+                $community_id-applet_active-$applet_key
         }
     }
 
@@ -1674,7 +1770,7 @@ namespace eval dotlrn_community {
             # there is some special stuff for cloning subcomms
             if {"dotlrn_community" eq $community_type} {
                 set subcomm_p 1
-                
+
                 # we need this here in case we are being called from ourself
                 if {$parent_community_id eq ""} {
                     set parent_community_id [get_parent_id -community_id $community_id]
@@ -1689,7 +1785,7 @@ namespace eval dotlrn_community {
                     set term_id [dotlrn_class::get_term_id -class_instance_id $parent_community_id]
                     ns_set put $extra_vars term_id $term_id
                 }
-                
+
                 check_community_key_valid_p \
                     -complain_if_invalid \
                     -community_key $key \
@@ -1701,11 +1797,11 @@ namespace eval dotlrn_community {
                 check_community_key_valid_p \
                     -complain_if_invalid \
                     -community_key $key
-                
+
                 if {$term_id ne ""} {
                     # it's a class instance that we're cloning
                     ns_set put $extra_vars class_key [db_string get_class_key {
-                        select class_key 
+                        select class_key
                         from dotlrn_class_instances_full
                         where class_instance_id = :community_id
                     }]
@@ -1776,14 +1872,14 @@ namespace eval dotlrn_community {
             } else {
                 set parent_node_id [get_type_node_id $community_type]
             }
-           
+
            set package_id [site_node::instantiate_and_mount \
                 -node_name $key \
                 -parent_node_id $parent_node_id \
                 -package_key [one_community_type_package_key] \
                 -package_name $pretty_name \
                 -context_id $clone_id \
-            ]  
+            ]
 
             # Set the right parameters
             parameter::set_value \
@@ -1833,12 +1929,12 @@ namespace eval dotlrn_community {
                 db_dml copy_customizations_if_any {}
             }
 
-	    # This new community should _not_ inherit it's permissions
-	    # from the root dotlrn instance. Why? All dotlrn users
-	    # can read the root dotlrn instance, but only members of
-	    # this community should be able to read this instance (and
-	    # it's children)
-	    permission::set_not_inherit -object_id $clone_id
+            # This new community should _not_ inherit it's permissions
+            # from the root dotlrn instance. Why? All dotlrn users
+            # can read the root dotlrn instance, but only members of
+            # this community should be able to read this instance (and
+            # it's children)
+            permission::set_not_inherit -object_id $clone_id
 
             # Grant read_private_data permission to "non guest" users.
             dotlrn_privacy::grant_read_private_data_to_non_guests -object_id $clone_id
@@ -1848,7 +1944,7 @@ namespace eval dotlrn_community {
 
             foreach subcomm $subcomm_list {
                 set subcomm_id [ns_set get $subcomm community_id]
-                
+
                 clone \
                     -community_id $subcomm_id \
                     -key [ns_set get $subcomm community_key] \
@@ -1875,7 +1971,7 @@ namespace eval dotlrn_community {
                 -site_template_id [get_site_template_id -community_id $community_id]
 
         }
-        
+
         return $clone_id
     }
 
@@ -2012,7 +2108,7 @@ namespace eval dotlrn_community {
     ad_proc -public list_applets {
         {-community_id:required}
     } {
-        lists the applets associated with a community
+        Lists the applets associated with a community.
     } {
         return [db_list select_community_applets {}]
     }
@@ -2020,7 +2116,7 @@ namespace eval dotlrn_community {
     ad_proc -public list_active_applets {
         {-community_id:required}
     } {
-        lists the applets associated with a community
+        Lists the applets associated with a community.
     } {
         return [db_list select_community_active_applets {}]
     }
@@ -2032,7 +2128,10 @@ namespace eval dotlrn_community {
         Is this applet active in this community? Does it do voulunteer work?
         Helps its neighbors? <joke> returns 1 or 0
     } {
-        return [db_0or1row select_active_applet_p {}]
+       ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-applet_active-$applet_key {
+                db_0or1row select_active_applet_p {}
+            }
     }
 
     ad_proc -public applets_dispatch {
@@ -2041,7 +2140,7 @@ namespace eval dotlrn_community {
         {-list_args {}}
     } {
         Dispatch an operation to every applet, either in one communtiy or
-        on all the active dotlrn applets
+        on all the active dotlrn applets.
     } {
         foreach applet [list_active_applets -community_id $community_id] {
             applet_call $applet $op $list_args
@@ -2053,15 +2152,18 @@ namespace eval dotlrn_community {
         op
         {list_args {}}
     } {
-        call a particular applet op
+        Call a particular applet op.
     } {
         acs_sc::invoke -contract dotlrn_applet -operation $op -call_args $list_args -impl $applet_key
     }
 
     ad_proc -public get_available_attributes {} {
-        get a list of the attributes that we can get/set for dotLRN communities
+        Get a list of the attributes that we can get/set for dotLRN communities.
     } {
-        return [util_memoize {dotlrn_community::get_available_attributes_not_cached}]
+        # candidate general cache
+        ::dotlrn::dotlrn_cache eval available_attributes {
+            dotlrn_community::get_available_attributes_not_cached
+        }
     }
 
     ad_proc -private get_available_attributes_not_cached {} {
@@ -2069,19 +2171,21 @@ namespace eval dotlrn_community {
     }
 
     ad_proc -private get_available_attributes_flush {} {
-        util_memoize_flush {dotlrn_community::get_available_attributes_not_cached}
+        ::dotlrn::dotlrn_cache flush available_attributes
     }
 
     ad_proc -public get_attributes {
         {-community_id ""}
     } {
-        get the attributes of a given community
+        Get the attributes of a given community.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
         }
-
-        return [util_memoize "dotlrn_community::get_attributes_not_cached -community_id $community_id"]
+        ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-attributes {
+                dotlrn_community::get_attributes_not_cached -community_id $community_id
+            }
     }
 
     ad_proc -private get_attributes_not_cached {
@@ -2094,7 +2198,7 @@ namespace eval dotlrn_community {
         {-community_id ""}
         {-attribute_name:required}
     } {
-        get the value for an attribute of this community
+        Get the value for an attribute of this community.
     } {
         set attribute_value ""
         foreach {attr_name attr_value} [concat {*}[get_attributes -community_id $community_id]] {
@@ -2111,7 +2215,7 @@ namespace eval dotlrn_community {
         {-community_id ""}
         {-pairs:required}
     } {
-        set attributes for a certain community
+        Set attributes for a certain community.
     } {
         foreach {attr_name attr_value} [concat {*}$pairs] {
             set_attribute -community_id $community_id -attribute_name $attr_name -attribute_value $attr_value
@@ -2123,7 +2227,7 @@ namespace eval dotlrn_community {
         {-attribute_name:required}
         {-attribute_value:required}
     } {
-        set an attribute of this community
+        Set an attribute of this community.
     } {
         # this is serious, we are trying to set an attribute that doesn't
         # exist
@@ -2144,7 +2248,7 @@ namespace eval dotlrn_community {
 
         # we assume that if the value of this attribute is null then we must
         # insert a new row for this attribute, if it's not null then we simply
-        # update it's value. this is not enforced in the database since the
+        # update its value. this is not enforced in the database since the
         # acs_attribute_values.attr_value column does not have a "not null"
         # constraint but we will enforce it via our api. if someone circumvents
         # our api then they can die and rot in hell.
@@ -2154,14 +2258,14 @@ namespace eval dotlrn_community {
             db_dml update_attribute_value {}
         }
 
-        util_memoize_flush "dotlrn_community::get_attributes_not_cached -community_id $community_id"
+        ::dotlrn::dotlrn_community_cache flush -partition_key $community_id $community_id-attributes
     }
 
     ad_proc -public unset_attribute {
         {-community_id ""}
         {-attribute_name:required}
     } {
-        ussets an attribute of this community
+        Unsets an attribute of this community.
     } {
         if {$community_id eq ""} {
             set community_id [get_community_id]
@@ -2176,25 +2280,23 @@ namespace eval dotlrn_community {
         # remove the row
         db_dml delete_attribute_value {}
 
-        util_memoize_flush \
-            "dotlrn_community::get_attributes_not_cached -community_id $community_id"
+        ::dotlrn::dotlrn_community_cache flush -partition_key $community_id $community_id-attributes
     }
 
     ad_proc -public unset_attributes {
         {-community_id ""}
     } {
-        ussets all the attributes of this community
+        Unsets all the attributes of this community.
     } {
         db_dml delete_attributes {}
 
-        util_memoize_flush \
-            "dotlrn_community::get_attributes_not_cached -community_id $community_id"
+        ::dotlrn::dotlrn_community_cache flush -partition_key $community_id $community_id-attributes
     }
 
     ad_proc -public get_attribute_id {
         {-attribute_name:required}
     } {
-        get the attribute id of an attribute
+        Get the attribute id of an attribute.
     } {
         set attribute_id ""
 
@@ -2211,15 +2313,9 @@ namespace eval dotlrn_community {
     ad_proc -public attribute_valid_p {
         {-attribute_name:required}
     } {
-        is this a valid attribute for dotlrn communities?
+        Is this a valid attribute for dotlrn communities?
     } {
-        set valid_p 0
-
-        if {[get_attribute_id -attribute_name $attribute_name] ne ""} {
-            set valid_p 1
-        }
-
-        return $valid_p
+        return [expr {[get_attribute_id -attribute_name $attribute_name] ne ""}]
     }
 
     ad_proc -private raise_change_event {
@@ -2228,7 +2324,7 @@ namespace eval dotlrn_community {
         {-old_value:required}
         {-new_value:required}
     } {
-        raise a change event so that anyone interested can take action
+        Raise a change event so that anyone interested can take action.
     } {
         applets_dispatch \
             -community_id $community_id \
@@ -2237,28 +2333,27 @@ namespace eval dotlrn_community {
     }
 
     ad_proc -public get_package_id_from_package_key {
-	{-package_key:required}
-	{-community_id:required}
+        {-package_key:required}
+        {-community_id:required}
     } {
-	Return the package_id of a certain package type mounted in a community
-	
-	@author Malte Sussdorff (sussdorff@sussdorff.de)
-	@creation-date 2005-06-13
-	
-	@param package_key
-	
-       @param community_id
-	
-	@return 
-	
-	@error 
+        Return the package_id of a certain package type mounted in a community.
+
+        @author Malte Sussdorff (sussdorff@sussdorff.de)
+        @creation-date 2005-06-13
+
+        @param package_key
+        @param community_id
+
+        @return
+
+        @error
     } {
-	
-	set package_id [dotlrn_community::get_package_id $community_id]
-	set site_node_id [site_node::get_node_id_from_object_id -object_id $package_id]
-	set url [site_node::get_children -package_key "$package_key" -node_id $site_node_id]
-	array set site_node [site_node::get_from_url -url [lindex $url 0]]
-	return $site_node(package_id)
+
+        set package_id [dotlrn_community::get_package_id $community_id]
+        set site_node_id [site_node::get_node_id_from_object_id -object_id $package_id]
+        set url [site_node::get_children -package_key "$package_key" -node_id $site_node_id]
+        array set site_node [site_node::get_from_url -url [lindex $url 0]]
+        return $site_node(package_id)
     }
 
     ad_proc -public send_member_email {
@@ -2272,7 +2367,7 @@ namespace eval dotlrn_community {
         {-override_enabled:boolean}
         {-message_only:boolean}
     } {
-        Send a membership email to the user
+        Send a membership email to the user.
 
         @author Roel Canicula (roel@solutiongrove.com)
         @creation-date 2004-09-05
@@ -2290,7 +2385,7 @@ namespace eval dotlrn_community {
 
         set var_list [lindex [callback dotlrn::member_email_var_list -community_id $community_id -to_user $to_user -type $type] 0]
         array set vars $var_list
-        if {![db_0or1row member_email {*SQL*}] }  {
+        if {![db_0or1row member_email {}] }  {
 
             # Only use the default mail if this is set in a parameter (off by default).
 
@@ -2309,23 +2404,23 @@ namespace eval dotlrn_community {
             }
         }
 
-        #This is a trick. If the subject is set, send the mail. Otherwise don't. 
+        # This is a trick. If the subject is set, send the mail. Otherwise don't.
         # We gracefully assume that the subject will be empty if no mail should be send. Otherwise why
         # bother to create the welcome message in the first place (will be spam filtered...) MalteS
         if { ([info exists subject] && $subject ne "") || $override_subject ne "" } {
             ns_log Debug "DAVEB override email '${override_email}' override_subject '${override_subject}'"
-            if {([info exists override_email] && $override_email ne "")} {
+            if {$override_email ne ""} {
                 set email $override_email
             }
-            if {([info exists override_subject] && $override_subject ne "")} {
+            if {$override_subject ne ""} {
                 set subject $override_subject
             }
             if {[info exists email] && "" ne [string trim $email] } {
-                
+
                 # user %varname% to substitute variables in email
                 set subject_vars [lang::message::get_embedded_vars $subject]
                 set email_vars [lang::message::get_embedded_vars $email]
-                foreach var [concat $subject_vars $email_vars] {
+                foreach var [list {*}$subject_vars {*}$email_vars] {
                     if {![info exists vars($var)]} {
                         set vars($var) ""
                     }
@@ -2333,26 +2428,26 @@ namespace eval dotlrn_community {
                 set var_list [array get vars]
                 set subject [lang::message::format $subject $var_list]
                 set email "[lang::message::format $email $var_list]"
-                
+
                 if {$message_only_p} {
                     return [list $subject $email]
                 }
                 # Shamelessly cut & pasted from bulk mail
-                if { (![info exists from_addr] || $from_addr eq "") } {
+                if { ![info exists from_addr] || $from_addr eq "" } {
                     set from_addr [ad_system_owner]
                 }
-                
+
                 if {$email_send_to eq ""} {
                     set to_addr [party::email -party_id $to_user]
                 }  else {
                     set to_addr [party::email -party_id $email_send_to]
                 }
-                
+
                 set extra_headers [ns_set create]
-                
+
                 set message [ad_html_text_convert -from text/enhanced -to text/html $email]
                 set mime_type "text/html"
-                
+
                 acs_mail_lite::send \
                     -to_addr $to_addr \
                     -from_addr $from_addr \
@@ -2372,18 +2467,18 @@ namespace eval dotlrn_community {
         }
         return $return_val
     }
-    
+
     ad_proc -public set_site_template_id {
         {-community_id:required}
         {-site_template_id:required}
     } {
-        Sets a given Site Template for a Community
+        Sets a given Site Template for a Community.
 
-	@author Victor Guerra ( guerra@galileo.edu )
-	@creation-date 2006-03-11
-	
-	@param community_id The id of the Community that will change it's Site Template 
-	@param site_template_id The id of the Site Template that will be used by the Community
+        @author Victor Guerra ( guerra@galileo.edu )
+        @creation-date 2006-03-11
+
+        @param community_id The id of the Community that will change its Site Template
+        @param site_template_id The id of the Site Template that will be used by the Community
 
     } {
         db_dml update_site_template {}
@@ -2391,83 +2486,86 @@ namespace eval dotlrn_community {
         set portal_id [get_portal_id -community_id $community_id]
         db_dml update_portal_theme {}
         set portal_id [get_admin_portal_id -community_id $community_id]
-	db_dml update_portal_theme {}
-	util_memoize_flush [list dotlrn_community::get_site_template_id_not_cached -community_id $community_id]
-	util_memoize_flush [list dotlrn_community::get_dotlrn_master_not_cached -community_id $community_id]
+        db_dml update_portal_theme {}
+        ::dotlrn::dotlrn_community_cache flush -partition_key $community_id $community_id-site_template
     }
 
     ad_proc -public get_dotlrn_master {
         {-community_id:required}
     } {
-        Returns the master configured for a given Community
+        Returns the master configured for a given Community.
 
-	@author Victor Guerra ( guerra@galileo.edu )
-	@creation-date 2006-03-11
+        @author Victor Guerra ( guerra@galileo.edu )
+        @creation-date 2006-03-11
 
-	@param community_id The id of the Community in order to obtain the master template configured for it
+        @param community_id The id of the Community in order to obtain the master template configured for it
 
-	@return The path of the master template that will be used.
+        @return The path of the master template that will be used.
 
     } {
         set site_template_id [get_site_template_id -community_id $community_id]
-	return [dotlrn::get_master_from_site_template_id -site_template_id $site_template_id]
+        return [dotlrn::get_master_from_site_template_id -site_template_id $site_template_id]
     }
-    
+
     ad_proc -public get_site_template_id {
         {-community_id:required}
     } {
-        Gets the id of the community's site template
+        Gets the id of the community's site template.
 
-	@author Victor Guerra ( guerra@galileo.edu )
-	@creation-date 2006-03-11
+        @author Victor Guerra ( guerra@galileo.edu )
+        @creation-date 2006-03-11
 
-	@param community_id The id of the Community of which we want to abtain the Site Template
-   
-	@return The id of the Site Template assigned to the Community
+        @param community_id The id of the Community of which we want to abtain the Site Template
+
+        @return The id of the Site Template assigned to the Community
 
     } {
-        return [util_memoize [list dotlrn_community::get_site_template_id_not_cached -community_id $community_id]]
+        ::dotlrn::dotlrn_community_cache eval -partition_key $community_id \
+            $community_id-site_template {
+                dotlrn_community::get_site_template_id_not_cached -community_id $community_id
+            }
     }
-    
-    ad_proc -private get_site_template_id_not_cached { 
+
+    ad_proc -private get_site_template_id_not_cached {
         {-community_id:required}
     } {
-	Gets the id of the community's site template - not cached
+        Gets the id of the community's site template - not cached.
     } {
-	set dotlrn_package_id [dotlrn::get_package_id] 
-	set comm_site_template_id [db_string select_site_template_id {} -default "0"]
-	if {[parameter::get -package_id $dotlrn_package_id -parameter AdminChangeSiteTemplate_p]} {
-	    set site_template_id $comm_site_template_id
-	} else {
-	    set site_template_id [parameter::get -package_id $dotlrn_package_id -parameter CommDefaultSiteTemplate_p]
-	    if {$site_template_id != $comm_site_template_id} {
-		set_site_template_id -community_id $community_id -site_template_id $site_template_id
-	    }
-	}
-	return $site_template_id
+        set dotlrn_package_id [dotlrn::get_package_id]
+        set comm_site_template_id [db_string select_site_template_id {} -default "0"]
+        if {[parameter::get -package_id $dotlrn_package_id -parameter AdminChangeSiteTemplate_p]} {
+            set site_template_id $comm_site_template_id
+        } else {
+            set site_template_id [parameter::get -package_id $dotlrn_package_id -parameter CommDefaultSiteTemplate_p]
+            if {$site_template_id != $comm_site_template_id} {
+            set_site_template_id -community_id $community_id -site_template_id $site_template_id
+            }
+        }
+        return $site_template_id
     }
-    
+
     ad_proc -public assign_default_sitetemplate {
-	{-site_template_id:required}
+        {-site_template_id:required}
     } {
-	Assigns a portal theme associated to a Site Template
-	to all communities
+        Assigns a portal theme associated to a Site Template
+        to all communities.
 
-	@author Victor Guerra ( guerra@galileo.edu )
-	@creation-date 2006-03-11
+        @author Victor Guerra ( guerra@galileo.edu )
+        @creation-date 2006-03-11
 
-	@param site_template_id The id of The Site Template to obtain the portal theme to be assigned
-    
+        @param site_template_id The id of The Site Template to obtain the portal theme to be assigned
+
     } {
-	
-	# We need to update the portal theme before the first hit!
-	set new_theme_id [db_string select_portal_theme {}]
+
+        # We need to update the portal theme before the first hit!
+        set new_theme_id [db_string select_portal_theme {}]
         db_dml update_portal_themes {}
-	db_dml update_portal_admin_themes {}
-	
-	util_memoize_flush_regexp "dotlrn_community::get_site_template_id_not_cached *" 
-    }
+        db_dml update_portal_admin_themes {}
 
+        foreach community_id [db_list affected_portals {}] {
+            ::dotlrn::dotlrn_community_cache flush -partition_key $community_id $community_id-site_template
+        }
+    }
 }
 
 # Local variables:

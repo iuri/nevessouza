@@ -1,20 +1,20 @@
-ad_library {
-    Utility functions for ical data 
-    
+::xo::library doc {
+    Utility functions for ical data
+
     @author neumann@wu-wien.ac.at
     @creation-date July 20, 2005
 
-  Incomplete backport from my calendar extensions
+  Incomplete backport from :calendar extensions
 }
 
 namespace eval ::xo {
   ::xotcl::Object ::xo::ical -ad_doc {
-    The Object ::calendar::ical provides the methods for 
+    The Object ::calendar::ical provides the methods for
     importing and exporting single or multiple calendar items
     in the ical format (see rfc 2445). Currently only the part
     of ical is implemented, which is used by the mozilla
     calendar (Sunbird, or Lightning for Thunderbird).
-    
+
     @author Gustaf Neumann
   }
 
@@ -36,7 +36,8 @@ namespace eval ::xo {
     clock format [clock scan $time] -format "%Y%m%dT%H%M%SZ" -gmt 1
   }
   ical proc tcl_time_to_local_day {time} {
-    VALUE=DATE:[my clock_to_local_day [clock scan $time]]
+    # https://tools.ietf.org/html/rfc5545#section-3.3.4
+    return "VALUE=DATE:[:clock_to_local_day [clock scan $time]]"
   }
   ical proc utc_to_clock {utc_time} {
     clock scan $utc_time -format "%Y%m%dT%H%M%SZ" -gmt 1
@@ -51,9 +52,9 @@ namespace eval ::xo {
     clock format $seconds -format "%Y%m%d"
   }
   ical proc clock_to_oacstime {seconds} {
-    clock format $seconds -format "%Y-%m-%d %H:%M" 
+    clock format $seconds -format "%Y-%m-%d %H:%M"
   }
-  
+
   ical ad_proc dates_valid_p {
     -start_date:required
     -end_date:required
@@ -67,12 +68,12 @@ namespace eval ::xo {
   }
 
   ical ad_proc text_to_ical {{-remove_tags false} text} {
-    Transform arbitrary text to the escaped ical text format 
+    Transform arbitrary text to the escaped ical text format
     (see rfc 2445)
   } {
     if {$remove_tags} {regsub -all {<[^>]+>} $text "" text}
-    regsub -all \n $text \\n text
     regsub -all {(\\|\;|\,)} $text {\\\1} text
+    regsub -all \n $text {\\n} text
     return $text
   }
   ical ad_proc ical_to_text {text} {
@@ -82,7 +83,7 @@ namespace eval ::xo {
     regsub -all {\\(\\|\;|\,)} $text {\1} text
     return $text
   }
-  
+
 }
 
 namespace eval ::xo {
@@ -107,41 +108,60 @@ namespace eval ::xo {
   }
 
   ::xo::ical::VCALITEM instproc tag {-tag -conv -value slot} {
+    #ns_log notice "::xo::ical::VCALITEM tag [self args]"
     if {![info exists tag]} {
       set tag [string toupper $slot]
     }
     if {![info exists value]} {
-      if {[my exists $slot]} {
-    set value [my $slot]
+      if {[info exists :$slot]} {
+        set value [set :$slot]
       } else {
-    return ""
+        return ""
       }
     }
     if {[info exists conv]} {
-      return "$tag:[::xo::ical $conv $value]\r\n"
-    } else {
-      return "$tag:$value\r\n"
+      set value [::xo::ical $conv $value]
     }
-    return ""
+    if {$value ne ""} {
+      set result "$tag:$value"
+      #
+      # Perform line folding: According to RFC 5545 section 3.1,
+      # SHOULD NOT be longer than 75 octets, excluding the line break.
+      # https://www.ietf.org/rfc/rfc5545.txt
+      #
+      if {[string length $result] > 73} {
+        set lines ""
+        while {[string length $result] > 73} {
+          append lines [string range $result 0 73] \r\n " "
+          set result [string range $result 74 end]
+        }
+        append lines $result
+        set result $lines
+      }
+      append result \r\n
+      #ns_log notice "::xo::ical::VCALITEM tag [self args] -> len: [string length $result]"
+    } else {
+      set result ""
+    }
+    return $result
   }
 
   ::xo::ical::VCALITEM instproc start_end {} {
-    if {[my is_day_item]} {
+    if {${:is_day_item}} {
       append result \
-      [my tag -conv tcl_time_to_local_day dtstart] \
-      [my tag -conv tcl_time_to_local_day dtend]
+          "DTSTART;" [::xo::ical tcl_time_to_local_day ${:dtstart}] \r\n
     } else {
       append result \
-      [my tag -conv tcl_time_to_utc dtstart] \
-      [my tag -conv tcl_time_to_utc dtend]
+          [:tag -conv tcl_time_to_utc dtstart] \
+          [:tag -conv tcl_time_to_utc dtend]
     }
   }
 
   ::xo::ical::VCALITEM instproc as_ical {} {
-    set item_type [namespace tail [my info class]]
+    set item_type [namespace tail [:info class]]
     append t "BEGIN:$item_type\r\n" \
-    [my ical_body] \
-    "END:$item_type\r\n"
+        [:ical_body] \
+        "END:$item_type\r\n"
     return $t
   }
 
@@ -155,47 +175,45 @@ namespace eval ::xo {
     # might occur more than once). An option would be to handle these
     # as lists.
     #
-    my instvar creation_date last_modified dtstamp
     #
-    # All date/time stamps are provided either by 
+    # All date/time stamps are provided either by
     # the ANSI date (from postgres) or by a date
     # which can be processed via clock scan
     #
-    if {![info exists dtstamp]}       {set dtstamp $creation_date}
-    if {![info exists last_modified]} {set last_modified $dtstamp}
-    
-    set tcl_stamp         [::xo::db::tcl_date $dtstamp tz]
-    set tcl_creation_date [::xo::db::tcl_date $creation_date tz]
-    set tcl_last_modified [::xo::db::tcl_date $last_modified tz]
+    if {![info exists :dtstamp]}       {set :dtstamp ${:creation_date}}
+    if {![info exists :last_modified]} {set :last_modified ${:dtstamp}}
 
-    # status values: 
+    set tcl_stamp         [::xo::db::tcl_date ${:dtstamp} tz]
+    set tcl_creation_date [::xo::db::tcl_date ${:creation_date} tz]
+    set tcl_last_modified [::xo::db::tcl_date ${:last_modified} tz]
+
+    # status values:
     #    VEVENT:   TENTATIVE, CONFIRMED, CANCELLED
     #    VTODO:    NEEDS-ACTION, COMPLETED, IN-PROCESS, CANCELLED
     #    VJOURNAL: DRAFT, FINAL, CANCELLED
 
     append t  \
-    [my tag -conv tcl_time_to_utc -value $tcl_creation_date created] \
-    [my tag -conv tcl_time_to_utc -value $tcl_last_modified last-modified] \
-    [my tag -conv tcl_time_to_utc -value $tcl_stamp dtstamp] \
-    [my tag -conv tcl_time_to_utc dtstart] \
-    [my tag -conv tcl_time_to_utc dtend] \
-    [my tag -conv tcl_time_to_utc completed] \
-    [my tag -conv tcl_time_to_utc percent-complete] \
-    [my tag transp] \
-    [my tag uid] \
-    [my tag url] \
-    [my tag geo] \
-    [my tag priority] \
-    [my tag sequence] \
-    [my tag CLASS] \
-    [my tag location] \
-    [my tag status] \
-    [my tag -conv text_to_ical description] \
-    [my tag -conv text_to_ical summary] \
-    [my tag -conv tcl_time_to_utc due]
-    
-    if {[my exists formatted_recurrences]} {
-      append t [my set formatted_recurrences]
+        [:tag -conv tcl_time_to_utc -value $tcl_creation_date created] \
+        [:tag -conv tcl_time_to_utc -value $tcl_last_modified last-modified] \
+        [:tag -conv tcl_time_to_utc -value $tcl_stamp dtstamp] \
+        [:start_end] \
+        [:tag -conv tcl_time_to_utc completed] \
+        [:tag -conv tcl_time_to_utc percent-complete] \
+        [:tag transp] \
+        [:tag uid] \
+        [:tag url] \
+        [:tag geo] \
+        [:tag priority] \
+        [:tag sequence] \
+        [:tag CLASS] \
+        [:tag -conv text_to_ical location] \
+        [:tag status] \
+        [:tag -conv text_to_ical description] \
+        [:tag -conv text_to_ical summary] \
+        [:tag -conv tcl_time_to_utc due]
+
+    if {[info exists :formatted_recurrences]} {
+      append t ${:formatted_recurrences}
     }
     return $t
   }
@@ -256,12 +274,12 @@ namespace eval ::xo {
   #
   Class create ::xo::ical::VCALENDAR -parameter {prodid version method}
   ::xo::ical::VCALENDAR instproc as_ical {} {
-    if {[my exists prodid]}  {set prodid  "PRODID:[my prodid]\n"} {set prodid ""}
-    if {[my exists method]}  {set method  "METHOD:[string toupper [my method]]\n"} {set method ""}
-    if {[my exists version]} {set version "VERSION:[my version]\n"} {set version "VERSION:2.0\n"}
+    if {[info exists :prodid]}  {set prodid  "PRODID:[:prodid]\n"} {set prodid ""}
+    if {[info exists :method]}  {set method  "METHOD:[string toupper [:method]]\n"} {set method ""}
+    if {[info exists :version]} {set version "VERSION:[:version]\n"} {set version "VERSION:2.0\n"}
     set t ""
     append t "BEGIN:VCALENDAR\n" $prodid $version $method
-    foreach i [my children] {
+    foreach i [:children] {
       append t [$i as_ical]
     }
     append t "END:VCALENDAR\n"
@@ -269,13 +287,15 @@ namespace eval ::xo {
   }
 
   #
-  # Subclass ::xo::ProtocolHander for dav (as used by ical)
+  # Subclass ::xo::ProtocolHandler for dav (as used by ical)
   #
   Class create ::xo::dav -superclass ProtocolHandler -parameter {
     {url /webdav}
   }
-
+  
 }
+
+::xo::library source_dependent
 
 #
 # Local variables:

@@ -3,7 +3,7 @@ ad_page_contract {
     Displays a simple view of the source category tree for copy.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: tree-copy-view.tcl,v 1.7 2018/06/29 17:27:18 hectorr Exp $
 } {
     source_tree_id:naturalnum,notnull
     target_tree_id:naturalnum,notnull

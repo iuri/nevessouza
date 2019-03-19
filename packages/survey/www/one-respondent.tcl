@@ -10,7 +10,7 @@ ad_page_contract {
     @author  philg@mit.edu
     @author  nstrug@arsdigita.com
     @date    28th September 2000
-    @cvs-id  $Id: one-respondent.tcl,v 1.9.2.1 2016/05/21 11:04:16 gustafn Exp $
+    @cvs-id  $Id: one-respondent.tcl,v 1.11 2017/09/30 18:12:52 gustafn Exp $
 } {
 
     survey_id:naturalnum,notnull
@@ -42,7 +42,7 @@ set editable_p $survey_info(editable_p)
 set context [_ survey.Responses]
 
 if {$description_html_p != "t" } {
-    set description [ad_text_to_html $description]
+    set description [ad_text_to_html -- $description]
 }
 
 db_multirow -extend {answer_summary pretty_submission_date respond_url} responses responses_select {} {

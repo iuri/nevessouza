@@ -21,7 +21,7 @@
 --
 -- The core DM and API for static portal content
 -- 
--- $Id: static-core.sql,v 1.9.10.1 2015/09/29 12:21:31 gustafn Exp $
+-- $Id: static-core.sql,v 1.11 2018/01/29 14:20:28 gustafn Exp $
 -- 
 
 --
@@ -40,7 +40,8 @@ create table static_portal_content (
     body                        clob,
     format                      varchar2(30)
                                 default 'text/html'
-                                constraint static_p_c_format_ck check (format in ('text/enhanced', 'text/plain', 'text/fixed-width', 'text/html'))
+                                constraint static_p_c_format_ck
+				check (format in ('text/enhanced', 'text/markdown', 'text/plain', 'text/fixed-width', 'text/html'))
 );
 create index static_portal_content_package_id_idx on static_portal_content(package_id);
 

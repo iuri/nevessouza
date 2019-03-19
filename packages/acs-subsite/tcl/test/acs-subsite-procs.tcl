@@ -3,10 +3,19 @@ ad_library {
 
     @author Joel Aufrecht
     @creation-date 2 Nov 2003
-    @cvs-id $Id: acs-subsite-procs.tcl,v 1.7.2.4 2017/04/21 15:27:49 gustafn Exp $
+    @cvs-id $Id: acs-subsite-procs.tcl,v 1.12 2018/12/11 16:23:21 antoniop Exp $
 }
 
-aa_register_case acs_subsite_expose_bug_775 {
+aa_register_case \
+    -bugs {775} \
+    -procs {
+        group::delete
+        group::new
+        permission::grant
+        rel_segments_new
+        relation_add
+    } \
+    acs_subsite_expose_bug_775 {
     Exposes Bug 775.
 
     @author Don Baccus
@@ -30,7 +39,15 @@ aa_register_case acs_subsite_expose_bug_775 {
 
 }
 
-aa_register_case acs_subsite_expose_bug_1144 {
+aa_register_case \
+    -bugs {1144} \
+    -procs {
+        acs_user::delete
+        application_group::group_id_from_package_id
+        auth::create_user
+        group::add_member
+    } \
+    acs_subsite_expose_bug_1144 {
     Exposes Bug 1144.
 
     @author Peter Marklund
@@ -75,7 +92,10 @@ aa_register_case acs_subsite_expose_bug_1144 {
         }
 }
 
-aa_register_case -cats smoke acs_subsite_trivial_smoke_test {
+aa_register_case \
+    -cats smoke \
+    -procs {subsite::main_site_id} \
+    acs_subsite_trivial_smoke_test {
     Minimal smoke test.
 } {    
 
@@ -84,29 +104,38 @@ aa_register_case -cats smoke acs_subsite_trivial_smoke_test {
         -test_code {
             # initialize random values
             set name [ad_generate_random_string]
-
             set main_subsite_id [subsite::main_site_id]
-
-            aa_true "Main subsite exists" [expr {$main_subsite_id ne ""}]
-
+            aa_true "Main subsite exists" {$main_subsite_id ne ""}
         }
 }
 
-aa_register_case -cats smoke acs_subsite_unregistered_visitor {
+aa_register_case \
+    -cats smoke \
+    acs_subsite_unregistered_visitor {
     Test that unregistered visitor is not in any groups
 } {
 
     aa_equals "Unregistered vistior is not in any groups except The Public" \
-        [db_string count_rels "
+        [db_string count_rels {
 	    select count(*)
 	    from group_member_map g, acs_magic_objects a
 	    where g.member_id = 0
 	      and g.group_id <> a.object_id
-	      and a.name = 'the_pubic'" -default 0] 0
+              and a.name = 'the_public'} -default 0] 0
 }
 
 
-aa_register_case -cats smoke acs_subsite_check_composite_group {
+aa_register_case \
+    -cats smoke \
+    -procs {
+        acs_user::get_by_username_not_cached
+        auth::authority::local
+        auth::create_user
+        group::add_member
+        group::new
+        relation_add
+        util_memoize_flush
+    } acs_subsite_check_composite_group {
     Build a 3-level hierarchy of composite groups and check memberships. This test case covers the membership and composition rel insertion triggers and composability of basic membership and admin rels.
 
     @author Michael Steigman
@@ -203,6 +232,65 @@ aa_register_case -cats smoke acs_subsite_check_composite_group {
 
         }
 }
+
+aa_register_case \
+    -cats smoke \
+    -procs {
+        group_type::new
+        acs_object_type::get
+        group::new
+        group::get
+        group_type::delete
+        _
+    } acs_subsite_group_type {
+        Create a new group type, create a new instance of it, check
+        that everything was created according to expectations and
+        cleanup at the end.
+
+        @author Antonio Pisano
+    } {
+        set group_type "aa_test_group_type"
+
+        try {
+            # Make sure the group type does not exist
+            group_type::delete -group_type $group_type
+
+            # Create the group type
+            set pretty_name "Test Group"
+            set pretty_plural "Test Groups"
+            set returned_group_type [group_type::new \
+                                         -group_type $group_type \
+                                         -supertype "group" \
+                                         $pretty_name $pretty_plural]
+            aa_true "Function returns the expected value (the group type)" \
+                {$group_type eq $returned_group_type}
+
+            # Test group type info
+            acs_object_type::get -object_type $group_type -array type
+            aa_true "Group type is an ACS Object created with expected values" \
+                {$pretty_name eq $type(pretty_name) && $pretty_plural eq $type(pretty_plural)}
+
+            # Create a group type instance
+            set group_name "${group_type}_instance_1"
+            set pretty_name "${pretty_name} Instance 1"
+            set group_id [group::new \
+                              -group_name  $group_name \
+                              -pretty_name $pretty_name \
+                              $group_type]
+
+            # Test group info
+            set group [group::get -group_id $group_id]
+            set expected_group_name  [dict get $group group_name]
+            # Pretty name is stored in an automatically generated message key
+            set expected_pretty_name [_ [string trim [dict get $group title] "#"]]
+            aa_true "Group was created with supplied values: $group_name eq $expected_group_name && $pretty_name eq $expected_pretty_name" \
+                {$group_name eq $expected_group_name && $pretty_name eq $expected_pretty_name}
+
+        } finally {
+            # Cleanup
+            group_type::delete -group_type $group_type
+        }
+    }
 
 # Local variables:
 #    mode: tcl

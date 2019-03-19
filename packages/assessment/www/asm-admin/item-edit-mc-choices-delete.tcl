@@ -6,7 +6,7 @@ ad_page_contract {
 
   @author timo@timohentschel.de
 
-  @cvs-id $Id: item-swap.tcl
+  @cvs-id $Id: item-edit-mc-choices-delete.tcl,v 1.9 2018/06/29 17:27:18 hectorr Exp $
 
 } {
     assessment_id:naturalnum,notnull
@@ -49,7 +49,9 @@ db_transaction {
 
 set section_id $new_section_id
 set as_item_id $new_item_id
+
 ad_returnredirect [export_vars -base item-edit {assessment_id section_id as_item_id}]
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

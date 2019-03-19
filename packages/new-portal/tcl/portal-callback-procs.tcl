@@ -3,7 +3,7 @@ ad_library {
 
     @author Dirk Gomez <openacs@dirkgomez.de>
     @creation-date 2005-06-12
-    @cvs-id $Id: portal-callback-procs.tcl,v 1.2.2.2 2017/04/22 12:33:27 gustafn Exp $
+    @cvs-id $Id: portal-callback-procs.tcl,v 1.4 2018/07/12 09:03:47 gustafn Exp $
 }
 
 ##################
@@ -52,7 +52,7 @@ ad_proc -public -callback search::url -impl portal_datasource {} {
     @author openacs@dirkgomez.de
     @creation-date 2005-06-13
 
-    returns a url for a portal to the search package
+    returns a URL for a portal to the search package
 
 } {
     # TODO implement me

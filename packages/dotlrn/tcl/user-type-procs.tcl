@@ -20,7 +20,7 @@ ad_library {
 
     @author <a href="mailto:yon@openforce.net">yon@openforce.net</a>
     @creation-date 2002-07-26
-    @cvs-id $Id: user-type-procs.tcl,v 1.5.2.1 2015/09/11 11:40:40 gustafn Exp $
+    @cvs-id $Id: user-type-procs.tcl,v 1.7 2018/09/18 17:27:14 gernst Exp $
 
 }
 
@@ -31,7 +31,9 @@ namespace eval dotlrn::user::type {
     } {
         get the user type info for the given dotlrn_user_type (cached)
     } {
-        return [util_memoize "dotlrn::user::type::get_not_cached -type $type"]
+        ::dotlrn::dotlrn_cache eval usertype-$type {
+            dotlrn::user::type::get_not_cached -type $type
+        }          
     }
 
     ad_proc -public get_not_cached {

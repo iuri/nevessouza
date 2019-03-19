@@ -10,7 +10,7 @@ ad_page_contract {
     @param  return_url   url to redirect to after submission 
     @author teadams@alum.mit
     @date   March 27, 2003
-    @cvs-id $Id: respond.tcl,v 1.5.2.2 2017/06/30 17:55:10 gustafn Exp $
+    @cvs-id $Id: respond.tcl,v 1.8 2018/04/26 08:56:38 hectorr Exp $
 } {
 
     user_id:naturalnum,notnull
@@ -51,8 +51,10 @@ set display_type $survey_info(display_type)
 set user_exists_p [db_0or1row user_name_from_id "select first_names, last_name from persons where person_id = :user_id" ]
 
 if { !$user_exists_p } {
-    ad_return_error "Not Found" "Could not find user #$user_id"
-    return
+    ad_return_error \
+	"Not Found" \
+	"Could not find user #$user_id"
+    ad_script_abort
 }
 
 # XXX TODO - person name
@@ -70,7 +72,7 @@ db_1row get_initial_response ""
 set rownum 0
 # for double-click protection
 set new_response_id [db_nextval acs_object_id_seq]    
-set questions [list]
+set questions {}
 
 db_foreach survey_sections {} {
 

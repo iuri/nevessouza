@@ -2,7 +2,7 @@ ad_page_contract {
     Displays last requests of a user
 
     @author Gustaf Neumann (adapted for interaction with controlling thread)
-    @cvs-id $Id: last-requests.tcl,v 1.8.2.3 2017/01/26 11:48:29 gustafn Exp $
+    @cvs-id $Id: last-requests.tcl,v 1.11 2018/07/05 15:14:01 gustafn Exp $
 } -query {
   request_key
   {all:optional 1}
@@ -18,10 +18,10 @@ set context [list "Last Requests"]
 set hide_patterns [parameter::get -parameter hide-requests -default {*.css}]
 
 if {[string is integer $request_key]} {
-    acs_user::get -user_id $request_key -array user
-    set user_string "$user(first_names) $user(last_name)"
-    set tmp_url [acs_community_member_url -user_id $request_key]
-    append user_string " (<a href='[ns_quotehtml $tmp_url]'>$request_key</a>)" 
+  set person [person::get_person_info -person_id $request_key]
+  set user_string "[dict get $person first_names] [dict get $person last_name]"
+  set tmp_url [acs_community_member_url -user_id $request_key]
+  append user_string " (<a href='[ns_quotehtml $tmp_url]'>$request_key</a>)" 
 } else {
    set user_string $request_key 
 }

@@ -4,7 +4,7 @@ ad_library {
 
     @creation-date 15 Apr 2000
     @author Jon Salz (jsalz@arsdigita.com)
-    @cvs-id $Id: 00-database-procs-postgresql.tcl,v 1.43.24.1 2015/09/10 08:21:54 gustafn Exp $
+    @cvs-id $Id: 00-database-procs-postgresql.tcl,v 1.44 2017/08/07 23:47:59 gustafn Exp $
 }
 
 # This file is now obsolete.  All procs have been merged into

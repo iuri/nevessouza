@@ -6,7 +6,7 @@ ad_page_contract {
     @author Bruno Mattarollo <bruno.mattarollo@ams.greenpeace.org>
     @author Christian Hvid
     @creation-date 30 October 2001
-    @cvs-id $Id: edit-localized-message.tcl,v 1.20.2.3 2016/05/20 19:55:32 gustafn Exp $
+    @cvs-id $Id: edit-localized-message.tcl,v 1.24 2018/05/18 09:47:09 gustafn Exp $
 
 } {
     locale
@@ -66,7 +66,7 @@ ad_form -name message_form -form {
         {label "Description"}
         {after_html {}}
     }
-} 
+}
 
 if { $default_locale ne $current_locale } {
     ad_form -extend -name message_form -form {
@@ -75,10 +75,10 @@ if { $default_locale ne $current_locale } {
         }
     }
 }
-    
+
 ad_form -extend -name message_form -form {
     {message:text(textarea)
-        {label "$locale_label Message"} 
+        {label "$locale_label Message"}
         {html { rows 6 cols 40 } }
     }
     {comment:text(textarea),optional
@@ -117,7 +117,7 @@ ad_form -extend -name message_form -form {
         and    cu.user_id = lm.creation_user
     }]
 
-    if { ([info exists message] && $message ne "") } {
+    if { [info exists message] && $message ne "" } {
         set message $message
     } else {
         set message $original_message
@@ -127,7 +127,7 @@ ad_form -extend -name message_form -form {
     if { $description eq "" } {
         set description [subst {(<a href="[ns_quotehtml $description_edit_url]">add description</a>)}]
     } else {
-        set description "[ad_text_to_html -- $description] [subst { (<a href="[ns_quotehtml $description_edit_url]">edit</a>)}]"
+        set description "[ad_text_to_html -- $description] (<a href='[ns_quotehtml $description_edit_url]'>edit</a>)"
     }
 
     # Augment the audit trail with info on who created the first message
@@ -158,30 +158,30 @@ ad_form -extend -name message_form -form {
                                      where  lm2.package_key = :package_key
                                      and    lm2.message_key = :message_key
                                      and    lm2.locale = :current_locale
-                                     )                                     
+                                     )
             }
-        } 
+        }
 
         set first_translated_message [subst {
-	    <ul> <li>First translated by
-	    [acs_community_member_link -user_id $creation_user_id -label $creation_user_name] on $creation_date
-	    </li></ul>
-	}]
+            <ul> <li>First translated by
+            [acs_community_member_link -user_id $creation_user_id -label $creation_user_name] on $creation_date
+            </li></ul>
+        }]
     } else {
         set first_translated_message ""
     }
 } -on_submit {
 
     set first_translated_message ""
-    
-    with_catch errmsg {
-	# Call semantic and sanity checks on the key before registering.
-	lang::message::check $locale $package_key $message_key $message
-    } {
-	template::form::set_error message message $errmsg
-	break
+
+    ad_try {
+        # Call semantic and sanity checks on the key before registering.
+        lang::message::check $locale $package_key $message_key $message
+    } on error {errorMsg} {
+        template::form::set_error message message $errorMsg
+        break
     }
-    
+
     # Register message via acs-lang
     lang::message::register -comment $comment $locale $package_key $message_key $message
 

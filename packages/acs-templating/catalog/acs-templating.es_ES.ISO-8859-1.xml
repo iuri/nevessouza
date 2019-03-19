@@ -22,6 +22,7 @@
   <msg key="Element_is_too_long_Singular">%label% es un caracater muy largo.</msg>
   <msg key="Enhanced_Text">Texto Enriquecido</msg>
   <msg key="Enter_your_search_text">Introduzca el texto a buscar</msg>
+  <msg key="filter_clear">Limpiar</msg>
   <msg key="Fixed_width_Text">Preformateado
 </msg>
   <msg key="Format">Formato
@@ -83,6 +84,7 @@
   <msg key="lt_No_value_supplied_for_-field_pretty-">Falta especificar el valor de %field_pretty%</msg>
   <msg key="lt_The_-field_pretty-_must_be_non_negative">%field_pretty% debe ser un entero no negativo</msg>
   <msg key="lt_When_specifying_a_non">Al especificar un page_size distinto de 0, debe especificar también el page_query o page_query_name</msg>
+  <msg key="Markdown_Text">Texto en formato Markdown</msg>
   <msg key="Meridian">Meridiano</msg>
   <msg key="Minutes">Minutos</msg>
   <msg key="minutes">minutos</msg>

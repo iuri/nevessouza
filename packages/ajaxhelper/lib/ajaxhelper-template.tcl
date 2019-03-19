@@ -10,7 +10,7 @@ set js_sources ""
 set init_body ""
 
 # if we're using ajax, let's use doc_type strict so we can get
-# consistent results accross standards compliant browsers
+# consistent results across standards compliant browsers
 # if { [info exists ajax_helper_js_sources] || [info exists ajax_helper_yui_js_sources] || [info exists ajax_helper_dojo_js_sources] } {
 #    set doc_type { <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> }
 # }

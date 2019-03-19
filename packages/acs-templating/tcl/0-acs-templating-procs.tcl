@@ -4,7 +4,7 @@ ad_library {
 
     @author Karl Goldstein (karlg@arsdigita.com)
 
-    @cvs-id $Id: 0-acs-templating-procs.tcl,v 1.3.2.3 2016/10/03 18:52:07 antoniop Exp $
+    @cvs-id $Id: 0-acs-templating-procs.tcl,v 1.4 2017/08/07 23:48:01 gustafn Exp $
 }
 
 # Initialize namespaces used by template procs

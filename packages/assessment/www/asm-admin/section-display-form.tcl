@@ -2,7 +2,7 @@ ad_page_contract {
     Form to add/edit a section display type.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: section-display-form.tcl,v 1.8 2018/06/29 17:27:18 hectorr Exp $
 } {
     assessment_id:naturalnum,notnull
     section_id:naturalnum,optional

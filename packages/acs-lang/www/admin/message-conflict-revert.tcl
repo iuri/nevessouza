@@ -1,5 +1,5 @@
 ad_page_contract {
-    Revert the a message to the last overwritten version. 
+    Revert the message to the last overwritten version.
     Mark conflict of an I18N message as resolved, i.e.
     set the conflict_p flag to false.
 
@@ -21,6 +21,7 @@ db_transaction {
 }
 
 ad_returnredirect $return_url
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

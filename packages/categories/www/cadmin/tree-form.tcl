@@ -2,7 +2,7 @@ ad_page_contract {
     Form to add/edit a category tree.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: tree-form.tcl,v 1.12 2018/06/29 17:27:18 hectorr Exp $
 } {
     tree_id:naturalnum,optional
     {locale ""}

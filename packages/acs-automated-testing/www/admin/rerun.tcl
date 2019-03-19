@@ -1,5 +1,5 @@
 ad_page_contract {
-    @cvs-id $Id: rerun.tcl,v 1.6.2.2 2015/09/10 08:21:15 gustafn Exp $
+    @cvs-id $Id: rerun.tcl,v 1.8 2018/01/19 21:23:51 gustafn Exp $
 } {
     {package_key:token ""}
     {category:aa_test_category ""}
@@ -22,6 +22,7 @@ if {$testcase_id eq ""} {
 	{by_package_key $package_key}
 	{by_category $category}
 	view_by quiet stress security_risk}]
+    ad_script_abort
 } else {
     if {$quiet} {
 	aa_runseries -quiet -testcase_id $testcase_id "" ""
@@ -29,7 +30,9 @@ if {$testcase_id eq ""} {
 	aa_runseries -testcase_id $testcase_id "" ""
     }
     ad_returnredirect "testcase?testcase_id=$testcase_id&package_key=$package_key&quiet=$quiet"
+    ad_script_abort
 }
+
 
 
 # Local variables:

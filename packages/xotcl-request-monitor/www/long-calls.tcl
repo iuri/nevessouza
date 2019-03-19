@@ -1,9 +1,9 @@
 ad_page_contract {
     Displays last n lines of long-calls log
 
-    @author Gustaf Neumann 
+    @author Gustaf Neumann
 
-    @cvs-id $id$
+    @cvs-id $Id: long-calls.tcl,v 1.4 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {lines:naturalnum 20}
     {readsize:naturalnum 100000}

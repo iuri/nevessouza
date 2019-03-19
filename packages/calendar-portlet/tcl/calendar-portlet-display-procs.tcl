@@ -18,11 +18,11 @@
 
 ad_library {
 
-Procedures to support the calendar portlet display
+    Procedures to support the calendar portlet display
 
-@creation-date April 15, 2002
-@author ben@openforce.net
-@cvs-id $Id: calendar-portlet-display-procs.tcl,v 1.3.24.1 2015/09/10 08:30:17 gustafn Exp $
+    @creation-date April 15, 2002
+    @author ben@openforce.net
+    @cvs-id $Id: calendar-portlet-display-procs.tcl,v 1.5 2018/07/10 16:03:55 antoniop Exp $
 
 }
 
@@ -30,6 +30,10 @@ namespace eval calendar_portlet_display {
     
     ad_proc -public get_url_stub {
         calendar_id
+    } {
+        Get the URL this calendar is mapped to.
+
+        @return a URL
     } {
         return [site_node_object_map::get_url -object_id $calendar_id]
     }

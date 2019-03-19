@@ -18,7 +18,7 @@
 -- The New Portal Package
 --
 -- @author arjun@openforce.net
--- @version $Id: objects-create.sql,v 1.4 2007/05/15 20:14:47 donb Exp $
+-- @version $Id: objects-create.sql,v 1.6 2018/07/11 16:32:40 antoniop Exp $
 
 -- datasources
 select acs_object_type__create_type (
@@ -26,8 +26,8 @@ select acs_object_type__create_type (
     'Portal Data Source',
     'Portal Data Sources',
     'acs_object',
-    'PORTAL_DATASOURCES',
-    'DATASOURCE_ID',
+    'portal_datasources',
+    'datasource_id',
     'portal_datasource',
     'f',
     null,
@@ -67,30 +67,14 @@ select acs_attribute__create_attribute (
     'f'
 );
 
-select acs_attribute__create_attribute (
-    'portal_datasource',
-    'CONTENT',
-    'string',
-    'Content',
-    'Contents',
-    null,
-    null,
-    null,
-    1,
-    1,
-    null,
-    'type_specific',
-    'f'
-);
-
 -- portal_layouts
 select  acs_object_type__create_type (
     'portal_layout',
     'Portal Layout',
     'Portal Layouts',
     'acs_object',
-    'PORTAL_LAYOUTS',
-    'LAYOUT_ID',
+    'portal_layouts',
+    'layout_id',
     'portal_layout',
     'f',
     null,
@@ -120,22 +104,6 @@ select acs_attribute__create_attribute (
     'string',
     'Description',
     'Descriptions',
-    null,
-    null,
-    null,
-    1,
-    1,
-    null,
-    'type_specific',
-    'f'
-);
-
-select acs_attribute__create_attribute (
-    'portal_layout',
-    'TYPE',
-    'string',
-    'Type',
-    'Types',
     null,
     null,
     null,
@@ -184,8 +152,8 @@ select  acs_object_type__create_type (
     'Portal Element Theme',
     'Portal Element Themes',
     'acs_object',
-    'PORTAL_ELEMENT_THEMES',
-    'THEME_ID',
+    'portal_element_themes',
+    'theme_id',
     'portal_element_theme',
     'f',
     null,
@@ -215,22 +183,6 @@ select acs_attribute__create_attribute (
     'string',
     'Description',
     'Descriptions',
-    null,
-    null,
-    null,
-    1,
-    1,
-    null,
-    'type_specific',
-    'f'
-);
-
-select acs_attribute__create_attribute (
-    'portal_element_theme',
-    'TYPE',
-    'string',
-    'Type',
-    'Types',
     null,
     null,
     null,
@@ -279,8 +231,8 @@ select  acs_object_type__create_type (
     'Portal',
     'Portals',
     'acs_object',
-    'PORTALS',
-    'PORTAL_ID',
+    'portals',
+    'portal_id',
     'portal',
     'f',
     null,
@@ -309,7 +261,7 @@ select acs_object_type__create_type (
     'Portal Page',
     'Portal Pages',
     'acs_object',
-    'PORTAL_PAGES',
+    'portal_pages',
     'page_id',
     'portal_page',
     'f',

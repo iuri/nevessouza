@@ -14,7 +14,7 @@
   Configure the plugin as per the directions in the config.php file.
    
  * @author $Author: gustafn $
- * @version $Id: MootoolsFileManager.js,v 1.1.2.1 2016/01/03 20:51:26 gustafn Exp $
+ * @version $Id: MootoolsFileManager.js,v 1.2 2017/08/07 23:48:27 gustafn Exp $
  * @package MootoolsFileManager
  */
 

@@ -7,7 +7,7 @@ ad_library {
     @author Dave Bauer (dave@solutiongrove.com)
     @creation-date 2005-05-15
     @arch-tag: ba556f8e-d5bf-4455-bb19-06be198014d8
-    @cvs-id $Id: as-item-type-swcat-procs.tcl,v 1.5.2.1 2015/09/10 08:27:59 gustafn Exp $
+    @cvs-id $Id: as-item-type-swcat-procs.tcl,v 1.6 2017/08/07 23:48:03 gustafn Exp $
 }
 
 namespace eval as::item_type_swcat {}

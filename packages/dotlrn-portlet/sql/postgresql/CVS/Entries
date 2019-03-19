@@ -1,6 +1,6 @@
-/dotlrn-admin-portlet-create.sql/1.4/Mon Oct 27 16:41:22 2014//Topenacs-5-9-compat
-/dotlrn-members-portlet-create.sql/1.4/Mon Oct 27 16:41:22 2014//Topenacs-5-9-compat
-/dotlrn-members-staff-portlet-create.sql/1.4/Mon Oct 27 16:41:22 2014//Topenacs-5-9-compat
-/dotlrn-portlet-create.sql/1.4/Mon Oct 27 16:41:23 2014//Topenacs-5-9-compat
-/dotlrn-portlet-drop.sql/1.4/Mon Oct 27 16:41:23 2014//Topenacs-5-9-compat
+/dotlrn-admin-portlet-create.sql/1.4/Mon Oct 27 16:41:22 2014//Toacs-5-10
+/dotlrn-members-portlet-create.sql/1.4/Mon Oct 27 16:41:22 2014//Toacs-5-10
+/dotlrn-members-staff-portlet-create.sql/1.5/Wed Jul 11 21:57:26 2018//Toacs-5-10
+/dotlrn-portlet-create.sql/1.4/Mon Oct 27 16:41:23 2014//Toacs-5-10
+/dotlrn-portlet-drop.sql/1.4/Mon Oct 27 16:41:23 2014//Toacs-5-10
 D

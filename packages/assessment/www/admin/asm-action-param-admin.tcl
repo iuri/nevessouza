@@ -1,8 +1,8 @@
 ad_page_contract {
     This page admin the parameters that receive the Tcl code defined in the action
     @author vivian@viaro.net Viaro Networks (www.viaro.net)
-    @date 07-01-2005
-    @cvs-id $Id:
+    @creation-date 07-01-2005
+    @cvs-id $Id: asm-action-param-admin.tcl,v 1.11 2018/06/29 17:27:18 hectorr Exp $
 } {
     action_id:naturalnum,notnull
     parameter_id:naturalnum,optional
@@ -78,6 +78,7 @@ ad_form -name parameter_admin -form {
 } -on_submit {
     
     ad_returnredirect "asm-action-param-admin?action_id=$action_id"
+    ad_script_abort
 }
 
 # Local variables:

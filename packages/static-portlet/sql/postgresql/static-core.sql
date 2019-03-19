@@ -21,7 +21,7 @@
 --
 -- The core DM and API for static portal content
 --
--- $Id: static-core.sql,v 1.7.2.2 2015/09/29 19:16:59 gustafn Exp $
+-- $Id: static-core.sql,v 1.9 2018/01/29 14:20:28 gustafn Exp $
 --
 --
 -- PostGreSQL port samir@symphinity.com 11 July 2002
@@ -37,15 +37,15 @@ BEGIN
 
    perform acs_object_type__create_type (
         'static_portal_content',            -- object_type
-        'Static Content',                            -- pretty_name
-        'Static Content',                            -- pretty_plural
-            'acs_object',                                    -- supertype
+        'Static Content',                   -- pretty_name
+        'Static Content',                   -- pretty_plural
+            'acs_object',                   -- supertype
         'static_portal_content',            -- table_name
-        'content_id',                                    -- id_column
-                null,                                                        -- package_name
-                'f',                                                    -- abstract_p
-                null,                                                        -- type_extension_table
-                null                                                        -- name_method
+        'content_id',                       -- id_column
+                null,                       -- package_name
+                'f',                        -- abstract_p
+                null,                       -- type_extension_table
+                null                        -- name_method
     );
     return 0;
 END;
@@ -74,7 +74,7 @@ create table static_portal_content (
     body                        text,
     format			varchar(30) default 'text/html'
 				constraint static_p_c_format_in
-				check (format in ('text/enhanced', 'text/plain', 'text/fixed-width', 'text/html'))
+				check (format in ('text/enhanced', 'text/markdown', 'text/plain', 'text/fixed-width', 'text/html'))
 );
 
 create index static_portal_content_package_id_idx on static_portal_content(package_id);

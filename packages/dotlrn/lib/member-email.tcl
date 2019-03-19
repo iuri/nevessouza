@@ -5,8 +5,7 @@
 #
 # @author Deds Castillo (deds@i-manila.com.ph)
 # @creation-date 2005-07-20
-# @arch-tag: 7d4ddca7-20cd-4e7d-9fc1-d23cd8b2a712
-# @cvs-id $Id: member-email.tcl,v 1.6.4.2 2016/09/12 11:14:56 gustafn Exp $
+# @cvs-id $Id: member-email.tcl,v 1.8 2018/08/15 16:43:08 gustafn Exp $
 
 foreach required_param {community_id type return_url} {
     if {![info exists $required_param]} {

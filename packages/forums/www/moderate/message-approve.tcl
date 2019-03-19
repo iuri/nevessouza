@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-24
-    @cvs-id $Id: message-approve.tcl,v 1.5.2.2 2016/05/20 20:38:58 gustafn Exp $
+    @cvs-id $Id: message-approve.tcl,v 1.9 2018/06/26 14:21:39 antoniop Exp $
 
 } {
     message_id:naturalnum,notnull
@@ -12,15 +12,16 @@ ad_page_contract {
 }
 
 # Check that the user can moderate the forum
-forum::security::require_moderate_message -message_id $message_id
+forum::message::get -message_id $message_id -array message
+forum::security::require_moderate_forum -forum_id $message(forum_id)
 
 # Approve the message
 forum::message::approve -message_id $message_id
+# flush templating cache so if this was a new thread UI list will be rebuilt
+forum::flush_templating_cache -forum_id $message(forum_id)
 
 ad_returnredirect "$return_url?message_id=$message_id"
-
-
-
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

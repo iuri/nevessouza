@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author John Lowry (lowry@ardigita.com)
     @creation-date 29 September 2000
-    @cvs-id $Id: format-test.tcl,v 1.1.24.1 2015/09/10 08:21:30 gustafn Exp $
+    @cvs-id $Id: format-test.tcl,v 1.3 2017/11/16 13:19:03 antoniop Exp $
 } { }
 
 set title "Test acs-lang package formatting routines"
@@ -13,7 +13,7 @@ set header [ad_header $title]
 # set navbar [ad_context_bar "Test"]
 set footer [ad_footer]
 
-db_1row lang_system_time_select "SELECT to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') AS system_time FROM dual"
+db_1row lang_system_time_select {}
 
 # Test 5 checks the localization routines
 set us_number [lc_numeric 123456.789 {} en_US]

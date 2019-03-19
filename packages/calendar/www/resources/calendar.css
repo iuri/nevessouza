@@ -254,12 +254,12 @@
 
 .day-entry-item {
 	position:absolute;
-	width:65px;
+	width:130px;
 	height:43px;
-    overflow: hidden;
+	overflow: hidden;
 	border:1px #ffffff solid;
 	opacity:.9; 
-    font-size: 90%;
+	font-size: 90%;
 }
 
 .day-entry-item p {
@@ -388,3 +388,10 @@ a.cal-export-option, a.cal-export-option:link, a.cal-export-option:visited, a.ca
   text-decoration: underline;
 }
 
+.calendar-Item span.time-span {
+    font-size: smaller;
+    color: #999;
+}
+.calendar-Item {
+    line-height: 1.1em;
+}

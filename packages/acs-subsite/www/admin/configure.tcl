@@ -3,7 +3,7 @@ ad_page_contract {
     
     @author Lars Pind (lars@collaboraid.biz)
     @creation-date 2003-06-13
-    @cvs-id $Id: configure.tcl,v 1.12.6.3 2015/09/10 10:07:01 gustafn Exp $
+    @cvs-id $Id: configure.tcl,v 1.14 2017/10/01 12:16:05 gustafn Exp $
 }
 
 set page_title [_ acs-subsite.Subsite_Configuration]
@@ -52,7 +52,7 @@ ad_form -name name -cancel_url [ad_conn url] -mode display -form {
     set group(description) $description
     group::update -group_id $group_id -array group
 
-    switch $visibility {
+    switch -- $visibility {
         any {
             permission::set_inherit -object_id [ad_conn package_id]
         }

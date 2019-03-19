@@ -3,7 +3,7 @@
   
   @creation-date 2006-08-08
   @author Gustaf Neumann
-  @cvs-id $Id: notification-procs.tcl,v 1.21.2.4 2016/11/29 22:04:46 gustafn Exp $
+  @cvs-id $Id: notification-procs.tcl,v 1.23 2017/12/22 13:51:40 gustafn Exp $
 }
 
 namespace eval ::xowiki {
@@ -123,7 +123,7 @@ namespace eval ::xowiki::notification {
       #
       # The notification renderer returned empty. Nothing to do.
       #
-      #ns_log notice "--n notification renderer returned emtpy for page [$page name] (revision_id $revision_id). Nothing to do"
+      #ns_log notice "--n notification renderer returned empty for page [$page name] (revision_id $revision_id). Nothing to do"
       return
     }
 

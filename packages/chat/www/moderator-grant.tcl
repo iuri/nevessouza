@@ -4,7 +4,7 @@ ad_page_contract {
     Add moderator to a room.
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 16, 2000
-    @cvs-id $Id: moderator-grant.tcl,v 1.3.12.1 2016/06/20 08:40:23 gustafn Exp $
+    @cvs-id $Id: moderator-grant.tcl,v 1.6.2.1 2019/02/14 16:15:01 gustafn Exp $
 } {
     room_id:naturalnum,notnull
 } -properties {
@@ -28,3 +28,8 @@ db_multirow parties list_parties {}
 
 ad_return_template grant-entry
 
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

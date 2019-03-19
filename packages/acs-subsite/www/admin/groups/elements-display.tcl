@@ -6,10 +6,10 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Mon Jan  8 14:01:48 2001
-    @cvs-id $Id: elements-display.tcl,v 1.6.2.2 2015/10/28 09:38:35 gustafn Exp $
+    @cvs-id $Id: elements-display.tcl,v 1.10 2018/07/03 13:22:40 michaela Exp $
 
 } {
-    group_id:naturalnum,notnull
+    group_id:integer,notnull
     rel_type:notnull
     {member_state ""}
 } -properties {
@@ -26,9 +26,9 @@ ad_page_contract {
     ancestor_rel_type:onevalue
 } -validate {
     groups_exists_p -requires {group_id:notnull} {
-	if { ![group::permission_p $group_id] } {
-	    ad_complain "The group either does not exist or you do not have permission to view it"
-	}
+        if { ![permission::permission_p -object_id $group_id -privilege "read"] } {
+            ad_complain "The group either does not exist or you do not have permission to view it"
+        }
     }
 }
 
@@ -45,7 +45,7 @@ db_1row group_and_rel_info {}
 # The role pretty names can be message catalog keys that need
 # to be localized before they are displayed
 set role_pretty_name [lang::util::localize $role_pretty_name]
-set role_pretty_plural [lang::util::localize $role_pretty_plural]    
+set role_pretty_plural [lang::util::localize $role_pretty_plural]
 
 set context [list [list "[ad_conn package_url]admin/groups/" "Groups"] [list [export_vars -base one group_id] "One Group"] "All $role_pretty_plural"]
 

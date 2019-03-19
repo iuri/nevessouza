@@ -3,13 +3,13 @@ ad_library {
 
     @creation-date 2004-04-01
     @author Jeff Davis davis@xarg.net
-    @cvs-id $Id: faq-sc-procs.tcl,v 1.3.2.1 2015/09/12 11:06:12 gustafn Exp $
+    @cvs-id $Id: faq-sc-procs.tcl,v 1.6 2018/07/12 12:39:45 hectorr Exp $
 }
 
 namespace eval faq::fts {}
 
 ad_proc -private faq::fts::datasource { faq_id } {
-    returns a datasource for a faq event to 
+    returns a datasource for a faq event to
     be indexed by the full text search engine.
 
     @param faq_id
@@ -32,7 +32,7 @@ ad_proc -private faq::fts::datasource { faq_id } {
 }
 
 ad_proc -private faq::fts::url { faq_id } {
-    returns a url for a faq to the search package
+    returns a URL for a faq to the search package
 
     @author davis@xarg.net
     @creation-date 2004-04-01
@@ -46,7 +46,7 @@ namespace eval faq_qanda::fts {}
 
 
 ad_proc -private faq_qanda::fts::datasource { entry_id } {
-    returns a datasource for a faq q/a to 
+    returns a datasource for a faq q/a to
     be indexed by the full text search engine.
 
     @param entry_id
@@ -59,10 +59,10 @@ ad_proc -private faq_qanda::fts::datasource { entry_id } {
         where faq_id = (select faq_id from faq_q_and_as where entry_id = :entry_id)
     } -default "FAQ $entry_id"]
 
-    if {[db_0or1row get {select question, answer from faq_q_and_as where entry_id = :entry_id}]} { 
+    if {[db_0or1row get {select question, answer from faq_q_and_as where entry_id = :entry_id}]} {
         append title ": $question"
         set content "Q: $question\n\nA: $answer\n\n"
-    } else { 
+    } else {
         set content {}
     }
 
@@ -75,7 +75,7 @@ ad_proc -private faq_qanda::fts::datasource { entry_id } {
 }
 
 ad_proc -private faq_qanda::fts::url { entry_id } {
-    returns a url for a faq to the search package
+    returns a URL for a faq to the search package
 
     @author davis@xarg.net
     @creation-date 2004-04-01
@@ -98,7 +98,7 @@ ad_proc -private faq::sc::register_implementations {} {
 }
 
 ad_proc -private faq::sc::unregister_implementations {} {
-    db_transaction { 
+    db_transaction {
         acs_sc::impl::delete -contract_name FtsContentProvider -impl_name faq
         acs_sc::impl::delete -contract_name FtsContentProvider -impl_name faq_q_and_a
     }

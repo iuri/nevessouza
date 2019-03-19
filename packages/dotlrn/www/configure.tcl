@@ -25,7 +25,7 @@ ad_page_contract {
     @author Arjun Sanyal (arjun@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-10-24
-    @version $Id: configure.tcl,v 1.22.8.3 2017/04/21 20:45:16 gustafn Exp $
+    @cvs-id $Id: configure.tcl,v 1.25 2018/06/29 17:27:19 hectorr Exp $
 
 }
 
@@ -33,13 +33,13 @@ if {[parameter::get -parameter community_type_level_p] == 1} {
 
     # at a community type level, redirect
     ad_returnredirect "one-community-type"
-    return
+    ad_script_abort
 
 } elseif {[parameter::get -parameter community_level_p] == 1} {
 
     # at a community, only admins can configure a comm's portal
     ad_returnredirect "one-community"
-    return
+    ad_script_abort
 
 } else {
 

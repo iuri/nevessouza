@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-01-20
-    @version $Id: user-add-3.tcl,v 1.13.4.2 2015/09/18 08:05:10 gustafn Exp $
+    @cvs-id $Id: user-add-3.tcl,v 1.16 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     email
     message
@@ -49,7 +49,7 @@ if {[catch {acs_mail_lite::send -send_immediately -to_addr $email -from_addr $ad
 }
 
 ad_returnredirect $referer
-
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

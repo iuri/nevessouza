@@ -3,7 +3,7 @@
 --
 -- @author rhs@mit.edu
 -- @creation-date 2000-08-22
--- @cvs-id $Id: groups-create.sql,v 1.28.4.3 2017/04/21 15:59:20 gustafn Exp $
+-- @cvs-id $Id: groups-create.sql,v 1.29 2017/08/07 23:47:56 gustafn Exp $
 --
 
 ----------------------------

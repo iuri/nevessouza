@@ -18,7 +18,7 @@ ad_page_contract {
 
     @author nimam (mazloumi@uni-mannheim.de)
     @creation-date Oct 05, 2004
-    @version $Id: members.tcl,v 1.34.2.2 2016/09/28 10:17:59 gustafn Exp $
+    @cvs-id $Id: members.tcl,v 1.39 2018/06/29 17:27:19 hectorr Exp $
 
 } {
     {orderby:token,optional "last_name,asc"}
@@ -91,7 +91,7 @@ set elm_list {
         label ""
         html "align right"
         display_template {
-            <if @members.portrait_p@ true>
+            <if @members.portrait_p;literal@ true>
               <a href="@members.member_url@" title="#acs-subsite.lt_User_has_portrait_title#">
                 <img src="/resources/acs-subsite/profile-16.png" height="16" width="16" alt="#acs-subsite.Profile#" style="border:0">
               </a>
@@ -237,11 +237,13 @@ if {$subcomm_p} {
             set return_url [ns_conn url]
         }
         ad_returnredirect $return_url
+        ad_script_abort
     }
 
 }
 
-if {([info exists reset] && $reset ne "") && ([info exists reltype] && $reltype ne "")} {
+if {[info exists reset] && $reset ne ""
+    && [info exists reltype] && $reltype ne ""} {
     set result ""
     db_multirow reset_members select_members {} {
         rp_form_put user_id $member_id

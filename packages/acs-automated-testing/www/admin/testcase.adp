@@ -1,7 +1,7 @@
 <master>
   <property name="doc(title)">@title;noquote@ (@package_key@)</property>
   <property name="context">@context;literal@</property>
-
+  <h1>@title@</h1>
   <div class="description">
     <dl>
       <dt>Description:</dt><dd>@testcase_desc@</dd>
@@ -15,6 +15,10 @@
         <dt>Procs:</dt><dd>This test case covers OpenACS proc(s):
           @proc_blurb;noquote@</dd>
       </if>
+      <if @url_blurb@ not nil>  
+        <dt>URLs:</dt><dd>This test case covers the following URLs:
+          @url_blurb;noquote@</dd>
+      </if>
       <if @testcase_inits@ ne "">
         <dt>Initialisation Classes:</dt><dd>@testcase_inits@</dd>
       </if>
@@ -22,16 +26,17 @@
         <dt class="fail">Testcase failure error response:</dt>
         <dd>@testcase_on_error;noquote@</dd>
       </if>
-      <if @showsource@ eq 1>
+      <if @showsource;literal@ true>
         <multiple name="bodys">
-          <dt>  Body @bodys.body_number@ source  </dt>
-          <dd><pre>@bodys.body@</pre></dd>
+	  <if @bodys:rowcount;literal@ lt 2><dt>Body:</dt></if>
+	  <else><dt>Body (part @bodys.body_number@)</dt></else>
+          <dd><pre class="code">@bodys.body;literal@</pre></dd>
         </multiple>
       </if>
     </dl>
   </div>
 
-  <if @showsource@ eq 0>
+  <if @showsource;literal@ false>
     [<a href="testcase?testcase_id=@testcase_id@&amp;package_key=@package_key@&amp;showsource=1&amp;quiet=@quiet@">
       show testcase source
     </a>]
@@ -50,7 +55,7 @@
   
   <p>
     <strong>Results</strong> 
-    [<if @quiet@ eq "1">
+    [<if @quiet;literal@ true>
       <strong> quiet </strong> | 
       <a href="@verbose_url@">verbose</a>
     </if><else>
@@ -73,7 +78,7 @@
           <td class="ok">@tests_quiet.result@</td>
         </elseif>
         <else>
-          <td>@tests_quiet.result@</td>
+          <td class="log">@tests_quiet.result@</td>
         </else>
         <td align="right" class="@tests_quiet.result@">@tests_quiet.count@</td>
       </tr>
@@ -86,7 +91,7 @@
       <th>Result</th>
       <th>Notes</th>
     </tr>
-    <if @tests:rowcount@ eq 0>
+    <if @tests:rowcount;literal@ eq 0>
       <tr><td> No results </td></tr>
     </if>
     <else>
@@ -97,18 +102,27 @@
         <else>
           <tr class="even">
         </else>
-        
-        <td> @tests.timestamp@ </td>
+	<td> @tests.timestamp@ </td>
         <if @tests.result@ eq "fail">
           <td class="fail">FAILED</td>
+	  <td><pre>@tests.notes;literal@</pre></td>	  
         </if>
         <elseif @tests.result@ eq "pass">
           <td class="ok">@tests.result@</td>
+  	  <td><pre>@tests.notes;literal@</pre></td>
+        </elseif>
+        <elseif @tests.result@ eq "warn">
+          <td class="warn">@tests.result@</td>
+  	  <td><pre class="warn">@tests.notes;literal@</pre></td>
+        </elseif>
+        <elseif @tests.result@ eq "sect">
+          <td class="sect"></td>
+  	  <td><div class="sect">@tests.notes;literal@</div></td>
         </elseif>
         <else>
-          <td>@tests.result@</td>
+          <td class="log">@tests.result@</td>
+	  <td class="log">@tests.notes;literal@</td>
         </else>
-        <td><pre>@tests.notes@</pre></td>
       </tr>
       </multiple>
     </else>

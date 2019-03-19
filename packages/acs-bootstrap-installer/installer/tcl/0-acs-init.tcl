@@ -5,7 +5,7 @@
 #
 # jsalz@mit.edu, 12 May 2000
 #
-# $Id: 0-acs-init.tcl,v 1.2.2.6 2017/08/01 08:50:23 gustafn Exp $
+# $Id: 0-acs-init.tcl,v 1.3 2017/08/07 23:47:46 gustafn Exp $
 
 namespace eval acs {
     #

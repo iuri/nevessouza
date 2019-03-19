@@ -24,20 +24,6 @@
 </fullquery>
 
  
-<fullquery name="attribute::delete.select_attr_info">      
-      <querytext>
-      
-        select a.object_type, a.attribute_name, 
-               case when a.storage = 'type_specific' then t.table_name else a.table_name end as table_name,
-	       coalesce(a.column_name, a.attribute_name) as column_name
-          from acs_attributes a, acs_object_types t
-         where a.attribute_id = :attribute_id
-           and t.object_type = a.object_type
-    
-      </querytext>
-</fullquery>
-
- 
 <fullquery name="attribute::value_delete.select_last_sort_order">      
       <querytext>
       
@@ -106,16 +92,31 @@
 
 
 <fullquery name="attribute::value_add.insert_enum_value">
-<querytext>
-	insert into acs_enum_values
-	(attribute_id, sort_order, enum_value, pretty_name)
-	select :attribute_id, :sort_order, :enum_value, :enum_value
-	from dual
-	where not exists (select 1 
-	from acs_enum_values v2
-	where v2.pretty_name = :enum_value
-	and v2.attribute_id = :attribute_id)
-</querytext>
+  <querytext>
+    insert into acs_enum_values
+    (attribute_id, sort_order, enum_value, pretty_name)
+    select :attribute_id, :sort_order, :enum_value, :enum_value
+    from dual
+    where not exists (select 1 
+    from acs_enum_values v2
+    where v2.pretty_name = :enum_value
+    and v2.attribute_id = :attribute_id)
+  </querytext>
 </fullquery>
- 
+
+
+<fullquery name="attribute::add.drop_attr_column">
+  <querytext>
+    alter table $table_name drop column $attribute_name
+  </querytext>
+</fullquery>
+
+
+<fullquery name="attribute::add.add_column">
+  <querytext>
+    alter table $table_name add $attribute_name $sql_type
+  </querytext>
+</fullquery>
+
+
 </queryset>

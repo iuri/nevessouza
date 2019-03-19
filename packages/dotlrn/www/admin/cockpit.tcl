@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Nima Mazloumi (mazloumi@uni-mannheim.d)
     @creation-date 2004-08-09
-    @version $Id: cockpit.tcl,v 1.1.1.1 2005/04/29 10:57:31 ecwork Exp $
+    @cvs-id $Id: cockpit.tcl,v 1.1.1.1 2005/04/29 10:57:31 ecwork Exp $
 }
 
 #Pages in this directory are only runnable by dotlrn-wide admins.
@@ -82,7 +82,7 @@ template::list::create \
     }
 
 
-set users [list]
+set users {}
 
 set count 0
 

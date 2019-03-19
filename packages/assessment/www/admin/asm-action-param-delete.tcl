@@ -1,8 +1,8 @@
 ad_page_contract {
     This page display the parameters that receive the actions
-    @authos vivian@viaro.net Viaro Networks (www.viaro.net)
-    @date 07-01-2005
-    @cvs-id $Id:
+    @author vivian@viaro.net Viaro Networks (www.viaro.net)
+    @creation-date 07-01-2005
+    @cvs-id $Id: asm-action-param-delete.tcl,v 1.11 2018/06/29 17:27:18 hectorr Exp $
 } {
     parameter_id:naturalnum,notnull
     action_id:naturalnum,notnull
@@ -24,10 +24,12 @@ ad_form -name parameter_delete -form {
 }  -on_submit {
     if { $back eq "back" } {
 	ad_returnredirect "asm-action-new?action_id=$action_id"
+        ad_script_abort
     } else {
 
 	as::actionparam::paramdelete $parameter_id
 	ad_returnredirect "asm-action-new?action_id=$action_id"
+        ad_script_abort
     }
 
 }

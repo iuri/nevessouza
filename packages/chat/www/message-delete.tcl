@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date January 18, 2001
-    @cvs-id $Id: message-delete.tcl,v 1.5.6.1 2016/06/20 08:40:23 gustafn Exp $
+    @cvs-id $Id: message-delete.tcl,v 1.8.2.1 2019/02/14 16:15:01 gustafn Exp $
 } {
     room_id:notnull,naturalnum
 } -properties {
@@ -23,3 +23,9 @@ set pretty_name [chat_room_name $room_id]
 set message_count [chat_message_count $room_id]
 
 ad_return_template
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

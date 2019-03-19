@@ -3,7 +3,7 @@
 
   @author Gustaf Neumann (gustaf.neumann@wu-wien.ac.at)
   @creation-date Aug 11, 2006
-  @cvs-id $Id: export.tcl,v 1.22.2.1 2015/09/10 08:10:41 gustafn Exp $
+  @cvs-id $Id: export.tcl,v 1.24 2017/12/22 13:51:41 gustafn Exp $
 
   @param object_type 
 } -parameter {
@@ -33,7 +33,7 @@ if {$objects eq ""} {
 }
 
 #
-# The exporter exports the specified objects together with implicitely
+# The exporter exports the specified objects together with implicitly
 # needed objects.
 #
 ::xowiki::exporter export [array names items]

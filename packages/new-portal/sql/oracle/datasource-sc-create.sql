@@ -18,7 +18,7 @@
 -- The data source(portlet) contract
 --
 -- @author arjun@openforce.net
--- @version $Id: datasource-sc-create.sql,v 1.8.24.1 2017/04/22 12:33:27 gustafn Exp $
+-- @version $Id: datasource-sc-create.sql,v 1.9 2017/08/07 23:48:12 gustafn Exp $
 --
 
 declare

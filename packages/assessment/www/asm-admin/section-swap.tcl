@@ -7,7 +7,7 @@ ad_page_contract {
 
   @author timo@timohentschel.de
 
-  @cvs-id $Id: section-swap.tcl
+  @cvs-id $Id: section-swap.tcl,v 1.7 2018/06/29 17:27:18 hectorr Exp $
 
 } {
     assessment_id:naturalnum,notnull
@@ -33,6 +33,7 @@ db_transaction {
 }
 
 ad_returnredirect [export_vars -base questions {assessment_id}]
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

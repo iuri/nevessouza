@@ -3,7 +3,7 @@
 
   @author Gustaf Neumann (gustaf.neumann@wu-wien.ac.at)
   @creation-date Oct 23, 2005
-  @cvs-id $Id: portal-element-add.tcl,v 1.15.2.2 2016/09/20 11:27:48 gustafn Exp $
+  @cvs-id $Id: portal-element-add.tcl,v 1.17 2018/01/22 00:53:45 gustafn Exp $
 
   @param object_type show objects of this class and its subclasses
 } -parameter {
@@ -21,6 +21,7 @@ if {$page eq ""} {
   ad_return_error \
       [_ xowiki.portlet_page_does_not_exist_error_short] \
       [_ xowiki.portlet_page_does_not_exist_error_long $page_name]
+  ad_script_abort
 
 } else {
   #
@@ -42,6 +43,7 @@ if {$page eq ""} {
     ad_return_error \
 	[_ xowiki.portlet_title_exists_error_short] \
 	[_ xowiki.portlet_title_exists_error_long $page_title]
+    ad_script_abort
   } else {
     #
     # everything ok, add the portal element

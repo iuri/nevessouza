@@ -4,7 +4,7 @@
 
   @creation-date 2016-03-21
   @author Gustaf Neumann
-  @cvs-id $Id: xowiki-uploader-procs.tcl,v 1.1.2.1 2016/03/23 11:57:25 gustafn Exp $
+  @cvs-id $Id: xowiki-uploader-procs.tcl,v 1.3 2018/07/07 10:58:20 gustafn Exp $
 }
 
 namespace eval ::xowiki {
@@ -19,7 +19,13 @@ namespace eval ::xowiki {
     :property tmpfile
     :property parent_object
 
-    :public method store_file {} {error "not implemented"}
+    :public method store_file {} {
+      #
+      # Abstract method.
+      #
+
+      error "not implemented"
+    }
   }
   
   nx::Class create ::xowiki::UploadFile -superclass ::xowiki::Upload {
@@ -27,6 +33,10 @@ namespace eval ::xowiki {
     # Class for storing files as xowiki::File instances.
     #
     :public method store_file {} {
+      #
+      # Store the file provided via instance variables by using the
+      # formfield::file implementation.
+      #
       set f [::xowiki::formfield::file new -name upload -object ${:parent_object}]
       set file_object [$f store_file \
                            -file_name ${:file_name} \

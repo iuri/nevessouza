@@ -7,7 +7,7 @@ ad_library {
 
     @author Dirk Gomez (openacs@dirkgomez.de)
     @creation-date Feb 19, 2004
-    @cvs-id $Id: 
+    @cvs-id $Id: calendar-compatibility-procs.tcl,v 1.5 2018/06/29 17:27:18 hectorr Exp $ 
 }
 
 ad_proc -deprecated calendar_have_private_p { 

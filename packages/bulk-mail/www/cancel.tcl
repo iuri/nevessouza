@@ -2,7 +2,7 @@ ad_page_contract {
 
     @author Caroline Meeks (caroline@meekshome.com)
     @creation-date 2002-11-27
-    @cvs-id $Id: cancel.tcl,v 1.3.2.1 2015/09/10 08:30:14 gustafn Exp $
+    @cvs-id $Id: cancel.tcl,v 1.4 2017/08/07 23:48:04 gustafn Exp $
 
 } -query {
     bulk_mail_id:naturalnum,notnull

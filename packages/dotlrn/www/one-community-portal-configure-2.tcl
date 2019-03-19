@@ -18,7 +18,7 @@ ad_page_contract {
     Form target for the Configuration page for an instance's portal template
 
     @author Arjun Sanyal (arjun@openforce.net)
-    @version $Id: one-community-portal-configure-2.tcl,v 1.12.2.2 2016/05/20 20:17:34 gustafn Exp $
+    @cvs-id $Id: one-community-portal-configure-2.tcl,v 1.15 2018/06/29 17:27:19 hectorr Exp $
 } {
     portal_id:naturalnum,notnull
     return_url:localurl
@@ -28,11 +28,10 @@ ad_page_contract {
 ns_log warning "starting one-community-portal-configure"
 
 ns_log warning "about to call dispatch"
-
 portal::configure_dispatch -portal_id $portal_id -form [ns_getform]
 
 ad_returnredirect "one-community-portal-configure?portal_id=$portal_id&referer=$return_url#$anchor"
-
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

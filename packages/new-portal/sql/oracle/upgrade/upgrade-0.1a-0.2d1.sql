@@ -20,7 +20,7 @@
 -- distributed under the GNU GPL v2
 --
 -- @author Arjun Sanyal (arjun@openforce.net)
--- @version $Id: upgrade-0.1a-0.2d1.sql,v 1.1 2003/10/08 16:03:58 mohanp Exp $
+-- @version $Id: upgrade-0.1a-0.2d1.sql,v 1.2 2018/04/12 07:47:22 hectorr Exp $
 --
 
 create or replace package portal_page
@@ -242,7 +242,7 @@ as
 
         else
 
-            -- we have a portal as our template. copy it's theme, pages, layouts,
+            -- we have a portal as our template. copy its theme, pages, layouts,
             -- elements, and element params.
             select theme_id
             into v_theme_id

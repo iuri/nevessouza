@@ -4,7 +4,7 @@
 #
 # @creation-date 12 May 2000
 # @author Jon Salz [jsalz@arsdigita.com]
-# @cvs-id $Id: bootstrap.tcl,v 1.32.2.6 2017/04/22 18:26:04 gustafn Exp $
+# @cvs-id $Id: bootstrap.tcl,v 1.34 2019/02/11 11:42:11 gustafn Exp $
 
 if {![info exists ::acs::rootdir]} {
     # just a temporary measure before the release of OpenACS 5.8.1
@@ -141,7 +141,7 @@ set errno [catch {
     # should not be necessary to use the [ad_acs_kernel_id] redefine
     # trick, but to use a plain variable in the ::acs namespace.
     #
-    set ::acs::kernel_id [ad_acs_kernel_id_mem]
+    set ::acs::kernel_id [ad_acs_kernel_id]
     ns_log notice "bootstrap: setting ::acs::kernel_id to $::acs::kernel_id"
 
     #

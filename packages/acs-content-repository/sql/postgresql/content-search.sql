@@ -1,4 +1,4 @@
--- @cvs-id $Id: content-search.sql,v 1.10.2.2 2016/02/11 08:07:03 gustafn Exp $ 
+-- @cvs-id $Id: content-search.sql,v 1.11 2017/08/07 23:47:47 gustafn Exp $ 
 ------------------------------------------------------------
 -- declare CR as a content provider for search/indexing interface
 ------------------------------------------------------------

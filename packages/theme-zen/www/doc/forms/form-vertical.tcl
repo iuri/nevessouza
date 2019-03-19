@@ -4,7 +4,7 @@ ad_page_contract {
     vertical-form class
    
     @creation-date 2/1/2007
-    @cvs-id $Id: form-vertical.tcl,v 1.2.8.1 2015/09/12 19:00:47 gustafn Exp $
+    @cvs-id $Id: form-vertical.tcl,v 1.3 2017/08/07 23:48:29 gustafn Exp $
 } {
     {zen_id:naturalnum,optional 42}
 }

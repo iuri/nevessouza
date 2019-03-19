@@ -1,4 +1,4 @@
-<if @login_p;literal@ eq 1>
+<if @login_p;literal@ true>
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top:8px;padding-bottom:0;">@photo;noquote@ <em class="glyphicon glyphicon-chevron-down"></em></a>
         <ul class="dropdown-menu">

@@ -1,12 +1,13 @@
-/index.adp/1.13.2.3/Thu Jan 19 08:40:15 2017//Topenacs-5-9-compat
-/index.tcl/1.9.4.2/Sun Sep 20 17:45:49 2015//Topenacs-5-9-compat
-/index.vuh/1.4.8.1/Thu Jun  9 09:13:25 2016//Topenacs-5-9-compat
-/index.xql/1.2/Tue May 15 20:14:35 2007//Topenacs-5-9-compat
-/one-faq.adp/1.20.2.4/Thu Jan 19 08:40:15 2017//Topenacs-5-9-compat
-/one-faq.tcl/1.11.2.2/Sun Sep 20 17:45:49 2015//Topenacs-5-9-compat
-/one-faq.xql/1.2/Tue May 15 20:14:35 2007//Topenacs-5-9-compat
-/one-question.adp/1.10.2.1/Fri Aug  5 14:01:01 2016//Topenacs-5-9-compat
-/one-question.tcl/1.6.4.1/Sat Sep 12 11:06:13 2015//Topenacs-5-9-compat
-/one-question.xql/1.2/Tue May 15 20:14:35 2007//Topenacs-5-9-compat
-/try.tcl/1.2.2.1/Sat Sep 12 11:06:13 2015//Topenacs-5-9-compat
-D
+/index.adp/1.14/Mon Aug  7 23:48:10 2017//Toacs-5-10
+/index.tcl/1.10/Mon Aug  7 23:48:10 2017//Toacs-5-10
+/index.vuh/1.5/Mon Aug  7 23:48:10 2017//Toacs-5-10
+/index.xql/1.2/Tue May 15 20:14:35 2007//Toacs-5-10
+/one-faq.adp/1.22/Mon Dec 10 09:02:49 2018//Toacs-5-10
+/one-faq.tcl/1.13/Sat Jan 20 23:16:24 2018//Toacs-5-10
+/one-faq.xql/1.2/Tue May 15 20:14:35 2007//Toacs-5-10
+/one-question.adp/1.11/Mon Aug  7 23:48:10 2017//Toacs-5-10
+/one-question.tcl/1.8/Wed Oct  4 13:11:08 2017//Toacs-5-10
+/one-question.xql/1.2/Tue May 15 20:14:35 2007//Toacs-5-10
+/try.tcl/1.3/Mon Aug  7 23:48:10 2017//Toacs-5-10
+D/admin////
+D/categories////

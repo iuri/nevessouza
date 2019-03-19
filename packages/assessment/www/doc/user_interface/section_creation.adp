@@ -39,7 +39,7 @@ phase.<br>
 <li><span class="context">
 <a href="../sequencing"><span style="color: rgb(204, 102, 0);">Sequencing
 Information</span></a><br>
-</span></li><li style="list-style: none"><ul>
+</span></li><li style="list-style: none; display: inline"><ul>
 <li style="color: rgb(204, 102, 0);">Display of the Pre Display
 Checks (with an edit and a remove link).</li><li style="color: rgb(204, 102, 0);">Add new Pre Display
 Check.</li><li style="color: rgb(204, 102, 0);">Add new Post Display
@@ -64,7 +64,7 @@ one).</span></li><li><span class="context">The answers have checkboxes, with the
 correct answers checked by default for multiple choice question.
 All other questions will only be displayed if they give a
 percentage value to the answer. In this case a textfield is given
-with the possibility to give a range (10-100) or seperate
+with the possibility to give a range (10-100) or separate
 percentages (10, 100, 200).</span></li><li><span class="context">The display of this section depends on
 whether the valid answers have been given to all or just one of the
 questions that have been checked (as you might have guessed, we
@@ -82,7 +82,7 @@ with a test).</span><ul>
 <li><span class="context">Section: select. This will display a list
 of all previous sections. The selected section will be used for the
 computation.</span></li><li><span class="context">Calculation: select (median, distractor,
-absolut number of points). What shall be computed to determine
+absolute number of points). What shall be computed to determine
 whether the user is allowed to see this section.</span></li><li><span class="context">From / To value: integer. Two fields to
 display the valid range for which this section will be displayed to
 the user.</span></li>
@@ -99,7 +99,7 @@ displayed with the options to<br>
 <ul>
 <li>Edit question<br>
 </li><li>Search and add question(s) from question database: Link to the
-search page which allows to search for questions that can be added
+search page which allows one to search for questions that can be added
 to this section (multiple add possibility).</li><li>Add question: Link to the question catalogue entry form with a
 return_url that adds the question from the catalogue to this
 section and return to the section page.</li><li>Change order of questions (arrow navigation) Title of the

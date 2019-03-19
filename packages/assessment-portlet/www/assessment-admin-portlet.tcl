@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author jopez@galileo.edu
     @creation-date 2004-10-06
-    @cvs_id $Id: assessment-admin-portlet.tcl,v 1.2.14.1 2015/09/10 08:28:10 gustafn Exp $
+    @cvs-id $Id: assessment-admin-portlet.tcl,v 1.4 2018/06/29 17:27:18 hectorr Exp $
 } -properties {
     
 }

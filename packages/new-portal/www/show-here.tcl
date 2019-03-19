@@ -15,11 +15,11 @@
 #
 
 ad_page_contract {
-    Add porlet form
+    Add portlet form
 
     @author Caroline@meekshome.com
     @creation-date 9/28/2001
-    @cvs_id $Id: show-here.tcl,v 1.6.4.2 2015/09/18 08:07:33 gustafn Exp $
+    @cvs-id $Id: show-here.tcl,v 1.9 2018/06/29 17:27:19 hectorr Exp $
 } -properties {
     region:onevalue
     action_string:onevalue

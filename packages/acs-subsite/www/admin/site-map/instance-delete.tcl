@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author Bryan Quinn (bquinn@arsdigita.com)
     @creation-date Mon Oct 23 14:58:57 2000
-    @cvs-id $Id: instance-delete.tcl,v 1.10.2.4 2017/01/10 13:27:16 antoniop Exp $
+    @cvs-id $Id: instance-delete.tcl,v 1.12 2018/01/19 14:09:48 gustafn Exp $
 
 } {
     package_id:naturalnum
@@ -56,6 +56,7 @@ db_transaction {
 }
 	
 ad_returnredirect ${parent}admin/site-map
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

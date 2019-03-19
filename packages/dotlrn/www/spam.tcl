@@ -17,7 +17,7 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date Jan 19, 2002
-    @version $Id: spam.tcl,v 1.31.4.3 2017/01/26 11:46:02 gustafn Exp $
+    @cvs-id $Id: spam.tcl,v 1.39 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {recipients:integer,multiple ""}
     {recipients_str ""}
@@ -56,9 +56,11 @@ ad_page_contract {
 	} 
 	
 	if { $recipients_p == 0} {
-	    if {([info exists community_id] && $community_id ne "")} {
+	    if {$community_id ne ""} {
 		# This is call using the old URL reference
 		ad_returnredirect "spam-recipients?referer=$referer"
+                ad_script_abort
+                
 	    } else {
 		ad_complain "[_ dotlrn.Must_specify_recipients]"
 	    }
@@ -77,6 +79,7 @@ ad_page_contract {
     portal_id:onevalue
 }
 
+set registered_users_id [acs_magic_object "registered_users"]
 
 set spam_name [bulk_mail::parameter -parameter PrettyName -default [_ dotlrn.Spam_]]
 set context [list [list $referer [_ dotlrn.Admin]] "$spam_name [_ dotlrn.Community]"]
@@ -90,13 +93,10 @@ dotlrn::require_user_spam_community -community_id $community_id
 set sender_id [ad_conn user_id]
 set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
 
-db_1row select_sender_info {}
-
-# names can have single quotes in them, and since they are being selected
-# from the database as literals down below, when the sender_info query is
-# passed to bulk_mail::new, we have to make sure they are properly quoted
-set sender_first_names [db_quote $sender_first_names]
-set sender_last_name [db_quote $sender_last_name]
+set user [acs_user::get -user_id $sender_id]
+set sender_email       [dict get $user email]
+set sender_first_names [dict get $user first_names]
+set sender_last_names  [dict get $user last_name]
 
 form create spam_message
 
@@ -197,15 +197,16 @@ if { [ns_queryexists "form:confirm"] } {
     # POSTGRES - change to plural
     # TODO - what if no rel_types
 
-    set safe_community_name [db_quote $community_name]
-
+    
+    set from_addr $from
+    
     set query [db_map sender_info]
 
     if {$format eq "html"} {
 	set message "$message"
 	set message_type "html"
     } elseif {$format eq "pre"} {
-	set message [ad_text_to_html $message]
+	set message [ad_text_to_html -- $message]
 	set message_type "html"
     } else {
 	set message [ns_quotehtml $message]

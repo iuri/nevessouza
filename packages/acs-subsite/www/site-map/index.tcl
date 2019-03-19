@@ -3,7 +3,7 @@ ad_page_contract {
     @author rhs@mit.edu
     @author bquinn@arsidigta.com
     @creation-date 2000-09-09
-    @cvs-id $Id: index.tcl,v 1.9.2.4 2016/09/27 08:50:47 gustafn Exp $
+    @cvs-id $Id: index.tcl,v 1.14 2018/10/22 07:41:37 gustafn Exp $
     
 } {
     {expand:integer,multiple ""}
@@ -20,7 +20,6 @@ if {$root_id eq ""} {
 
 # Check if the user has site-wide-admin privileges
 set site_wide_admin_p [acs_user::site_wide_admin_p]
-
 
 array set node [site_node::get -node_id $root_id]
 set parent_id $node(parent_id)
@@ -41,28 +40,8 @@ set context [list $page_title]
 
 set user_id [ad_conn user_id]
 
-db_foreach path_select {} {
-    if {$node_id != $root_id && $admin_p == "t"} {
-        append head "<a href=\"[export_vars -base . {expand:multiple {root_id $node_id}}]\">"
-    }
-    if {$name eq ""} {
-	append head "$obj_name:"
-    } else {
-	append head $name
-    }
-    
-    if {$node_id != $root_id && $admin_p == "t"} {
-	append head "</a>"
-    }
-    
-    if {$directory_p == "t"} {
-	append head "/"
-    }
-} if_no_rows {
-    append head "&nbsp;"
-}
-
 if {[llength $expand] == 0} {
+    #lappend expand 0
     lappend expand $root_id 
     if { $parent_id ne "" } {
         lappend expand $parent_id
@@ -109,26 +88,30 @@ template::list::create \
 		<if @nodes.action_type@ eq "new_app">
 		<form name="new_application" action="package-new">
 		<div><input name="instance_name" type="text" size="8" value="">
-		(@nodes.action_form_part;noquote@)
+		@nodes.action_form_part;noquote@
 		<input type="submit" value="New"></div>
 		</form>
 		</if>
 		<if @nodes.action_type@ eq "rename_app">
 		<form name="rename_application" action="rename">
 		<div><input name="instance_name" type="text" value="@nodes.instance@">
-		(@nodes.action_form_part;noquote@)
+		@nodes.action_form_part;noquote@
 		<input type="submit" value="Rename"></div>
 		</form>
 		</if>
 		<else>
-		(@nodes.instance_url;noquote@)
+		@nodes.instance_url;noquote@
 		</else>
 	    }
         }
     }
 
-multirow create nodes node_id expand_mode expand_url tree_indent name name_url instance instance_url type action_type action_form_part add_folder_url new_app_url unmount_url mount_url rename_url delete_url parameters_url permissions_url extra_form_part view_p
+multirow create nodes \
+    node_id expand_mode expand_url tree_indent name name_url instance instance_url \
+    type action_type action_form_part add_folder_url new_app_url unmount_url mount_url \
+    rename_url delete_url parameters_url permissions_url extra_form_part view_p
 set open_nodes [list]
+
 
 db_foreach nodes_select {} {
     set add_folder_url ""
@@ -140,7 +123,12 @@ db_foreach nodes_select {} {
     set parameters_url ""
     set permissions_url ""
 
-    if { $parent_id ni $open_nodes && $parent_id ne "" && $mylevel > 2 } { continue } 
+    if {$parent_id ni $open_nodes
+        && $parent_id ne ""
+        && $mylevel > 2
+    } {
+        continue
+    }
         
     if {$directory_p == "t"} {
 	set add_folder_url [export_vars -base . {expand:multiple root_id node_id {new_parent $node_id} {new_type folder}}]
@@ -172,7 +160,11 @@ db_foreach nodes_select {} {
 	set delete_url [export_vars -base delete {expand:multiple root_id node_id}]
     }
     
-    # use the indent variable to hold current indent level we'll use it later to indent stuff at the end by the amount of the last node
+    #
+    # Use the indent variable to hold current indent level we'll use
+    # it later to indent stuff at the end by the amount of the last
+    # node.
+    #
     set indent ""
     if { $mylevel != 1 } {
 	if { $mylevel == 2 } {
@@ -184,10 +176,6 @@ db_foreach nodes_select {} {
 	}
     }
 
-    #for {set i 0} {$i < 3*$mylevel} {incr i} {
-    #append indent "&nbsp;"
-    #}
-    
     set expand_mode 0
     if {!$root_p && $n_children > 0} {
 	set expand_mode 1
@@ -241,8 +229,10 @@ db_foreach nodes_select {} {
 	set action_form_part [export_vars -form {expand:multiple parent_id node_type root_id}]
     }
 
-    multirow append nodes $node_id $expand_mode $expand_url $indent $name $name_url $object_name $url $package_pretty_name $action_type $action_form_part $add_folder_url $new_app_url $unmount_url $mount_url $rename_url $delete_url $parameters_url $permissions_url "" $view_p
-
+    multirow append nodes $node_id $expand_mode $expand_url $indent $name $name_url $object_name \
+        $url $package_pretty_name $action_type $action_form_part $add_folder_url \
+        $new_app_url $unmount_url $mount_url $rename_url $delete_url $parameters_url \
+        $permissions_url "" $view_p
 }
 
 #set new_app_form_part_1 "<p align=\"top\"><form name="new_application" action="package-new"><input type="hidden" name="node_id" value="$node(node_id)>"<input type="hidden" name="root_id" value="$node(node_id)"><input type="hidden" name="new_node_p" value="t">[export_vars -form {expand:multiple}]<input name="node_name" type="text" size="8"></p>"

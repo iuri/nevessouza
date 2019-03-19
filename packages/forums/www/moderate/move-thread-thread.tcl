@@ -13,16 +13,20 @@ ad_page_contract {
 
 set table_border_color [parameter::get -parameter table_border_color]
 
-# Check that the user can moderate the forum
-forum::security::require_moderate_message -message_id $msg_id
-
 # Select the stuff
 forum::message::get -message_id $msg_id -array message
 
+# Check that the user can moderate the forum
+forum::security::require_moderate_forum -forum_id $message(forum_id)
+
 #form to confirm
-ad_form -name confirmed_move -mode {display} -actions [list [list [_ forums.Yes] yes] [list No no] ] -export { msg_id return_url selected_message} -html {enctype multipart/form-data} -form {
- {data:text(hidden)                     {value 0}}
-} 
+ad_form \
+    -name confirmed_move -mode {display} \
+    -actions [list [list [_ forums.Yes] yes] [list No no] ] -export {
+        msg_id return_url selected_message
+    } -html {enctype multipart/form-data} -form {
+        {data:text(hidden)  {value 0}}
+    }
 #get the clicked button
 set action [template::form::get_action confirmed_move]
 
@@ -86,7 +90,7 @@ if {$confirm_p == 2} {
 }
 set url_vars [export_vars {msg_id return_url selected_message}]
 
-if {([info exists alt_template] && $alt_template ne "")} {
+if {[info exists alt_template] && $alt_template ne ""} {
   ad_return_template $alt_template
 }
 

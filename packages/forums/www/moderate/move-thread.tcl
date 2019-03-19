@@ -13,11 +13,11 @@ ad_page_contract {
 
 set table_border_color [parameter::get -parameter table_border_color]
 
-# Check that the user can moderate the forum
-forum::security::require_moderate_message -message_id $msg_id
-
 # Select the stuff
 forum::message::get -message_id $msg_id -array message
+
+# Check that the user can moderate the forum
+forum::security::require_moderate_forum -forum_id $message(forum_id)
 
 #form to confirm 
 ad_form -name confirmed_move -mode {display} \
@@ -78,6 +78,11 @@ if {$confirm_p == 1} {
     #update the last_child_post final thread and last_child_post initial father thread
     db_dml forums::move_thread::update_last_child_post_initial {}
     db_dml forums::move_thread::update_last_child_post_final {}
+
+    if { [forum::use_ReadingInfo_p] } {
+        ns_log Notice "moving message $message(message_id) to thread $selected_message"
+        db_exec_plsql forums::move_thread::update_reading_info {}
+    }
     
     # Redirect to the forum
     ad_returnredirect "../forum-view?forum_id=$message(forum_id)"

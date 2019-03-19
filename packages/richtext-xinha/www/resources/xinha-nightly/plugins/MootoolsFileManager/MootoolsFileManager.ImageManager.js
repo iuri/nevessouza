@@ -6,7 +6,7 @@
   for managing images.  This file is loaded automatically.
      
  * @author $Author: gustafn $
- * @version $Id: MootoolsFileManager.ImageManager.js,v 1.1.2.1 2016/01/03 20:51:25 gustafn Exp $
+ * @version $Id: MootoolsFileManager.ImageManager.js,v 1.2 2017/08/07 23:48:27 gustafn Exp $
  * @package MootoolsFileManager
  */
 

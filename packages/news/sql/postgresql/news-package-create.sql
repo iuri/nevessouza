@@ -2,7 +2,7 @@
 --
 -- @author stefan@arsdigita.com
 -- @created 2000-12-13
--- @cvs-id $Id: news-package-create.sql,v 1.6.2.2 2017/02/16 12:42:52 gustafn Exp $
+-- @cvs-id $Id: news-package-create.sql,v 1.9 2018/04/04 22:05:13 hectorr Exp $
 --
 -- OpenACS Port: Robert Locke (rlocke@infiniteinfo.com)
 
@@ -117,7 +117,7 @@ $$ LANGUAGE plpgsql;
 
 
 
--- deletes a news item along with all its revisions and possible attachements
+-- deletes a news item along with all its revisions and possible attachments
 
 select define_function_args('news__delete','item_id');
 
@@ -276,7 +276,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- the status function returns information on the puplish or archive status
+-- the status function returns information on the publish or archive status
 -- it does not make any checks on the order of publish_date and archive_date
 
 

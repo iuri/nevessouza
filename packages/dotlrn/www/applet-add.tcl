@@ -20,7 +20,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-10-08
-    @version $Id: applet-add.tcl,v 1.10.6.1 2015/09/11 11:40:41 gustafn Exp $
+    @cvs-id $Id: applet-add.tcl,v 1.13 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     applet_key
     {referer "applets"}
@@ -39,7 +39,7 @@ dotlrn::require_user_admin_community -user_id [ad_conn user_id] -community_id $c
 dotlrn_community::add_applet_to_community $community_id $applet_key
 
 ad_returnredirect $referer
-
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

@@ -21,10 +21,10 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @author Arjun Sanyal (arjun@openforce.net)
-    @cvs_id $Id: fs-portlet.tcl,v 1.26.2.2 2015/09/20 17:30:52 gustafn Exp $
+    @cvs-id $Id: fs-portlet.tcl,v 1.34 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {n_past_days "99999"}
-    {page_num:naturalnum ""}
+    {page_num:naturalnum 0}
 } -properties {
     user_id:onevalue
     user_root_folder:onevalue
@@ -41,7 +41,7 @@ array set config $cf
 set user_id [ad_conn user_id]
 set list_of_folder_ids $config(folder_id)
 set n_folders [llength $list_of_folder_ids]
-set scoped_p [ad_decode $config(scoped_p) t 1 0]
+set scoped_p [expr {$config(scoped_p) eq "t"}]
 
 set user_root_folder [dotlrn_fs::get_user_root_folder -user_id $user_id]
 set user_root_folder_present_p 0
@@ -50,6 +50,7 @@ if {$user_root_folder ne "" && $user_root_folder in $list_of_folder_ids} {
     set folder_id $user_root_folder
     set user_root_folder_present_p 1
     set use_ajaxfs_p 0
+    set file_storage_package_id ""
 } else {
     set folder_id [lindex $list_of_folder_ids 0]
     set file_storage_node_id [site_node::get_node_id_from_object_id \
@@ -84,7 +85,6 @@ if { !$scoped_p } {
     }
 }
 
-set query "select_folders"
 if {$scoped_p} {
     set scope_fs_url "/packages/file-storage/www/folder-chunk"
 } else {
@@ -112,7 +112,7 @@ if {$scoped_p} {
             label "[_ file-storage.Name]"
             display_template {
                 <if @folders.type@ eq "folder">
-                <a href="@folders.url@?folder_id=@folders.object_id@">@folders.name@</a>      
+                <a href="@folders.url@?folder_id=@folders.object_id@">@folders.name@</a>
                 </if>
                 <elseif @folders.type@ eq "url">
                 <a href="@folders.url@url-goto?url_id=@folders.object_id@">@folders.name@</a>
@@ -147,10 +147,12 @@ if {$scoped_p} {
         }
     }
 
-    db_multirow folders $query {
+    db_multirow -extend { url } folders select_folders {} {
+        set url [site_node::get_url_from_object_id -object_id $url_package_id]
         # The name of the folder may contain message keys that need to be localized on the fly
         set name [lang::util::localize $name]
     }
+
 }
 
 # Enable Notifications
@@ -158,7 +160,7 @@ if {$scoped_p} {
 set folder_name [fs_get_folder_name $folder_id]
 set folder_url [ad_conn url]?[ad_conn query]&folder_id=$folder_id
 
-if {([info exists file_storage_package_id] && $file_storage_package_id ne "")} {
+if {$file_storage_package_id ne ""} {
     set use_webdav_p  [parameter::get -package_id $file_storage_package_id -parameter "UseWebDavP"]
     
     if { $use_webdav_p == 1} { 
@@ -166,8 +168,6 @@ if {([info exists file_storage_package_id] && $file_storage_package_id ne "")} {
         regsub -all {/\$} $webdav_url {/\\$} webdav_url
     }
 }
-
-ad_return_template 
 
 # Local variables:
 #    mode: tcl

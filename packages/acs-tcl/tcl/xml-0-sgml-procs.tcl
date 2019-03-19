@@ -33,7 +33,7 @@ ad_library {
 # liability for all claims, expenses, losses, damages and costs any user may
 # incur as a result of using, copying or modifying the Software.
 #
-    @cvs-id $Id: xml-0-sgml-procs.tcl,v 1.4.2.2 2017/04/21 14:22:46 gustafn Exp $
+    @cvs-id $Id: xml-0-sgml-procs.tcl,v 1.10 2018/09/30 15:43:18 gustafn Exp $
 }
 
 package provide sgml 1.7
@@ -96,7 +96,7 @@ namespace eval sgml {
 #
 # Arguments:
 #	sgml		text to tokenize
-#	elemExpr	RE to recognise tags
+#	elemExpr	RE to recognize tags
 #	elemSub		transform for matched tags
 #	args		options
 #
@@ -263,7 +263,7 @@ proc sgml::parseEvent {sgml args} {
 	# regsub has done to reconstitute the data
 
 	set empty {}
-	switch $state(mode) {
+	switch -- $state(mode) {
 	    comment {
 		# This had "[string length $param] && " as a guard -
 		# can't remember why :-(
@@ -745,7 +745,7 @@ proc sgml::Entity {opts entityrefcmd pcdatacmd entities ref} {
 
     switch -glob -- $ref {
 	%* {
-	    # Parameter entity - not recognised outside of a DTD
+	    # Parameter entity - not recognized outside of a DTD
 	}
 	#x* {
 	    # Character entity - hex
@@ -788,10 +788,10 @@ proc sgml::Entity {opts entityrefcmd pcdatacmd entities ref} {
 		# Must parse the replacement text for start & end tags, etc
 		# This text must be self-contained: balanced closing tags, and so on
 
-		set tokenised [tokenise $map($ref) $::xml::tokExpr $::xml::substExpr]
+		set tokenized [tokenise $map($ref) $::xml::tokExpr $::xml::substExpr]
 		set final $options(-final)
 		unset options(-final)
-		eval parseEvent [list $tokenised] [array get options] -final 0
+		eval parseEvent [list $tokenized] [array get options] -final 0
 		set options(-final) $final
 
 		return {}
@@ -885,7 +885,7 @@ proc sgml::parseDTD {dtd args} {
 #			Content model is mixed (PCDATA and elements).
 #			The second element of the list contains the 
 #			elements that may occur.  #PCDATA is assumed 
-#			(ie. the list is normalised).
+#			(i.e. the list is normalized).
 #
 # Arguments:
 #	id	identifier for the element.
@@ -1217,7 +1217,7 @@ proc sgml::CModelMakeTransitionTable {state st} {
     }
 
     # Construct the followpos functions
-    catch {unset var}
+    unset -nocomplain var
     followpos $state $st $firstpos $lastpos
 
     # Construct transition table
@@ -1434,7 +1434,7 @@ proc sgml::lastpos {cs lastpos nullable} {
 
 # sgml::makeSet --
 #
-#	Turn a list into a set, ie. remove duplicates.
+#	Turn a list into a set, i.e. remove duplicates.
 #
 # Arguments:
 #	s	a list

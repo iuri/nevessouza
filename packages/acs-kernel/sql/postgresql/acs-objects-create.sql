@@ -10,7 +10,7 @@
 --
 -- @creation-date 2000-05-18
 --
--- @cvs-id $Id: acs-objects-create.sql,v 1.67.2.4 2017/04/21 15:59:20 gustafn Exp $
+-- @cvs-id $Id: acs-objects-create.sql,v 1.71 2018/04/11 21:35:07 hectorr Exp $
 --
 
 -----------------------------
@@ -298,7 +298,7 @@ comment on column acs_objects.context_id is $$
  The context_id column points to an object that provides a context for
  this object. Often this will reflect an observed hierarchy in a site,
  for example a bboard message would probably list a bboard topic as
- it's context, and a bboard topic might list a sub-site as it's
+ its context, and a bboard topic might list a sub-site as its
  context. Whenever we ask a question of the form "can user X perform
  action Y on object Z", the acs security model will defer to an
  object's context if there is no information about user X's
@@ -817,9 +817,18 @@ CREATE OR REPLACE FUNCTION acs_object__delete(
 DECLARE
   obj_type record;
 BEGIN
-  
+
+   -- Also child relationships must be deleted. On delete cascade
+   -- would not help here, as only tuple in acs_rels would go, while
+   -- related acs_object would stay.
+   PERFORM acs_object__delete(object_id)
+     from acs_objects where object_id in
+     (select rel_id from acs_rels where
+          object_id_one = delete__object_id or
+          object_id_two = delete__object_id);
+
   -- GN: the following deletion operation iterates over the id_columns
-  -- of the acs_object_types of the type tree for the obejct and
+  -- of the acs_object_types of the type tree for the object and
   -- performs manual deletions in these tables by trying to delete the
   -- delete__object_id from the id_column.  This deletion includes as
   -- well the deletion in acs_objects.

@@ -1,13 +1,10 @@
-# 
-
 ad_library {
     
     APM callbacks for the news package
     
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2005-01-20
-    @arch-tag: 0f0b0270-4074-410a-a5f9-386d402adc46
-    @cvs-id $Id: news-apm-callback-procs.tcl,v 1.4.12.2 2016/01/02 20:34:49 gustafn Exp $
+    @cvs-id $Id: news-apm-callback-procs.tcl,v 1.6 2018/08/15 16:29:24 gustafn Exp $
 }
 
 namespace eval ::news::install {}

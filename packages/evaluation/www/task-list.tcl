@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author jopez@galileo.edu
     @creation-date Mar 2004
-    @cvs-id $Id: task-list.tcl,v 1.8.10.2 2017/02/02 14:18:02 gustafn Exp $
+    @cvs-id $Id: task-list.tcl,v 1.9 2017/08/07 23:48:10 gustafn Exp $
 
 } -query {
 	{orderby:token,optional}

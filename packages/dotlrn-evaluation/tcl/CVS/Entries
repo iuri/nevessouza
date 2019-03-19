@@ -1,5 +1,5 @@
-/apm-callback-procs.tcl/1.3.10.1/Fri Sep 11 11:40:56 2015//Topenacs-5-9-compat
-/dotlrn-evaluation-procs-oracle.xql/1.1/Fri Jan 14 00:01:37 2005//Topenacs-5-9-compat
-/dotlrn-evaluation-procs-postgresql.xql/1.3/Tue Aug  8 21:26:34 2006//Topenacs-5-9-compat
-/dotlrn-evaluation-procs.tcl/1.8.2.2/Fri Jun 30 17:46:30 2017//Topenacs-5-9-compat
+/apm-callback-procs.tcl/1.4/Mon Aug  7 23:48:10 2017//Toacs-5-10
+/dotlrn-evaluation-procs-oracle.xql/1.1/Fri Jan 14 00:01:37 2005//Toacs-5-10
+/dotlrn-evaluation-procs-postgresql.xql/1.3/Tue Aug  8 21:26:34 2006//Toacs-5-10
+/dotlrn-evaluation-procs.tcl/1.10/Tue Mar 27 14:22:30 2018//Toacs-5-10
 D

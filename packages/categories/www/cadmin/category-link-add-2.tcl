@@ -3,7 +3,7 @@ ad_page_contract {
     Let user decide about the target category to add a category link.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id:
+    @cvs-id $Id: category-link-add-2.tcl,v 1.11 2018/06/29 17:27:18 hectorr Exp $
 } {
     link_tree_id:naturalnum,notnull
     category_id:naturalnum,notnull
@@ -71,8 +71,8 @@ template::list::create \
 	links {
 	    sub_class narrow
 	    display_template {
-		<if @tree.backward_exists_p@ true><img src="/resources/acs-subsite/left.gif" height="16" width="16" alt="backward link" style="border:0"></if>
-		<if @tree.forward_exists_p@ true><img src="/resources/acs-subsite/right.gif" height="16" width="16" alt="forward link" style="border:0"></if>
+		<if @tree.backward_exists_p;literal@ true><img src="/resources/acs-subsite/left.gif" height="16" width="16" alt="backward link" style="border:0"></if>
+		<if @tree.forward_exists_p;literal@ true><img src="/resources/acs-subsite/right.gif" height="16" width="16" alt="forward link" style="border:0"></if>
 	    }
 	    html {align center}
 	}

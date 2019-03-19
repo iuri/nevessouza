@@ -3,7 +3,7 @@ ad_page_contract {
 
     @author Kevin Scaldeferri (kevin@arsdigita.com)
     @creation-date 10 Nov 2000
-    @cvs-id $Id: file-delete.tcl,v 1.6.2.1 2015/09/11 11:40:58 gustafn Exp $
+    @cvs-id $Id: file-delete.tcl,v 1.7 2017/08/07 23:48:10 gustafn Exp $
 } {
     file_id:integer,notnull
     {confirmed_p:boolean "f"}

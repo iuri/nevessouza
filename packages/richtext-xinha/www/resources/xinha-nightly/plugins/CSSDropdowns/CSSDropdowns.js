@@ -6,7 +6,7 @@
 // Distributed under the same terms as HTMLArea itself.
 // This notice MUST stay intact for use (see license.txt).
 //
-// $Id: CSSDropdowns.js,v 1.1.2.1 2016/01/03 20:47:20 gustafn Exp $
+// $Id: CSSDropdowns.js,v 1.2 2017/08/07 23:48:23 gustafn Exp $
 // @TODO This is the default and won't be very useful to others.
 // We should make this better.
 Xinha.Config.prototype.cssPluginConfig =

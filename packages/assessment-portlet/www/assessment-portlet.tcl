@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author jopez@galileo.edu
     @creation-date Oct 2004
-    @cvs_id $Id: assessment-portlet.tcl,v 1.17.2.2 2017/01/26 09:30:44 gustafn Exp $
+    @cvs-id $Id: assessment-portlet.tcl,v 1.23 2018/07/12 09:02:29 gustafn Exp $
 } {
     {page_num:naturalnum,notnull 0}
 } -properties {
@@ -29,7 +29,7 @@ if {!$one_instance_p} {
 lappend elements title \
     [list \
          label "[_ assessment.Title]" \
-         display_template {<a href="@assessments.assessment_url@">@assessments.title@</a><if @assessments.anonymous_p@ eq "t"><br>(#assessment.anonymous#)</if>}]
+         display_template {<a href="@assessments.assessment_url@">@assessments.title@</a><if @assessments.anonymous_p;literal@ true><br>(#assessment.anonymous#)</if>}]
 
 lappend elements status {
     label "[_ assessment.Status]"
@@ -61,12 +61,12 @@ lappend elements session \
 
 lappend elements admin {
     label "[_ acs-kernel.common_Administration]"
-    display_template {<if @assessments.admin_p@ true><a href="@assessments.community_url@assessment/asm-admin/one-a?assessment_id=@assessments.assessment_id@">\#acs-kernel.common_Administration\#</a></if>}
+    display_template {<if @assessments.admin_p;literal@ true><a href="@assessments.community_url@assessment/asm-admin/one-a?assessment_id=@assessments.assessment_id@">\#acs-kernel.common_Administration\#</a></if>}
 }
 
 lappend elements results {
     label "[_ assessment.Results]"
-    display_template {<if @assessments.admin_p@ true><a href="@assessments.community_url@assessment/asm-admin/results-users?assessment_id=@assessments.assessment_id@">\#assessment.Results\#</a></if><else></else>}
+    display_template {<if @assessments.admin_p;literal@ true><a href="@assessments.community_url@assessment/asm-admin/results-users?assessment_id=@assessments.assessment_id@">\#assessment.Results\#</a></if><else></else>}
 	}
 
 # create a list with all open assessments
@@ -80,7 +80,7 @@ template::list::create \
 # get the information of all open assessments
 template::multirow create assessments assessment_id title description assessment_url community_url community_name anonymous_p in_progress_p completed_p status number_tries admin_p
 set old_comm_node_id 0
-db_foreach open_asssessments {} {
+db_foreach open_assessments {} {
 	if {$comm_node_id == $old_comm_node_id} {
 	    set community_name ""
 	}
@@ -129,12 +129,12 @@ lappend elements session \
 
 lappend elements admin {
     label "[_ acs-kernel.common_Administration]"
-    display_template {<if @sessions.admin_p@ true><a href="@sessions.community_url@assessment/asm-admin/one-a?assessment_id=@sessions.assessment_id@">\#acs-kernel.common_Administration\#</a></if>}
+    display_template {<if @sessions.admin_p;literal@ true><a href="@sessions.community_url@assessment/asm-admin/one-a?assessment_id=@sessions.assessment_id@">\#acs-kernel.common_Administration\#</a></if>}
 }
 
 lappend elements results {
     label "[_ assessment.Results]"
-    display_template {<if @sessions.admin_p@ true><a href="@sessions.community_url@assessment/asm-admin/results-users?assessment_id=@sessions.assessment_id@">\#assessment.Results\#</a></if><else></else>}
+    display_template {<if @sessions.admin_p;literal@ true><a href="@sessions.community_url@assessment/asm-admin/results-users?assessment_id=@sessions.assessment_id@">\#assessment.Results\#</a></if><else></else>}
 	}
 
 # create a list with all answered assessments and their sessions

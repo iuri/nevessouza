@@ -19,7 +19,7 @@ ad_library {
     Procs to set up the dotLRN news applet
     
     @author ben@openforce.net,arjun@openforce.net
-    @cvs-id $Id: dotlrn-news-procs.tcl,v 1.33.2.3 2017/06/30 17:48:16 gustafn Exp $
+    @cvs-id $Id: dotlrn-news-procs.tcl,v 1.35 2018/03/27 14:22:30 hectorr Exp $
 
 }
 
@@ -70,7 +70,7 @@ namespace eval dotlrn_news {
     ad_proc -public add_applet_to_community {
 	community_id
     } {
-	Add the news applet to a specifc dotlrn community
+	Add the news applet to a specific dotlrn community
     } {
 	set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
 
@@ -120,7 +120,7 @@ namespace eval dotlrn_news {
 	community_id
 	user_id
     } {
-	Add a user to a specifc dotlrn community
+	Add a user to a specific dotlrn community
     } {
         set package_id [dotlrn_community::get_applet_package_id -community_id $community_id -applet_key [applet_key]]
         set portal_id [dotlrn::get_portal_id -user_id $user_id]

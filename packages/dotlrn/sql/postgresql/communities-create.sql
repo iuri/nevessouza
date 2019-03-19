@@ -22,7 +22,7 @@
 -- @author arjun (arjun@openforce.net)
 -- @author dan chak (chak@openforce.net)
 -- @creation-date September 20th, 2001 (redone)
--- @version $Id: communities-create.sql,v 1.5.10.1 2016/05/15 18:34:04 gustafn Exp $
+-- @version $Id: communities-create.sql,v 1.6 2017/08/07 23:48:09 gustafn Exp $
 --
 
 create table dotlrn_community_types (

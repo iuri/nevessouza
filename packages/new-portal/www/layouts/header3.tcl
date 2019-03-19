@@ -16,7 +16,7 @@
 
 # www/templates/header3.tcl
 ad_page_contract {
-    @cvs_id $Id: header3.tcl,v 1.3.24.1 2015/09/12 11:06:40 gustafn Exp $
+    @cvs-id $Id: header3.tcl,v 1.5 2018/06/29 17:27:19 hectorr Exp $
 } -properties {
     element_list:onevalue
     element_src:onevalue

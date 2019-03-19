@@ -7,7 +7,7 @@ ad_page_contract {
 
     @author stefan@arsdigita.com
     @creation-date 2000-11-14
-    @cvs-id $Id: item-create.tcl,v 1.14.2.2 2016/08/11 12:52:38 gustafn Exp $
+    @cvs-id $Id: item-create.tcl,v 1.17 2018/01/19 14:24:20 gustafn Exp $
 
 } {
     {publish_title {}}
@@ -39,7 +39,9 @@ set context [list $title]
 
 set lc_format [lc_get formbuilder_date_format]
 
-db_1row get_dates {}
+set date_today [clock format [clock seconds] -format %Y-%m-%d]
+set active_days [parameter::get -parameter ActiveDays -default 14]
+set date_proj [clock format [clock scan "$active_days days"] -format %Y-%m-%d]
 
 if { $publish_date_ansi eq "" || $publish_date_ansi eq "now"} {
     set publish_date_ansi $date_today
@@ -64,6 +66,7 @@ ad_form -name "news" -action "preview" -html {enctype "multipart/form-data"} -fo
         {html {cols 60 rows 20}}
         {value "[list $publish_body ${publish_body.format}]"}}
 }
+#        {options {editor ckeditor5 JSEditorClass InlineEditor}}
 
 if { $immediate_approve_p } {
     ad_form -extend -name "news" -form {

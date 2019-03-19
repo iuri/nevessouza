@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Tracy Adams (teadams@alum.mit.edu)
     @creation-date 2002-29-08
-    @version $Id: deregister-confirm.tcl,v 1.6.2.2 2017/01/26 11:46:02 gustafn Exp $ 
+    @cvs-id $Id: deregister-confirm.tcl,v 1.8 2018/06/29 17:27:19 hectorr Exp $ 
 } -query {
     {user_id:naturalnum,multiple,notnull}
     {community_id:integer ""}

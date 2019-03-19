@@ -6,7 +6,7 @@ ad_page_contract {
 
 	@creation-date Apr 2004
 	@author jopez@galileo.edu
-	@cvs-id $Id: grades-type-reports.tcl,v 1.13.2.1 2015/09/12 11:06:05 gustafn Exp $
+	@cvs-id $Id: grades-type-reports.tcl,v 1.14 2017/08/07 23:48:10 gustafn Exp $
 
 } {
 	{orderby:token ""}

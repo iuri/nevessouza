@@ -31,7 +31,7 @@ ad_library {
 # liability for all claims, expenses, losses, damages and costs any user may
 # incur as a result of using, copying or modifying the Software.
 #
-    @cvs-id $Id: xml-2-procs.tcl,v 1.3.2.1 2015/09/10 08:22:02 gustafn Exp $
+    @cvs-id $Id: xml-2-procs.tcl,v 1.5 2018/07/11 10:37:41 gustafn Exp $
 }
 
 package provide xml 1.9
@@ -102,7 +102,7 @@ namespace eval xml {
 #	-reportempty		whether to provide empty element indication
 #
 # Results:
-#	The state variable is initialised.
+#	The state variable is initialized.
 
 proc xml::parser {args} {
     variable ParserCounter
@@ -213,7 +213,7 @@ proc xml::ParseCommand_parse {object xml} {
 	set parent {}
     }
 
-    set tokenised [lrange \
+    set tokenized [lrange \
 	    [${parent}::sgml::tokenise $xml \
 	    $tokExpr \
 	    $substExpr \
@@ -221,7 +221,7 @@ proc xml::ParseCommand_parse {object xml} {
 	4 end]
 
     eval ${parent}::sgml::parseEvent \
-	[list $tokenised \
+	[list $tokenized \
 	    -emptyelement [namespace code ParseEmpty] \
 	    -parseattributelistcommand [namespace code ParseAttrs]] \
 	[array get parser -*command] \
@@ -300,7 +300,7 @@ proc xml::ParseAttrs attrs {
 #	object	parser object
 #
 # Results:
-#	Parser data structure initialised
+#	Parser data structure initialized
 
 proc xml::ParseCommand_reset object {
     upvar \#0 [namespace current]::$object parser

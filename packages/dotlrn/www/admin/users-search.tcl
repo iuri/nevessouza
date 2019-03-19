@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-02-10
-    @version $Id: users-search.tcl,v 1.30.2.3 2017/02/02 14:09:22 gustafn Exp $
+    @cvs-id $Id: users-search.tcl,v 1.36 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     {type:word "any"}
     {can_browse_p:word "any"}
@@ -68,15 +68,19 @@ if {[form is_valid user_search_results]} {
     switch -exact $search_action {
         "spam" {
             ad_returnredirect [export_vars -base users-spam {{users $selected_users}}]
+            ad_script_abort
         }
         "add_to_community" {
             ad_returnredirect [export_vars -base users-add-to-community {{users $selected_users}}]
+            ad_script_abort
         }
         "deactivate" {
             ad_returnredirect [export_vars -base users-deactivate {{users $selected_users}}]
+            ad_script_abort
         }
         "delete" {
             ad_returnredirect [export_vars -base users-delete {{users $selected_users}}]
+            ad_script_abort
         }
     }
 }
@@ -154,8 +158,9 @@ if {[form is_valid user_search]} {
 
     if { $join_criteria ni {and or} } {
         ad_return_error \
-            "[_ dotlrn.lt_There_was_a_bug_in_th]" \
-            "[_ dotlrn.lt_There_was_a_bug_in_th_1]"
+            [_ dotlrn.lt_There_was_a_bug_in_th] \
+            [_ dotlrn.lt_There_was_a_bug_in_th_1]
+        ad_script_abort
     }
 
     set context_bar [list [list users [_ dotlrn.Users]] [list users-search [_ dotlrn.User_Search]] [_ dotlrn.Results]]

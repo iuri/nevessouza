@@ -3,11 +3,11 @@
 <property name="doc(title)">2. Actions Administration</property>
 <master>
 <include src="/packages/acs-core-docs/lib/navheader"
-		    leftLink="ch02s01" leftLabel="Prev"
-		    title="Chapter 2. User
+			leftLink="ch02s01" leftLabel="Prev"
+			title="Chapter 2. User
 Manual"
-		    rightLink="ch02s03" rightLabel="Next">
-		<div class="section" lang="en">
+			rightLink="ch02s03" rightLabel="Next">
+		    <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="d0e87" id="d0e87"></a>2. Actions Administration</h2></div></div></div><p>To be able to administrate actions the user must have site wide
 admin privileges. To admin actions the user must follow the link
@@ -17,7 +17,7 @@ dotlrn class/community.</p></li>
 </ol></div><p>Actions can be also created, following the link "Add new
 action":</p><div class="screenshot"><div class="mediaobject"><img src="resources/add_action.JPG"></div></div><p>The action is formed mainlly by four things:</p><div class="orderedlist"><ol type="1">
 <li><p>Name: the desire name that gives an idea of what the action
-do.</p></li><li><p>Description: short explaination of what the action do, and how
+do.</p></li><li><p>Description: short explanation of what the action do, and how
 its done.</p></li><li><p>Tcl code: the code that its executed to performe the action.</p></li><li><p>Parameter: this are the variables needed in the tcl code, that
 depends of the user.</p></li>
 </ol></div><div class="screenshot"><div class="mediaobject"><img src="resources/create_action.JPG"></div></div><p>After the action is created, a link to add the parameters is
@@ -33,10 +33,10 @@ the action will not be deleted if there is some reference to this
 action (i.e. a trigger that wil execute this action).</p><div class="screenshot"><div class="mediaobject"><img src="resources/action_del_confirm.JPG"></div></div>
 </div>
 <include src="/packages/acs-core-docs/lib/navfooter"
-		    leftLink="ch02s01" leftLabel="Prev" leftTitle="1. Manage
+			leftLink="ch02s01" leftLabel="Prev" leftTitle="1. Manage
 Permissions "
-		    rightLink="ch02s03" rightLabel="Next" rightTitle=" 3. Trigger
+			rightLink="ch02s03" rightLabel="Next" rightTitle=" 3. Trigger
 Definition"
-		    homeLink="index" homeLabel="Home" 
-		    upLink="ch02" upLabel="Up"> 
-		
+			homeLink="index" homeLabel="Home" 
+			upLink="ch02" upLabel="Up"> 
+		    

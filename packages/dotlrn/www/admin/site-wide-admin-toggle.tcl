@@ -19,7 +19,7 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date Jan 12, 2002
-    @version $Id: site-wide-admin-toggle.tcl,v 1.14.2.2 2017/01/26 11:46:02 gustafn Exp $
+    @cvs-id $Id: site-wide-admin-toggle.tcl,v 1.19 2018/06/29 17:27:19 hectorr Exp $
 } -query {
     user_id:naturalnum,notnull
     value
@@ -30,13 +30,11 @@ ad_page_contract {
 dotlrn::require_admin 
 
 if { ![acs_user::site_wide_admin_p] } {
-    ns_log notice "user has tried to site-wide-admin-toggle  without permission"
+    ns_log notice "user has tried to site-wide-admin-toggle without permission"
     ad_return_forbidden \
                "Permission Denied" \
-               "<p>
-	            [_ acs-admin.lt_You_dont_have_permiss]
-               </p>"
-    return
+               "<p>[_ acs-admin.lt_You_dont_have_permiss]</p>"
+    ad_script_abort
 }
 
 set object_id [acs_magic_object "security_context_root"]
@@ -45,11 +43,13 @@ if {$value eq "grant"} {
 } elseif {$value eq "revoke"} {
     permission::revoke -party_id $user_id -object_id $object_id -privilege admin
 }
+#
+# Flush all permission checks pertaining to this user.
+#
+permission::cache_flush -party_id $user_id
 
-util_memoize_flush_regexp $user_id
 ad_returnredirect $referer
-
-
+ad_script_abort
 
 # Local variables:
 #    mode: tcl

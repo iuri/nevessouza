@@ -5,7 +5,7 @@ ad_library {
     @author Doug Harris (dharris@worldbank.org)
     @author Janine Sisk (jsisk@mit.edu)
     @creation-date 25 Feb 2002
-    @cvs-id $Id: html-email-procs.tcl,v 1.19.2.3 2017/04/22 18:11:54 gustafn Exp $
+    @cvs-id $Id: html-email-procs.tcl,v 1.21 2017/10/01 12:16:05 gustafn Exp $
 }
 
 # switched to using tcllib, its required for OpenACS >= 5.3
@@ -127,7 +127,7 @@ ad_proc parse_incoming_email {
 
     foreach part $expanded_parts {
         catch {mime::getproperty $part content} this_content 
-        switch $this_content {
+        switch -- $this_content {
             "text/plain" {
                 if { ![info exists plain] } {
                     set plain [mime::getbody $part]

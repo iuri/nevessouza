@@ -3,7 +3,7 @@ ad_page_contract {
 
     @author Lars Pind (lars@collaboraid.biz)
     @creation-date 2003-06-02
-    @cvs-id $Id: index.tcl,v 1.11.2.6 2017/04/28 17:52:45 antoniop Exp $
+    @cvs-id $Id: index.tcl,v 1.13 2019/01/13 02:36:23 gustafn Exp $
 } {
     page:naturalnum,optional
     {search ""}
@@ -53,7 +53,7 @@ list::create \
         }
         instance_name {
             label "[_ acs-subsite.Name]"
-            link_url_eval {../../$name/}
+            link_url_eval {[site_node::get_url -node_id $node_id]}
         }
         name {
             label "[_ acs-subsite.URL]"

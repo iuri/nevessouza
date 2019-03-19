@@ -4,8 +4,7 @@
 <!--  -->
 <!-- @author Dave Bauer (dave@thedesignexperience.org) -->
 <!-- @creation-date 2005-02-09 -->
-<!-- @arch-tag: 8fc5c63c-02e7-4910-a536-8edbaff68ff8 -->
-<!-- @cvs-id $Id: content-revision-procs.xql,v 1.2.14.1 2016/10/27 18:02:00 antoniop Exp $ -->
+<!-- @cvs-id $Id: content-revision-procs.xql,v 1.4 2018/08/15 17:00:24 gustafn Exp $ -->
 
 <queryset>
 

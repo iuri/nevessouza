@@ -20,7 +20,7 @@ ad_library {
     
     @author Mark Dettinger (mdettinger@arsdigita.com)
     @creation-date March 29, 2000
-    @cvs-id $Id: ad-functional-procs.tcl,v 1.8.2.2 2017/04/21 14:22:45 gustafn Exp $
+    @cvs-id $Id: ad-functional-procs.tcl,v 1.10 2018/04/09 20:11:54 hectorr Exp $
 
     This was part of ACS 3
     Added to OpenACS by bdolicki on 11 Feb 2004
@@ -506,9 +506,9 @@ ad_proc -public filter {pred xs} {
 ad_proc -public copy {n x} "returns list of n copies of x" {
     set result {}
     for {set i 0} {$i<$n} {incr i} {
-	lappend result $x
+        lappend result $x
     }
-    return $result    
+    return $result
 }
 
 # Example:
@@ -517,9 +517,9 @@ ad_proc -public copy {n x} "returns list of n copies of x" {
 ad_proc -public cycle {n xs} "returns concatenated list of n copies of xs" {
     set result {}
     for {set i 0} {$i<$n} {incr i} {
-	set result [concat $result $xs]
+        lappend result {*}$xs
     }
-    return $result    
+    return $result
 }
 
 # Example:
