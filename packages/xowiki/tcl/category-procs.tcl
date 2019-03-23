@@ -3,7 +3,7 @@
 
     @creation-date 2006-10-10
     @author Gustaf Neumann
-    @cvs-id $Id: category-procs.tcl,v 1.31 2018/11/03 18:59:55 gustafn Exp $
+    @cvs-id $Id: category-procs.tcl,v 1.27.2.1 2015/09/10 08:10:40 gustafn Exp $
 }
 
 namespace eval ::xowiki {
@@ -48,7 +48,7 @@ namespace eval ::xowiki {
         if {!$match} continue
       }
       # Get the values from info in "tree" into separate variables given by output.
-      # Note that the order matters!
+      # Note, that the order matters!
       lassign $tree {*}$output
       set l [list]
       foreach __var $output {lappend l [set $__var]}

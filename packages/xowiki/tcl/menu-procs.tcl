@@ -1,8 +1,8 @@
 ::xo::library doc {
 
-  Basic classes for Menus (context menu, menu bar, menu item).  The
+  Basic classes for Menues (context menu, menu bar, menu item).  The
   design is influenced by the YUI2 classes, but we tried to keep the
-  implementation generic. The original version was developed by Michael
+  implmentation generic. The original version was developed by Michael
   Aram in his Master Thesis. Over the time it was simplified,
   downstripped and refactored by Gustaf Neumann. The currently
   preferred interface is the class.
@@ -18,7 +18,7 @@ namespace eval ::xowiki {
   #
   ::xo::tdom::Class create MenuComponent \
       -superclass ::xo::tdom::Object
-
+  
   MenuComponent instproc js_name {} {
     return [::xowiki::Includelet js_name [self]]
   }
@@ -32,13 +32,13 @@ namespace eval ::xowiki {
   ::xo::tdom::Class create Menu \
       -superclass MenuComponent \
       -parameter {
-        {id "[:html_id]"}
+        {id "[my html_id]"}
         CSSclass
       }
 
   Menu ad_instproc render {} {doku} {
-    html::ul [:get_attributes id {CSSclass class}] {
-      foreach menuitem [:children] {$menuitem render}
+    html::ul [my get_attributes id {CSSclass class}] {
+      foreach menuitem [my children] {$menuitem render}
     }
   }
 
@@ -51,7 +51,7 @@ namespace eval ::xowiki {
         text
         href
         title
-        {id "[:html_id]"}
+        {id "[my html_id]"}
         CSSclass
         style
         linkclass
@@ -64,29 +64,29 @@ namespace eval ::xowiki {
   MenuItem ad_instproc init args {doku} {
     next
     # Use computed default values when not specified
-    if {![info exists :title]} {
+    if {![my exists title]} {
       # set the mouseover-title to the "MenuItem-Label"
       # TODO: Do we really want "text" to be required ?
-      set :title ${:text}
+      my title [my text]
     }
-    if {![info exists :CSSclass]} {
+    if {![my exists CSSclass]} {
       # set the CSS class to e.g. "yuimenuitem"
-      set :CSSclass [string tolower [namespace tail [:info class]]]
+      my CSSclass [string tolower [namespace tail [my info class]]]
     }
 
-    if {![info exists :href] || ${:href} eq ""} {
-      append :CSSclass " " [string tolower [namespace tail [:info class]]]-disabled
+    if {![my exists href] || [my href] eq ""} {
+      my append CSSclass " " [string tolower [namespace tail [my info class]]]-disabled
     }
-    if {![info exists :linkclass]} {
+    if {![my exists linkclass]} {
       # set the CSS class to e.g. "yuimenuitemlabel"
-      set :linkclass [string tolower [namespace tail [:info class]]]label
+      my set linkclass [string tolower [namespace tail [my info class]]]label
     }
   }
 
   MenuItem ad_instproc render {} {doku} {
-    html::li [:get_attributes id {CSSclass class}] {
-      html::a [:get_attributes title href target] {
-        html::t ${:text}
+    html::li [my get_attributes id {CSSclass class}] {
+      html::a [my get_attributes title href target] {
+        html::t [my text]
       }
     }
   }
@@ -119,7 +119,7 @@ namespace eval ::xowiki {
   #  2) All menu entry names must start with a capital letter
   #  3) All menu entry names should be named after the menu name
   #
-  # Notice: the current implementation uses internally dicts. Since the
+  # Notice: the current implementation uses interally dicts. Since the
   # code should as well work with Tcl 8.4 instances, we provide a
   # compatibility layer. Maybe it would be better to base the code on
   # an ordered composite. Ideally, the interface should stay mostly
@@ -151,31 +151,32 @@ namespace eval ::xowiki {
   }
 
   ::xowiki::MenuBar instproc init {} {
-    set :Menues [list]
-    :destroy_on_cleanup
+    my set Menues [list]
+    my destroy_on_cleanup
   }
 
   ::xowiki::MenuBar instproc add_menu {-name {-label ""}} {
-    if {$name in ${:Menues}} {
+    my instvar Menues
+    if {$name in $Menues} {
       error "menu $name exists already"
     }
     if {[string match {[a-z]*} $name]} {
       error "names must start with uppercase, provided name '$name'"
     }
-    lappend :Menues $name
+    my lappend Menues $name
     if {$label eq ""} {set label $name}
-    set :Menu($name) [list label $label]
-    #:log "menues: ${:Menues}"
+    my set Menu($name) [list label $label]
+    #my log "menues: $Menues"
   }
 
   ::xowiki::MenuBar instproc additional_sub_menu {-kind:required -pages:required -owner:required} {
-    set :submenu_pages($kind) $pages
-    set :submenu_owner($kind) $owner
+    my set submenu_pages($kind) $pages
+    my set submenu_owner($kind) $owner
   }
 
   ::xowiki::MenuBar instproc clear_menu {-menu:required} {
-    array set "" [set :Menu($menu)]
-    set :Menu($menu) [list label $(label)]
+    array set "" [my set Menu($menu)]
+    my set Menu($menu) [list label $(label)]
   }
 
   ::xowiki::MenuBar instproc current_folder {} {
@@ -204,11 +205,12 @@ namespace eval ::xowiki {
     # containing at least attributes "label" and "url"
     #   (e.g. "label .... url ....").
     #
+    my instvar Menues
     set full_name $name
     if {![regexp {^([^.]+)[.](.+)$} $name _ menu name]} {
       error "menu item name '$name' not of the form Menu.Name"
     }
-    if {$menu ni ${:Menues}} {
+    if {$menu ni $Menues} {
       error "menu $menu does not exist"
     }
     if {[string match {[a-z]*} $name]} {
@@ -234,7 +236,7 @@ namespace eval ::xowiki {
     #
     set updated 0
     set newitems [list]
-    foreach {n i} [set :Menu($menu)] {
+    foreach {n i} [my set Menu($menu)] {
       if {$n eq $name} {
         lappend newitems $name $item
         set updated 1
@@ -243,9 +245,9 @@ namespace eval ::xowiki {
       }
     }
     if {$updated} {
-      set :Menu($menu) $newitems
+      my set Menu($menu) $newitems
     } else {
-      lappend :Menu($menu) $name $item
+      my lappend Menu($menu) $name $item
     }
   }
 
@@ -257,7 +259,7 @@ namespace eval ::xowiki {
     if {$type ni {"DropZone" "ModeButton"}} {
       error "unknown extra item type: $type"
     }
-    set :${type}($name) $item
+    my set ${type}($name) $item
   }
 
 
@@ -275,8 +277,8 @@ namespace eval ::xowiki {
     # {dropzone -name DropZone -label DropZone -uploader File}
     # {modebutton -name Admin -label admin -button admin}
 
-
-    set :parent_id $parent_id
+   
+    my set parent_id $parent_id
 
     foreach me $items {
       array unset ""
@@ -284,12 +286,12 @@ namespace eval ::xowiki {
       if {[string index $kind 0] eq "#"} continue
       set properties [lrange $me 1 end]
 
-      switch -- $kind {
-
+      switch $kind {
+        
         clear_menu {
-          :clear_menu -menu [dict get $properties -menu]
+          my clear_menu -menu [dict get $properties -menu]
         }
-
+        
         form_link -
         entry {
           # sample entry: entry -name New.YouTubeLink -label YouTube -form en:YouTube.form
@@ -307,16 +309,16 @@ namespace eval ::xowiki {
                           [list object_type [dict get $properties -object_type]] \
                           parent_id return_url autoname template_file]
           } else {
-            :log "Warning: no link specified"
+            my log "Warning: no link specified"
             set link ""
           }
           set item [list url $link]
           if {[dict exists $properties -label]} {
             lappend item label [dict get $properties -label]
           }
-          :add_menu_item -name [dict get $properties -name] -item $item
+          my add_menu_item -name [dict get $properties -name] -item $item
         }
-
+        
         "dropzone" {
           foreach {var default} {
             name dropzone
@@ -330,7 +332,7 @@ namespace eval ::xowiki {
           }
 
           set link [$package_id make_link $parent_id file-upload]
-          :add_extra_item -name $name -type DropZone \
+          my add_extra_item -name $name -type DropZone \
               -item [list url $link uploader $uploader label $label]
         }
 
@@ -348,7 +350,7 @@ namespace eval ::xowiki {
           if {$label eq ""} {set label $button}
           set state [::xowiki::mode::$button get]
           set link [$package_id make_link $parent_id toggle-modebutton]
-          :add_extra_item -name $name -type ModeButton \
+          my add_extra_item -name $name -type ModeButton \
               -item [list url $link on $state label $label]
         }
 
@@ -360,17 +362,17 @@ namespace eval ::xowiki {
   }
 
   ::xowiki::MenuBar instproc content {} {
-    set result [list id [:id]]
-    foreach e ${:Menues} {
-      lappend result $e [list kind MenuButton {*}[set :Menu($e)]]
+    set result [list id [my id]]
+    foreach e [my set Menues] {
+      lappend result $e [concat kind MenuButton [my set Menu($e)]]
+    }
+    
+    foreach e [my array name ModeButton] {
+      lappend result $e [concat kind ModeButton [my set ModeButton($e)]]
     }
 
-    foreach e [:array name ModeButton] {
-      lappend result $e [list kind ModeButton {*}[set :ModeButton($e)]]
-    }
-
-    foreach e [:array name DropZone] {
-      lappend result $e [list kind DropZone {*}[set :DropZone($e)]]
+    foreach e [my array name DropZone] {
+      lappend result $e [concat kind DropZone [my set DropZone($e)]]
     }
 
     return $result
@@ -385,14 +387,14 @@ namespace eval ::xowiki {
   }
 
 
-
+  
   # ::xo::tdom::Class create MenuDropZone \
   #     -superclass MenuComponent \
   #     -parameter {
   #       text
   #       href
   #       title
-  #       {id "[:html_id]"}
+  #       {id "[my html_id]"}
   #       CSSclass
   #     }
 
@@ -400,21 +402,21 @@ namespace eval ::xowiki {
   # MenuDropZone instproc init args {
   #   next
   #   # Use computed default values when not specified
-  #   if {![info exists :title]} {
+  #   if {![my exists title]} {
   #     # set the mouseover-title to the "MenuItem-Label"
   #     # TODO: Do we really want "text" to be required ?
-  #     :title [:text]
+  #     my title [my text]
   #   }
 
-  #   if {![info exists :href] || [:href] eq ""} {
-  #     append :CSSclass " " [string tolower [namespace tail [:info class]]]-disabled
+  #   if {![my exists href] || [my href] eq ""} {
+  #     my append CSSclass " " [string tolower [namespace tail [my info class]]]-disabled
   #   }
   # }
 
   # MenuDropZone instproc render {} {
-  #   html::li [:get_attributes id {CSSclass class}] {
-  #     html::a [:get_attributes title href target] {
-  #       html::t [:text]
+  #   html::li [my get_attributes id {CSSclass class}] {
+  #     html::a [my get_attributes title href target] {
+  #       html::t [my text]
   #     }
   #   }
   # }

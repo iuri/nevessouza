@@ -5,7 +5,7 @@ ad_page_contract {
     @author Gustaf Neumann neumann@wu-wien.ac.at
     @author Dave Bauer (dave@solutiongrove.com)
     @creation-date 13.07.2004
-    @cvs-id $Id: insert-file.tcl,v 1.7 2017/10/01 12:10:25 gustafn Exp $
+    @cvs-id $Id: insert-file.tcl,v 1.5.2.1 2015/09/10 08:10:43 gustafn Exp $
 } {
     {parent_id:naturalnum,notnull}
     {selector_type "image"}
@@ -90,7 +90,7 @@ if {[permission::permission_p -party_id $user_id -object_id $parent_id \
                     -creation_ip [ad_conn peeraddr] \
                     -package_id [ad_conn package_id]
             }
-            file delete -- $upload_tmpfile
+            file delete $upload_tmpfile
             permission::grant \
                 -object_id $item_id \
                 -party_id $user_id \

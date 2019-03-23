@@ -73,7 +73,7 @@
 	  var f_url = document.getElementById("f_url");
 	  var url = f_url.value;
 	  if (!url) {
-	    alert("You have to enter a URL first");
+	    alert("You have to enter an URL first");
 	    f_url.focus();
 	    return false;
 	  }
@@ -235,7 +235,7 @@
 	<table border="0" width="100%" style="margin: 0 auto; text-align: left;padding: 0px;">
 	  <tbody>
       <td valign="top" width="50%" >
-	<if @write_p;literal@ true>
+	<if @write_p@ eq 1>
 	  <fieldset style="margin-top:10px;padding-top:10px;">
 	    <legend><strong>@HTML_UploadTitle@</strong></legend>
 	    <formtemplate id="upload_form">

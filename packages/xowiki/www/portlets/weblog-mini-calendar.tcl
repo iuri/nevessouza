@@ -24,11 +24,9 @@ array set message_key_array {
 }
 
 # Get the current month, day, and the first day of the month
-ad_try {
+if {[catch {
   dt_get_info $date
-} on error {errorMsg} {
-  # if dt_get_info fails from the provided date, try it with the
-  # sysdate.
+} errmsg]} {
   set date [dt_sysdate]
   dt_get_info $date
 }

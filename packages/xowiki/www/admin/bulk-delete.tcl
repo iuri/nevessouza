@@ -3,7 +3,7 @@
 
   @author Gustaf Neumann (gustaf.neumann@wu-wien.ac.at)
   @creation-date Nov 11, 2007
-  @cvs-id $Id: bulk-delete.tcl,v 1.5 2018/01/19 13:48:24 gustafn Exp $
+  @cvs-id $Id: bulk-delete.tcl,v 1.3.4.2 2016/11/12 16:25:16 gustafn Exp $
 
   @param object_type 
 } -parameter {
@@ -16,7 +16,6 @@ foreach o $objects {
 }
 
 ad_returnredirect "./list"
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

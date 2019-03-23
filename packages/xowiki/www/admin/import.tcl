@@ -3,7 +3,7 @@
 
   @author Gustaf Neumann (gustaf.neumann@wu-wien.ac.at)
   @creation-date Aug 11, 2006
-  @cvs-id $Id: import.tcl,v 1.28 2019/01/04 15:50:36 antoniop Exp $
+  @cvs-id $Id: import.tcl,v 1.23.4.2 2015/10/20 08:23:39 gustafn Exp $
 } -parameter {
   {create_user_ids 0}
   {replace 0}
@@ -46,9 +46,7 @@ ad_form \
       foreach o [::xowiki::Page allinstances] { 
         set preexists($o) 1
       }
-      ad_try {
-        namespace eval ::xo::import $content
-      } on error {errorMsg} {
+      if {[catch {namespace eval ::xo::import $content} errorMsg]} {
 	ad_log error $errorMsg
 	# cleanup all objects, that did not exist before
         foreach o [::xowiki::Page allinstances] {
@@ -56,7 +54,7 @@ ad_form \
 	    if {[::xotcl::Object isobject $o]} {$o destroy}
 	  }
         }
-      } on ok {r} {
+      } else {
         set objects [list]
         foreach o [::xowiki::Page allinstances] {
           if {![info exists preexists($o)]} {lappend objects $o}
@@ -64,21 +62,16 @@ ad_form \
         ns_log notice "objects to import: $objects"
         set parent_id [ns_queryget parent_id 0]
         #::xotcl::Object msg parent_id=$parent_id
-        ad_try {
+        if {[catch {
           set msg [$package_id import -replace $replace -create_user_ids $create_user_ids \
                        -parent_id $parent_id -objects $objects]
-        } on error {errMsg} {
+        } errMsg]} {
           ns_log notice "Error during import: $errMsg\nErrInfo: $::errorInfo"
           ::xotcl::Object msg "Error during import: $errMsg\nErrInfo: $::errorInfo"
+          foreach o $objects {$o destroy}
           error $errMsg
-        } finally {
-          # Make sure objects have been cleaned up
-          foreach o $objects {
-            if {[::xotcl::Object isobject $o]} {
-              $o destroy
-            }
-          }
         }
+        foreach o $objects {if {[::xotcl::Object isobject $o]} {$o destroy}}
       }
       namespace delete ::xo::import
     }

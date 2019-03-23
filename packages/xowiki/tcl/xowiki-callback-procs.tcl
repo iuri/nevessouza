@@ -3,7 +3,7 @@
 
   @creation-date 2006-08-08
   @author Gustaf Neumann
-  @cvs-id $Id: xowiki-callback-procs.tcl,v 1.78 2018/06/26 10:25:30 gustafn Exp $
+  @cvs-id $Id: xowiki-callback-procs.tcl,v 1.74 2014/10/27 16:42:05 victorg Exp $
 }
 
 namespace eval ::xowiki {
@@ -51,10 +51,10 @@ namespace eval ::xowiki {
    
     set instance_name [apm_instance_name_from_id $package_id]
     
-    ::xo::xotcl_package_cache flush package_id-$instance_name
-    ::xo::xotcl_package_cache flush package_key-$package_id
-    ::xo::xotcl_package_cache flush root_folder-$package_id
-    ::xo::xotcl_object_type_cache flush -partition_key -100 -100-$instance_name    
+    ::xo::clusterwide ns_cache flush xotcl_object_type_cache package_id-$instance_name
+    ::xo::clusterwide ns_cache flush xotcl_object_type_cache -100-$instance_name    
+    ::xo::clusterwide ns_cache flush xotcl_object_type_cache package_key-$package_id
+    ::xo::clusterwide ns_cache flush xotcl_object_type_cache root_folder-$package_id
 
     ns_log notice "before-uninstantiate DONE"
   }
@@ -63,7 +63,7 @@ namespace eval ::xowiki {
   ad_proc -public ::xowiki::delete_gc_messages {
     {-package_id:required}
   } {
-    Deletes the messages of general comments to allow one to
+    Deletes the messages of general comments to allow to
     uninstantiate the package without violating constraints.
     
     @author Gustaf Neumann

@@ -3,7 +3,7 @@
 
   @creation-date 2006-04-10
   @author Gustaf Neumann
-  @cvs-id $Id: xowiki-form-procs.tcl,v 1.147 2018/06/27 12:07:09 gustafn Exp $
+  @cvs-id $Id: xowiki-form-procs.tcl,v 1.134.2.12 2017/05/09 14:09:28 antoniop Exp $
 }
 
 namespace eval ::xowiki {
@@ -20,7 +20,7 @@ namespace eval ::xowiki {
         {f.page_order "="}
         {f.title "="}
         {f.creator "="}
-        {f.text "= richtext,extraPlugins=xowikiimage"}
+        {f.text "= richtext"}
         {f.description "="}
         {f.nls_language "="}
         {validate {
@@ -47,66 +47,63 @@ namespace eval ::xowiki {
       }
 
   WikiForm instproc mkFields {} {
+    my instvar data autoname
     set __fields ""
-    set field_list [:field_list]
-    set show_page_order [[${:data} package_id] show_page_order]
-    if {!$show_page_order} { :f.page_order "= hidden" } 
-    if {${:autoname}}      { :f.name       "= hidden,optional"}
+    set field_list [my field_list]
+    set show_page_order [[$data package_id] show_page_order]
+    if {!$show_page_order} { my f.page_order "= hidden" } 
+    if {$autoname}         { my f.name       "= hidden,optional"}
     set form_fields [list]
 
     foreach __field $field_list {
       # if there is no field spec, use the default from the slot definitions
-      set __spec  [expr {[info exists :f.$__field] ? [set :f.$__field] : "="}]
+      set __spec  [expr {[my exists f.$__field] ? [my set f.$__field] : "="}]
       set __wspec [lindex $__spec 0]
       #my msg "$__field: wspec=$__wspec, spec=$__spec"
 
       # check first if we have widget_specs.
       # TODO: this part is likely to be removed in the future.
       if {
-          [${:data} istype ::xowiki::PlainPage] && $__field eq "text"
-          || [${:data} istype ::xowiki::File]   && $__field eq "text"
+          [$data istype ::xowiki::PlainPage] && $__field eq "text"
+          || [$data istype ::xowiki::File]   && $__field eq "text"
         } {
         set s ""
       } else {
-        set s [${:data} get_rich_text_spec $__field ""]
+        set s [$data get_rich_text_spec $__field ""]
       }
       if {$s ne ""} {
-        #:msg "we got richtext spec for $__field = '$s'"
+        #my msg "we got richtext spec for $__field = '$s'"
         set __spec $s
         set __wspec [lindex $__spec 0]
-        #
-        # Old style folder spec substitution. Ugly.
-        #
-        if {[:folderspec] ne ""} {
+        # old style folder spec substituion. ugly.
+        if {[my folderspec] ne ""} {
           # append the folder spec to its options
           set __newspec [list $__wspec]
           foreach __e [lrange $__spec 1 end] {
             lassign $__e __name __value
-            if {$__name eq "options"} {lappend __value {*}[:folderspec]}
+            if {$__name eq "options"} {lappend __value {*}[my folderspec]}
             lappend __newspec [list $__name $__value]
           }
-          #:msg "--F rewritten spec is '$__newspec'"
+          #my msg "--F rewritten spec is '$__newspec'"
           set __spec $__newspec
         }
       } elseif {[lindex $__wspec 0] eq "="} {
         # 
-        # Get the information from the attribute definitions and given
-        # specs.
+        # get the information from the attribute definitions & given specs
         #
 
-        set f [${:data} create_raw_form_field \
+        set f [$data create_raw_form_field \
                    -name $__field \
-                   -slot [${:data} find_slot $__field] \
+                   -slot [$data find_slot $__field] \
                    -spec [lindex $__spec 1] \
                   ]
-        #:log SPEC=[lindex $__spec 1]
 
         if {[$f istype ::xowiki::formfield::richtext] &&
-            [:folderspec] ne ""} {
+            [my folderspec] ne ""} {
           # Insert the folder_id and the script_dir into the spec for
           # the oacsfs plugin to access the correct filestore instance
           # and to find the script directory
-          foreach {key value} [:folderspec] {
+          foreach {key value} [my folderspec] {
             $f $key $value
           }
           # We have to reinitialize for exporting these values asWidgetSpec
@@ -119,18 +116,18 @@ namespace eval ::xowiki {
       }
 
       if {[string first "richtext" $__wspec] > -1} {
-        # ad_form does a subst, therefore escape esp. the JavaScript stuff
+        # ad_form does a subst, therefore escape esp. the javascript stuff
         set __spec [string map {\[ \\[ \] \\] \$ \\$ \\ \\\\} $__spec]
       }
 
-      #:msg "--F field <$__field> = $__spec"
+      #my msg "--F field <$__field> = $__spec"
       append __fields [list $__spec] \n
     }
 
     # setting form fields for later use in validator
-    # ${:data} show_fields $form_fields
-    set :form_fields $form_fields
-    set :fields $__fields
+    # $data show_fields $form_fields
+    my set form_fields $form_fields
+    my set fields $__fields
   }
 
   proc ::xowiki::locales {} {
@@ -151,7 +148,7 @@ namespace eval ::xowiki {
   proc ::xowiki::page_templates {} {
     set form ::xowiki::f1 ;# form has to be named this way for the time being
     #set form [lindex [::xowiki::WikiForm info instances -closure] 0]
-    $form instvar folder_id
+    $form instvar data folder_id
     set q [::xowiki::PageTemplate instance_select_query \
                -folder_id $folder_id \
                -with_subtypes false \
@@ -257,7 +254,7 @@ namespace eval ::xowiki {
       set granted [$package_id check_permissions -link $computed_link $package_id edit-new]
       #$data msg computed_link=$computed_link,granted=$granted
       if {!$granted} {
-        util_user_message -message "User not authorized to create a file named $name"
+        util_user_message -message "User not authorized to to create a file named $name"
         return 0
       }
     } else {
@@ -332,127 +329,137 @@ namespace eval ::xowiki {
   #
   #   WikiForm instproc set_form_data {} {
   #     next
-  #     #:msg "name in form=[:var name]"
-  #     set name_in_form [:var name]
+  #     #my msg "name in form=[my var name]"
+  #     set name_in_form [my var name]
   #     if {[regexp {^..:(.*)$} $name_in_form _ stripped_name]} {
   #       # use stripped "name" in form to avoid possible confusions
-  #       :var name $stripped_name
+  #       my var name $stripped_name
   #     }
   #   }
 
   WikiForm instproc tidy {} {
     upvar #[template::adp_level] text text
     if {[info exists text]} {
-      lassign [:var text] text format
+      lassign [my var text] text format
       if {[info exists format]} {
-        :var text [list [list [::xowiki::tidy clean $text] $format]]
+        my var text [list [list [::xowiki::tidy clean $text] $format]]
       }
     }
   }
   
   WikiForm instproc data_from_form {{-new 0}} {
-    if {[${:data} exists_form_parameter text.format]} {
-      ${:data} set mime_type [${:data} form_parameter text.format]
+    my instvar data
+    if {[$data exists_form_parameter text.format]} {
+      $data set mime_type [$data form_parameter text.format]
     }
-    if {$new && [[${:data} set package_id] get_parameter production_mode 0]} {
-      ${:data} set publish_status production
+    if {$new && [[$data set package_id] get_parameter production_mode 0]} {
+      $data set publish_status production
     }
     upvar #[template::adp_level] page_order page_order
     if {[info exists page_order] && $page_order ne ""} {
       set page_order [string trim $page_order " ."]
     }
-    :tidy
+    my tidy
   }
 
   WikiForm instproc update_references {} {
-    if {![:istype PageInstanceForm]} {
+    my instvar data folder_id
+    if {![my istype PageInstanceForm]} {
       ### danger: update references does an ad_eval, which breaks the [template::adp_level]
       ### ad_form! don't do it in pageinstanceforms.
-      ${:data} render_adp false
-      ${:data} render -update_references true
+      $data render_adp false
+      $data render -update_references true
     }
     # Delete the link cache entries for this entry.
     # The logic could be made more intelligent to delete entries is more rare cases, like
     # in case the file was renamed, but this is more bullet-proof.
     #
-    # xowiki::LinkCache flush ${:folder_id} [${:data} set item_id]
-    #
-    if {![${:data} istype ::xowiki::Object]
-        && ![${:data} istype ::xowiki::PageTemplate]
-      } {
-      if {[${:data} istype ::xowiki::PageInstance]} {
-        if {[${:data} set instance_attributes] ne ""} {
-          #
-          # Field-less page instances are not notified. Problem?
-          #
-          # :log "--i instance_attributes = <[${:data} set instance_attributes]>"
-          ::xowiki::notification::do_notifications -page ${:data}
+    # In case "ns_cache names xowiki_cache *pattern*" is not working on your installation;
+    #    upgrade ns_cache from cvs or use
+    #    foreach entry [lsearch -inline -all [ns_cache names xowiki_cache] link-*-$folder_id] 
+    foreach entry [ns_cache names xowiki_cache link-*-$folder_id] {
+      array set tmp [ns_cache get xowiki_cache $entry]
+      if {$tmp(item_id) == [$data set item_id]} {
+        ::xo::clusterwide ns_cache flush xowiki_cache $entry
+      }
+    }
+    if {![$data istype ::xowiki::Object] &&
+        ![$data istype ::xowiki::PageTemplate] } {
+      if {[$data istype ::xowiki::PageInstance]} {
+        if {[$data set instance_attributes] ne ""} {
+          # fieldless page instances are not notified. problem?
+          # my log "--i instance_attributes = <[$data set instance_attributes]>"
+          ::xowiki::notification::do_notifications -page $data
         }
       } else {
-        ::xowiki::notification::do_notifications -page ${:data}
+        ::xowiki::notification::do_notifications -page $data
       }
     }
 
-    #:log "v=[ad_acs_version] 5.2] compare: [apm_version_names_compare [ad_acs_version] 5.2]"
+    #my log "v=[ad_acs_version] 5.2] compare: [apm_version_names_compare [ad_acs_version] 5.2]"
     if {[apm_version_names_compare [ad_acs_version] 5.3.0d4] == 1} {
       application_data_link::update_links_from \
-          -object_id [${:data} set item_id] \
-          -text [${:data} set text]
+          -object_id [$data set item_id] \
+          -text [$data set text]
     }
   }
   
   
   WikiForm instproc new_request {} {
+    my instvar data
     #
     # get the defaults from the slots and set it in the data.
     # This should not be necessary with xotocl 1.6.*
     #
-    foreach f [:field_list] {
-      set s [${:data} find_slot $f] 
+    foreach f [my field_list] {
+      set s [$data find_slot $f] 
       if {$s ne "" && [$s exists default] && [$s default] ne ""} {
-        #:msg "new_request $f default = '[$s default]'"
-        ${:data} set $f [$s default]
+        #my msg "new_request $f default = '[$s default]'"
+        $data set $f [$s default]
       }
     }
     # 
     # set the following defaults manually
     #
-    ${:data} set creator [::xo::get_user_name [::xo::cc user_id]]
-    if {[${:data} name] eq ""} {
-      ${:data} set nls_language [::xo::cc locale]
+    $data set creator [::xo::get_user_name [::xo::cc user_id]]
+    if {[$data name] eq ""} {
+      $data set nls_language [::xo::cc locale]
     }
     next
   }
 
   WikiForm instproc edit_request args {
-    if {[${:data} set creator] eq ""} {
-      ${:data} set creator [::xo::get_user_name [::xo::cc user_id]]
+    my instvar data
+    if {[$data set creator] eq ""} {
+      $data set creator [::xo::get_user_name [::xo::cc user_id]]
     }
     next
   }
 
   WikiForm instproc new_data {} {
-    :data_from_form -new 1 
-    ${:data} set __autoname_prefix [string range [${:data} set nls_language] 0 1]:
+    my instvar data
+    my data_from_form -new 1 
+    $data set __autoname_prefix [string range [$data set nls_language] 0 1]:
     set item_id [next]
-    ${:data} set creation_user [::xo::cc user_id]
-    :update_references
+    $data set creation_user [::xo::cc user_id]
+    my update_references
     return $item_id
   }
 
   WikiForm instproc edit_data {} {
-    :data_from_form -new 0
+    my data_from_form -new 0
     set item_id [next]
-    :update_references
+    my update_references
     return $item_id
   }
 
   WikiForm instproc after_submit {item_id} {
-    set link [:submit_link]
+    set link [my submit_link]
     if {$link eq "."} {
-      # we can determine submit link only after nls_language 
+      my instvar data
+      # we can determine submit link only after nls_langauge 
       # is returned from the user
-      :submit_link [${:data} pretty_link]
+      my submit_link [$data pretty_link]
     }
     next
   }
@@ -495,39 +502,40 @@ namespace eval ::xowiki {
   }
 
   FileForm instproc get_uploaded_file {} {
-    #:log "--F... [ns_conn url] [ns_conn query] form vars = [ns_set array [ns_getform]]"
-    set upload_file [${:data} form_parameter upload_file]
-    # :log "--F... upload_file = $upload_file"
+    my instvar data
+    #my log "--F... [ns_conn url] [ns_conn query] form vars = [ns_set array [ns_getform]]"
+    set upload_file [$data form_parameter upload_file]
+    # my log "--F... upload_file = $upload_file"
     if {$upload_file ne "" && $upload_file ne "{}"} {
-      ${:data} set upload_file $upload_file
-      ${:data} set import_file [${:data} form_parameter upload_file.tmpfile]
-      set mime_type [${:data} form_parameter upload_file.content-type]
+      $data set upload_file $upload_file
+      $data set import_file [$data form_parameter upload_file.tmpfile]
+      set mime_type [$data form_parameter upload_file.content-type]
       if {[::xo::dc 0or1row check_mimetype {
         select 1 from cr_mime_types where mime_type = :mime_type
       }] == 0 
           || $mime_type eq "application/octet-stream" 
           || $mime_type eq "application/force-download"} {
         set guessed_mime_type [::xowiki::guesstype $upload_file]
-        #:msg guess=$guessed_mime_type
+        #my msg guess=$guessed_mime_type
         if {$guessed_mime_type ne "*/*"} {
           set mime_type $guessed_mime_type
         }
       }
-      ${:data} set mime_type $mime_type
-    } elseif {[${:data} name] ne ""} {
-      # :log "--F no upload_file provided [lsort [${:data} info vars]]"
-      if {[${:data} exists mime_type]} {
-        :log "--mime_type=[${:data} set mime_type]"
-        #:log "   text=[${:data} set text]"
-        regexp {^[^:]+:(.*)$} [${:data} set name] _ upload_file
-        ${:data} set upload_file $upload_file
-        ${:data} set import_file [${:data} full_file_name]
-        # :log "--F upload_file $upload_file  import_file [${:data} full_file_name]"
-        #:log "   import_type=[${:data} set import_file]"
+      $data set mime_type $mime_type
+    } elseif {[$data name] ne ""} {
+      # my log "--F no upload_file provided [lsort [$data info vars]]"
+      if {[$data exists mime_type]} {
+        my log "--mime_type=[$data set mime_type]"
+        #my log "   text=[$data set text]"
+        regexp {^[^:]+:(.*)$} [$data set name] _ upload_file
+        $data set upload_file $upload_file
+        $data set import_file [$data full_file_name]
+        # my log "--F upload_file $upload_file  import_file [$data full_file_name]"
+        #my log "   import_type=[$data set import_file]"
       } 
     } else {
-      # :log "--F no name and no upload file"
-      ${:data} set upload_file ""
+      # my log "--F no name and no upload file"
+      $data set upload_file ""
     }
   }
   FileForm instproc new_data {} {
@@ -584,22 +592,24 @@ namespace eval ::xowiki {
   }
 
   PodcastForm instproc new_data {} {
-    set pub_date [:var pub_date]
-    ${:data} set pub_date [list [:to_timestamp $pub_date]]
+    set pub_date [my var pub_date]
+    my var pub_date [list [my to_timestamp $pub_date]]
     return [next]
   }
   PodcastForm instproc edit_data {} {
-    set pub_date [:var pub_date]
-    ${:data} set pub_date [list [:to_timestamp $pub_date]]
+    set pub_date [my var pub_date]
+    my var pub_date [list [my to_timestamp $pub_date]]
     return [next]
   }
 
   PodcastForm instproc new_request {} {
-    ${:data} set pub_date [:to_timeinfo [clock format [clock seconds]  -format "%y-%m-%d %T"]]
+    my instvar data
+    $data set pub_date [my to_timeinfo [clock format [clock seconds]  -format "%y-%m-%d %T"]]
     next
   }
   PodcastForm instproc edit_request {item_id} {
-    ${:data} set pub_date [:to_timeinfo [${:data} set pub_date]]
+    my instvar data
+    $data set pub_date [my to_timeinfo [$data set pub_date]]
     next
   }
 
@@ -615,13 +625,14 @@ namespace eval ::xowiki {
       }
 
   ObjectForm instproc init {} {
-    if {[${:data} exists name]} {
+    my instvar data
+    if {[$data exists name]} {
       # don't call validate on the folder object, don't let people change its name
-      set name [${:data} set name]
-      if {$name eq "::[${:data} set parent_id]"} {
-        :f.name  "= inform,help_text="
-        :validate {{name {1} {dummy}} }
-        #:log "--e don't validate folder id - parent_id = [${:data} set parent_id]"
+      set name [$data set name]
+      if {$name eq "::[$data set parent_id]"} {
+        my f.name  "= inform,help_text="
+        my validate {{name {1} {dummy}} }
+        #my log "--e don't validate folder id - parent_id = [$data set parent_id]"
       }
     }
     next
@@ -629,22 +640,24 @@ namespace eval ::xowiki {
 
 
   ObjectForm instproc new_request {} {
+    my instvar data
     permission::require_permission \
-        -party_id [ad_conn user_id] -object_id [${:data} set parent_id] \
+        -party_id [ad_conn user_id] -object_id [$data set parent_id] \
         -privilege "admin"
     next
   }
 
   ObjectForm instproc edit_request {item_id} {
+    my instvar data
     #my f.name {{name:text {label #xowiki.Page-name#}}}
     permission::require_permission \
-        -party_id [ad_conn user_id] -object_id [${:data} set parent_id] \
+        -party_id [ad_conn user_id] -object_id [$data set parent_id] \
         -privilege "admin"
     next
   }
 
   ObjectForm instproc edit_data {} {
-    [:data] initialize_loaded_object
+    [my data] initialize_loaded_object
     next
   }
 
@@ -677,22 +690,24 @@ namespace eval ::xowiki {
     # nothing
   }
   PageInstanceForm instproc set_submit_link_edit {} {
-    set object_type [[${:data} info class] object_type]
-    #:log "-- data=${:data} cl=[${:data} info class] ot=$object_type"
-    set item_id [${:data} set item_id]
-    set page_template [${:data} form_parameter page_template]
-    if {[${:data} exists_query_parameter return_url]} {
-      set return_url [${:data} query_parameter return_url]
+    my instvar folder_id data
+    set object_type [[$data info class] object_type]
+    #my log "-- data=$data cl=[$data info class] ot=$object_type"
+    set item_id [$data set item_id]
+    set page_template [$data form_parameter page_template]
+    if {[$data exists_query_parameter return_url]} {
+      set return_url [$data query_parameter return_url]
     }
-    :submit_link [${:data} pretty_link -query [export_vars {
+    my submit_link [$data pretty_link -query [export_vars {
       {m edit} page_template return_url item_id
     }]]
-    # :log "-- submit_link = [:submit_link]"
+    # my log "-- submit_link = [my submit_link]"
   }
 
   PageInstanceForm instproc new_data {} {
+    my instvar data
     set item_id [next]
-    :set_submit_link_edit
+    my set_submit_link_edit
     return $item_id
   }
 
@@ -715,85 +730,89 @@ namespace eval ::xowiki {
   }
 
   PageInstanceEditForm instproc new_data {} {
+    my instvar data
     set __vars {folder_id item_id page_template return_url}
-    set object_type [[${:data} info class] object_type]
-    #:log "-- cl=[${:data} info class] ot=$object_type $__vars"
-    foreach __v $__vars {set $__v [${:data} from_parameter $__v] ""}
+    set object_type [[$data info class] object_type]
+    #my log "-- cl=[[my set data] info class] ot=$object_type $__vars"
+    foreach __v $__vars {set $__v [$data from_parameter $__v] ""}
     set item_id [next]
 
-    set link [${:data} pretty_link]
-    :submit_link [export_vars -no_base_encode -base $link {{m edit} $__vars}]
-    # :log "-- submit_link = [:submit_link]"
+    set link [$data pretty_link]
+    my submit_link [export_vars -no_base_encode -base $link {{m edit} $__vars}]
+    # my log "-- submit_link = [my submit_link]"
     return $item_id
   }
 
   PageInstanceEditForm instproc edit_request {item_id} {
-    :log "-- "
+    my log "-- "
+    my instvar page_instance_form_atts data
     next
 
-    set __ia [${:data} set instance_attributes]
-    foreach var ${:page_instance_form_atts} {
-      if {[dict exists $__ia $var]} {:var $var [list [dict get $__ia $var]]}
+    set __ia [$data set instance_attributes]
+    foreach var $page_instance_form_atts {
+      if {[dict exists $__ia $var]} {my var $var [list [dict get $__ia $var]]}
     }
   }
 
 
   PageInstanceEditForm instproc edit_data {} {
-    :log "-- "
+    my log "-- "
+    my instvar page_instance_form_atts data
 
-    set __ia [${:data} set instance_attributes]
-    foreach var ${:page_instance_form_atts} {
-      dict set __ia $var [:var $var]
+    set __ia [$data set instance_attributes]
+    foreach var $page_instance_form_atts {
+      dict set __ia $var [my var $var]
     }
-    ${:data} set instance_attributes $__ia
+    $data set instance_attributes $__ia
 
     set item_id [next]
-    :log "-- edit_data item_id=$item_id"
+    my log "-- edit_data item_id=$item_id"
     return $item_id
   }
 
   PageInstanceEditForm instproc init {} {
-    set item_id [${:data} form_parameter item_id]
+    my instvar data page_instance_form_atts
+    set item_id [$data form_parameter item_id]
     #
     # make sure to have page template object loaded
     #
-    set page_template_id [${:data} form_parameter page_template ""]
+    set page_template_id [$data form_parameter page_template ""]
     if {$page_template_id eq ""} {
-      set page_template_id [${:data} set page_template]
+      set page_template_id [$data set page_template]
     }
     set template [::xo::db::CrClass get_instance_from_db -item_id $page_template_id]
-    set dont_edit [concat [[${:data} info class] array names db_slot] \
+    set dont_edit [concat [[$data info class] array names db_slot] \
                        [::xo::db::CrClass set common_query_atts]]
 
-    set category_spec [${:data} get_short_spec @categories]
+    set category_spec [$data get_short_spec @categories]
     foreach f [split $category_spec ,] {
-      if {$f eq "off"} {set :with_categories false}
+      if {$f eq "off"} {my set with_categories false}
     }
 
     #
     # compute list of form instance attributes
     #
-    set :page_instance_form_atts [list]
-    foreach {var _} [${:data} template_vars [$template set text]] {
-      if {$var ni $dont_edit} {lappend :page_instance_form_atts $var}
+    set page_instance_form_atts [list]
+    foreach {var _} [$data template_vars [$template set text]] {
+      if {$var ni $dont_edit} {lappend page_instance_form_atts $var}
     }
-    set :field_list [concat [:field_list_top] ${:page_instance_form_atts} [:field_list_bottom]]
+    my set field_list [concat [my field_list_top] $page_instance_form_atts [my field_list_bottom]]
 
     #
     # get widget specs from folder. 
     # All other specs are taken form attributes or form constraints.
     # The widget_spec functionality might be deprecated in the future.
     #
-    foreach __var ${:page_instance_form_atts} {
-      set spec [${:data} widget_spec_from_folder_object $__var [$template set name]]
+    foreach __var $page_instance_form_atts {
+      set spec [$data widget_spec_from_folder_object $__var [$template set name]]
       if {$spec ne ""} {
-        set :f.$__var "$__var:$spec"
+        my set f.$__var "$__var:$spec"
       }
     }
 
-    :edit_page_title [${:data} get_from_template title]
+    my edit_page_title [$data get_from_template title]
     next
-    #:log "--fields = [:fields]"
+    #my log "--fields = [my fields]"
   }
 
   proc ::xowiki::validate_form_text {} {
@@ -810,7 +829,7 @@ namespace eval ::xowiki {
     #ns_log notice "--validate_form_content '$content' clean='$clean_content', \
         #    stripped='[string trim $clean_content]'"
     if {[string trim $clean_content] eq ""} { set text [list "" $mime]}
-    #:log "final text='$text'"
+    #my log "final text='$text'"
     return 1
   }
 
@@ -841,10 +860,11 @@ namespace eval ::xowiki {
       }
   
   FormForm instproc new_data {} {
+    my instvar data
     set item_id [next]
     
     # provide unique ids and names, if form is provided
-    #     set form [${:data} set form]
+    #     set form [$data set form]
     #     if {$form ne ""} {
     #       dom parse -simple -html [lindex $form 0] doc
     #       $doc documentElement root
@@ -854,11 +874,10 @@ namespace eval ::xowiki {
     #       foreach field $fields {
     #         $field setAttribute name $id.[$field getAttribute name]
     #       }
-    #       # Updating is rather crude. We need the item_id in advance to fill it.
-    #       #
+    #       # updating is rather crude. we need the item_id in advance to fill it
     #       # into the items, but it is returned from saving the file.
-    #       :log "item_id=$item_id form=[$root asHTML] [${:data} serialize]"
-    #       ${:data} update_content [${:data} revision_id] [list [$root asHTML] [lindex $form 1] ]
+    #       my log "item_id=$item_id form=[$root asHTML] [$data serialize]"
+    #       $data update_content [$data revision_id] [list [$root asHTML] [lindex $form 1] ]
     #     }
     return $item_id
   }

@@ -4,15 +4,15 @@
 
   @author Gustaf Neumann (gustaf.neumann@wu-wien.ac.at)
   @creation-date Oct 23, 2005
-  @cvs-id $Id: list.tcl,v 1.38 2018/01/22 18:42:59 gustafn Exp $
+  @cvs-id $Id: list.tcl,v 1.36.2.7 2017/05/03 07:12:52 gustafn Exp $
 
   @param object_type show objects of this class and its subclasses
 } -parameter {
-  {-object_type:token,optional}
-  {-orderby:token,optional "last_modified,desc"}
+  {-object_type:optional}
+  {-orderby:optional "last_modified,desc"}
 }
 
-set context [list index]
+set context   [list index]
 
 # if object_type is specified, only list entries of this type;
 # otherwise show types and subtypes of $supertype

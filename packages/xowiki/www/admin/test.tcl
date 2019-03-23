@@ -1,52 +1,48 @@
 # regression test for xowiki
-# $Id: test.tcl,v 1.46 2018/08/05 21:13:10 gustafn Exp $
+# $Id: test.tcl,v 1.38.2.3 2017/04/22 17:34:04 gustafn Exp $
 Object test
 test set passed 0
 test set failed 0
-test proc case msg {ad_return_top_of_page "<title>$msg</title><h2>$msg</h2>"}
-test proc section msg    {:reset; ns_write "<hr><h3>$msg</h3>"}
-test proc subsection msg {ns_write "<h4>$msg</h4>"}
-test proc subsubsection msg {ns_write "<h5>$msg</h5>"}
-test proc errmsg msg     {:code "ERROR: [string map [list < {&lt;} > {&gt;}] $msg]<br/>";test incr failed}
+test proc case msg {ad_return_top_of_page "<title>$msg</title><h2>$msg</h2>"} 
+test proc section msg    {my reset; ns_write "<hr><h3>$msg</h3>"} 
+test proc subsection msg {ns_write "<h4>$msg</h4>"} 
+test proc subsubsection msg {ns_write "<h5>$msg</h5>"} 
+test proc errmsg msg     {my code "ERROR: [string map [list < {&lt;} > {&gt;}] $msg]<br/>";test incr failed}
 test proc okmsg msg      {ns_write "OK: $msg<br/>"; test incr passed}
 test proc code msg       {ns_write "<pre>$msg</pre>"}
 test proc hint msg       {ns_write "$msg<br/>"}
 test proc reset {} {
   array unset ::xotcl_cleanup
-  array unset ::af_parts
-  array unset ::af_key_name
+  global af_parts  af_key_name
+  array unset af_parts
+  array unset af_key_name
 }
 test proc without_ns_form {cmd} {
   rename ::ns_queryget ::ns_queryget.orig
   rename ::ns_querygetall ::ns_querygetall.orig
   rename ::ad_returnredirect ::ad_returnredirect.orig
-  try {
-    proc ::ns_queryget key {
-      #ns_log notice "queryget $key => [::xo::cc form_parameter $key {}]";
-      ::xo::cc form_parameter $key ""
-    }
-    proc ::ns_querygetall key {
-      #ns_log notice "querygetall $key => [list [::xo::cc form_parameter $key {}]]"
-      list [::xo::cc form_parameter $key {}]
-    }
-    proc ::ad_returnredirect url {::xo::cc returnredirect $url}
-
-    try {
-      set r [uplevel $cmd]
-    } on error {errmsg} {
-      test code "error in command: $errmsg [info exists r]"
-      set r ""
-    }
-  } finally {
-    rename ::ns_queryget ""
-    rename ::ns_queryget.orig ::ns_queryget
-    rename ::ns_querygetall ""
-    rename ::ns_querygetall.orig ::ns_querygetall
-    rename ::ad_returnredirect ""
-    rename ::ad_returnredirect.orig ::ad_returnredirect
+  proc ::ns_queryget key {
+    #ns_log notice "queryget $key => [::xo::cc form_parameter $key {}]"; 
+    ::xo::cc form_parameter $key ""
   }
+  proc ::ns_querygetall key {
+    #ns_log notice "querygetall $key => [list [::xo::cc form_parameter $key {}]]"
+    list [::xo::cc form_parameter $key {}] 
+  }
+  proc ::ad_returnredirect url {::xo::cc returnredirect $url}
+  if {[catch {set r [uplevel $cmd]} errmsg]} {
+    if {$errmsg ne ""} {test code "error in command: $errmsg [info exists r]"}
+    set r ""
+  }
+  rename ::ns_queryget ""
+  rename ::ns_queryget.orig ::ns_queryget
+  rename ::ns_querygetall ""
+  rename ::ns_querygetall.orig ::ns_querygetall
+  rename ::ad_returnredirect ""
+  rename ::ad_returnredirect.orig ::ad_returnredirect
   return $r
 }
+
 
 proc ? {cmd expected {msg ""}} {
    set r [uplevel $cmd]
@@ -82,8 +78,8 @@ if {$ns_cache_version_old} {
 set tdom_version [package require tdom]
 if {$tdom_version < "0.8.0"} {
   ? {set x old} new "xowiki requires at least tDOM 0.8.0 (released Aug 2004), \
-        the installed tDOM version is to old ($tdom_version).<br>&nbsp;&nbsp;&nbsp;\
-        Please Upgrade tDOM from: <code>cvs -z3 -d:pserver:anonymous@cvs.tdom.org:/usr/local/pubcvs co tdom</code><br>"
+	the installed tDOM version is to old ($tdom_version).<br>&nbsp;&nbsp;&nbsp;\
+	Please Upgrade tDOM from: <code>cvs -z3 -d:pserver:anonymous@cvs.tdom.org:/usr/local/pubcvs co tdom</code><br>"
 } else {
   ? {set x new} new "tdom version $tdom_version is ok"
 }
@@ -103,7 +99,7 @@ if {[site_node::exists_p -url /$instance_name]} {
   site_node::delete -node_id $info(node_id)
   # remove the package instance
   apm_package_instance_delete $info(object_id)
-
+  
   #test code [array get info]
 }
 
@@ -139,6 +135,11 @@ array set info [site_node::get_from_url -url /$instance_name -exact]
 #test code [array get info]
 
 ? {expr {$info(package_id) ne ""}} 1 "package is mounted, package_id provided: $info(package_id)"
+
+# Make sure to delete the name entry in the cache in case, the instance was deleted
+# via low-level API
+#::xo::clusterwide ns_cache flush xotcl_object_type_cache package_id-xowiki
+#::xo::clusterwide ns_cache flush xotcl_object_type_cache -100-$instance_name
 
 #############################################################
 test subsection "Basic Setup: Package, url= /$instance_name/"
@@ -209,7 +210,7 @@ test subsection "Check Permissions based on default policy"
 
 ########################################################################
 #
-# run a new query, use en/index explicitly
+# run a new query, use en/index explicitely
 #
 ##################################################
 test section "New Query: /$instance_name/en/index"
@@ -377,7 +378,7 @@ test section "Testing as SWA: query /$instance_name/"
 #####################################################
 
 set swas [xo::dc list get_swa "select grantee_id from acs_permissions \
-        where object_id = -4 and privilege = 'admin'"]
+	where object_id = -4 and privilege = 'admin'"]
 
 ::xowiki::Package initialize -parameter $index_vuh_parms \
     -package_id $info(package_id) \
@@ -535,22 +536,22 @@ test section "Submit edited hello page via weblink"
     -actual_query "m=edit" \
     -user_id [lindex $swas 0] \
     -form_parameter [subst {
-      form:id f1
-      form:mode edit
-      formbutton:ok {       OK       }
-      __refreshing_p 0
+      form:id f1 
+      form:mode edit 
+      formbutton:ok {       OK       } 
+      __refreshing_p 0 
       __confirmed_p 0
       __new_p 0
-      __key_signature {$signature}
+      __key_signature {$signature} 
       __object_name en:hello
-      name en:hello
-      object_type ::xowiki::Page
-      text.format text/html
-      creator {{Gustaf Neumann}}
+      name en:hello 
+      object_type ::xowiki::Page 
+      text.format text/html 
+      creator {{Gustaf Neumann}} 
       description {{this is the description}}
-      text {{$text ... just testing ..<br />}}
-      nls_language en_US
-      folder_id $returned_folder_id
+      text {{$text ... just testing ..<br />}} 
+      nls_language en_US 
+      folder_id $returned_folder_id 
       title {{$title - saved}}
       item_id $returned_item_id }]
 
@@ -657,11 +658,11 @@ test subsection "Filter expressions"
 
 ? {::xowiki::FormPage filter_expression \
        "_state=created|accepted|approved|tested|developed|deployed&&_assignee=123" &&} \
-    {tcl {[lsearch -exact {created accepted approved tested developed deployed} [:property _state]] > -1&&[:property _assignee] eq {123}} h {} vars {} sql {{state in ('created','accepted','approved','tested','developed','deployed')} {assignee = '123'}}} filter_expr_where_1
+    {tcl {[lsearch -exact {created accepted approved tested developed deployed} [my property _state]] > -1&&[my property _assignee] eq {123}} h {} vars {} sql {{state in ('created','accepted','approved','tested','developed','deployed')} {assignee = '123'}}} filter_expr_where_1
 
 ? {::xowiki::FormPage filter_expression \
        "_assignee<=123 && y>=123" &&} \
-    {tcl {[:property _assignee] <= {123}&&[dict get $__ia y] >= {123}} h {} vars {y {}} sql {{assignee <= '123'}}} \
+    {tcl {[my property _assignee] <= {123}&&[dict get $__ia y] >= {123}} h {} vars {y {}} sql {{assignee <= '123'}}} \
     filter_expr_where_2
 
 ? {::xowiki::FormPage filter_expression \
@@ -671,12 +672,12 @@ test subsection "Filter expressions"
 
 ? {::xowiki::FormPage filter_expression \
        "_state=closed" ||} \
-    {tcl {[:property _state] eq {closed}} h {} vars {} sql {{state = 'closed'}}} \
+    {tcl {[my property _state] eq {closed}} h {} vars {} sql {{state = 'closed'}}} \
     filter_expr_unless_1
 
 ? {::xowiki::FormPage filter_expression \
     "_state= closed|accepted || x = 1" ||} \
-    {tcl {[lsearch -exact {closed accepted} [:property _state]] > -1||[dict get $__ia x] eq {1}} h x=>1 vars {x {}} sql {{state in ('closed','accepted')}}} \
+    {tcl {[lsearch -exact {closed accepted} [my property _state]] > -1||[dict get $__ia x] eq {1}} h x=>1 vars {x {}} sql {{state in ('closed','accepted')}}} \
     filter_expr_unless_1
 
 
@@ -688,12 +689,12 @@ test section "Item refs"
 # Testing item refs and wiki links (between [[ .... ]])
 #
 # Still missing:
-#    - test reverse mappings from URLs generated from item-refs back to item_ids
+#    - test reverse mappings from urls generated from item-refs back to item_ids
 #    - syntax Person:de:p1 (if de:p1 does not exist, create an instance of Person name de:p1)
 #    - typed links (glossary app)... important?
 #    - interaction between PackagePath and folders (would be nice to inherit from folders, not packages)
 #
-# Save this file in openacs-4/www/item-ref-test.tcl and run it via
+# Save this file in openacs-4/www/item-ref-test.tcl and run it via 
 # http://..../item-ref-test
 #
 #
@@ -701,13 +702,13 @@ test section "Item refs"
   # "require_folder" and "require_page" are here just for testing
   proc require_folder {name parent_id package_id} {
     set item_id [::xo::db::CrClass lookup -name $name -parent_id $parent_id]
-
+    
     if {$item_id == 0} {
       set form_id [::xowiki::Weblog instantiate_forms -forms en:folder.form -package_id $package_id]
       set f [$form_id create_form_page_instance \
-                 -name $name \
-                 -nls_language en_US \
-                 -default_variables [list title "Folder $name" parent_id $parent_id package_id $package_id]]
+		 -name $name \
+		 -nls_language en_US \
+		 -default_variables [list title "Folder $name" parent_id $parent_id package_id $package_id]]
       $f save_new
       set item_id [$f item_id]
     }
@@ -717,17 +718,17 @@ test section "Item refs"
 
   proc require_link {name parent_id package_id target_id} {
     set item_id [::xo::db::CrClass lookup -name $name -parent_id $parent_id]
-
+    
     if {$item_id == 0} {
       set form_id [::xowiki::Weblog instantiate_forms -forms en:link.form -package_id $package_id]
       set target [::xo::db::CrClass get_instance_from_db -item_id $target_id]
       set item_ref [[$target package_id] external_name -parent_id [$target parent_id] [$target name]]
 
       set f [$form_id create_form_page_instance \
-                 -name $name \
-                 -nls_language en_US \
-                 -instance_attributes [list link $item_ref] \
-                 -default_variables [list title "Link $name" parent_id $parent_id package_id $package_id]]
+		 -name $name \
+		 -nls_language en_US \
+		 -instance_attributes [list link $item_ref] \
+		 -default_variables [list title "Link $name" parent_id $parent_id package_id $package_id]]
       $f save_new
       set item_id [$f item_id]
     }
@@ -738,7 +739,7 @@ test section "Item refs"
   proc require_page {name parent_id package_id {file_content ""}} {
     set item_id [::xo::db::CrClass lookup -name $name -parent_id $parent_id]
     if {$item_id == 0} {
-      if {$file_content eq ""} {
+      if {$file_content eq ""} {      
         set f [::xowiki::Page new -name $name -description "" \
                    -parent_id $parent_id -package_id $package_id -text [list "Content of $name" text/html]]
       } else {
@@ -746,7 +747,7 @@ test section "Item refs"
         set f [::xowiki::File new -name $name -description "" \
                    -parent_id $parent_id -package_id $package_id -mime_type $mime_type]
         set import_file [ad_tmpnam]
-        ::xo::write_file $import_file [::base64::decode $file_content]
+        ::xowiki::write_file $import_file [::base64::decode $file_content]
         $f set import_file $import_file
       }
       $f save_new
@@ -761,13 +762,6 @@ test section "Item refs"
 
   #some test cases
   ::xowiki::Package initialize -url /$instance_name/
-
-set expected_locale ""
-foreach nls_language [lang::system::get_locales] {
-  if {[string range $nls_language 0 1] eq "de"} {
-    set expected_locale $nls_language
-  }
-}
 
 # We use destroy_on_cleanup here although the object is explicitly
 # destroyed later. However, if some test bails out with an error,
@@ -819,7 +813,7 @@ test subsection "Toplevel Tests:"
   set test [label "item_ref" "existing topfolder" $l]
   array set "" [p item_ref -default_lang en -parent_id $folder_id $l]
   ? {expr {$(link_type) eq "link" && $(prefix) eq "" && $(stripped_name) eq "f1"
-           && $(form) eq "en:folder.form"
+	   && $(form) eq "en:folder.form"
            && $(parent_id) eq $folder_id && $(item_id) == $f1_id}} 1 "\n$test:\n  [array get {}]\n "
 
   set l "de:parentpage"
@@ -912,7 +906,7 @@ test subsection "Toplevel Tests:"
   set l "/" ;# stripped name will be the name of the root folder
   set test [label "item_ref" "just slash" $l]
   array set "" [p item_ref -default_lang de -parent_id $folder_id $l]
-  ? {expr {$(link_type) eq "folder" && $(prefix) eq ""
+  ? {expr {$(link_type) eq "folder" && $(prefix) eq "" 
            && $(parent_id) == -100 && $(item_id) == $folder_id}} 1 "\n$test:\n  [array get {}]\n "
 
 
@@ -958,7 +952,7 @@ test subsection "Toplevel Tests:"
   set l "./" ;# stripped name will be the name of the root folder
   set test [label "item_ref" "dot with slash, relative" $l]
   array set "" [p item_ref -default_lang de -parent_id $folder_id $l]
-  ? {expr {$(link_type) eq "folder" && $(prefix) eq ""
+  ? {expr {$(link_type) eq "folder" && $(prefix) eq "" 
            && $(parent_id) == -100 && $(item_id) == $folder_id}} 1 "\n$test:\n  [array get {}]\n "
 
 ##################################
@@ -968,7 +962,7 @@ test subsection "Ending with dot:"
   set l "." ;# stripped name will be the name of the root folder, omit from test
   set test [label "item_ref" "dot with slash, relative" $l]
   array set "" [p item_ref -default_lang de -parent_id $folder_id $l]
-  ? {expr {$(link_type) eq "folder" && $(prefix) eq ""
+  ? {expr {$(link_type) eq "folder" && $(prefix) eq "" 
            && $(parent_id) eq -100 && $(item_id) == $folder_id}} 1 "\n$test:\n  [array get {}]\n "
 
   set l "./f1/."
@@ -1180,7 +1174,7 @@ test subsection "Ending with /.."
   set l "parentpage1"
   set test [label "link" "not existing simple page" $l]
   set link [p create_link $l]
-? {$link render} [subst -nocommands {<a class='missing' href='/$instance_name/?nls_language=$expected_locale&amp;object_type=::xowiki::Page&amp;edit-new=1&amp;name=de:parentpage1&amp;parent_id=$folder_id&amp;title=parentpage1'> parentpage1</a>}] "\n$test\n "
+? {$link render} [subst -nocommands {<a class='missing' href='/$instance_name/?nls_language=de_DE&amp;object_type=%3a%3axowiki%3a%3aPage&amp;edit-new=1&amp;name=de%3aparentpage1&amp;parent_id=$folder_id&amp;title=parentpage1'> parentpage1</a>}] "\n$test\n "
 
   set l "parentpage#a"
   set test [label "link" "existing simple with anchor" $l]
@@ -1268,7 +1262,7 @@ test section "page properties"
   ? {$l5 pretty_link} "/XOWIKI-TEST/link5"
   ? {$l5 pretty_link -download true} "/XOWIKI-TEST/download/file/link5"
 
-  test section "item info from pretty links"
+  test section "item info from pretty links"  
 
   set l [$f1 pretty_link]
   set test [label "url" "topfolder" $l]
@@ -1278,12 +1272,12 @@ test section "page properties"
   set l [$f2 pretty_link]
   set test [label "url" "folder under topfolder" $l]
   array set "" [$package_id item_info_from_url $l]
-  ? {expr {$(item_id) == $f3_id && $(stripped_name) eq "f3"}} 1 "\n$test:\n  [array get {}]\n "
+  ? {expr {$(item_id) == $f3_id && $(stripped_name) eq "f3"}} 1 "\n$test:\n  [array get {}]\n "  
 
   set l [$f3 pretty_link]
   set test [label "url" "subsubfolder" $l]
   array set "" [$package_id item_info_from_url $l]
-  ? {expr {$(item_id) == $subf3_id && $(stripped_name) eq "subf3"}} 1 "\n$test:\n  [array get {}]\n "
+  ? {expr {$(item_id) == $subf3_id && $(stripped_name) eq "subf3"}} 1 "\n$test:\n  [array get {}]\n "  
 
   set l [$p1 pretty_link]
   set test [label "url" "toppage" $l]
@@ -1304,13 +1298,13 @@ test section "page properties"
   set test [label "url" "toplevel en page" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $enpage_id && $(stripped_name) eq "page"
-           && $(name) eq "en:page"}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "en:page"}} 1 "\n$test:\n  [array get {}]\n "
 
   set l [$p5 pretty_link]
   set test [label "url" "en page under subfolder" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $f3page_id && $(stripped_name) eq "page"
-           && $(name) eq "en:page"}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "en:page"}} 1 "\n$test:\n  [array get {}]\n "
 
   # image links
 
@@ -1318,63 +1312,63 @@ test section "page properties"
   set test [label "url" "toplevel image" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $image_id && $(stripped_name) eq "image.png"
-           && $(name) eq "file:image.png"}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "file:image.png"}} 1 "\n$test:\n  [array get {}]\n "
 
   set l [$i2 pretty_link]
   set test [label "url" "toplevel image" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $subimage_id && $(stripped_name) eq "image2.png"
-           && $(name) eq "file:image2.png"}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "file:image2.png"}} 1 "\n$test:\n  [array get {}]\n "
 
   set l [$i3 pretty_link]
   set test [label "url" "toplevel image" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $childimage_id && $(stripped_name) eq "image3.png"
-           && $(name) eq "file:image3.png" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "file:image3.png" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
 
-
+  
   # links
-
+ 
   set l [$l1 pretty_link]
   set test [label "url" "toplevel link to page" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $pagelink_id && $(stripped_name) eq "link1"
-           && $(name) eq "link1" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "link1" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
 
   set l [$l2 pretty_link]
   set test [label "url" "toplevel link to folder" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $folderlink_id && $(stripped_name) eq "link2"
-           && $(name) eq "link2" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "link2" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
 
   set l [$l3 pretty_link]
   set test [label "url" "toplevel link to page under folder" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $subpagelink_id && $(stripped_name) eq "link3"
-           && $(name) eq "link3" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "link3" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
 
   set l [$l4 pretty_link]
   set test [label "url" "toplevel link to folder under folder" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $subfolderlink_id && $(stripped_name) eq "link4"
-           && $(name) eq "link4" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "link4" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
 
   set l [$l5 pretty_link]
   set test [label "url" "toplevel link to image under folder" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $subimagelink_id && $(stripped_name) eq "link5"
-           && $(name) eq "link5" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "link5" && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n "
 
 ########################################################
 test section "item info from variations of pretty links"
-########################################################
+########################################################  
 
   # download
   set l /XOWIKI-TEST/download/file/image.png
   set test [label "url" "toplevel image download" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $image_id && $(stripped_name) eq "image.png"
-           && $(name) eq "file:image.png"  && $(method) eq "download"}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "file:image.png"  && $(method) eq "download"}} 1 "\n$test:\n  [array get {}]\n "
 
   # download via link
   #set l /XOWIKI-TEST/download/file/link5
@@ -1382,14 +1376,14 @@ test section "item info from variations of pretty links"
   #array set "" [$package_id item_info_from_url $l]
   #test hint "<p>found $(item_id) should be $subimagelink_id"
   # ? {expr {$(item_id) == $subimagelink_id && $(stripped_name) eq "link5"
-  #        && $(name) eq "file:link5"  && $(method) eq "download"}} 1 "\n$test:\n  [array get {}]\n "
+  # 	   && $(name) eq "file:link5"  && $(method) eq "download"}} 1 "\n$test:\n  [array get {}]\n "
 
   # tag link
   set l /XOWIKI-TEST/tag/a
   set test [label "url" "tag query" $l]
   array set "" [$package_id item_info_from_url -default_lang de $l]
   ? {expr {$(item_id) != 0 && $(stripped_name) eq "weblog"
-           && $(name) eq "en:weblog"  && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n"
+	   && $(name) eq "en:weblog"  && $(method) eq ""}} 1 "\n$test:\n  [array get {}]\n"  
   # missing: tag links to subdirectories
 
   # url without default lang
@@ -1411,7 +1405,7 @@ test section "item info from variations of pretty links"
 
 
 #############################################
-test section "item info via links to folders"
+test section "item info via links to folders"  
 #############################################
 
   # reference pages over links to folders
@@ -1420,28 +1414,28 @@ test section "item info via links to folders"
   set test [label "url" "reference page over links to folder default-lang" $l]
   array set "" [$package_id item_info_from_url -default_lang de $l]
   ? {expr {$(item_id) == $testpage_id && $(stripped_name) eq "testpage"
-         && $(name) eq "de:testpage"}} 1 "\n$test:\n  [array get {}]\n "
+	 && $(name) eq "de:testpage"}} 1 "\n$test:\n  [array get {}]\n "
 
   set l /XOWIKI-TEST/link2/de:testpage
   set test [label "url" "reference page over links to folder direct name" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $testpage_id && $(stripped_name) eq "testpage"
-         && $(name) eq "de:testpage"}} 1 "\n$test:\n  [array get {}]\n "
+	 && $(name) eq "de:testpage"}} 1 "\n$test:\n  [array get {}]\n "
 
   set l /XOWIKI-TEST/download/file/link2/image2.png
   set test [label "url" "reference download image over links to folder" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $subimage_id && $(stripped_name) eq "image2.png"
-           && $(name) eq "file:image2.png"}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "file:image2.png"}} 1 "\n$test:\n  [array get {}]\n "
 
   set l /XOWIKI-TEST/link2/f3/page
   set test [label "url" "path contains link and references finally page" $l]
   array set "" [$package_id item_info_from_url $l]
   ? {expr {$(item_id) == $f3page_id && $(stripped_name) eq "page"
-           && $(name) eq "en:page"}} 1 "\n$test:\n  [array get {}]\n "
+	   && $(name) eq "en:page"}} 1 "\n$test:\n  [array get {}]\n "
 
 
-  #test section "inherited pages"
+  #test section "inherited pages"  
 
   # link to site-wide page
 
@@ -1454,8 +1448,8 @@ test section "item info via links to folders"
   # link to dir in other package
 
 ##########################
-test section "Form Fields"
-##########################
+test section "Form Fields" 
+########################## 
 
 # Create dummy object with a minimal setup to be used like a page
 set o [::xotcl::Object new -destroy_on_cleanup]
@@ -1470,20 +1464,20 @@ set f0 [$o create_raw_form_field -name test -slot ::xowiki::Page::slot::name]
     "name with help_text"
 
 set f0 [$o create_raw_form_field -name test \
-            -slot ::xowiki::Page::slot::name -spec inform]
+	    -slot ::xowiki::Page::slot::name -spec inform]
 ? {$f0 asWidgetSpec} \
     {text(inform) {label {#xowiki.Page-name#}}  {html {id F.dummy.test }}  {help_text {Shortname to identify an entry within a folder, typically lowercase characters}}} \
     "name with help_text + inform"
 
 set f0 [$o create_raw_form_field -name test \
-            -slot ::xowiki::Page::slot::name -spec optional]
+	    -slot ::xowiki::Page::slot::name -spec optional]
 ? {$f0 asWidgetSpec} \
     {text,optional {label {#xowiki.Page-name#}}  {html {maxlength 400 id F.dummy.test size 80 }}  {help_text {Shortname to identify an entry within a folder, typically lowercase characters}}} \
     "name with help_text + optional"
 
 set f1 [$o create_raw_form_field -name test \
-            -slot ::xowiki::Page::slot::description \
-            -spec "textarea,cols=80,rows=2"]
+	    -slot ::xowiki::Page::slot::description \
+	    -spec "textarea,cols=80,rows=2"]
 ? {$f1 asWidgetSpec} \
     {text(textarea),nospell,optional {label {#xowiki.Page-description#}}  {html {cols 80 id F.dummy.test rows 2 }} } \
     "textarea,cols=80,rows=2"
@@ -1501,7 +1495,7 @@ set f3 [$o create_raw_form_field -name test \
 ? {$f3 asWidgetSpec} \
     {date,optional {label {#xowiki.PodcastItem-pub_date#}}  {html {id F.dummy.test }}  {format {YYYY MM DD HH24 MI}} } \
     {date with format}
-
+  
 
 
 ns_write "<p>
@@ -1509,7 +1503,7 @@ ns_write "<p>
  Tests passed: [test set passed]<br>
  Tests failed: [test set failed]<br>
  Tests Time: [t1 diff -start]ms<br>
-"
+" 
 
 # Local variables:
 #    mode: tcl
