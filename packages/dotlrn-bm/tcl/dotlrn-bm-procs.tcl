@@ -20,7 +20,7 @@ ad_library {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-05-13
-    @cvs-id $Id: dotlrn-bm-procs.tcl,v 1.12 2017/08/07 23:48:09 gustafn Exp $
+    @cvs-id $Id: dotlrn-bm-procs.tcl,v 1.11.2.2 2017/06/30 17:45:40 gustafn Exp $
 
 }
 

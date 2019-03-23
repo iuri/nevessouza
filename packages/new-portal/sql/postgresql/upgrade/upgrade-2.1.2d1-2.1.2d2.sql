@@ -3,7 +3,8 @@
 -- 
 -- @author Victor Guerra (guerra@galileo.edu)
 -- @creation-date 2005-07-14
--- @cvs-id $Id: upgrade-2.1.2d1-2.1.2d2.sql,v 1.4 2018/08/15 16:53:10 gustafn Exp $
+-- @arch-tag: 6caf0fef-e1d0-455d-9e61-7d3ab2cd97a8
+-- @cvs-id $Id: upgrade-2.1.2d1-2.1.2d2.sql,v 1.3 2013/11/01 21:45:33 gustafn Exp $
 --
 
 alter table portal_pages add column hidden_p char(1);

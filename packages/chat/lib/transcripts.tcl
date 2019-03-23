@@ -1,8 +1,3 @@
-ad_include_contract {
-    This include is the UI to display and manage chat room transcripts
-} {
-    room_id:naturalnum
-}
 
 set transcript_create_p [permission::permission_p -object_id $room_id -privilege chat_transcript_create]
 set transcript_delete_p [permission::permission_p -object_id $room_id -privilege chat_transcript_delete]
@@ -14,12 +9,7 @@ db_multirow -extend {
     viewer
     transcript_url
     delete_url
-} chat_transcripts list_transcripts {
-   select ct.transcript_id, ct.pretty_name, ao.creation_date
-    from chat_transcripts ct, acs_objects ao
-    where ct.transcript_id = ao.object_id and ct.room_id = :room_id
-    order by ao.creation_date desc
-} {
+} chat_transcripts list_transcripts {} {
     set creation_date_pretty [lc_time_fmt $creation_date "%q %X"]
     set transcript_url [export_vars -base "chat-transcript" {room_id transcript_id}]
     set delete_url [export_vars -base "transcript-delete" {room_id transcript_id}]
@@ -51,7 +41,7 @@ list::create \
             label "#chat.actions#"
             html { align "center" }
             display_template {
-                <if @transcript_delete_p;literal@ true>
+                <if @transcript_delete_p@ eq "1">
                   <a href="@chat_transcripts.delete_url@">
                     <img src="/shared/images/Delete16.gif" alt="#chat.Delete_transcript#">
                   </a>

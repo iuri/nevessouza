@@ -4,64 +4,69 @@ ad_library {
 
     @author stefan@arsdigita.com
     @creation-date 12-14-00
-    @cvs-id $Id: news-procs.tcl,v 1.41 2018/07/12 11:09:34 hectorr Exp $
+    @cvs-id $Id: news-procs.tcl,v 1.35.2.3 2016/01/02 20:34:49 gustafn Exp $
 }
 
 # News specific db-API wrapper functions and interpreters
 
 ad_proc news_items_archive { id_list when } {
 
-    Immediately gives all news items in list id_list a status of
-    archived as of ANSI date in when, i.e. when must be like
-    2000-10-11.
+    immediately gives all news items in list id_list
+    a status of archived as of ANSI date in when, i.e. when must be like 2000-10-11.
 
 } {
+
     foreach id $id_list {
-        db_exec_plsql news_item_archive {}
+	db_exec_plsql news_item_archive {}
     }
+
 }
+
 
 ad_proc news_items_make_permanent { id_list } {
 
-    Immediately gives all news items in list id_list a status of
-    permanently published.
+    immediately gives all news items in list id_list
+    a status of permanently published
 
 } {
+
     foreach id  $id_list {
-        db_exec_plsql news_item_make_permanent {}
+	db_exec_plsql news_item_make_permanent {}
     }
+
 }
+
 
 ad_proc news_items_delete { id_list } {
 
-    Deletes all news items with news_id in id_list.
+    deletes all news items with news_id in id_list
 
-} {
+} { 
+
     foreach id $id_list {
-        db_exec_plsql news_item_delete {}
+	db_exec_plsql news_item_delete {}
     }
+
 }
+
 
 ad_proc news_util_get_url {
     package_id
 } {
-    Get package URL from package_id. If this was mounted multiple
-    times, only the first occurrence will be returned.
-
-    This proc could be deprecated in the future.
-
-    @see apm_package_url_from_id
-
     @author Robert Locke
 } {
-    return [apm_package_url_from_id $package_id]
+
+    set url_stub ""
+
+    db_0or1row get_url_stub {}
+    return $url_stub
+
 }
 
 ad_proc news__datasource {
     object_id
 } {
-    Implementation for the FtsContentProvider.datasource Service
-    Contract.
+    
 
     @author Jeff Davis (davis@xarg.net)
 } {
@@ -119,15 +124,13 @@ ad_proc news__datasource {
 ad_proc news__url {
     object_id
 } {
-    Returns the URL for specified news object.
     @author Robert Locke
 } {
     db_1row get {}
-    set package_url [apm_package_url_from_id $package_id]
-    return "[ad_url]${package_url}item/$item_id"
+    return "[ad_url][news_util_get_url $package_id]item/$item_id"
 }
 
-ad_proc news_pretty_status {
+ad_proc news_pretty_status { 
     {-publish_date:required}
     {-archive_date:required}
     {-status:required}
@@ -152,7 +155,7 @@ ad_proc news_pretty_status {
     set now_seconds [clock scan now]
     set n_days_until_archive {}
 
-    if { $archive_date ne "" } {
+    if { $archive_date ne "" } { 
         set archive_date_seconds [clock scan $archive_date]
 
         if { $archive_date_seconds > $now_seconds } {
@@ -172,7 +175,7 @@ ad_proc news_pretty_status {
         }
     }
 
-    # Message lookup may use vars n_days_until_archive and n_days_until_publish
+    # Message lookup may use vars n_days_until_archive and n_days_until_publis
     return [_ $news_status_keys($status)]
 }
 
@@ -205,7 +208,7 @@ ad_proc -public news__last_updated {
     package_id
 } {
 
-    Return the timestamp of the most recent item in this news instance.
+    Return the timestamp of the most recent item in this news instance
 
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2005-01-22
@@ -222,13 +225,13 @@ ad_proc -public news__last_updated {
 ad_proc -private news__rss_datasource {
     summary_context_id
 } {
-    This procedure implements the "datasource" operation of the
-    RssGenerationSubscriber service contract.
+    This procedure implements the "datasource" operation of the 
+    RssGenerationSubscriber service contract.  
 
     @author Dave Bauer (dave@thedesignexperience.org)
 } {
     # TODO make limit a parameter
-    set limit 15
+    set limit 15 
 
     set items [list]
     set counter 0
@@ -299,53 +302,36 @@ ad_proc -private news_update_rss {
 
 # add news notification
 ad_proc -public news_notification_get_url {
-    news_package_id
+       news_package_id
 } {
-    Get package URL from package_id. If this was mounted multiple
-    times, only the first occurrence will be returned.
-
-    This proc could be deprecated in the future.
-
-    @see apm_package_url_from_id
-} {
-    return [apm_package_url_from_id $package_id]
+       returns a full url to the news item.       
+} { 
+    return "[news_util_get_url $news_package_id]"
 }
 
 ad_proc -public news_do_notification {
     news_package_id
     news_id
-} {
-    Sends notifications for specified news item.
-} {
-    set system_url [parameter::get_from_package_key -package_key acs-kernel -parameter SystemURL]
-    set package_url [apm_package_url_from_id $news_package_id]
+} { 
 
+    set package_id [ad_conn package_id]
     set node_id [ad_conn node_id]
-    set instance_name [application_group::closest_ancestor_element \
-                           -include_self \
-                           -node_id $node_id \
-                           -element "instance_name"]
+    set instance_name [application_group::closest_ancestor_element  -include_self  -node_id $node_id  -element "instance_name"]
 
     # get the title and teaser for latest news item for the given package id
     if { [db_0or1row get_news {
-        select item_id,
-               publish_date,
-               publish_title as title,
-               publish_lead as lead,
-               publish_body,
-               publish_format
-         from news_items_live_or_submitted
-        where news_id = :news_id
+        select item_id, publish_date, publish_title as title, publish_lead as lead, publish_body, publish_format
+        from news_items_live_or_submitted where news_id = :news_id
     }] } {
-        set item_url ${system_url}${package_url}item?item_id=$item_id
         set new_content "$title\n\n$lead\n\n[ad_html_text_convert -from $publish_format -to text/plain -- $publish_body]"
         set html_content [ad_html_text_convert -from $publish_format -to text/html -- $publish_body]
         append new_content "\n\n[string repeat - 70]"
-        append new_content "\n\n${item_url} \n\n"
-        append html_content "<br><br><hr>" [ad_html_text_convert "\n ${item_url}"] "<br><br>"
+        append new_content "\n\n[parameter::get_from_package_key -package_key acs-kernel -parameter SystemURL][news_util_get_url $news_package_id]]item?item_id=$item_id \n\n"
+        append html_content "<br><br><hr>[ad_html_text_convert "\n [parameter::get_from_package_key -package_key acs-kernel -parameter SystemURL][news_util_get_url $news_package_id]item?item_id=$item_id"]<br><br>"
     }
 
     # Notifies the users that requested notification for the specific news item
+
     notification::new \
         -type_id [notification::type::get_type_id -short_name one_news_item_notif] \
         -object_id $news_package_id \
@@ -353,6 +339,7 @@ ad_proc -public news_do_notification {
         -notif_text $new_content \
         -notif_html $html_content \
         -notif_date $publish_date
+
 }
 
 # Local variables:

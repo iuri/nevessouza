@@ -9,7 +9,7 @@ namespace eval as::actionparam {}
 ad_proc -public as::actionparam::paramdelete {
     {parameter_id}
 } {
-   Delete parameter if it doesn't have a value associated
+   Delete parameter if it doesnt have a value asociated
 } {
 
     db_1row select_params ""
@@ -26,7 +26,7 @@ ad_proc -public as::actionparam::paramdelete {
 ad_proc -public as::actionparam::actiondelete {
     {action_id}
 } {
-   Delete action if it doesn't have a parameter associated
+   Delete action if it doesnt have a parameter asociated
 } {
 
     db_1row select_actions ""

@@ -1,9 +1,9 @@
 ad_page_contract {
     Displays last 100 requests in the system
 
-    @author Gustaf Neumann
+    @author Gustaf Neumann 
 
-    @cvs-id $Id: last101.tcl,v 1.9 2018/06/29 17:27:19 hectorr Exp $
+    @cvs-id $id
 } -query {
     {orderby:token,optional "time,desc"}
 } -properties {
@@ -38,7 +38,8 @@ t1 orderby -order [expr {$order eq "asc" ? "increasing" : "decreasing"}] $att
 foreach l $stat {
   lassign $l timestamp c url ms requestor
   if {[string is integer $requestor]} {
-    set user_string [person::name -person_id $requestor]
+    acs_user::get -user_id $requestor -array user
+    set user_string "$user(first_names) $user(last_name)"
   } else {
     set user_string $requestor
   }
@@ -56,11 +57,11 @@ Object instproc asHTML {{-master defaultMaster} -page:switch} {
   dom createDocument html doc
   set root [$doc documentElement]
   if {!$page} {
-    $root appendFromScript {:render}
+    $root appendFromScript {my render}
     return [[$root childNode] asHTML]
   } else {
     set slave [$master decorate $root]
-    $slave appendFromScript {:render}
+    $slave appendFromScript {my render}
     ns_return 200 text/html [$root asHTML]
   }
 }

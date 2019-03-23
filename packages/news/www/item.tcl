@@ -5,7 +5,7 @@ ad_page_contract {
     Page to view one item (live or archived) in its active revision
     @author stefan@arsdigita.com
     @creation-date 2000-12-20
-    @cvs-id $Id: item.tcl,v 1.23 2018/01/20 22:43:23 gustafn Exp $
+    @cvs-id $Id: item.tcl,v 1.21.2.1 2015/09/12 11:06:42 gustafn Exp $
     
 } {
 
@@ -71,7 +71,6 @@ if { $item_exist_p } {
     set title [_ news.Error]
     set contect [list $title]
     ad_return_complaint 1 [_ news.lt_Could_not_find_the_re]
-    ad_script_abort
 }
 
 # Local variables:

@@ -4,11 +4,15 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-25
-    @cvs-id $Id: thread-chunk.tcl,v 1.15 2018/06/15 19:59:03 antoniop Exp $
+    @cvs-id $Id: thread-chunk.tcl,v 1.12.2.4 2017/06/30 17:51:02 gustafn Exp $
 
 }
 
-set forum_moderated_p [expr {$forum(posting_policy) eq "moderated"}]
+if {$forum(posting_policy) eq "moderated"} {
+    set forum_moderated_p 1
+} else {
+    set forum_moderated_p 0
+}
 
 # get the colors from the params
 set table_border_color [parameter::get -parameter table_border_color]
@@ -40,6 +44,12 @@ if { $permissions(moderate_p) } {
 #
 #####
 
+if {$forum(presentation_type) eq "flat"} {
+    set order_by "fma.posting_date, fma.tree_sortkey"
+} else {
+    set order_by "fma.tree_sortkey"
+}
+
 set root_message_id $message(root_message_id)
 set message_id_list [db_list select_message_ordering {}]
 
@@ -55,7 +65,8 @@ if { [info exists message(parent_id)] && $message(parent_id) ne "" } {
     set message(parent_root_url) [export_vars -base [ad_conn url] { { message_id $message(parent_id) } }]
 }
 
-set message(reply_p) [expr {$message(user_id) == [ad_conn user_id]}]
+set message(open_p) "t"
+set message(reply_p) [expr {$message(open_p) == "t" || $message(user_id) eq [ad_conn user_id]}]
 set message(tree_level) 0
 
 
@@ -76,16 +87,9 @@ set old_tree_level 0
 set old_message_id 0
 set message_ids {}
 
-db_multirow -extend {
-    posting_date_pretty
-    direct_url
-    number
-    parent_number
-    parent_direct_url
-    reply_p
-    viewed_p
-} responses $query {} {    
-    set tree_level [expr {min($tree_level - $message(tree_level), 10)}]
+db_multirow -extend { posting_date_pretty direct_url number parent_number parent_direct_url reply_p viewed_p open_p} responses $query {} {
+    set open_p t
+    set tree_level [min [expr {$tree_level - $message(tree_level)}] 10]
     set posting_date_ansi [lc_time_system_to_conn $posting_date_ansi]
     set posting_date_pretty [lc_time_fmt $posting_date_ansi "%x %X"]
     set direct_url "$direct_url_base\#msg_$message_id"
@@ -93,7 +97,7 @@ db_multirow -extend {
     set parent_number [expr {[lsearch $message_id_list $parent_id] + 1}]
     set parent_direct_url "$direct_url_base\#msg_$parent_id"
     set parent_root_url [export_vars -base [ad_conn url] {{message_id $parent_id}}]
-    set reply_p [expr {$user_id == [ad_conn user_id]}]
+    set reply_p [expr {$open_p == "t" || $user_id eq [ad_conn user_id]}]
     
     # DEDS: get the response ids the Tcl way or else we need to hit
     # the db for each response to count its children
@@ -128,14 +132,14 @@ db_multirow -extend {
 set message(tree_level) 0
 
 if {[info exists alt_template] && $alt_template ne ""} {
-    ad_return_template $alt_template
+  ad_return_template $alt_template
 }
 
 set response_arrays_stub ""
 foreach one_parent_id [array names parent_message] {
     set one_children_list $parent_message($one_parent_id)
     if {[llength $one_children_list] == 1} {
-        # this is needed to make the JavaScript work
+        # this is needed to make the javascript work
         lappend one_children_list "null"
     }
     append response_arrays_stub "  forums_replies\[$one_parent_id\] = new Array([join $one_children_list ","]);\n"

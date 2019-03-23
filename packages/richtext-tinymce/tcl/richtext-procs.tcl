@@ -9,7 +9,7 @@ ad_library {
 
     @author Gustaf Neumann
     @creation-date 1 Jan 2016
-    @cvs-id $Id: richtext-procs.tcl,v 1.4 2018/05/09 15:33:33 hectorr Exp $
+    @cvs-id $Id: richtext-procs.tcl,v 1.1.2.4 2016/11/15 10:44:15 gustafn Exp $
 }
 
 namespace eval ::richtext::tinymce {

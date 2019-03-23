@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <queryset>
 
 <rdbms><type>oracle</type><version></version></rdbms>
@@ -24,5 +23,11 @@ FROM
 WHERE rownum <= $n 
 </querytext>
 </fullquery>
+
+<partialquery name="max_age_filter">
+<querytext>
+   AND sysdate - to_timestamp(publish_date,'YYYY-MM-DD') < interval '$max_age' day
+</querytext>
+</partialquery>
 
 </queryset>

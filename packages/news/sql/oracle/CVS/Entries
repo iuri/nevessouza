@@ -1,8 +1,8 @@
-/news-create.sql/1.10/Thu Feb 24 18:03:04 2005//Toacs-5-10
-/news-drop.sql/1.4/Fri Mar 23 23:53:02 2018//Toacs-5-10
-/news-package-create.sql/1.3/Wed Apr  4 22:05:13 2018//Toacs-5-10
-/news-sws-drop.sql/1.1.1.1/Fri Apr 20 20:51:14 2001//Toacs-5-10
-/news-sws.sql/1.1.1.1/Fri Apr 20 20:51:14 2001//Toacs-5-10
-/news-views-create.sql/1.2/Tue Dec 22 22:24:02 2009//Toacs-5-10
-/news-views-drop.sql/1.1/Thu Feb 24 18:03:04 2005//Toacs-5-10
+/news-create.sql/1.10/Thu Feb 24 18:03:04 2005//Topenacs-5-9-compat
+/news-drop.sql/1.3/Thu Feb 24 18:03:04 2005//Topenacs-5-9-compat
+/news-package-create.sql/1.1/Thu Feb 24 18:03:04 2005//Topenacs-5-9-compat
+/news-sws-drop.sql/1.1.1.1/Fri Apr 20 20:51:14 2001//Topenacs-5-9-compat
+/news-sws.sql/1.1.1.1/Fri Apr 20 20:51:14 2001//Topenacs-5-9-compat
+/news-views-create.sql/1.2/Tue Dec 22 22:24:02 2009//Topenacs-5-9-compat
+/news-views-drop.sql/1.1/Thu Feb 24 18:03:04 2005//Topenacs-5-9-compat
 D

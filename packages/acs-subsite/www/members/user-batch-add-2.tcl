@@ -1,6 +1,6 @@
 ad_page_contract {
     Interface for specifying a list of users to sign up as a batch
-    @cvs-id $Id: user-batch-add-2.tcl,v 1.8 2018/01/21 00:35:29 gustafn Exp $
+    @cvs-id $Id: user-batch-add-2.tcl,v 1.6.2.3 2016/01/02 20:57:57 gustafn Exp $
 } -query {
     userlist
     from
@@ -84,9 +84,7 @@ while {[regexp {(.[^\n]+)} $userlist match_fodder row] } {
     
     # if anything goes wrong here, stop the whole process
     if { !$user_id } {
-	ad_return_error \
-            "Insert Failed" \
-            "We were unable to create a user record for ($row)."
+	ad_return_error "Insert Failed" "We were unable to create a user record for ($row)."
 	ad_script_abort
     }
 
@@ -102,13 +100,11 @@ while {[regexp {(.[^\n]+)} $userlist match_fodder row] } {
     }
     
     if {[catch {acs_mail_lite::send -send_immediately -to_addr $email -from_addr $from -subject $subject -body $sub_message} errmsg]} {
-        ad_return_error \
-            "Mail Failed" \
-            "<p>The system was unable to send email.  Please notify the user personally.  This problem is probably caused by a misconfiguration of your email system.  Here is the error:</p>
+        ad_return_error "Mail Failed" "<p>The system was unable to send email.  Please notify the user personally.  This problem is probably caused by a misconfiguration of your email system.  Here is the error:</p>
 <div><code>
 [ns_quotehtml $errmsg]
 </code></div>"
-        ad_script_abort
+        return
     }
 
 }

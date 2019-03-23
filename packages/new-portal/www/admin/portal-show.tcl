@@ -21,7 +21,7 @@ ad_page_contract {
 
     @author AKS
     @creation-date 
-    @cvs-id $Id: portal-show.tcl,v 1.7 2017/08/07 23:48:12 gustafn Exp $
+    @cvs-id $Id: portal-show.tcl,v 1.6.24.2 2017/01/26 09:30:44 gustafn Exp $
 } {
     {referer:notnull}
     portal_id:naturalnum,notnull

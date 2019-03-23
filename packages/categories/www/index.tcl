@@ -3,7 +3,7 @@ ad_page_contract {
     The index page to browse category trees.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: index.tcl,v 1.11 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     {search_text:optional ""}
 } -properties {

@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author stefan@arsdigita.com
     @creation-date 2000-12-20
-    @cvs-id $Id: revision-set-active.tcl,v 1.6 2018/01/19 14:24:20 gustafn Exp $
+    @cvs-id $Id: revision-set-active.tcl,v 1.4.2.2 2016/01/02 20:34:50 gustafn Exp $
     
 } {
 
@@ -19,7 +19,12 @@ ad_page_contract {
 db_exec_plsql update_forum {}
     
 ad_returnredirect "item?item_id=$item_id"
-ad_script_abort
+
+
+
+
+
+
 
 # Local variables:
 #    mode: tcl

@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-24
-    @cvs-id $Id: forum-view.tcl,v 1.38 2018/07/24 14:37:10 gustafn Exp $
+    @cvs-id $Id: forum-view.tcl,v 1.35.2.4 2016/11/06 15:22:20 gustafn Exp $
 
 } -query {
     forum_id:naturalnum,notnull
@@ -14,17 +14,13 @@ ad_page_contract {
     page_size:naturalnum,optional,notnull
 }
 
-ad_try {
-    #
-    # Get forum data
-    #
-    forum::get -forum_id $forum_id -array forum
-    
-} trap NOT_FOUND {} {
-    ns_returnnotfound
-    ad_script_abort
-    
-} on error {errMsg} {
+
+# Get forum data
+if {[catch {forum::get -forum_id $forum_id -array forum} errMsg]} {
+    if {$::errorCode eq "NOT_FOUND"} {
+        ns_returnnotfound
+        ad_script_abort
+    }
     error $errMsg $::errorInfo $::errorCode
 }
 
@@ -36,6 +32,11 @@ if {$forum(enabled_p) != "t"} {
 
 forum::security::require_read_forum -forum_id $forum_id
 forum::security::permissions -forum_id $forum_id -- permissions
+
+#it is confusing to provide a moderate link for non-moderated forums.
+if { $forum(posting_policy) ne "moderated" } {
+    set permissions(moderate_p) 0
+}
 
 set admin_url [export_vars -base "admin/forum-edit" { forum_id {return_url [ad_return_url]}}]
 set moderate_url [export_vars -base "moderate/forum" { forum_id }]

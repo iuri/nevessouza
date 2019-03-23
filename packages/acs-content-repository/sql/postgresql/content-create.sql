@@ -4,7 +4,7 @@
 -- Copyright (C) 1999-2000 ArsDigita Corporation
 -- Author: Karl Goldstein (karlg@arsdigita.com)
 
--- $Id: content-create.sql,v 1.65 2018/02/21 14:11:08 antoniop Exp $
+-- $Id: content-create.sql,v 1.63.2.9 2017/04/21 14:53:07 gustafn Exp $
 
 -- This is free software distributed under the terms of the GNU Public
 -- License.  Full text of the license is available from the GNU Project:
@@ -716,7 +716,7 @@ create table cr_revision_attributes (
                  constraint cr_revision_attributes_pk
                  primary key
                  constraint cr_revision_attributes_fk
-                 references cr_revisions on delete cascade,
+                 references cr_revisions,
   attributes     text
 );
 

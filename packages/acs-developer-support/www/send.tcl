@@ -31,7 +31,6 @@ if {$code ne ""} {
         }
     }
 }
-ad_script_abort
 
 
 # Local variables:

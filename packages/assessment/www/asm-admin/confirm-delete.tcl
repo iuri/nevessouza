@@ -1,7 +1,7 @@
 ad_page_contract {
     This page deletes checks
     @author Anny Flores (annyflores@viaro.net) Viaro Networks
-    @creation-date 2005-01-17
+    @date 2005-01-17
 } {
     inter_item_check_id:naturalnum,multiple
     section_id:naturalnum,notnull
@@ -36,11 +36,11 @@ ad_form -name delete_checks -export {by_item_p item_id_check} -form {
 }  -after_submit {
     
     if {$by_item_p == 1} {
-	ad_returnredirect [export_vars -base checks-delete {section_id inter_item_check_id assessment_id by_item_p item_id}]
+	ad_returnredirect "checks-delete?section_id=$section_id&inter_item_check_id=$inter_item_check_id&assessment_id=$assessment_id&by_item_p=$by_item_p&item_id=$item_id_check"
     } else {
-	ad_returnredirect [export_vars -base checks-delete {section_id inter_item_check_id assessment_id by_item_p}]
+	ad_returnredirect "checks-delete?section_id=$section_id&inter_item_check_id=$inter_item_check_id&assessment_id=$assessment_id&by_item_p=$by_item_p"
     }
-    ad_script_abort
+    
     
 }
 

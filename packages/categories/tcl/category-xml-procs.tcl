@@ -3,7 +3,7 @@ ad_library {
 
     @author Tom Ayles (tom@beatniq.net)
     @creation-date 2003-12-02
-    @cvs-id $Id: category-xml-procs.tcl,v 1.6 2018/11/01 08:50:20 gustafn Exp $
+    @cvs-id $Id: category-xml-procs.tcl,v 1.3.6.2 2016/11/27 12:19:35 gustafn Exp $
 }
 
 namespace eval ::category_tree::xml {}
@@ -53,14 +53,14 @@ ad_proc -public ::category_tree::xml::import {
                 set description {}
             }
             if {$tree_id} {
-                # tree initialized, add translation
+                # tree initialised, add translation
                 category_tree::update \
                     -tree_id $tree_id \
                     -name $name \
                     -description $description \
                     -locale $locale
             } else {
-                # initialize tree
+                # initialise tree
                 set tree_id [category_tree::add \
                                  -site_wide_p $site_wide_p \
                                  -name $name \

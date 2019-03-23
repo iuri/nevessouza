@@ -1,5 +1,0 @@
-ad_page_contract {}
-
-
-doc_return 200 "application/json" $result
-ad_script_abort

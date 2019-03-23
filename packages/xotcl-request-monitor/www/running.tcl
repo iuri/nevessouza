@@ -1,14 +1,14 @@
 ad_page_contract {
-  Displays last requests of a user
+    Displays last requests of a user
 
-  @author Gustaf Neumann (adapted for interaction with controlling thread)
-  @cvs-id $Id: running.tcl,v 1.10 2018/06/27 16:26:34 antoniop Exp $
+    @author Gustaf Neumann (adapted for interaction with controlling thread)
+    @cvs-id $Id: running.tcl,v 1.7.2.2 2017/01/26 11:48:29 gustafn Exp $
 } -query {
   orderby:token,optional
 } -properties {
-  title:onevalue
-  context:onevalue
-  user_string:onevalue
+    title:onevalue
+    context:onevalue
+    user_string:onevalue
 }
 
 set admin_p [acs_user::site_wide_admin_p]
@@ -20,9 +20,9 @@ if {!$admin_p} {
 
 set running_requests [throttle running]
 if {[info commands bgdelivery] ne ""} {
-  set background_requests [bgdelivery running]
+   set background_requests [bgdelivery running]
 } else {
-  set background_requests [list]
+   set background_requests [list]
 }
 set nr_bg  [expr {[llength $background_requests]/2}]
 set nr_req [expr {[llength $running_requests]/2}]
@@ -53,7 +53,8 @@ foreach {key elapsed} $running_requests {
   lassign [split $key ,] requestor url
   set ms [format %.2f [expr {[throttle ms -start_time $elapsed]/1000.0}]]
   if {[string is integer $requestor]} {
-    set user_string [person::name -person_id $requestor]
+    acs_user::get -user_id $requestor -array user
+    set user_string "$user(first_names) $user(last_name)"
   } else {
     set user_string $requestor
   }
@@ -65,7 +66,8 @@ foreach {index entry} $background_requests {
   lassign [split $key ,] requestor url
   set ms [format %.2f [expr {[throttle ms -start_time $elapsed]/-1000.0}]]
   if {[string is integer $requestor]} {
-    set user_string [person::name -person_id $requestor]
+    acs_user::get -user_id $requestor -array user
+    set user_string "$user(first_names) $user(last_name)"
   } else {
     set user_string $requestor
   }
@@ -82,7 +84,8 @@ if {[ns_info name] eq "NaviServer"}  {
     set progress [format {%5.2f%% of %5.2f MB} $percentage [expr {$size/1000000.0}]]
     set ms [format %.2f [expr {([clock milliseconds] - $starttime*1000)/-1000.0}]]
     if {[string is integer $requestor]} {
-      set user_string [person::name -person_id $requestor]      
+      acs_user::get -user_id $requestor -array user
+      set user_string "$user(first_names) $user(last_name)"
     } else {
       set user_string $requestor
     }

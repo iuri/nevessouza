@@ -18,8 +18,8 @@
 
 %>
 
-  <if @shaded_p;literal@ false>
-    <if @inside_comm_p;literal@ true>
+  <if @shaded_p@ ne "t">
+    <if @inside_comm_p@ >
       <div style="padding-top:0.2em; padding-bottom:0.3em;">
         <div style="float:right;">
           <a href="@news_url@item-create" title="#news-portlet.Add_a_News_Item#" class="button">#news-portlet.Add_a_News_Item#</a>
@@ -30,23 +30,23 @@
      object_id="@package_id;literal@"
      pretty_name="News"
      url="@news_url;literal@" >
-</if>
-          <if @rss_exists;literal@ eq 1>
+</if>    
+          <if @rss_exists@ eq 1>
             <br>
               <a href="@rss_url@"><img src="/resources/xml.gif" alt="Subscribe via RSS" width="26" height="10" style="border:0; padding-right:3px">#rss-support.Syndication_Feed#</a>
           </if>
         </div>
       </div>
     </if>
-    <if @news_items:rowcount;literal@ gt 0>
-      <if @news_items:rowcount;literal@ eq 1>
+    <if @news_items:rowcount@ gt 0>
+      <if @news_items:rowcount@ eq 1>
 
         <multiple name="news_items">
-          <include src="summary"
+          <include src="summary" 
             item_id="@news_items.item_id;literal@"
             url="@news_items.view_url;literal@">
         </multiple>
-
+        
       </if>
       <else>
 

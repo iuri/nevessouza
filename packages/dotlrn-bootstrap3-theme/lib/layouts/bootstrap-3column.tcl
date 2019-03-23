@@ -22,7 +22,7 @@ ad_page_contract {
 
     @author arjun@openforce.net
     @author yon@openforce.net
-    @cvs-id $Id: bootstrap-3column.tcl,v 1.2 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: bootstrap-3column.tcl,v 1.1 2017/02/20 09:49:14 gustafn Exp $
 } -properties {
     element_list:onevalue
     element_src:onevalue

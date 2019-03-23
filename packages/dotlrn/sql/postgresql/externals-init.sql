@@ -18,7 +18,7 @@
 -- Initialize the dotLRN Externals package
 --
 -- @author <a href="mailto:yon@openforce.net">yon@openforce.net</a>
--- @version $Id: externals-init.sql,v 1.7 2017/08/07 23:48:09 gustafn Exp $
+-- @version $Id: externals-init.sql,v 1.6.4.1 2016/08/31 18:57:41 gustafn Exp $
 --
 
 

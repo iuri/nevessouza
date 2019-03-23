@@ -1,10 +1,13 @@
+# 
+
 ad_page_contract {
      
     Displays dotLRN Site templates admin page
     
     @author Victor Guerra (guerra@galileo.edu)
     @creation-date 2005-05-19
-    @cvs-id $Id: site-templates.tcl,v 1.4 2018/08/15 16:43:08 gustafn Exp $
+    @arch-tag: 59d729de-a526-48af-8087-f81ee8cf0fda
+    @cvs-id $Id: site-templates.tcl,v 1.2.10.1 2015/09/11 11:40:52 gustafn Exp $
 } {
 } -properties {
     title:onevalue

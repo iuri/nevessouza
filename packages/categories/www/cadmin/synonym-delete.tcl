@@ -3,7 +3,7 @@ ad_page_contract {
     Deletes a synonym
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: synonym-delete.tcl,v 1.6 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     synonym_id:naturalnum,multiple
     category_id:naturalnum,notnull

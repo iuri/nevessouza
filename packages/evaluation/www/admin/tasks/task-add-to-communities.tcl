@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author jopez@galileo.edu
     @creation-date Jun 2004
-    @cvs-id $Id: task-add-to-communities.tcl,v 1.12 2017/08/07 23:48:10 gustafn Exp $
+    @cvs-id $Id: task-add-to-communities.tcl,v 1.11.2.2 2016/05/20 20:30:12 gustafn Exp $
 } {
     return_url:localurl,notnull
     task_id:naturalnum,notnull

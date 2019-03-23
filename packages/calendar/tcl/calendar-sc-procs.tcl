@@ -3,7 +3,7 @@ ad_library {
 
     @creation-date 2004-04-01
     @author Jeff Davis davis@xarg.net
-    @cvs-id $Id: calendar-sc-procs.tcl,v 1.5 2018/04/30 09:50:03 gustafn Exp $
+    @cvs-id $Id: calendar-sc-procs.tcl,v 1.3.2.1 2015/09/10 08:30:14 gustafn Exp $
 }
 
 namespace eval calendar::fts {}
@@ -40,7 +40,7 @@ ad_proc -private calendar::fts::datasource { cal_item_id } {
 }
 
 ad_proc -private calendar::fts::url { cal_item_id } {
-    returns a URL for an event to the search package
+    returns a url for an event to the search package
 
     @author davis@xarg.net
     @creation-date 2004-04-01

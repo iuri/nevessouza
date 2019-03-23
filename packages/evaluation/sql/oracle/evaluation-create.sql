@@ -68,7 +68,7 @@ create table evaluation_answers
                                 references cr_revisions,
         answer_item_id  integer constraint evaluation_sans_aiid_fk
                                 references cr_items(item_id),
-        -- person/group to which the answer belongs
+        -- person/group to wich the answer belongs
         party_id        integer constraint evaluation_sans_pid_nn
                                 not null
                                 constraint evaluation_sans_pid_fk
@@ -155,26 +155,23 @@ insert into acs_object_type_tables
     values
     ('evaluation_task_groups', 'evaluation_task_groups', 'group_id');
 
--- task_id used to be a column in evaluation_task_groups and was then
--- renamed to task_item_id. Attribute was not updated accordingly and
--- is most likely useless now. Left here for documentation.
--- declare
---     attr_id acs_attributes.attribute_id%TYPE;
--- begin
---     attr_id := acs_attribute.create_attribute
---    (
---     object_type     => 'evaluation_task_groups',       
---     attribute_name  => 'task_id',                      
---     datatype        => 'integer',                      
---     pretty_name     => 'Task id',                      
---     pretty_plural   => 'Task ids',                     
---     table_name      => 'evaluation_task_groups',       
---     column_name     => 'task_id',                              
---     min_n_values    => 1,                                      
---     max_n_values    => 1,                                      
---     storage         => 'type_specific'                        
---     );
--- end;
+declare
+    attr_id acs_attributes.attribute_id%TYPE;
+begin
+    attr_id := acs_attribute.create_attribute
+   (
+    object_type     => 'evaluation_task_groups',       
+    attribute_name  => 'task_id',                      
+    datatype        => 'integer',                      
+    pretty_name     => 'Task id',                      
+    pretty_plural   => 'Task ids',                     
+    table_name      => 'evaluation_task_groups',       
+    column_name     => 'task_id',                              
+    min_n_values    => 1,                                      
+    max_n_values    => 1,                                      
+    storage         => 'type_specific'                        
+    );
+end;
 /
 
 create table evaluation_user_profile_rels 

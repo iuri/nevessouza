@@ -21,7 +21,7 @@ ad_page_contract {
 
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 9/28/2001
-    @cvs-id $Id: place-element.tcl,v 1.40 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: place-element.tcl,v 1.38.8.1 2015/09/12 11:06:38 gustafn Exp $
 } -properties {
     region:onevalue
     action_string:onevalue

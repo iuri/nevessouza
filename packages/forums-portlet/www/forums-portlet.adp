@@ -18,14 +18,14 @@
 
 %>
 
-<if @config.shaded_p;literal@ false>
-    <if @forums:rowcount@ not nil and @forums:rowcount@ gt 0>
+<if @shaded_p;literal@ false>
+    <if @forums:rowcount@ gt 0>
       <multiple name="forums">
         <h2>@forums.parent_name@</h2>
         <ul>
           <group column="package_id">
             <li>
-              <if @useReadingInfo;literal@ true>
+              <if @useReadingInfo@>
                 <if @forums.count_unread@ gt 0><strong></if>
                 <a href="@forums.url@forum-view?forum_id=@forums.forum_id@">@forums.name@</a>
                 <if  @forums.count_unread@ gt 0></strong>(@forums.count_unread@)</if>

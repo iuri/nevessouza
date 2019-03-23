@@ -25,7 +25,7 @@ set locale [lang::user::locale -user_id $rel_user_id]
 
 if {$send_notification_mail} {
     #
-    # Compose a mail to notify the user about the new state
+    # Compose a mail to notifiy the user about the new state
     #
     set action [group::get_member_state_pretty -component action \
                     -member_state $member_state \
@@ -51,7 +51,8 @@ if {$send_notification_mail} {
     #
     # Use the current user in the "from" field of the email
     #
-    set email_from [dict get [acs_user::get -user_id [ad_conn user_id]] email]
+    set email_from [ad_conn user_id]
+    
     acs_mail_lite::send -send_immediately \
         -to_addr $user_info(email) \
         -from_addr $email_from \

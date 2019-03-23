@@ -7,7 +7,7 @@ ad_page_contract {
     @author Deds Castillo (deds@i-manila.com.ph)
     @creation-date 2005-07-26
     @arch-tag: 29e2145c-7bcc-4a3d-b2e7-b43a2e305f7c
-    @cvs-id $Id: add-edit-section-check.tcl,v 1.7 2018/01/20 22:38:28 gustafn Exp $
+    @cvs-id $Id: add-edit-section-check.tcl,v 1.5.2.1 2015/09/10 08:28:02 gustafn Exp $
 } {
     assessment_id:naturalnum,notnull
     section_id:naturalnum,optional
@@ -85,15 +85,12 @@ ad_form \
         } 
     } -edit_request {
         db_1row get_check_properties {}
-
     } -edit_data {
         set check_sql "select 1 as perform_p from dual"
         db_dml update_check {}
-
     } -after_submit {
         set url [as::assessment::check::add_check_return_url $action_p]
         ad_returnredirect "${url}?assessment_id=$assessment_id&inter_item_check_id=$inter_item_check_id&section_id=$section_id_from&section_check_p=1$return_url"
-        ad_script_abort
 }
 
 # Local variables:

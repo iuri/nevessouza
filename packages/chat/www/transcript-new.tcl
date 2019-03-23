@@ -34,8 +34,3 @@ db_foreach get_archives_messages {} {
 
 ad_return_template "transcript-entry"
 
-# Local variables:
-#    mode: tcl
-#    tcl-indent-level: 4
-#    indent-tabs-mode: nil
-# End:

@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2001-12-13
-    @cvs-id $Id: term-new.tcl,v 1.16 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: term-new.tcl,v 1.13.10.3 2016/09/10 11:53:38 gustafn Exp $
 } -query {
     {referer "terms"}
 } -properties {
@@ -72,7 +72,7 @@ ad_form -name add_term -export referer -form {
     }
 } -on_submit {
     
-    # Setting the right format to send to the procedures
+    # Setting the rigth format to send to the procedures
     # dotlrn_term::start_end_dates_to_term_year  and
     # dotlrn_term::new
     

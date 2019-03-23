@@ -1,7 +1,7 @@
 ad_page_contract {
     Let's the user reset his/her password.
 
-    @cvs-id $Id: password-reset.tcl,v 1.6 2018/01/21 00:35:30 gustafn Exp $
+    @cvs-id $Id: password-reset.tcl,v 1.3.2.3 2016/05/20 20:02:44 gustafn Exp $
 } {
     {user_id:naturalnum,notnull {[ad_conn untrusted_user_id]}}
     {return_url:localurl ""}
@@ -15,10 +15,7 @@ if { [security::RestrictLoginToSSLP] } {
 }
 
 if { ![auth::password::can_change_p -user_id $user_id] } {
-    ad_return_error \
-        "Not supported" \
-        "Changing password is not supported."
-    ad_script_abort
+    ad_return_error "Not supported" "Changing password is not supported."
 }
 
 set admin_p [permission::permission_p -object_id $user_id -privilege admin]
@@ -28,11 +25,13 @@ if { !$admin_p } {
 }
 
 
+
 set page_title [_ acs-subsite.Reset_Password]
 set context [list [list [ad_pvt_home] [ad_pvt_home_name]] $page_title]
 
 set system_name [ad_system_name]
 set site_link [ad_site_home_link]
+
 
 
 acs_user::get -user_id $user_id -array user
@@ -71,7 +70,7 @@ ad_form -extend -name reset -form {
                           -old_password "" \
                           -new_password $password_1]
 
-    switch -- $result(password_status) {
+    switch $result(password_status) {
         ok {
             # Continue
         }

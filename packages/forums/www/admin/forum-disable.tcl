@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-28
-    @cvs-id $Id: forum-disable.tcl,v 1.9 2018/01/19 14:20:33 gustafn Exp $
+    @cvs-id $Id: forum-disable.tcl,v 1.7.2.1 2015/09/12 11:06:29 gustafn Exp $
 
 } {
     forum_id:naturalnum,notnull
@@ -13,7 +13,9 @@ ad_page_contract {
 forum::disable -forum_id $forum_id
 
 ad_returnredirect "."
-ad_script_abort
+
+
+
 
 # Local variables:
 #    mode: tcl

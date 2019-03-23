@@ -4,7 +4,7 @@ as
 --/** 
 --Content items store the overview of the content published on a
 --website. The actual content is stored in content revisions. It is
---implemented this way so that there can be multiple versions of the
+--implemented this way so that there can be mulitple versions of the
 --actual content while the main idea remains constant. For example: If
 --there is a review for the movie "Terminator," there will exist a
 --content item by the name "terminator" with all the right parameters
@@ -89,7 +89,7 @@ function new (
 
 
 function is_published (
-  --/** Determines whether an item is published or not.
+  --/** Determins whether an item is published or not.
   --    @author Michael Pih
   --    @param item_id		The item ID
   --    @return 't' if the item is published, 'f' otherwise
@@ -106,7 +106,7 @@ function is_publishable (
   --	3) any 'publishing_wf' workflows are finished
   --    @author Michael Pih
   --    @param item_id		The item ID
-  --    @return 't' if the item is publishable in its present state,
+  --    @return 't' if the item is publishable in it's present state, 
   --            Otherwise, returns 'f'
   --*/
   item_id		in cr_items.item_id%TYPE
@@ -3098,7 +3098,7 @@ show errors
 
 -- @author Dave Bauer (dave@thedesignexperience.org)
 -- @creation-date 2004-05-02
--- @cvs-id $Id: upgrade-5.1.5d2-5.1.5d3.sql,v 1.6 2018/04/11 21:35:06 hectorr Exp $
+-- @cvs-id $Id: upgrade-5.1.5d2-5.1.5d3.sql,v 1.3.12.1 2017/04/21 14:53:07 gustafn Exp $
 --
 
 -- reload packages to get fixed version of content_folder.rename

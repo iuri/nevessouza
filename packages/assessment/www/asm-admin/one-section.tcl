@@ -6,7 +6,7 @@ ad_page_contract {
     @param  section_id integer specifying section
 
     @author vinod@solutiongrove.com
-    @creation-date   October 28, 2006
+    @date   October 28, 2006
 
 } {
     assessment_id:naturalnum,notnull

@@ -2,7 +2,7 @@ ad_page_contract {
   present throttle statistics, active users, etc
 
   @author Gustaf Neumann
-  @cvs-id $Id: throttle-statistics.tcl,v 1.5 2018/06/27 16:22:55 antoniop Exp $
+  @cvs-id $Id: throttle-statistics.tcl,v 1.3.2.4 2017/04/21 20:13:52 gustafn Exp $
 } -properties {
   title:onevalue
   context:onevalue
@@ -34,7 +34,8 @@ foreach l [lsort -index 2 $data] {
     set user "Anonymous"
     set user_url ""
   } else {
-    set user [person::name -person_id $uid]
+    acs_user::get -user_id $uid -array userinfo
+    set user "$userinfo(first_names) $userinfo(last_name)"
     set user_url [acs_community_member_admin_url -user_id $uid]
   }
   set time [clock format $time -format "%Y-%m-%d %H:%M:%S"]

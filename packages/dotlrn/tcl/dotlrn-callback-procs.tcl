@@ -1,28 +1,15 @@
+# packages/dotlrn/tcl/dotlrn-callback-procs.tcl
+
 ad_library {
     
     Callback Procedures offered by the .LRN package
     
     @author Malte Sussdorff (sussdorff@sussdorff.de)
     @creation-date 2005-07-19
-    @cvs-id $Id: dotlrn-callback-procs.tcl,v 1.8 2018/08/15 16:43:08 gustafn Exp $
+    @arch-tag: 8a447ef7-85b1-4ef9-b342-49ca78f57e49
+    @cvs-id $Id: dotlrn-callback-procs.tcl,v 1.4.8.1 2015/09/11 11:40:39 gustafn Exp $
 }
 
-
-#### Callback Hooks
-
-ad_proc -public -callback dotlrn_community::set_community_name {
-    -community_id
-    -pretty_name
-} {
-
-    Actions to be performed by other packages when a community changes
-    name. Note that dotlrn-specific packages (as applets) already
-    implement a way to react to actions.    
-
-} -
-
-
-#### Callbacks
 ad_proc -callback merge::MergeShowUserInfo -impl dotlrn {
     -user_id:required
 } {
@@ -33,7 +20,7 @@ ad_proc -callback merge::MergeShowUserInfo -impl dotlrn {
     ns_log Notice $msg
     set result [list $msg]
     
-    set from_rel_ids [db_list_of_lists get_from_rel_ids {} ]	    
+    set from_rel_ids [db_list_of_lists get_from_rel_ids { *SQL* } ]	    
     
     foreach rel $from_rel_ids {
 	set l_rel_id [lindex $rel 0]
@@ -73,7 +60,7 @@ ad_proc -callback merge::MergePackageUser -impl dotlrn {
 	# select the communities where from_user_id belongs to and
 	# to_user_id does not belong.
 
-	set from_rel_ids [db_list_of_lists get_from_rel_ids {} ]	    
+	set from_rel_ids [db_list_of_lists get_from_rel_ids { *SQL* } ]	    
 
 	foreach rel $from_rel_ids {
 	    set l_rel_id [lindex $rel 0]
@@ -172,7 +159,7 @@ ad_proc -public -callback contact::person_new -impl dotlrn_user {
 } {
     
     
-    db_1row get_community_id {}
+    db_1row get_community_id { }
     
     
     dotlrn_privacy::set_user_guest_p -user_id $party_id -value "t"

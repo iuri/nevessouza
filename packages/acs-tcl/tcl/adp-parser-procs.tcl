@@ -25,14 +25,14 @@ ad_library {
 
     @author Jon Salz (jsalz@mit.edu)
     @creation-date 26 June 2000
-    @cvs-id $Id: adp-parser-procs.tcl,v 1.5 2018/04/18 20:58:59 hectorr Exp $
+    @cvs-id $Id: adp-parser-procs.tcl,v 1.3.2.2 2015/09/10 08:21:55 gustafn Exp $
 
 }
 
 # NSV: doc_adptags($tag) is a list representation of an array containing:
 #
 #   - balanced_p: do we expect a close tag for $tag?
-#   - literal_p: was literal provided to doc_register_adptag?
+#   - literal_p: was literal provided to doc_register_adp_tag?
 #   - handler: the name of the handler proc. See document-procs.tcl for some good
 #       examples.
 

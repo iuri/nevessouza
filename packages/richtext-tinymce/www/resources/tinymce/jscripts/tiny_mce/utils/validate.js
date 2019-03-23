@@ -1,5 +1,5 @@
 /**
- * $Id: validate.js,v 1.2 2017/08/07 23:48:21 gustafn Exp $
+ * $Id: validate.js,v 1.1.2.1 2016/01/03 20:44:36 gustafn Exp $
  *
  * Various form validation methods.
  *

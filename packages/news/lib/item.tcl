@@ -4,7 +4,7 @@ ad_page_contract {
     Page to view one item (live or archived) in its active revision
     @author stefan@arsdigita.com
     @creation-date 2000-12-20
-    @cvs-id $Id: item.tcl,v 1.5 2017/08/07 23:48:12 gustafn Exp $
+    @cvs-id $Id: item.tcl,v 1.4.2.2 2016/01/02 20:34:49 gustafn Exp $
     
 } {
 

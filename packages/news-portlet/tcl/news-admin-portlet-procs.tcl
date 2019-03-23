@@ -20,7 +20,7 @@ ad_library {
 
     @creation-date Jan 2002
     @author ben@openforce.net
-    @cvs-id $Id: news-admin-portlet-procs.tcl,v 1.12 2018/07/11 15:11:34 antoniop Exp $
+    @cvs-id $Id: news-admin-portlet-procs.tcl,v 1.10.14.1 2015/09/12 11:06:44 gustafn Exp $
 
 }
 
@@ -33,8 +33,6 @@ namespace eval news_admin_portlet {
 
     ad_proc -public get_pretty_name {
     } {
-        Get the pretty name.
-    } {
 	return "#news-portlet.admin_pretty_name#"
     }
 
@@ -45,8 +43,6 @@ namespace eval news_admin_portlet {
 
     ad_proc -public link {
     } {
-        Get the link. This is currently empty.
-    } {
 	return ""
     }
 
@@ -55,7 +51,7 @@ namespace eval news_admin_portlet {
         {-page_name ""}
 	{-package_id:required}
     } {
-	Adds a news admin PE to the given portal.
+	Adds a news admin PE to the given portal
 
 	@param portal_id The page to add self to
 	@param package_id The package_id of the news package
@@ -74,7 +70,7 @@ namespace eval news_admin_portlet {
     ad_proc -public remove_self_from_page {
 	{-portal_id:required}
     } {
-        Removes a news admin PE from the given page.
+	  Removes a news admin PE from the given page
     } {
         portal::remove_element \
             -portal_id $portal_id \
@@ -82,14 +78,14 @@ namespace eval news_admin_portlet {
     }
 
     ad_proc -public show {
-        cf
+	 cf
     } {
-        Show the news admin portlet.
     } {
         portal::show_proc_helper \
             -package_key [my_package_key] \
             -config_list $cf \
             -template_src "news-admin-portlet"
+
     }
 
 }

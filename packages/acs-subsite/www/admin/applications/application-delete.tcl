@@ -5,7 +5,7 @@ ad_page_contract {
     @author Gustaf Neumann
 
     @creation-date 2003-05-28
-    @cvs-id $Id: application-delete.tcl,v 1.8 2018/01/19 14:09:48 gustafn Exp $
+    @cvs-id $Id: application-delete.tcl,v 1.6.2.2 2016/05/20 20:02:44 gustafn Exp $
 } {
     {node_id:naturalnum,multiple ""}
     {package_id:naturalnum,multiple ""}
@@ -34,7 +34,7 @@ if { !$confirm_p } {
 
     if { $num == 0 } {
         ad_returnredirect .
-        ad_script_abort
+        return
     }
 
     append listing <ul>\n
@@ -90,7 +90,6 @@ db_transaction {
 }
      
 ad_returnredirect $return_url
-ad_script_abort
 
 
 #

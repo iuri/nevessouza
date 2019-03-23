@@ -3,7 +3,8 @@
 <!-- packages/dotlrn/www/member-email-toggle-oracle.xql -->
 <!-- @author Roel Canicula (roelmc@pldtdsl.net) -->
 <!-- @creation-date 2005-08-20 -->
-<!-- @cvs-id $Id: member-email-toggle-oracle.xql,v 1.3 2018/08/15 17:02:02 gustafn Exp $ -->
+<!-- @arch-tag: 2d9ab52d-3137-447a-8994-fe6b14b4e3ce -->
+<!-- @cvs-id $Id: member-email-toggle-oracle.xql,v 1.2 2006/08/08 21:26:24 donb Exp $ -->
 
 <queryset>
   

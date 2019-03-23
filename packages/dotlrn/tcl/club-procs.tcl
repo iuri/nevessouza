@@ -152,7 +152,7 @@ ad_proc -public -callback contact::contact_form -impl dotlrn_club {
     {-object_type:required}
     {-party_id ""}
 } {
-    If organization, ask to create new club
+    If organisation, ask to create new club
 } {
     if {$object_type ne "person" } {
 	
@@ -187,7 +187,7 @@ ad_proc -public -callback contact::organization_new -impl dotlrn_club {
 } {
     upvar create_club_p create_club_p
     
-    if {[info exists create_club_p] && $create_club_p ne ""
+    if {([info exists create_club_p] && $create_club_p ne "")
 	&& $create_club_p == "t"} {
 	# Create the new club and create a link between it and
 	# the new contact.

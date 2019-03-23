@@ -31,6 +31,14 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="auth::sync::job::start_get_document.update_doc_start_time">
+        <querytext>
+            update auth_batch_jobs
+            set    doc_start_time = current_timestamp
+            where  job_id = :job_id
+        </querytext>
+    </fullquery>
+
     <fullquery name="auth::sync::job::end_get_document.update_doc_end">
         <querytext>
             update auth_batch_jobs
@@ -43,6 +51,17 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="auth::sync::job::end.update_job_end">
+        <querytext>
+
+            update auth_batch_jobs
+            set    job_end_time = current_timestamp,
+                   message = :message
+            where  job_id = :job_id
+
+        </querytext>
+    </fullquery>
+
     <fullquery name="auth::sync::job::create_entry.insert_entry">
         <querytext>
 
@@ -50,6 +69,15 @@
             (entry_id, job_id, operation, username, user_id, success_p, message, element_messages)
             values
             (:entry_id, :job_id, :operation, :username, :user_id, :success_p_db, :message, :element_messages)
+
+        </querytext>
+    </fullquery>
+
+    <fullquery name="auth::sync::purge_jobs.purge_jobs">
+        <querytext>
+
+            delete from auth_batch_jobs
+            where  job_end_time < current_timestamp - interval '$num_days days'
 
         </querytext>
     </fullquery>

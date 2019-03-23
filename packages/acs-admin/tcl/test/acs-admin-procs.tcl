@@ -3,16 +3,12 @@ ad_library {
 
     @author Joel Aufrecht
     @creation-date 2 Nov 2003
-    @cvs-id $Id: acs-admin-procs.tcl,v 1.6 2018/07/19 12:15:19 gustafn Exp $
+    @cvs-id $Id: acs-admin-procs.tcl,v 1.4.2.1 2015/09/10 08:21:01 gustafn Exp $
 }
 
-aa_register_case -cats {
-    api smoke
-} -procs {
-    apm_higher_version_installed_p
-} apm_higher_version_installed_p {
+aa_register_case -cats {api smoke} apm_higher_version_installed_p {
     Test apm_higher_version_installed_p proc.
-} {
+} {    
 
     aa_run_with_teardown \
         -rollback \

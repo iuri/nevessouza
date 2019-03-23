@@ -3,7 +3,8 @@
 -- 
 -- @author Victor Guerra (guerra@galileo.edu)
 -- @creation-date 2007-12-10
--- @cvs-id $Id: upgrade-2.3.2d1-2.3.2d2.sql,v 1.2 2018/08/15 16:55:08 gustafn Exp $
+-- @arch-tag: f358e2fa-fa9c-4d3a-8783-c897efb7643d
+-- @cvs-id $Id: upgrade-2.3.2d1-2.3.2d2.sql,v 1.1 2007/12/10 09:53:41 victorg Exp $
 --
 
 

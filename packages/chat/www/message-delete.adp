@@ -3,7 +3,7 @@
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date January 18, 2001
-    @cvs-id $Id: message-delete.adp,v 1.12 2017/08/07 23:48:07 gustafn Exp $
+    @cvs-id $Id: message-delete.adp,v 1.10.2.1 2016/06/20 08:40:23 gustafn Exp $
 -->
 <master>
 <property name="context">@context_bar;literal@</property>

@@ -3,7 +3,7 @@
 --
 -- @author Kevin Scaldeferri (kevin@arsdigita.com)
 -- @creation-date 6 Nov 2000
--- @cvs-id $Id: file-storage-package-create.sql,v 1.30 2017/12/29 11:32:49 gustafn Exp $
+-- @cvs-id $Id: file-storage-package-create.sql,v 1.28.2.2 2017/04/21 17:14:16 antoniop Exp $
 --
 
 
@@ -245,7 +245,7 @@ BEGIN
              new_file__creation_ip,     -- creation_ip
              new_file__indb_p,          -- storage_type
              null,                      -- item_id
-             new_file__package_id       -- package_id
+             new_file__package_id       -- pacakge_id
         );
 
 END;

@@ -2,7 +2,7 @@ ad_page_contract {
     Form to add/edit an assessment.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: assessment-form.tcl,v 1.19 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     assessment_id:naturalnum,optional
     {__new_p:boolean 0}

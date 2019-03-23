@@ -3,7 +3,7 @@ ad_page_contract {
     @author yon@openforce.net
     @author rob@thaum.net
     @creation-date 2002-07-01
-    @cvs-id $Id: search.tcl,v 1.15 2017/08/07 23:48:11 gustafn Exp $
+    @cvs-id $Id: search.tcl,v 1.14.18.2 2017/02/02 15:15:10 gustafn Exp $
 
 } -query {
     {forum_id:integer ""}

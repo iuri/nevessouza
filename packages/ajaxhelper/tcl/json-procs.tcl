@@ -5,21 +5,9 @@
 #
 #   Copyright 2006 ActiveState Software Inc.
 #
-#   $Id: json-procs.tcl,v 1.4.2.1 2019/02/14 16:15:01 gustafn Exp $
+#   $Id: json-procs.tcl,v 1.2 2014/10/27 16:40:53 victorg Exp $
 #
 #   modified by Dave Bauer
-
-if {$::tcl_version > 8.5} {
-    #
-    # This modifications are probably not necessary with more modern
-    # tcl/tcllib versions. The implementation below conflicts with the
-    # tcllib "json" package.
-    #
-    # In case the code below fixes a problem in tcllib, it should be
-    # fixed there.
-    #
-    return
-}
 
 if {$::tcl_version < 8.5} {
 #    package require dict

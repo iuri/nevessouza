@@ -1,7 +1,7 @@
 # Organize standard top level navigation, if any, for output by groups (rows of
 # horizontal tabs by default)
 #
-#set subsite_name [lang::util::localize [subsite::get_element -element instance_name]]
+set subsite_name [lang::util::localize [subsite::get_element -element instance_name]]
 
 if { [template::multirow exists navigation] } {
     set selected_main_nav_item ""

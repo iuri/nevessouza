@@ -3,7 +3,7 @@ ad_page_contract {
 
     @author Kevin Scaldeferri (kevin@arsdigita.com)
     @creation-date 13 Nov 2000
-    @cvs-id $Id: file-move-2.tcl,v 1.5 2017/08/07 23:48:10 gustafn Exp $
+    @cvs-id $Id: file-move-2.tcl,v 1.4.2.1 2015/09/11 11:40:58 gustafn Exp $
 } {
     file_id:integer,notnull
     parent_id:integer,notnull

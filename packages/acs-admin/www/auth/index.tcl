@@ -31,7 +31,7 @@ list::create \
             label "\#acs-admin.Enabled\#"
             html { align center }
             display_template {
-                <if @authorities.enabled_p;literal@ true>
+                <if @authorities.enabled_p@ true>
                 <a href="@authorities.enabled_p_url@" title="\#acs-admin.Disable_this_authority\#"><img src="/shared/images/checkboxchecked.gif" alt="enabled" height="13" width="13" style="background-color: white; border: 0;"></a>
                 </if>
                 <else>
@@ -62,11 +62,11 @@ list::create \
                     <img src="/resources/acs-subsite/radiochecked.gif" height="13" width="13" style="border: 0" alt="checked">
                   </case>
                   <case value="can_select">
-                    <a href="@authorities.registration_url@"
+                    <a href="@authorities.registration_url@" 
                        title="\#acs-admin.Make_this_the_authority_for_registering_new_users\#"
                        id="@authorities.select_id;literal@">
                 <img src="/resources/acs-subsite/radio.gif" height="13" width="13" style="background-color: white; border: 0;" alt="unchecked">
-                    </a>
+                    </a> 
                   </case>
                   <case value="cannot_select">
                     <span style="color: gray;">N/A</span>
@@ -95,17 +95,17 @@ list::create \
                 </if>
             }
             sub_class narrow
-        }
+        }        
     }
 
 
 # The authority currently selected for registering users
 set register_authority_id [auth::get_register_authority]
 
-db_multirow -extend {
-    enabled_p_url
-    sort_order_url_up
-    sort_order_url_down
+db_multirow -extend { 
+    enabled_p_url 
+    sort_order_url_up 
+    sort_order_url_down 
     delete_url
     registration_url
     registration_status

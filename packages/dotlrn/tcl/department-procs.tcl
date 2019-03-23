@@ -19,7 +19,7 @@ ad_library {
 
     @author yon (yon@openforce.net)
     @creation-date 2001-01-20
-    @cvs-id $Id: department-procs.tcl,v 1.16 2018/01/25 12:36:53 gustafn Exp $
+    @cvs-id $Id: department-procs.tcl,v 1.14.2.1 2015/09/11 11:40:39 gustafn Exp $
 }
 
 namespace eval dotlrn_department {
@@ -80,7 +80,7 @@ namespace eval dotlrn_department {
     ad_proc -public count_classes {
         {-department_key:required}
     } {
-        returns the number of classes under this department
+        retuns the number of classes under this department
     } {
         return [db_string select_count_classes {} -default 0]
     }

@@ -6,7 +6,7 @@ ad_page_contract {
     @author yon (yon@openforce.net)
     @author arjun (arjun@openforce.net)
     @creation-date 2002-06-02
-    @cvs-id $Id: row2.tcl,v 1.5.2.3 2019/02/15 13:25:58 gustafn Exp $
+    @cvs-id $Id: row2.tcl,v 1.3.2.3 2016/11/11 00:09:20 gustafn Exp $
 
 }
 
@@ -70,11 +70,10 @@ if {[llength $direct_children_list] == 0} {
 
 
 # Gets all the direct children of the main message
-set children [db_list get_children "select message_id from $table_name \
-	where parent_id = :parent_message_id or message_id = :parent_message_id \
-        order by message_id"]
+set childs [db_list get_children "select message_id from $table_name \
+	where  parent_id = :parent_message_id or message_id = $parent_message_id  order by message_id"]
 
-set is_direct_children [lsearch $children $parent_message_id]
+set is_direct_children [lsearch $childs $parent_message_id]
 if {$is_direct_children == -1 } {
     set is_direct_child 0
 } else {
@@ -84,10 +83,6 @@ if {$is_direct_children == -1 } {
 ## Ends New ##
 set allow_edit_own_p [parameter::get -parameter AllowUsersToEditOwnPostsP -default 0]
 set own_p [expr {$message(user_id) eq $viewer_id && $allow_edit_own_p}]
-
-set delete_url [export_vars -base "moderate/message-delete" {
-    {message_id:sign(csrf) $message(message_id)}
-}]
 
 template::add_event_listener -id "toggle$message(message_id)" -script [subst {
     dynamicExpand('$message(message_id)');

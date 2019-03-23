@@ -2,7 +2,7 @@
 -- bulk_mail model create
 --
 -- @author <a href="mailto:yon@openforce.net">yon@openforce.net</a>
--- @version $Id: bulk-mail-create.sql,v 1.4 2018/12/11 10:38:04 gustafn Exp $
+-- @version $Id: bulk-mail-create.sql,v 1.3 2006/08/08 21:26:15 donb Exp $
 --
 
 create table bulk_mail_messages (
@@ -37,7 +37,6 @@ create table bulk_mail_messages (
                                 constraint bm_messages_status_nn
                                 not null
 );
-CREATE INDEX bm_messages_status_idx ON bulk_mail_messages(status);
 
 -- create a new object type
 begin

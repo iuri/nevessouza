@@ -15,7 +15,7 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date 2002-03-05
-    @cvs-id $Id: edit-preapproved-emails.tcl,v 1.12 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: edit-preapproved-emails.tcl,v 1.10.10.1 2015/09/11 11:40:52 gustafn Exp $
 } -query {
     {referer [dotlrn::get_admin_url]}
 } -properties {

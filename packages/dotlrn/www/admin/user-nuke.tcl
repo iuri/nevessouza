@@ -4,7 +4,7 @@ ad_page_contract {
     
     @author Andrew Grumet (aegrumet@alum.mit.edu)
     @creation-date 2002-08-08
-    @cvs-id $Id: user-nuke.tcl,v 1.9 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: user-nuke.tcl,v 1.7.2.1 2015/09/11 11:40:53 gustafn Exp $
 } {
     user_id:naturalnum,notnull
     {referer "[dotlrn::get_admin_url]/users"}

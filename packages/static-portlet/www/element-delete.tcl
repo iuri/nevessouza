@@ -16,9 +16,9 @@
 
 ad_page_contract {
     delete a static element
-
+    
     @author arjun (arjun@openforce)
-    @cvs-id $Id: element-delete.tcl,v 1.9.2.1 2019/02/14 16:15:01 gustafn Exp $
+    @cvs_id $Id: element-delete.tcl,v 1.8.2.1 2015/09/12 19:00:46 gustafn Exp $
 } -query {
     {content_id:naturalnum,notnull}
     {referer:notnull}

@@ -55,8 +55,6 @@ switch $action {
 
 
 ad_returnredirect $url
-ad_script_abort
-
 # Local variables:
 #    mode: tcl
 #    tcl-indent-level: 4

@@ -3,7 +3,7 @@ ad_library {
     Procs to set up the dotLRN assessment applet
     
     @author jopez@galileo.edu
-    @cvs-id $Id: dotlrn-assessment-procs.tcl,v 1.8 2018/03/27 14:22:30 hectorr Exp $
+    @cvs-id $Id: dotlrn-assessment-procs.tcl,v 1.6.2.2 2017/06/30 17:44:32 gustafn Exp $
 }
 
 namespace eval dotlrn_assessment {}
@@ -49,7 +49,7 @@ ad_proc -public dotlrn_assessment::remove_applet {} {
 ad_proc -public dotlrn_assessment::add_applet_to_community {
     community_id
 } {
-    Add the assessment applet to a specific dotlrn community
+    Add the assessment applet to a specifc dotlrn community
 } {
     set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
 
@@ -99,7 +99,7 @@ ad_proc -public dotlrn_assessment::add_user_to_community {
     community_id
     user_id
 } {
-    Add a user to a specific dotlrn community
+    Add a user to a specifc dotlrn community
 } {
     set package_id [dotlrn_community::get_applet_package_id -community_id $community_id -applet_key [applet_key]]
     set portal_id [dotlrn::get_portal_id -user_id $user_id]

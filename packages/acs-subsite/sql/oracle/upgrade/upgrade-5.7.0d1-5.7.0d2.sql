@@ -1,4 +1,4 @@
--- Getting right constraint names on subsite_themes. This doesn't matter for PG...
+-- Getting right constraint names on subsite_themes this dont matter for PG since 
 -- 
 -- 
 -- @author Victor Guerra (vguerra@gmail.com)

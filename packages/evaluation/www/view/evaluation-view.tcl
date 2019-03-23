@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author jopez@galileo.edu
     @creation-date Sept 2004
-    @cvs-id $Id: evaluation-view.tcl,v 1.7 2018/05/09 15:33:31 hectorr Exp $
+    @cvs-id $Id: evaluation-view.tcl,v 1.4.2.2 2016/05/20 20:30:12 gustafn Exp $
 } {
     evaluation_id:naturalnum,notnull
     {return_url:localurl ""}

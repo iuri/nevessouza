@@ -9,7 +9,7 @@ of the assessment system. It deals with the storing of the various
 questions that can be used in a survey. You are able to
 add/edit/delete a question of a certain type to a certain scope.
 Furthermore it allows you to search and browse for questions for
-inclusion in your assessment as well as import and export multiple
+inclusion in your assesment as well as import and export multiple
 questions using various formats. This concept is new to survey 0.1d
 and changes the design of the survey module considerably. No
 mockups available.</span></p>
@@ -36,7 +36,7 @@ allows a survey to use the older version of a question, if the
 question is changed.</span></li>
 </ul>
 <span class="context">For each of the various question types, there
-will be a separate input form instead of the currently used method.
+will be a seperate input form instead of the currently used method.
 A user selects a question type to add and is then redirected to the
 question type add form.</span>
 <ul>
@@ -197,8 +197,8 @@ Rank questions ask for the answers to be ranked.</span><ul>
 <li><span class="context">Rank Type: Boolean (alphabetic, numeric).
 Shall the rank be from a to z or from 1 to n.</span></li><li><span class="context">Only unique rank: Boolean (yes/no). Shall
 the ranking only allow unique ranks (like 1,2,3,5,6 instead of
-1,2,2,4,5)</span></li><li><span class="context">Straight order: Boolean (alphabetic,
-numeric). Shall the rank be in a straight order or is it allowed to
+1,2,2,4,5)</span></li><li><span class="context">Straigth order: Boolean (alphabetic,
+numeric). Shall the rank be in a straigth order or is it allowed to
 skip values (1,2,3 vs. 1,3,4)</span></li><li>
 <span class="context">For each answer we ask the following
 questions:</span><ul>
@@ -223,7 +223,7 @@ following question types:</span>
 The answer to this question will be stored in the database. The
 question has the following additional fields:</span><ul>
 <li><span class="context">Table Name: short_string. This is the
-name of the table that is being used for storing the
+name of the table that is beeing used for storing the
 responses.</span></li><li><span class="context">Column: short_string. This is the column
 of the table that is used for storing the responses.</span></li><li><span class="context">Key Column: short_string. This is the
 column of the table that matches the user_id of the

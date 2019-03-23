@@ -3,7 +3,7 @@
 --
 -- @author Gary Jin (gjin@arsdigita.com)
 -- @creation-date Nov 17, 2000
--- @cvs-id $Id: cal-item-drop.sql,v 1.8 2018/03/23 23:53:01 hectorr Exp $
+-- @cvs-id $Id: cal-item-drop.sql,v 1.7 2006/08/08 21:26:16 donb Exp $
 --
 
 -- ported by Lilian Tong (tong@ebt.ee.usyd.edu.au)
@@ -40,7 +40,7 @@ delete from acs_objects where object_type='cal_item';
 
   -- drop attributes and acs_object_type
 begin;
-  -- drop attributes
+  -- drop attibutes
 	select acs_attribute__drop_attribute (
            'cal_item',
            'on_which_calendar'

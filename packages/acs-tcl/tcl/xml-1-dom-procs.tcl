@@ -19,7 +19,7 @@ ad_library {
 # liability for all claims, expenses, losses, damages and costs any user may
 # incur as a result of using, copying or modifying this software.
 #
-    @cvs-id $Id: xml-1-dom-procs.tcl,v 1.11 2018/09/30 15:43:18 gustafn Exp $
+    @cvs-id $Id: xml-1-dom-procs.tcl,v 1.4.2.1 2015/09/10 08:22:02 gustafn Exp $
 }
 
 package provide dom 1.6
@@ -165,7 +165,7 @@ proc dom::DOMImplementation {method args} {
 		1 {
 		    # Use array name provided.  Should check that it is safe.
 		    set name [lindex $args 0]
-		    unset -nocomplain $name
+		    catch {unset $name}
 		}
 		default {
 		    return -code error "wrong number of arguments"
@@ -211,17 +211,16 @@ proc dom::DOMImplementation {method args} {
 	    ##
 	    upvar #0 $node(docArray) docArray
 	    for {set i 0} {$i < $docArray(counter)} {incr i} {
-		unset -nocomplain ${docArrayName}var$i
-		unset -nocomplain ${docArrayName}arr$i
+		catch {unset ${docArrayName}var$i}
+		catch {unset ${docArrayName}arr$i}
 	    }
              
 	    ##
 	    ## Then release the main document array
 	    ##
-	    if {![info exists $node(docArray)]} {
+	    if {[catch {unset $node(docArray)}]} {
 		return -code error "unable to destroy document"
 	    }
-            unset -nocomplain $node(docArray)
 
 	    return {}
 
@@ -299,15 +298,14 @@ proc dom::DOMImplementation {method args} {
 		$parser configure -final false
 		while {[string length [lindex $args 0]]} {
 		    $parser parse [string range [lindex $args 0] 0 $opts(-chunksize)]
-		    #set args [lreplace $args 0 0 \
-                    #              [string range [lindex $args 0] $opts(-chunksize) end]]
-                    lset args 0 [string range [lindex $args 0] $opts(-chunksize) end]
+		    set args [lreplace $args 0 0 \
+			[string range [lindex $args 0] $opts(-chunksize) end]]
 		    uplevel #0 $opts(-progresscommand)
 		}
 		$parser configure -final true
 	    } elseif {[catch {$parser parse [lindex $args 0]} err]} {
 		catch {rename $parser {}}
-		unset -nocomplain $state
+		catch {unset $state}
 		return -code error $err
 	    }
 
@@ -784,14 +782,14 @@ proc dom::node {method token args} {
 		return -code error "too many arguments"
 	    }
 	    if {[regexp [format {^-(%s)$} $nodeOptionsRO] [lindex $args 0] discard option]} {
-		switch -- $option {
+		switch $option {
 		    childNodes {
 			# How are we going to handle documentElement?
 			set result $node(node:childNodes)
 		    }
 		    firstChild {
 			upvar #0 $node(node:childNodes) children
-			switch -- $node(node:nodeType) {
+			switch $node(node:nodeType) {
 			    documentFragment {
 				set result [lindex $children 0]
 				catch {set result $node(document:documentElement)}
@@ -803,7 +801,7 @@ proc dom::node {method token args} {
 		    }
 		    lastChild {
 			upvar #0 $node(node:childNodes) children
-			switch -- $node(node:nodeType) {
+			switch $node(node:nodeType) {
 			    documentFragment {
 				set result [lindex $children end]
 				catch {set result $node(document:documentElement)}
@@ -957,9 +955,8 @@ proc dom::node {method token args} {
 		node removeChild $newChild(node:parentNode) [lindex $args 0]
 	    }
 
-	    #set $node(node:childNodes) \
-		#[lreplace [set $node(node:childNodes)] $idx $idx [lindex $args 0]]
-            lset $node(node:childNodes) $idx [lindex $args 0]
+	    set $node(node:childNodes) \
+		[lreplace [set $node(node:childNodes)] $idx $idx [lindex $args 0]]
 	    set newChild(node:parentNode) $token
 
 	    # Update old child to reflect lack of parentage
@@ -1030,7 +1027,7 @@ proc dom::node {method token args} {
 		}
 	    }
 
-	    switch -- $node(node:nodeType) {
+	    switch $node(node:nodeType) {
 		element {
 		    set result [CreateElement {} $node(node:nodeName) [array get $node(element:attributeList)] -docarray $node(docArray)]
 		    if {$deep} {
@@ -1184,7 +1181,7 @@ proc dom::element {method token args} {
 		return -code error "too many arguments"
 	    }
 	    if {[regexp [format {^-(%s)$} $elementOptionsRO] [lindex $args 0] discard option]} {
-		switch -- $option {
+		switch $option {
 		    tagName {
 			set result [lindex $node(node:nodeName) 0]
 		    }
@@ -1251,7 +1248,7 @@ proc dom::element {method token args} {
 	    }
 
 	    upvar #0 $node(element:attributeList) attrList
-	    unset -nocomplain attrList([lindex $args 0])
+	    catch {unset attrList([lindex $args 0])}
 
 	}
 
@@ -1310,7 +1307,7 @@ proc dom::Element:GetByTagName {token name} {
 
     if {$node(node:nodeType) ne "documentFragment" } {
 	foreach child [set $node(node:childNodes)] {
-	    unset -nocomplain childNode
+	    catch {unset childNode}
 	    array set childNode [set $child]
 	    if {$childNode(node:nodeType) eq "element" 
 		&& [GetField childNode(node:nodeName)] eq $name 
@@ -1320,7 +1317,7 @@ proc dom::Element:GetByTagName {token name} {
 	}
     } elseif {[llength $node(document:documentElement)]} {
 	# Document Element must exist and must be an element type node
-	unset -nocomplain childNode
+	catch {unset childNode}
 	array set childNode [set $node(document:documentElement)]
 	if {$childNode(node:nodeName) eq $name } {
 	    set result $node(document:documentElement)
@@ -1350,7 +1347,7 @@ proc dom::Element:Normalize {pVar nodes} {
 	GetHandle node $n child
 	set cleanup {}
 
-	switch -- $child(node:nodeType) {
+	switch $child(node:nodeType) {
 	    textNode {
 		if {[llength $textNode]} {
 		    # Coalesce into previous node
@@ -1365,7 +1362,7 @@ proc dom::Element:Normalize {pVar nodes} {
 		    PutHandle $textNode text
 		} else {
 		    set textNode $n
-		    unset -nocomplain text
+		    catch {unset text}
 		    array set text [array get child]
 		}
 	    }
@@ -1388,7 +1385,7 @@ proc dom::Element:Normalize {pVar nodes} {
 
 # dom::processinginstruction --
 #
-#	Functions for a processing instruction.
+#	Functions for a processing intruction.
 #
 # Arguments:
 #	method	method to invoke
@@ -1419,7 +1416,7 @@ proc dom::processinginstruction {method token args} {
 		return -code error "too many arguments"
 	    }
 	    if {[regexp [format {^-(%s)$} $elementOptionsRO] [lindex $args 0] discard option]} {
-		switch -- $option {
+		switch $option {
 		    target {
 			set result [lindex $node(node:nodeName) 0]
 		    }
@@ -1428,7 +1425,7 @@ proc dom::processinginstruction {method token args} {
 		    }
 		}
 	    } elseif {[regexp [format {^-(%s)$} $elementOptionsRW] [lindex $args 0] discard option]} {
-		switch -- $option {
+		switch $option {
 		    data {
 			return $node(node:nodeValue)
 		    }
@@ -1450,7 +1447,7 @@ proc dom::processinginstruction {method token args} {
 		    if {[regexp [format {^-(%s)$} $elementOptionsRO] $option discard opt]} {
 			return -code error "attribute \"$option\" is read-only"
 		    } elseif {[regexp [format {^-(%s)$} $elementOptionsRW] $option discard opt]} {
-			switch -- $opt {
+			switch $opt {
 			    data {
 				set node(node:nodeValue) $value
 			    }
@@ -1478,7 +1475,7 @@ proc dom::processinginstruction {method token args} {
 
 #################################################
 #
-# Serialization
+# Serialisation
 #
 #################################################
 
@@ -1601,7 +1598,7 @@ proc dom::Serialize:node {token args} {
 
     set result {}
     foreach childToken [set $node(node:childNodes)] {
-	unset -nocomplain child
+	catch {unset child}
 	array set child [set $childToken]
 	append result [eval [list Serialize:$child(node:nodeType) $childToken] $args]
     }
@@ -1928,7 +1925,7 @@ proc dom::ParseDocType {stateVar root {publit {}} {systemlit {}} {dtd {}}} {
 proc dom::Trim nodeid {
     array set node [set $nodeid]
 
-    switch -- $node(node:nodeType) {
+    switch $node(node:nodeType) {
 
 	textNode {
 	    if {[string trim $node(node:nodeValue)] eq ""} {
@@ -1973,8 +1970,8 @@ proc GetField var {
 #	Return the minimum of two numeric values
 #
 # Arguments:
-#	a some value
-#	b another value
+#	a	a value
+#	b	another value
 #
 # Results:
 #	Returns the value which is lower than the other.
@@ -1988,8 +1985,8 @@ proc dom::Min {a b} {
 #	Return the maximum of two numeric values
 #
 # Arguments:
-#	a some value
-#	b another value
+#	a	a value
+#	b	another value
 #
 # Results:
 #	Returns the value which is greater than the other.

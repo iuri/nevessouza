@@ -3,7 +3,8 @@
 -- 
 -- @author Deds Castillo (deds@i-manila.com.ph)
 -- @creation-date 2006-05-10
--- @cvs-id $Id: upgrade-1.2.0d3-1.2.0d4.sql,v 1.3 2018/08/15 16:53:10 gustafn Exp $
+-- @arch-tag: 3b12c94c-beed-4b92-a2bb-f07a2856154e
+-- @cvs-id $Id: upgrade-1.2.0d3-1.2.0d4.sql,v 1.2 2006/08/08 21:26:51 donb Exp $
 --
 
 -- increase charter to 4000 chars

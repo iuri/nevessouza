@@ -20,12 +20,12 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-11-04
-    @cvs-id $Id: classes.tcl,v 1.19 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: classes.tcl,v 1.16.10.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     {department_key ""}
     {orderby:token "department_name,asc"}
     {keyword ""}
-    {page:naturalnum ""}
+    {page ""}
 } -properties {
     title:onevalue
     context_bar:onevalue

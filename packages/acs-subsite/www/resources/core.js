@@ -786,7 +786,7 @@ Calendar.prototype.create = function (_par) {
 		parent = _par;
 		this.isPopup = false;
 	}
-	this.date = this.dateStr ? this.parseDate(this.dateStr) : new Date();
+	this.date = this.dateStr ? new Date(this.dateStr) : new Date();
 
 	var table = Calendar.createElement("table");
 	this.table = table;
@@ -1338,7 +1338,8 @@ Calendar.prototype.parseDate = function (str, fmt) {
 		}
 	}
 	if (y != 0 && m != -1 && d != 0) {
-		return (new Date(y, m, d));
+		this.setDate(new Date(y, m, d));
+		return;
 	}
 	y = 0; m = -1; d = 0;
 	for (i = 0; i < a.length; ++i) {
@@ -1367,13 +1368,9 @@ Calendar.prototype.parseDate = function (str, fmt) {
 		y = today.getFullYear();
 	}
 	if (m != -1 && d != 0) {
-		return (new Date(y, m, d));
+		this.setDate(new Date(y, m, d));
 	}
 };
-
-Calendar.prototype.parseAndSetDate = function (str, fmt) {
-    this.setDate(this.parseDate(str,fmt));
-}
 
 Calendar.prototype.hideShowCovered = function () {
 	function getStyleProp(obj, style){
@@ -1668,7 +1665,7 @@ function showCalendar(id,dateformat) {
   if (calendar != null) {
     // we already have one created, so just update it.
     calendar.hide();            // hide the existing calendar
-    calendar.parseAndSetDate(el.value, dateformat); // set it to a new date
+    calendar.parseDate(el.value, dateformat); // set it to a new date
   } else {
     // first-time call, create the calendar
     if ( dateformat == null ) {
@@ -1687,13 +1684,13 @@ function showCalendar(id,dateformat) {
 }
 
 // same function as above except you can set a defaultdate which
-// the calendar will go to immediately when you click on it
+// the calendar will go to immediately when when you click on it
 function showCalendarWithDefault(id,defaultdate,dateformat) {
   var el = document.getElementById(id);
   if (calendar != null) {
     // we already have one created, so just update it.
     calendar.hide();            // hide the existing calendar
-    calendar.parseAndSetDate(el.value, dateformat); // set it to a new date
+    calendar.parseDate(el.value, dateformat); // set it to a new date
   } else {
     // first-time call, create the calendar
     if ( dateformat == null ) {
@@ -1720,14 +1717,14 @@ function showCalendarWithDateWidget(id,fmt) {
   if (calendar != null) {
     // we already have one created, so just update it.
     calendar.hide();            // hide the existing calendar
-    calendar.parseAndSetDate(calval,fmt); // set it to a new date
+    calendar.parseDate(calval,fmt); // set it to a new date
   } else {
     // first-time call, create the calendar
     var cal = new Calendar(true, null, selectwidget, closeHandler);
     calendar = cal;             // remember the calendar in the global
     cal.setRange(1900, 2050);   // min/max year allowed
     calendar.create();          // create a popup calendar
-    calendar.parseAndSetDate(calval,fmt); // set it to a new date
+    calendar.parseDate(calval,fmt); // set it to a new date
   }
   calendar.selM = idM;            // inform it about the input field in use
   calendar.selD = idD;            // inform it about the input field in use

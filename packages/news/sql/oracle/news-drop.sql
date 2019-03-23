@@ -2,7 +2,7 @@
 --
 -- @author stefan@arsdigita.com
 -- @created 2000-12-20
--- $Id: news-drop.sql,v 1.4 2018/03/23 23:53:02 hectorr Exp $
+-- $Id: news-drop.sql,v 1.3 2005/02/24 18:03:04 jeffd Exp $
 
 
 -- unregister content_types from folder
@@ -78,7 +78,7 @@ content_type.drop_attribute (
     content_type   => 'news',
     attribute_name => 'archive_date'
 );
--- assignment to an authorized user for approval
+-- assignement to an authorized user for approval
 content_type.drop_attribute (
     content_type   => 'news',
     attribute_name => 'approval_user'

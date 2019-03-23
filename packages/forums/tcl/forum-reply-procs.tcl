@@ -4,7 +4,7 @@ ad_library {
 
     @creation-date 2002-05-17
     @author Ben Adida <ben@openforce.biz>
-    @cvs-id $Id: forum-reply-procs.tcl,v 1.8 2018/07/10 10:36:10 antoniop Exp $
+    @cvs-id $Id: forum-reply-procs.tcl,v 1.6.6.1 2015/09/12 11:06:25 gustafn Exp $
 
 }
 
@@ -13,8 +13,8 @@ namespace eval forum::notification {
     ad_proc -public get_url {
         object_id
     } {
-        Returns a full url to the object_id.<br>
-        Handles messages and forums.
+        returns a full url to the object_id.
+        handles messages and forums.
     } { 
 
 	set object_type [db_string select_object_type {}]
@@ -40,8 +40,6 @@ namespace eval forum::notification {
 
     ad_proc -public process_reply {
         reply_id
-    } {
-        NotificationType.ProcessReply Service Contract implementation.
     } {
 
         # Get the data

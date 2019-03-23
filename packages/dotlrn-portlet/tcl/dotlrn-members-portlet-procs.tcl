@@ -19,7 +19,7 @@ ad_library {
     Procedures to support the dotlrn "members" portlet
 
     @author arjun@openforce.net
-    @cvs-id $Id: dotlrn-members-portlet-procs.tcl,v 1.14 2018/07/11 08:35:07 antoniop Exp $
+    @cvs-id $Id: dotlrn-members-portlet-procs.tcl,v 1.12.20.2 2017/06/30 17:49:13 gustafn Exp $
 
 }
 
@@ -35,16 +35,13 @@ namespace eval dotlrn_members_portlet {
         return "dotlrn-portlet"
     }
 
+
     ad_proc -public get_pretty_name {
-    } {
-        Get the pretty name.
     } {
         return "#dotlrn-portlet.members_portlet_pretty_name#"
     }
 
     ad_proc -public link {
-    } {
-        Get the link. This is currently empty.
     } {
 	return ""
     }
@@ -55,7 +52,7 @@ namespace eval dotlrn_members_portlet {
 	{-community_id:required}
     } {
         Adds the dotlrn "members" portlet to the given portal.
-        Pass along the community_id.
+        Pass along the community_id
     } {
         return [portal::add_element_parameters \
                     -pretty_name [get_pretty_name] \
@@ -70,7 +67,7 @@ namespace eval dotlrn_members_portlet {
     ad_proc -public remove_self_from_page {
         {-portal_id:required}
     } {
-	Removes the dotlrn "members" PE from the given portal.
+	Removes the dotlrn "members"  PE from the given portal
     } {
         portal::remove_element \
             -portal_id $portal_id \
@@ -80,7 +77,6 @@ namespace eval dotlrn_members_portlet {
     ad_proc -public show {
 	 cf
     } {
-        Show the members portlet.
     } {
         portal::show_proc_helper \
             -package_key [my_package_key] \

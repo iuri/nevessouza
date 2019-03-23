@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-01-22
-    @cvs-id $Id: community-member.tcl,v 1.25 2018/08/12 12:14:47 gustafn Exp $
+    @version $Id: community-member.tcl,v 1.20.2.2 2016/05/20 20:17:34 gustafn Exp $
 } {
     user_id:naturalnum,notnull
     {community_id:naturalnum ""}
@@ -42,18 +42,16 @@ ad_page_contract {
     bio:onevalue
     verified_user_id:onevalue
     folder_id:onevalue
+    user_contributions:multirow
 }
 
 if {[dotlrn_community::get_community_id] != $community_id} {
-    ad_returnredirect [export_vars -base "[dotlrn_community::get_community_url $community_id]community-member" {
-        user_id community_id
-    }]
-    ad_script_abort
+    ad_returnredirect [export_vars -base "[dotlrn_community::get_community_url $community_id]community-member" {user_id community_id}]
 }
 
 auth::require_login
 
-acs_user::get -user_id $user_id -array user
+acs_user::get -user_id $user_id -array user -include_bio
 
 foreach name {first_names last_name} {
     set $name $user($name)
@@ -82,9 +80,8 @@ set portrait_p [db_0or1row get_item_id {
       and cr.revision_id = c.live_revision}]
 
 if { $portrait_p } {
-    set url [subsite::get_element -element url]
-    set img_src [export_vars -base "${url}shared/portrait-bits.tcl" { user_id item_id {size thumbnail} }]
-    set portrait_url [export_vars -base "${url}shared/portrait" { user_id return_url }]
+    set img_src [export_vars -base "[subsite::get_element -element url]shared/portrait-bits.tcl" { user_id item_id {size thumbnail}}]
+    set portrait_url [export_vars -base "[subsite::get_element -element url]shared/portrait" { user_id return_url }]
 }
 
 ad_return_template

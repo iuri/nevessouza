@@ -1,12 +1,12 @@
 ad_page_contract {
 
     @author Anny Flores (annyflores@viaro.net) Viaro Networks (www.viaro.net)
-    @creation-date 2005-01-19
-
+    @creation_date 2005-01-19
+    
 } {
     inter_item_check_id:naturalnum,notnull
     request_id:naturalnum,multiple
-    type_id:naturalnum,notnull
+    type_id:naturalnum,notnull     
     assessment_id:naturalnum,notnull
     section_id:naturalnum,notnull
 } 
@@ -25,7 +25,6 @@ for { set i 0} { $i < $request_count } { incr i } {
 }
 
 ad_returnredirect "request-notification?inter_item_check_id=$inter_item_check_id&type_id=$type_id&assessment_id=$assessment_id&section_id=$section_id"
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

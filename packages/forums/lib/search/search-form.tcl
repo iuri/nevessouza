@@ -4,7 +4,7 @@
 #
 # @author Emmanuelle Raffenne (eraffenne@gmail.com)
 # @creation-date 2007-12-23
-# @cvs-id $Id: search-form.tcl,v 1.3 2017/08/07 23:48:11 gustafn Exp $
+# @cvs-id $Id: search-form.tcl,v 1.2.2.2 2015/09/12 11:06:25 gustafn Exp $
 
 form create search -action search -has_submit 0
 forums::form::search search

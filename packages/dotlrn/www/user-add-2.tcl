@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-01-20
-    @cvs-id $Id: user-add-2.tcl,v 1.18 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: user-add-2.tcl,v 1.16.2.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     user_id:naturalnum,notnull
     password

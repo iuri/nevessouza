@@ -2,7 +2,7 @@ ad_page_contract {
     Reactivates deprecated categories.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: category-phase-in.tcl,v 1.9 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     tree_id:naturalnum,notnull
     category_id:naturalnum,multiple
@@ -21,7 +21,6 @@ db_transaction {
 category_tree::flush_cache $tree_id
 
 ad_returnredirect [export_vars -no_empty -base tree-view { tree_id locale object_id ctx_id}]
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

@@ -19,7 +19,7 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date 2002-05-13
-    @cvs-id $Id: spam-2.tcl,v 1.13 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: spam-2.tcl,v 1.10.4.2 2015/09/18 08:05:10 gustafn Exp $
 } -query {
 } -properties {
     subject:onevalue
@@ -36,7 +36,7 @@ form get_values spam_message subject message format
 if {$format eq "html"} {
     set preview_message "$message"
 } elseif {$format eq "pre"} {
-    set preview_message [ad_text_to_html -- $message]
+    set preview_message [ad_text_to_html $message]
 } else {
     set preview_message [ns_quotehtml $message]
 }

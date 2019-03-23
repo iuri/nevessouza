@@ -17,7 +17,7 @@ drop function evaluation__new_evaluation_task_group(integer,varchar,varchar,time
 drop function evaluation__delete_evaluation_task_group(integer);
 
 ---------------------------------------
--- GRADE FUNCTIONS
+-- GRADE FUNCIONS
 ---------------------------------------
 
 drop function evaluation__task_grade (integer, integer);
@@ -29,7 +29,7 @@ drop function evaluation__class_total_grade (integer, integer);
 drop function evaluation__clone_task(integer,integer);
 
 ---------------------------------------
--- OTHER FUNCTIONS
+-- OTHER FUNCIONS
 ---------------------------------------
 
 drop function evaluation__party_name (integer,integer);

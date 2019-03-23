@@ -8,12 +8,12 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/" style="padding:3px;">
-                <if @subsite_logo@ not nil>
-                    <img src="@subsite_logo@" alt="Home">
+                <if @subsite_logo@ defined>
+                  <img src="@subsite_logo@" width="40px" alt="Home">
                 </if>
-		<else>
-		     <div>#acs-subsite.Subsite_Home#</div>
-		</else>
+                <else>
+                    <img src="/resources/openacs-bootstrap3-theme/images/openacs2_xs.png" alt="Home">
+                </else>
             </a>
         </div>
 
@@ -22,7 +22,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <comment> Tabbed Master Navigation </comment>
                 <if @navigation:rowcount@ defined>
-                    <widget src="navigation" &="navigation" ds="0" &="subsite_url" &="subsite_name">
+                    <widget src="navigation" &navigation="navigation" ds="0" >
                 </if>
                 <widget src="login" ds="0" >
             </ul>

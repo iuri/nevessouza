@@ -21,7 +21,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2001-12-03
-    @cvs-id $Id: club.tcl,v 1.18 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: club.tcl,v 1.16.10.2 2015/09/18 08:05:10 gustafn Exp $
 } -query {
     club_id:naturalnum,notnull
 } -errors {

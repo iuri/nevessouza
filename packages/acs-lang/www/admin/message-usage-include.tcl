@@ -3,14 +3,12 @@
 #
 # @author Peter Marklund (peter@collaboraid.biz)
 # @author Lars Pind (lars@collaboraid.biz)
-# @cvs-id $Id: message-usage-include.tcl,v 1.8 2017/12/29 11:26:06 gustafn Exp $
+# @cvs-id $Id: message-usage-include.tcl,v 1.6.2.2 2015/09/10 08:21:29 gustafn Exp $
 
 set full_key "$package_key.$message_key"
 
-# Since acs-lang.localization- messages use the lc_get proc (that
-# leaves out the acs-lang.localization- part) for lookups we need a
-# special regexp for them
-
+# Since acs-lang.localization- messages use the lc_get proc (that leaves out the acs-lang.localization- part)
+# for lookups we need a special regexp for them 
 if { [string match "acs-lang.localization-*" $full_key] } {
     set grepfor "${full_key}|lc_get \[\"\{\]?[string range $message_key [string length "localization-"] end]\[\"\}\]?"
 } else {
@@ -19,15 +17,15 @@ if { [string match "acs-lang.localization-*" $full_key] } {
 
 multirow create message_usage file code
 
-ad_try {
-    exec find $::acs::rootdir -type f -regex ".*\\.\\(info\\|adp\\|sql\\|tcl\\)" -follow \
-        | xargs egrep "$grepfor" 2>/dev/null
+with_catch errmsg {
+    exec find $::acs::rootdir -type f -regex ".*\\.\\(info\\|adp\\|sql\\|tcl\\)" -follow | xargs egrep "$grepfor" 2>/dev/null
+} {
+    #error "find $::acs::rootdir -type f -regex \".*\\.\\(info\\|adp\\|sql\\|tcl\\)\" -follow | xargs egrep \"${full_key_pattern}\""
 
-} on error {errorMsg} {
-    foreach line [split $errorMsg "\n"] {
+    foreach line [split $errmsg "\n"] {
         if { [string first "child process exited abnormally" $line] == -1 } {
             set colon [string first ":" $line]
-
+            
             multirow append message_usage \
                 [string range $line 0 $colon-1] \
                 [string trim [string range $line $colon+1 end]]

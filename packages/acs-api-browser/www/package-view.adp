@@ -67,5 +67,3 @@ td.wide {width:35%;}
   </multiple>
 </table>
 </if>
-<if @doc_pages@ not nil><hr><p> <a href="/doc/@package_key@">Package Documentation</a>
-</if>

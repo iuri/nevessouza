@@ -27,6 +27,15 @@
       </querytext>
 </fullquery>
 
+<fullquery name="content::get_content.get_table_name">      
+      <querytext>
+
+        select table_name from acs_object_types 
+        where object_type = :content_type
+
+      </querytext>
+</fullquery>
+
 <partialquery name="content::get_content.content_as_text">
 	<querytext>
 

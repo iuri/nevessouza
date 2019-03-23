@@ -32,9 +32,6 @@ if {![info exists subsite_link]} {
     set subsite_link "/"
 }
 
-set subsite_url [subsite::get_element -element url]
-set subsite_name [lang::util::localize [subsite::get_element -element instance_name]]
-
 template::head::add_meta \
     -name "viewport" \
     -content "width=device-width, initial-scale=1"

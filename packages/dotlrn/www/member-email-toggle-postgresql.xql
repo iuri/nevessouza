@@ -3,7 +3,8 @@
 <!-- packages/dotlrn/www/member-email-toggle-postgresql.xql -->
 <!-- @author Roel Canicula (roelmc@pldtdsl.net) -->
 <!-- @creation-date 2005-08-20 -->
-<!-- @cvs-id $Id: member-email-toggle-postgresql.xql,v 1.3 2018/08/15 17:02:02 gustafn Exp $ -->
+<!-- @arch-tag: 863646d1-3edb-498b-9a29-fc4f8a59ce02 -->
+<!-- @cvs-id $Id: member-email-toggle-postgresql.xql,v 1.2 2006/08/08 21:26:24 donb Exp $ -->
 
 <queryset>
   

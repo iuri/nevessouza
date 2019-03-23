@@ -7,7 +7,7 @@ ad_page_contract {
 
     @author rhs@mit.edu
     @creation-date 2000-09-13
-    @cvs-id $Id: package-new.tcl,v 1.18 2018/02/02 00:05:53 gustafn Exp $
+    @cvs-id $Id: package-new.tcl,v 1.15.2.3 2016/01/02 20:57:57 gustafn Exp $
 
 } {
     {new_package_id:naturalnum ""}
@@ -15,7 +15,7 @@ ad_page_contract {
     {new_node_p:boolean f}
     {node_name:trim ""}
     {instance_name ""}
-    package_key:token,notnull
+    package_key:notnull
     {expand:integer,multiple ""}
     root_id:naturalnum,optional
 }
@@ -70,7 +70,6 @@ db_transaction {
 }
 
 ad_returnredirect [export_vars -base . {expand:multiple root_id}]
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

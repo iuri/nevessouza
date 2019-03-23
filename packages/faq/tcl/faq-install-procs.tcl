@@ -3,19 +3,19 @@ ad_library {
 
     @creation-date 2004-04-01
     @author Jeff Davis davis@xarg.net
-    @cvs-id $Id: faq-install-procs.tcl,v 1.4 2018/07/12 12:39:45 hectorr Exp $
+    @cvs-id $Id: faq-install-procs.tcl,v 1.2.14.1 2015/09/12 11:06:12 gustafn Exp $
 }
 
 namespace eval faq::install {}
 
-ad_proc -private faq::install::package_install {} {
+ad_proc -private faq::install::package_install {} { 
     package install callback
 } {
     faq::sc::register_implementations
     faq::apm_callback::package_install
 }
 
-ad_proc -private faq::install::package_uninstall {} {
+ad_proc -private faq::install::package_uninstall {} { 
     package uninstall callback
 } {
     faq::sc::unregister_implementations

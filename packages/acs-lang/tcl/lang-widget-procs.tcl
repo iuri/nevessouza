@@ -7,7 +7,7 @@ ad_library {
 
     @author Don Baccus (dhogaza@pacifier.com)
     @creation-date November 3, 2006
-    @cvs-id $Id: lang-widget-procs.tcl,v 1.10 2018/04/24 14:28:55 hectorr Exp $
+    @cvs-id $Id: lang-widget-procs.tcl,v 1.8.2.2 2015/09/18 07:41:03 gustafn Exp $
 }
 
 namespace eval template {}
@@ -37,7 +37,8 @@ ad_proc -public template::widget::select_locales {
 
         foreach option $element(options) {
 
-            lassign $option label value
+            set label [lindex $option 0]
+            set value [lindex $option 1]
 
             if { [info exists values($value)] } {
                 lappend selected_list $label
@@ -62,7 +63,8 @@ ad_proc -public template::widget::select_locales {
 
         foreach option $element(options) {
 
-            lassign $option label value
+            set label [lindex $option 0]
+            set value [lindex $option 1]
 
             set value [ns_quotehtml $value]
             append output " <option lang=\"[string range $value 0 1]\" value=\"$value\""

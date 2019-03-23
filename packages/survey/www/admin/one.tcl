@@ -8,7 +8,7 @@ ad_page_contract {
     @author nstrug@arsdigita.com
     @author dave@thedesignexperience.org
     @date   February 9, 2000
-    @cvs-id $Id: one.tcl,v 1.13 2017/09/30 18:12:53 gustafn Exp $
+    @cvs-id $Id: one.tcl,v 1.12 2015/06/27 20:46:15 gustafn Exp $
 } {
 
     survey_id:naturalnum,notnull
@@ -27,7 +27,7 @@ if {![info exists survey_info(survey_id)]} {
 }
 
 if {$survey_info(description_html_p) == "f"} {   
-    set survey_info(description) [ad_text_to_html -- $survey_info(description)]    
+    set survey_info(description) [ad_text_to_html $survey_info(description)]    
 }
 
 # get users and # who responded etc...

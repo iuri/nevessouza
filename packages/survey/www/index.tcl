@@ -1,12 +1,12 @@
 ad_page_contract {
 
     Lists all the enabled surveys
-    a user is eligible to complete.
+    a user is eligable to complete.
 
     @author  philg@mit.edu
     @author  nstrug@arsdigita.com
     @date    28th September 2000
-    @cvs-id  $Id: index.tcl,v 1.5 2018/01/31 21:18:47 gustafn Exp $
+    @cvs-id  $Id: index.tcl,v 1.4 2013/11/06 07:33:54 gustafn Exp $
 } {
 
 } -properties {

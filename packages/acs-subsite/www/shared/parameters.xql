@@ -29,7 +29,7 @@
       select p.parameter_name,
         coalesce(p.description, 'No Description') as description,
         v.attr_value,
-        coalesce(p.section_name, 'main') as section_name,
+        coalesce(p.section_name, '') as section_name,
         p.datatype
       from apm_parameters p left outer join
         (select v.parameter_id, v.attr_value
@@ -39,12 +39,7 @@
       where p.package_key = :package_key
         and p.scope = :scope
 	$section_where_clause
-      order by
-        case when lower(section_name) = 'deprecated'
-          then null
-        when section_name is null
-          then '1'
-        else section_name end, parameter_name
+      order  by section_name, parameter_name
     </querytext>
   </fullquery>
 

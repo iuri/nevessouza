@@ -2,17 +2,17 @@
 --
 -- @author Gary Jin (gjin@arsdigita.com)
 -- @creation-date Nov 17, 2000
--- @cvs-id $Id: calendar-create.sql,v 1.20 2018/07/04 17:31:27 antoniop Exp $
+-- @cvs-id $Id: calendar-create.sql,v 1.14.18.1 2017/04/22 12:25:25 gustafn Exp $
 --
 -- ported by Charles Mok (mok_cl@eelab.usyd.edu.au)
 
 ------------------------------------------------------------------
--- calendar system permissions
+-- calendar system permissions 
 ------------------------------------------------------------------
-
+ 
   -- creating the basic set of permissions for cal_item
   --
-  -- 1  create: create an new item
+  -- 1  create: create an new item 
   -- 2. read: can view the cal_item
   -- 3. write: edit an existing cal_item
   -- 4. delete: can delete the cal_item
@@ -20,27 +20,27 @@
 
 
 
-  select acs_privilege__create_privilege('cal_item_create', 'Add an new item', null);
+  select acs_privilege__create_privilege('cal_item_create', 'Add an new item', null); 
   select acs_privilege__create_privilege('cal_item_read',   'view an cal_item', null);
-  select acs_privilege__create_privilege('cal_item_write',  'Edit an existing cal_item', null);
+  select acs_privilege__create_privilege('cal_item_write',  'Edit an exsiting cal_item', null);
   select acs_privilege__create_privilege('cal_item_delete', 'Delete cal_item', null );
-  select acs_privilege__create_privilege('cal_item_invite', 'Allow others to view cal_item', null);
+  select acs_privilege__create_privilege('cal_item_invite', 'Allow others to view cal_item', null); 
 
-  select acs_privilege__add_child('create', 'cal_item_create');
-  select acs_privilege__add_child('read', 'cal_item_read');
-  select acs_privilege__add_child('write', 'cal_item_write');
+  select acs_privilege__add_child('create', 'cal_item_create'); 
+  select acs_privilege__add_child('read', 'cal_item_read'); 
+  select acs_privilege__add_child('write', 'cal_item_write'); 
 
-  select acs_privilege__add_child('delete', 'cal_item_delete');
-
-  select acs_privilege__create_privilege('calendar_on', 'Implies that a calendar is selected', null);
+  select acs_privilege__add_child('delete', 'cal_item_delete'); 
+        
+  select acs_privilege__create_privilege('calendar_on', 'Implies that a calendar is selected', null); 
   select acs_privilege__create_privilege('calendar_show', 'Show a calendar', null);
 
-  select acs_privilege__add_child('read', 'calendar_on');
-  select acs_privilege__add_child('read', 'calendar_show');
-
+  select acs_privilege__add_child('read', 'calendar_on'); 
+  select acs_privilege__add_child('read', 'calendar_show');         
+	
   select acs_privilege__create_privilege('calendar_create', 'Create a new calendar', null);
-  select acs_privilege__create_privilege('calendar_read', 'View items on an existing calendar', null);
-  select acs_privilege__create_privilege('calendar_write', 'Edit items of an existing calendar', null);
+  select acs_privilege__create_privilege('calendar_read', 'View items on an exsiting calendar', null);	
+  select acs_privilege__create_privilege('calendar_write', 'Edit items of an exsiting calendar', null);
   select acs_privilege__create_privilege('calendar_delete','Delete an calendar', null);
 
   select acs_privilege__add_child('create', 'calendar_create');
@@ -52,7 +52,7 @@
   select acs_privilege__add_child('calendar_read', 'cal_item_read');
   select acs_privilege__add_child('calendar_write', 'cal_item_write');
   select acs_privilege__add_child('calendar_delete', 'cal_item_delete');
-
+       
   select acs_privilege__create_privilege('calendar_admin', 'calendar administrator', null);
   select acs_privilege__add_child('admin', 'calendar_admin');
   select acs_privilege__add_child('calendar_admin', 'calendar_read');
@@ -61,80 +61,80 @@
   select acs_privilege__add_child('calendar_admin', 'calendar_create');
   select acs_privilege__add_child('calendar_admin', 'cal_item_invite');
 
-----------------------------------------------------------
---  calendar_object
------------------------------------------------------------
+---------------------------------------------------------- 
+--  calendar_ojbect 
+----------------------------------------------------------- 
 
-create or replace function inline_0(
-) returns integer AS $$
-declare
+CREATE FUNCTION inline_0()
+RETURNS integer
+AS 'declare
 	attr_id acs_attributes.attribute_id%TYPE;
-begin
-	PERFORM
+    begin
+	PERFORM 
 	    acs_object_type__create_type(
-		'calendar',	-- object_type
-		'Calendar',	-- pretty_name
-		'Calendar',	-- pretty_plural
-		'acs_object',	-- supertype
-		'calendars',	-- table_name
-		'calendar_id',  -- id_column
+		''calendar'',	-- object_type
+		''Calendar'',	-- pretty_name
+		''Calendar'',	-- pretty_plural
+		''acs_object'',	-- supertype
+		''calendars'',	-- table_name
+		''calendar_id'',-- id_column
 		null,		-- package_name
-		'f',		-- abstract_p
+		''f'',		-- abstract_p
 		null,		-- type_extension_table
 		null		-- name_method
 	    );
-
+		
 	    attr_id := acs_attribute__create_attribute (
-		'calendar',       -- object_type
-		'owner_id',       -- attribute_name
-		'integer',        -- datatype
-		'Owner',          -- pretty_name
-		'Owners',         -- pretty_plural
-		null,             -- table_name (default)
-		null,             -- column_name (default)
-		null,             -- default_value (default)
-		1,                -- min_n_values (default)
-		1,                -- max_n_values (default)
-		null,             -- sort_order (default)
-		'type_specific',  -- storage (default)
-		'f'               -- static_p (default)
+		''calendar'',       -- object_type
+	        ''owner_id'',     -- attribute_name
+        	''integer'',         -- datatype
+	        ''Owner'',        -- pretty_name
+        	''Owners'',       -- pretty_plural
+	        null,                -- table_name (default)
+	        null,                -- column_name (default)
+        	null,                -- default_value (default)
+	        1,                   -- min_n_values (default)
+        	1,                   -- max_n_values (default)
+	        null,                -- sort_order (default)
+        	''type_specific'',   -- storage (default)
+	        ''f''                -- static_p (default)
 	    );
 
 	    attr_id := acs_attribute__create_attribute (
-		'calendar',          -- object_type
-		'private_p',         -- attribute_name
-		'boolean',           -- datatype
-		'Private Calendar',  -- pretty_name
-		'Private Calendars', -- pretty_plural
-		null,                -- table_name (default)
-		null,                -- column_name (default)
-		null,                -- default_value (default)
-		1,                   -- min_n_values (default)
-		1,                   -- max_n_values (default)
-		null,                -- sort_order (default)
-		'type_specific',     -- storage (default)
-		'f'                  -- static_p (default)
+		''calendar'',       -- object_type
+	        ''private_p'',     -- attribute_name
+        	''string'',         -- datatype
+	        ''Private Calendar'',        -- pretty_name
+        	''Private Calendars'',       -- pretty_plural
+	        null,                -- table_name (default)
+	        null,                -- column_name (default)
+        	null,                -- default_value (default)
+	        1,                   -- min_n_values (default)
+        	1,                   -- max_n_values (default)
+	        null,                -- sort_order (default)
+        	''type_specific'',   -- storage (default)
+	        ''f''                -- static_p (default)
 	    );
 
 	    attr_id := acs_attribute__create_attribute (
-		'calendar',          -- object_type
-		'calendar_name',     -- attribute_name
-		'string',            -- datatype
-		'Calendar Name',     -- pretty_name
-		'Calendar Names',    -- pretty_plural
-		null,                -- table_name (default)
-		null,                -- column_name (default)
-		null,                -- default_value (default)
-		1,                   -- min_n_values (default)
-		1,                   -- max_n_values (default)
-		null,                -- sort_order (default)
-		'type_specific',     -- storage (default)
-		'f'                  -- static_p (default)
+		''calendar'',       -- object_type
+	        ''calendar_name'',     -- attribute_name
+        	''string'',         -- datatype
+	        ''Calendar Name'',        -- pretty_name
+        	''Calendar Names'',       -- pretty_plural
+	        null,                -- table_name (default)
+	        null,                -- column_name (default)
+        	null,                -- default_value (default)
+	        1,                   -- min_n_values (default)
+        	1,                   -- max_n_values (default)
+	        null,                -- sort_order (default)
+        	''type_specific'',   -- storage (default)
+	        ''f''                -- static_p (default)
 	    );
 	    return 0;
 
-end;
-$$ LANGUAGE plpgsql;
+    end;' 
+LANGUAGE 'plpgsql';
 
 SELECT inline_0();
 
@@ -143,55 +143,55 @@ DROP function inline_0();
 -- Calendar is a collection of events. Each calendar must
 -- belong to somebody (a party).
 create table calendars (
-	  -- primary key
-	calendar_id             integer
-				constraint calendars_calendar_id_fk
-				references acs_objects
-				constraint calendars_calendar_id_pk
-				primary key,
-	  -- the name of the calendar
-	calendar_name           varchar(200),
-	  -- the individual or party that owns the calendar
-	owner_id                integer
-				constraint calendars_calendar_owner_id_fk
-				references parties
-				on delete cascade,
-	  -- keep track of package instances
-	package_id              integer
-				constraint calendars_package_id_fk
-				references apm_packages(package_id)
-				on delete cascade,
-	  -- whether or not the calendar is a private personal calendar or a
-	  -- public calendar.
-	private_p               boolean
-				default 'f'
-				constraint calendars_private_p_ck
-				check (private_p in (
-					't',
-					'f'
-					)
-				)
+          -- primary key
+        calendar_id             integer         
+                                constraint calendars_calendar_id_fk 
+                                references acs_objects
+                                constraint calendars_calendar_id_pk 
+                                primary key,
+          -- the name of the calendar
+        calendar_name           varchar(200),
+          -- the individual or party that owns the calendar        
+        owner_id                integer
+                                constraint calendars_calendar_owner_id_fk 
+                                references parties
+                                on delete cascade,
+          -- keep track of package instances
+        package_id              integer
+                                constraint calendars_package_id_fk
+                                references apm_packages(package_id)
+                                on delete cascade,
+          -- whether or not the calendar is a private personal calendar or a 
+          -- public calendar. 
+        private_p               boolean
+                                default 'f'
+                                constraint calendars_private_p_ck 
+                                check (private_p in ( 
+                                        't',
+                                        'f'
+                                        )
+                                )       
 );
 
 comment on table calendars is '
-	Table calendars maps the many to many relationship betweens
-	calendar and its owners.
+        Table calendars maps the many to many relationship betweens
+        calendar and its owners. 
 ';
 
 comment on column calendars.calendar_id is '
-	Primary Key
+        Primary Key
 ';
 
 comment on column calendars.calendar_name is '
-	the name of the calendar. This would be unique to avoid confusion
+        the name of the calendar. This would be unique to avoid confusion
 ';
 
 comment on column calendars.owner_id is '
-	the individual or party that owns the calendar
+        the individual or party that owns the calendar
 ';
 
 comment on column calendars.package_id is '
-	keep track of package instances
+        keep track of package instances
 ';
 
 
@@ -201,11 +201,11 @@ create sequence cal_item_type_seq;
 
 create table cal_item_types (
        item_type_id              integer not null
-				 constraint cal_item_type_id_pk
-				 primary key,
+                                 constraint cal_item_type_id_pk
+                                 primary key,
        calendar_id               integer not null
-				 constraint cal_item_type_cal_id_fk
-				 references calendars(calendar_id),
+                                 constraint cal_item_type_cal_id_fk     
+                                 references calendars(calendar_id),
        type                      varchar(100) not null,
        -- this constraint is obvious given that item_type_id
        -- is unique, but it's necessary to allow strong
@@ -224,27 +224,34 @@ create table cal_item_types (
 
 select define_function_args ('calendar__new', 'calendar_id,calendar_name,object_type;calendar,owner_id,private_p,package_id,context_id,creation_date,creation_user,creation_ip');
 
---
--- procedure calendar__new/10
---
-
-create or replace function calendar__new(
-   new__calendar_id integer,
-   new__calendar_name varchar(200),
-   new__object_type varchar, -- default 'calendar'
-   new__owner_id integer,
-   new__private_p boolean,
-   new__package_id integer,
-   new__context_id integer,
-   new__creation_date timestamptz,
-   new__creation_user integer,
-   new__creation_ip varchar
-
-) returns integer AS $$
-declare
+CREATE FUNCTION calendar__new (
+       integer,            -- calendar.calendar_id%TYPE
+       varchar(200),            -- calendar.calendar_name%TYPE
+       varchar,            -- acs_objects.object_type%TYPE
+       integer,            -- calendar.owner_id%TYPE
+       boolean,            -- calendar.private_p
+       integer,            -- calendar.package_id
+       integer,            -- acs_objects.context_id%TYPE
+       timestamptz,        -- acs_objects.creation_date%TYPE
+       integer,            -- acs_objects.creation_user%TYPE
+       varchar             -- acs_objects.creation_ip%TYPE
+)
+RETURNS integer 
+AS 'declare
 	v_calendar_id           calendars.calendar_id%TYPE;
-begin
-	v_calendar_id := acs_object__new(
+	new__calendar_id	alias for $1;
+	new__calendar_name	alias for $2;
+	new__object_type	alias for $3;
+	new__owner_id		alias for $4;
+	new__private_p		alias for $5;
+	new__package_id		alias for $6;
+	new__context_id		alias for $7;
+	new__creation_date	alias for $8;
+	new__creation_user	alias for $9;
+	new__creation_ip	alias for $10;
+
+    begin
+        v_calendar_id := acs_object__new(
 		new__calendar_id,
 		new__object_type,
 		new__creation_date,
@@ -252,63 +259,59 @@ begin
 		new__creation_ip,
 		new__context_id
 	);
-
+	
 	insert into     calendars
-			(calendar_id, calendar_name, owner_id, package_id, private_p)
+                        (calendar_id, calendar_name, owner_id, package_id, private_p)
 	values          (v_calendar_id, new__calendar_name, new__owner_id, new__package_id, new__private_p);
-
+      
 	PERFORM acs_permission__grant_permission (
-	      v_calendar_id,
-	      new__owner_id,
-	      'calendar_admin'
-	);
+              v_calendar_id,
+              new__owner_id,
+              ''calendar_admin''
+        );
 
 
 	return v_calendar_id;
-end;
-$$ LANGUAGE plpgsql;
-
-
---
--- procedure calendar__delete/1
---
+    end;'
+LANGUAGE 'plpgsql';   
 
 select define_function_args('calendar__delete','calendar_id');
 
-create or replace function calendar__delete(
+CREATE FUNCTION calendar__delete(
        integer            -- calendar.calendar_id%TYPE
-) returns integer AS $$
-declare
+)
+RETURNS integer
+AS 'declare
 	delete__calendar_id		alias for $1;
-begin
+    begin
 	delete from calendars
 	where calendar_id = delete__calendar_id;
 
 	-- Delete all privileges associate with this calendar
+	
+	delete from     acs_permissions 
+        where           object_id = delete__calendar_id;
 
-	delete from     acs_permissions
-	where           object_id = delete__calendar_id;
-
-        delete from     acs_permissions
-	where           object_id in (
+       delete from     acs_permissions
+        where           object_id in (
 				select  cal_item_id
-				from    cal_items
-				where   on_which_calendar = delete__calendar_id
+                                from    cal_items
+                                where   on_which_calendar = delete__calendar_id
 			);
-
+                         
 	PERFORM acs_object__delete(delete__calendar_id);
 
     return 0;
-end;
-$$ LANGUAGE plpgsql;
-
+    end;'
+LANGUAGE 'plpgsql';
+	
 
 
 -----------------------------------------------------------------
 -- load related sql files
 -----------------------------------------------------------------
 --\i cal-item-create.sql
---
+-- 
 \i cal-table-create.sql
 
 \i calendar-notifications-init.sql

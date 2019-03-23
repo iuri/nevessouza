@@ -8,7 +8,7 @@ ad_library {
 
     @creation-date 2002-05-24
     @author Ben Adida <ben@openforce.biz>
-    @cvs-id $Id: notification-type-procs.tcl,v 1.16 2018/04/11 10:26:07 gustafn Exp $
+    @cvs-id $Id: notification-type-procs.tcl,v 1.8.2.2 2017/06/30 17:52:25 gustafn Exp $
 
 }
 
@@ -54,14 +54,10 @@ namespace eval notification::type {
     } {
 	return the notification type ID given a short name. Short names are unique but not primary keys.
     } {
-        set key ::notification::type::get_type_id($short_name)
-        if {[info exists $key]} {
-            return [set $key]
-        }
-        return [set $key [notification::type::get_type_id_not_cached $short_name]]
+        return [util_memoize [list notification::type::get_type_id_not_cached $short_name]]
     }
     
-    ad_proc -private get_type_id_not_cached {
+    ad_proc -public get_type_id_not_cached {
         short_name
     } {
 	return the notification type ID given a short name. Short names are unique but not primary keys.
@@ -78,16 +74,6 @@ namespace eval notification::type {
 
         db_exec_plsql delete_notification_type {}
 
-        #
-        # TODO: currently, the util_memoize_flush below does nothing
-        # (we need in these rare cases a restart of the server to get
-        # rid of the old cache entry - one can get still a
-        # notification type id from the cache, although it is removed
-        # from the db). The right thing would be a broadcast operation
-        # for flushing (similar to xo*) or a blueprint epoch/refetch
-        # (as under consideration for better live updates on the
-        # OpenACS wish-list).
-        #
         util_memoize_flush [list notification::type::get_type_id_not_cached $short_name]
     }
     

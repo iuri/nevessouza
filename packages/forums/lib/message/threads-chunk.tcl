@@ -3,7 +3,7 @@ ad_include_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-24
-    @cvs-id $Id: threads-chunk.tcl,v 1.32 2018/09/14 07:58:26 trenner Exp $
+    @cvs-id $Id: threads-chunk.tcl,v 1.16.2.4 2017/07/29 09:47:46 gustafn Exp $
 } {
     forum_id:naturalnum,notnull
     {orderby:token,notnull "last_child_post,desc"}
@@ -12,7 +12,6 @@ ad_include_contract {
     {base_url ""}
 }
 
-set package_id [ad_conn package_id]
 set user_id [ad_conn user_id]
 # Get forum data
 
@@ -37,23 +36,28 @@ set actions [list]
 
 # new postings are allowed if
 # 0. The user has post-permissions
-# 1. Users can create new threads or user is a moderator
+# 1. Users can create new threads AND the posting policy is open or
+# moderated 2. User is a moderator or adminsitrator
 
-if { $permissions(post_p) } {
-    if {($permissions(moderate_p) ||
-         [forum::new_questions_allowed_p -forum_id $forum_id])
+if {$permissions(post_p)} {
+  if {(
+       [forum::new_questions_allowed_p -forum_id $forum_id] 
+       && ($forum(posting_policy) eq "open" || $forum(posting_policy) eq "moderated")
+       )
+      || [template::util::is_true $permissions(admin_p)] 
+      || [template::util::is_true $permissions(moderate_p)]  
   } {
     lappend actions [_ forums.Post_a_New_Message] \
 	[export_vars -base "${base_url}message-post" { forum_id }] [_ forums.Post_a_New_Message]
   }
 }
 
-if { $permissions(admin_p) && $package_id == $forum(package_id) } {
+if { [template::util::is_true $permissions(admin_p)] } {
     lappend actions [_ forums.Administer] \
 	[export_vars -base "${base_url}admin/forum-edit" {forum_id {return_url [ad_return_url]}}] [_ forums.Administer]
 }
 
-if { $permissions(moderate_p) && $forum(posting_policy) eq "moderated" } {
+if { [template::util::is_true $permissions(moderate_p)] } {
     lappend actions [_ forums.ManageModerate] \
 	[export_vars -base "${base_url}moderate/forum" { forum_id }] [_ forums.ManageModerate]
 }
@@ -77,14 +81,14 @@ template::list::create \
             display_template {
                 <h2 class="forum-heading">
 		<a href="@messages.message_url@" title="#forums.goto_thread_subject#">
-                  <if @useReadingInfo;literal@ true>
-                   <if @messages.unread_p;literal@ true>
+                  <if @useReadingInfo@>
+                   <if @messages.unread_p@>
                     <b>@messages.subject@</b>
                    </if>
                    <else>@messages.subject@</else>
                   </if>
                   <else>
-                   <if @messages.new_p;literal@ true>
+                   <if @messages.new_p@>
                     <b>@messages.subject@</b>
                    </if>
                    <else>@messages.subject@</else>
@@ -95,7 +99,7 @@ template::list::create \
         }
         state_pretty {
             label "\#forums.Moderate\#"
-            hide_p {[expr {$moderate_p ne 1}]}
+            hide_p {[ad_decode $moderate_p 1 0 1]}
         }
         user_name {
             label "#forums.Author#"
@@ -132,9 +136,8 @@ template::list::create \
         }
         user_name {
             label "#forums.Author#"
-            orderby {(select first_names || last_name
-                      from persons where person_id = fm.user_id)}
-            default_direction asc
+            orderby_asc_name "orderby_user_name_asc"
+            orderby_desc_name "orderby_user_name_desc"
         }
         n_messages {
             label "#forums.Replies#"
@@ -147,9 +150,7 @@ template::list::create \
 
 set useScreenNameP [parameter::get -parameter "UseScreenNameP" -default 0]
 
-db_multirow -extend {
-    user_name
-    screen_name
+db_multirow -extend { 
     last_child_post_pretty
     posting_date_pretty
     message_url
@@ -157,13 +158,6 @@ db_multirow -extend {
     n_messages_pretty
     state_pretty
 } messages messages_select {} {
-    set screen_name [acs_user::get_user_info -user_id $user_id -element screen_name]
-    set user_name   [person::name -person_id $user_id]
-
-    if {[acs_user::registered_user_p -user_id $user_id]} {
-        set user_url [export_vars -base "${base_url}user-history" { user_id }]
-    }
-    
     set last_child_post_ansi [lc_time_system_to_conn $last_child_post_ansi]
     set last_child_post_pretty [lc_time_fmt $last_child_post_ansi "%x %X"]
 
@@ -174,10 +168,14 @@ db_multirow -extend {
     if { $useScreenNameP } {
 	set user_name $screen_name
 	set user_url ""
+    } elseif {$user_id eq ""} {
+        set user_url ""
+    } else {
+	set user_url [export_vars -base "${base_url}user-history" { user_id }]
     }
     set n_messages_pretty [lc_numeric $n_messages]
 
-    switch -- $state {
+    switch $state {
         pending {
             set state_pretty [_ forums.Pending]
         }
@@ -190,7 +188,7 @@ db_multirow -extend {
     }
 }
 
-if {[info exists alt_template] && $alt_template ne ""} {
+if {([info exists alt_template] && $alt_template ne "")} {
     ad_return_template $alt_template
 }
 

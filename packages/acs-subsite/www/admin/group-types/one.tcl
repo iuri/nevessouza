@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Wed Nov  8 18:02:15 2000
-    @cvs-id $Id: one.tcl,v 1.9 2018/01/21 00:35:29 gustafn Exp $
+    @cvs-id $Id: one.tcl,v 1.7.2.5 2016/06/13 11:02:34 gustafn Exp $
 
 } {
     group_type:notnull
@@ -30,10 +30,8 @@ set group_type_enc [ad_urlencode $group_type]
 set package_id [ad_conn package_id]
 
 if { ![db_0or1row select_pretty_name {}] } {
-    ad_return_error \
-        "Group type doesn't exist" \
-        "Group type \"$group_type\" doesn't exist"
-    ad_script_abort
+    ad_return_error "Group type doesn't exist" "Group type \"$group_type\" doesn't exist"
+    return
 }
 
 set doc(title) [_ acs-subsite.Details_for__group_type_pretty_name]

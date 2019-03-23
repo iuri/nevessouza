@@ -6,7 +6,7 @@
 // Distributed under the same terms as HTMLArea itself.
 // This notice MUST stay intact for use (see license.txt).
 //
-// $Id: SpellChecker.js,v 1.2 2017/08/07 23:48:28 gustafn Exp $
+// $Id: SpellChecker.js,v 1.1.2.1 2016/01/03 20:52:19 gustafn Exp $
 
 Xinha.Config.prototype.SpellChecker = { 'backend': 'php', 'personalFilesDir' : '', 'defaultDictionary' : 'en_GB', 'utf8_to_entities' : true };
 

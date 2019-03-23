@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <message_catalog package_key="acs-subsite" locale="es_ES" charset="ISO-8859-1">
 
-  <msg key="400_title">Error del servidor</msg>
-  <msg key="404_title">Solicitud incorrecta</msg>
-  <msg key="403_message">No tiene los privilegios necesarios para ver esta página</msg>
-  <msg key="404_message">Recurso no encontrado</msg>
-  <msg key="500_message">Ocurrió un error mientras se tramitaba su solicitud</msg>
-  <msg key="503_message">Servicio no disponible en este momento</msg>
   <msg key="_or">, o</msg>
   <msg key="_Update_Basic_Information">Actualizar Información Básica</msg>
   <msg key="A_member_of_the_system">Miembro de %system_name% desde</msg>
@@ -195,7 +189,6 @@ Para cambiar su contraseña, visite %reset_password_url%</msg>
   <msg key="First_names_not_provided_by_authority">La autoridad de autenticación no nos ha proporcionado su nombre. Por favor, introduzca su nombre.</msg>
   <msg key="First_select_the_supertype">Primero, seleccione el supertipo para el nuevo tipo de relación</msg>
   <msg key="Forgot_your_password">¿Ha olvidado su contraseña?</msg>
-  <msg key="forum_moderate">Moderación del foro</msg>
   <msg key="Frequency">Frecuencia</msg>
   <msg key="Gender">Género</msg>
   <msg key="Go_back">Regresar</msg>

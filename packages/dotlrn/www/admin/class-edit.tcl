@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2001-03-14
-    @cvs-id $Id: class-edit.tcl,v 1.16 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: class-edit.tcl,v 1.14.8.1 2015/09/11 11:40:49 gustafn Exp $
 } -query {
     class_key:notnull
     {referer classes}

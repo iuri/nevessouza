@@ -3,7 +3,7 @@ ad_library {
   
   @creation-date 2008-02-26
   @author Gustaf Neumann
-  @cvs-id $Id: xowiki-admin-portlet-procs.tcl,v 1.4 2018/04/30 09:14:23 gustafn Exp $
+  @cvs-id $Id: xowiki-admin-portlet-procs.tcl,v 1.3 2008/04/24 08:38:30 gustafn Exp $
 }
 
 #
@@ -15,7 +15,7 @@ ad_library {
 #      (supposed to work under postgres and Oracle)
 #
 # In the next steps, it would make sense to define a ::dotlrn::Portlet
-# class, which provides some of the common behaviour defined here...
+# class, which provides some of the the common behaviour defined here...
 #
 Object xowiki_admin_portlet
 xowiki_admin_portlet proc name {} {

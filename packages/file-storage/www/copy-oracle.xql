@@ -4,7 +4,7 @@
 
 <!-- @author Dave Bauer (dave@thedesignexperience.org) -->
 <!-- @creation-date 2004-05-09 -->
-<!-- @cvs-id $Id: copy-oracle.xql,v 1.7 2017/08/07 23:48:11 gustafn Exp $ -->
+<!-- @cvs-id $Id: copy-oracle.xql,v 1.6.6.2 2017/05/09 12:01:01 antoniop Exp $ -->
 
 <queryset>
   

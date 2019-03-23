@@ -2,7 +2,7 @@
 --
 -- @author @jennie.ybos.net,@wirth.ybos.net,openacs port @samir.symphinity.com
 -- 
--- @cvs-id $Id: faq-create.sql,v 1.5.16.1 2019/02/14 16:15:01 gustafn Exp $
+-- @cvs-id $Id: faq-create.sql,v 1.5 2004/04/01 22:52:45 jeffd Exp $
 --
 begin
      	acs_object_type.create_type (
@@ -21,7 +21,6 @@ end;
 create table faqs (
 		faq_id    constraint faqs_faq_id_fk
 			  references acs_objects (object_id)
-                          on delete cascade
 			  constraint faqs_pk
 			  primary key,
 		faq_name  varchar (250)
@@ -50,10 +49,9 @@ end;
 create table faq_q_and_as (
 	entry_id  constraint faq_q_and_as_entry_id_fk  
 		  references acs_objects (object_id)
-                  on delete cascade
 		  constraint faq_q_sand_a_pk
          	  primary key,
-	faq_id	  integer not null references faqs on delete cascade,
+	faq_id	  integer references faqs not null,
 	question  varchar (4000) not null,
 	answer    varchar (4000) not null,
 	-- determines the order of questions in a FAQ

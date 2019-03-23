@@ -4,8 +4,8 @@
 <master>
 <h2>Overview</h2>
 <p>The schema for the entities that actually collect, store and
-retrieve Assessment data parallels the hierarchical structure of
-the <a href="data-modell">Metadata Data Model</a>. In the
+retrieve Assesment data parallels the hierarchical structure of the
+<a href="data-modell">Metadata Data Model</a>. In the
 antecedent "complex survey" and "questionnaire"
 systems, this schema was simple two-level structure:</p>
 <ul>
@@ -250,7 +250,7 @@ OpenACS</li>
 </ul>
 <ul><li>
 <span style="font-weight: bold;">Signing of content</span>
-allows one to verify that the data submitted is actually from the
+allows to verify that the data submitted is actually from the
 person it is pretended to be from. This assumes an public key
 environment where the public key is stored along with the user
 information (e.g. with the users table) and the data stored in

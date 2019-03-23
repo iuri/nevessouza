@@ -20,15 +20,15 @@ ad_page_contract {
     The display logic for the dotlrn main (Groups) portlet
 
     @author Arjun Sanyal (arjun@openforce.net)
-    @cvs-id $Id: dotlrn-main-portlet.tcl,v 1.26 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: dotlrn-main-portlet.tcl,v 1.21.4.1 2015/09/11 11:40:43 gustafn Exp $
 } {
 }
 
-if {![info exists show_buttons_p] || $show_buttons_p eq ""} {
+if {(![info exists show_buttons_p] || $show_buttons_p eq "")} {
     set show_buttons_p 0
 }
 
-if {![info exists show_archived_p] || $show_archived_p eq ""} {
+if {(![info exists show_archived_p] || $show_archived_p eq "")} {
     set show_archived_p 0
 }
 
@@ -36,7 +36,7 @@ if {![info exists show_archived_p] || $show_archived_p eq ""} {
 #theme-selva for .LRN 2.2.
 
 set community_type_clause ""
-if { [info exists community_filter] && $community_filter ne "" } {
+if { ([info exists community_filter] && $community_filter ne "") } {
     set show_subtitle_p 0
     if { $community_filter eq "class_instances" } {
         set community_type_clause "and dotlrn_communities_all.community_type not in ('dotlrn_community', 'dotlrn_club', 'dotlrn_pers_community')"
@@ -79,9 +79,8 @@ db_multirow -extend {intra_type_ul_tags previous_type_ul_tags} communities selec
         set base_level $tree_level
         set new_type_p 1
     }
-    if { [info exists old_simple_community_type]
-         && $old_simple_community_type ne $simple_community_type
-     } {
+    if { [info exists old_simple_community_type] &&
+         $old_simple_community_type ne $simple_community_type } {
         append previous_type_ul_tags [string repeat "</li></ul>" $old_depth]
         set old_depth 0
     }
@@ -89,8 +88,8 @@ db_multirow -extend {intra_type_ul_tags previous_type_ul_tags} communities selec
     set depth [expr {$tree_level - $base_level}]
     if { $depth > $old_depth } {
         append intra_type_ul_tags [string repeat "<ul><li>" [expr {$depth - $old_depth}]]
-
-    } elseif { $old_depth > $depth } {
+    }
+    if { $old_depth > $depth } {
         append intra_type_ul_tags [string repeat "</li></ul>" [expr {$old_depth - $depth}]]
         append intra_type_ul_tags "</li><li>"
     }
@@ -109,9 +108,8 @@ if { $old_depth > 0 } {
 }
 
 set dotlrn_url [dotlrn::get_url]
-set referer [ad_return_url]
 
-# Add the dhtml tree JavaScript to the HEAD.
+# Add the dhtml tree javascript to the HEAD.
 template::head::add_javascript -script "var mktree_remember = true;" -order 1
 template::head::add_javascript -src "/resources/acs-templating/mktree.js" -order 2
 template::head::add_css -href "/resources/acs-templating/mktree.css"

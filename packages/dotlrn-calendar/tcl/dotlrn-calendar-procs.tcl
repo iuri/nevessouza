@@ -19,7 +19,7 @@ ad_library {
     the dotlrn applet for calendar
 
     @author ben@openforce.net,arjun@openforce.net
-    @cvs-id $Id: dotlrn-calendar-procs.tcl,v 1.85 2018/06/30 21:08:42 hectorr Exp $
+    @cvs-id $Id: dotlrn-calendar-procs.tcl,v 1.82.2.2 2017/06/30 17:45:40 gustafn Exp $
 }
 
 namespace eval dotlrn_calendar {}
@@ -117,7 +117,7 @@ ad_proc -public dotlrn_calendar::add_applet_to_community_helper {
 } {
     Add the calendar applet to a specific dotlrn community
 
-    @param community_id
+    @params community_id 
 } {
     #
     # ** setup stuff **
@@ -414,7 +414,7 @@ ad_proc -public dotlrn_calendar::remove_portlet {
     args
 } {
     A helper proc to remove the underlying portlet from the given portal. 
-    This is a lot simpler than add_portlet.
+    This is alot simpler than add_portlet.
 
     @param portal_id
     @param args An ns_set with the calendar_id. 

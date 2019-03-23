@@ -4,9 +4,9 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-24
-    @cvs-id $Id: delete.tcl,v 1.6.2.3 2019/02/15 13:25:58 gustafn Exp $
+    @cvs-id $Id: delete.tcl,v 1.4.2.1 2015/09/12 11:06:23 gustafn Exp $
 
-}
+} 
 
 set table_border_color [parameter::get -parameter table_border_color]
 
@@ -24,11 +24,9 @@ set message_id $message(message_id)
 
 set message(tree_level) 0
 
-set confirm_url [export_vars -base "message-delete" {
-    {message_id:sign(csrf) $message(message_id)} return_url {confirm_p 1}
-}]
+set confirm_url [export_vars -base "message-delete" {message_id return_url {confirm_p 1}}]
 
-if {[info exists alt_template] && $alt_template ne ""} {
+if {([info exists alt_template] && $alt_template ne "")} {
   ad_return_template $alt_template
 }
 

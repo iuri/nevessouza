@@ -4,7 +4,7 @@ ad_page_contract {
 
   @author rhs@mit.edu
   @creation-date 2000-08-20
-  @cvs-id $Id: revoke.tcl,v 1.9 2018/06/20 10:05:53 antoniop Exp $
+  @cvs-id $Id: revoke.tcl,v 1.6.2.2 2015/10/28 09:38:39 gustafn Exp $
 } {
   object_id:naturalnum,notnull
   {revoke_list:multiple,optional {}}
@@ -26,14 +26,15 @@ set body [subst {
 
     <hr>
     Are you sure you want to remove the following entries from the access
-    control list of [acs_object_name $object_id]?
+    control list of [db_string name {}]?
     <ul>
 }]
 
 foreach item $revoke_list {
-    lassign $item party_id privilege
+    set party_id [lindex $item 0]
+    set privilege [lindex $item 1]
     append body [subst {
-        <li>[party::name -party_id $party_id]</li>
+	<li>[db_string party_name {}]</li>
     }]
 }
 
@@ -45,7 +46,7 @@ append body [subst {
 
 foreach item $revoke_list {
     append body [subst {
-        <input type="hidden" name="revoke_list" value="$item">
+	<input type="hidden" name="revoke_list" value="$item">
     }]
 }
 

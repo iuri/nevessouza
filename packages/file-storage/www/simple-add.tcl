@@ -4,7 +4,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)    
     @author arjun (arjun@openforce.net)
     @creation-date 01 April 2002
-    @cvs-id $Id: simple-add.tcl,v 1.17 2018/01/19 12:03:41 gustafn Exp $
+    @cvs-id $Id: simple-add.tcl,v 1.15.2.1 2015/09/12 11:06:20 gustafn Exp $
 } {
     folder_id:naturalnum,notnull
     {type "fs_url"}
@@ -102,7 +102,7 @@ ad_form -extend -form {
 } -after_submit {
 
     ad_returnredirect "?folder_id=$folder_id"
-    ad_script_abort
+
 }
 
 # Local variables:

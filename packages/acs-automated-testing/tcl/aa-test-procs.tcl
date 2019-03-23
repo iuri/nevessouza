@@ -9,15 +9,15 @@
 ad_library {
     Procs to support the acs-automated-testing package.
 
-    NOTE: There's a hack in packages/acs-bootstrap-installer/bootstrap.tcl to load
+    NOTE: There's a hack in packages/acs-bootstrap-installer/bootstrap.tcl to load 
     this file on server startup before other packages' -procs files.
-
+    
     @author Peter Harper (peter.harper@open-msg.com)
     @creation-date 21 June 2001
-    @cvs-id $Id: aa-test-procs.tcl,v 1.79 2018/10/04 10:02:14 gustafn Exp $
+    @cvs-id $Id: aa-test-procs.tcl,v 1.40.2.7 2017/06/30 17:23:06 gustafn Exp $
 }
 
-# LARS: We do this here, because if we do it in the -init file, then we cannot register
+# LARS: We do this here, because if we do it in the -init file, then we cannot register 
 # test cases in -procs files of packages.
 if { ![nsv_exists aa_test cases] } {
     nsv_set aa_test cases {}
@@ -29,7 +29,7 @@ if { ![nsv_exists aa_test cases] } {
         nsv_lappend aa_test categories "selenium"
     } else {
         nsv_lappend aa_test exclusion_categories "selenium"
-    }
+    }    
 }
 
 proc aa_proc_copy {proc_name_old proc_name_new {new_body ""}} {
@@ -57,12 +57,12 @@ proc aa_proc_copy {proc_name_old proc_name_new {new_body ""}} {
         }
         set arg_parser "[namespace tail $proc_name_old]__arg_parser"
         #
-        # In case an arg-parser was used in the old body, but is
+        # In case a arg-parser was used in the old body, but is
         # missing in the new version, add it automatically to the new
         # body.
         #
-        if {[string match "*$arg_parser*" $old_body]} {
-            if {![string match "*$arg_parser*" $new_body]} {
+        if {[string match *$arg_parser* $old_body]} {
+            if {![string match *$arg_parser* $new_body]} {
                 set new_body $arg_parser\n$new_body
                 #ns_log notice "... auto added arg_parser for '$proc_name_new' ====> new_body $new_body"
             }
@@ -114,7 +114,7 @@ ad_proc -public aa_stub {
             aa_proc_copy $proc_name ${proc_name}_unstubbed
         }
         set aa_stub_sequence($proc_name) 1
-
+        
         aa_proc_copy $proc_name $proc_name "
       global aa_stub_sequence
       global aa_testcase_id
@@ -150,23 +150,22 @@ ad_proc -public aa_register_init_class {
     constructor
     destructor
 } {
-    Registers a initialization class to be used by one or more testcases.  An
-    initialization class can be assigned to a testcase via the
-    aa_register_case proc.
-
-    An initialization constructor is called <strong>once</strong> before
-    running a set of testcases, and the destructor called <strong>once</strong>
+    Registers a initialisation class to be used by one or more testcases.  An
+    initialisation class can be assigned to a testcase via the
+    aa_register_case proc.<p>
+    <p>
+    An initialisation constructor is called <strong>once</strong> before
+    running a set of testcases, and the descructor called <strong>once</strong>
     upon completion of running a set of testcases.<p>
     The idea behind this is that it could be used to perform data intensive
     operations that shared amongst a set if testcases.  For example, mounting
     an instance of a package.  This could be performed by each testcase
     individually, but this would be highly inefficient if there are any
     significant number of them.
-
+    <p>
     Better to let the acs-automated-testing infrastructure call
     the init_class code to set the package up, run all the tests, then call
-    the destructor to unmount the package.
-
+    the descructor to unmount the package.
     @author Peter Harper
     @creation-date 04 November 2001
 
@@ -221,7 +220,7 @@ ad_proc -public aa_register_init_class {
     # the constructor has exported.
     #
     ad_proc -private _${package_key}__i_$init_class_id {} "
-    aa_log \"Running \\\"$init_class_id\\\" initialization class constructor\"
+    aa_log \"Running \\\"$init_class_id\\\" initialisation class constructor\"
     $constructor
   "
     ad_proc -private _${package_key}__d_$init_class_id {} "
@@ -328,23 +327,17 @@ ad_proc -public aa_register_case {
     {-error_level "error"}
     {-bugs {}}
     {-procs {}}
-    {-urls {}}
     {-init_classes {}}
     {-on_error {}}
     testcase_id
     testcase_desc
     args
 } {
-    Registers a testcase with the acs-automated-testing system.
-    Whenever possible, cases that fail to register are replaced with
-    'metatest' log cases, so that the register-time errors are visible
-    at test time.
+    Registers a testcase with the acs-automated-testing system.  Whenever possible, cases that fail to register are replaced with 'metatest' log cases, so that the register-time errors are visible at test time.
 
     See <a href="/doc/tutorial-debug">the tutorial</a> for examples.
 
-    @param libraries A list of keywords of additional code modules to
-    load.  The entire test case will fail if any package is missing.
-    Currently includes <b>tclwebtest</b>.
+    @param libraries A list of keywords of additional code modules to load.  The entire test case will fail if any package is missing.  Currently includes <b>tclwebtest</b>.
 
     @param cats Properties of the test case.  Must be zero or more of the following:
     <ul>
@@ -352,30 +345,20 @@ ad_proc -public aa_register_case {
     <li><b>api</b>: tests the Tcl API
     <li><b>web</b>: tests HTTP interface
     <li><b>smoke</b>: Minimal test to assure functionality and catch basic errors.
-    <li><b>stress</b>: Puts heavy load on server or creates large numbers of records. \
-        Intended to simulate maximal production load.
+    <li><b>stress</b>: Puts heavy load on server or creates large numbers of records.  Intended to simulate maximal production load. 
     <li><b>security_risk</b>: May introduce a security risk.
     <li><b>populator</b>: Creates sample data for future use.
-    <li><b>production_safe</b>: Can be used on a live production site, \
-        i.e. for sanity checking or keepalive purposes. \
-        Implies: no risk of adding or deleting data; no risk of crashing; minimal cpu/db/net load.
+    <li><b>production_safe</b>: Can be used on a live production site, ie for sanity checking or keepalive purposes.  Implies: no risk of adding or deleting data; no risk of crashing; minimal cpu/db/net load.
     </ul>
-
-    @param error_level Force all test failures to this error level. One of
+    @param error_level Force all test failures to this error level.  One of 
     <ul>
     <li><b>notice</b>: Informative.  Does not indicate an error.
-    <li><b>warning</b>: May indicate an problem. \
-        Example: a non-critical bug repro case that hasn't been fixed.
+    <li><b>warning</b>: May indicate an problem.  Example: a non-critical bug repro case that hasn't been fixed.
     <li><b>error</b>: normal error
-    <li><b>metatest</b>: Indicates a problem with the test framework, execution, or reporting. \
-        Suggests that current test results may be invalid. \
-        Use this for test cases that test the tests. \
-        Also used, automatically, for errors sourcing test cases.
+    <li><b>metatest</b>: Indicates a problem with the test framework, execution, or reporting.  Suggests that current test results may be invalid.  Use this for test cases that test the tests.  Also used, automatically, for errors sourcing test cases.  
     </ul>
-
     @param bugs A list of integers correspending to openacs.org bug numbers which relate to this test case.
     @param procs A list of OpenACS procs which are tested by this case.
-    @param urls A list of URLs (relative to package) tested in web test case
 
     @param on_error Deprecated.
     @param init_classes Deprecated.
@@ -406,7 +389,8 @@ ad_proc -public aa_register_case {
     # Work out the package_key.
     #
     set package_root [file join $::acs::rootdir packages]
-    set package_rel [string replace [info script] 0 [string length $package_root]]
+    set package_rel [string replace [info script] \
+                         0 [string length $package_root]]
     set package_key [lindex [file split $package_rel] 0]
 
     # run library specific code
@@ -417,7 +401,7 @@ ad_proc -public aa_register_case {
             # place following the Tcl way, we use this absolute path
             # hack.
             set tclwebtest_absolute_path "/usr/local/tclwebtest/lib"
-            if { ![info exists ::auto_path] || $tclwebtest_absolute_path ni $::auto_path } {
+            if { ![info exists ::auto_path] || [lsearch $::auto_path $tclwebtest_absolute_path] == -1 } {
                 lappend ::auto_path $tclwebtest_absolute_path
             }
             if { [catch {
@@ -458,12 +442,8 @@ ad_proc -public aa_register_case {
 
     set test_case_list [list $testcase_id $testcase_desc \
                             [info script] $package_key \
-                            $cats $init_classes $on_error $args $error_level \
-                            $bugs $procs $urls]
-    foreach p $procs {
-        api_add_to_proc_doc -proc_name $p -property testcase -value [list $testcase_id $package_key]
-        #ns_log notice "TESTCASE: api_add_to_proc_doc -proc_name $p -property testcase -value $testcase_id -> [dict get [nsv_get api_proc_doc $p] testcase]"
-    }
+                            $cats $init_classes $on_error $args $error_level $bugs $procs]
+
     #
     # First, search the current list of test cases. If an old version already
     # exists, replace it with the new version.
@@ -471,9 +451,8 @@ ad_proc -public aa_register_case {
     set lpos 0
     set found_pos -1
     foreach case [nsv_get aa_test cases] {
-        if {[lindex $case 0] == $testcase_id
-            && [lindex $case 3] == $package_key
-        } {
+        if {[lindex $case 0] == $testcase_id &&
+            [lindex $case 3] == $package_key} {
             nsv_set aa_test cases [lreplace [nsv_get aa_test cases] $lpos $lpos \
                                        $test_case_list]
             set found_pos $lpos
@@ -511,7 +490,8 @@ ad_proc -public aa_register_case {
     upvar 2 _aa_exports _aa_exports
     foreach init_class \[list $init_classes\] {
       if {[llength $init_class] == 2} {
-        lassign $init_class init_class init_package_key
+        set init_package_key [lindex $init_class 1]
+        set init_class [lindex $init_class 0]
       } else {
         set init_package_key $package_key
       }
@@ -528,7 +508,7 @@ ad_proc -public aa_register_case {
     set body "
     $init_class_code
     set _aa_export {}
-    set body_count 1
+    set body_count 0
     foreach testcase_body \[list $args\] {
       aa_log \"Running testcase body \$body_count\"
       set catch_val \[catch \"eval \[list \$testcase_body\]\" msg\]
@@ -547,11 +527,9 @@ ad_proc -public aa_register_case {
 ad_proc -public aa_export_vars {
     args
 } {
-    Called from a initialization class constructor or a component to
+    Called from a initialisation class constructor or a component to
     explicitly export the specified variables to the current testcase. You need
-    to call aa_export_vars <b>before</b> you create the variables.
-
-    Example:
+    to call aa_export_vars <b>before</b> you create the variables. Example:
     <pre>
     aa_export_vars {package_id item_id}
     set package_id 23
@@ -589,15 +567,15 @@ ad_proc -public aa_runseries {
 
     set aa_run_quietly_p $quiet_p
     #
-    # Work out the list of initialization classes.
+    # Work out the list of initialisation classes.
     #
     set testcase_ids {}
     if {$testcase_id ne ""} {
         lappend testcase_ids $testcase_id
         foreach testcase [nsv_get aa_test cases] {
             if {$testcase_id == [lindex $testcase 0]} {
-                set package_key     [lindex $testcase 3]
-                set init_classes    [lindex $testcase 5]
+                set package_key    [lindex $testcase 3]
+                set init_classes   [lindex $testcase 5]
                 foreach init_class $init_classes {
                     set classes([list $package_key $init_class]) 1
                 }
@@ -605,14 +583,14 @@ ad_proc -public aa_runseries {
         }
     } else {
         foreach testcase [nsv_get aa_test cases] {
-            set testcase_id     [lindex $testcase 0]
-            set package_key     [lindex $testcase 3]
-            set categories      [lindex $testcase 4]
-            set init_classes    [lindex $testcase 5]
+            set testcase_id    [lindex $testcase 0]
+            set package_key    [lindex $testcase 3]
+            set categories     [lindex $testcase 4]
+            set init_classes   [lindex $testcase 5]
 
             # try to disqualify the test case
 
-            # if category is specified,
+            # if category is specified, 
             if { $by_package_key ne "" && $by_package_key ne $package_key } {
                 continue
             }
@@ -626,12 +604,12 @@ ad_proc -public aa_runseries {
             if { ! $stress && "stress" in $categories } {
                 continue
             }
-
+            
             # if we don't want security risks, then the test must not be stress
             if { ! $security_risk && "security_risk" in $categories } {
                 continue
             }
-
+            
             # we made it through the filters, so add the test case
             lappend testcase_ids $testcase_id
             foreach init_class $init_classes {
@@ -640,13 +618,14 @@ ad_proc -public aa_runseries {
         }
     }
     #
-    # Run each initialization script.  Keep a list of the exported variables
-    # by each initialization script so each testcase (and destructor) can
+    # Run each initialisation script.  Keep a list of the exported variables
+    # by each initialisation script so each testcase (and destructor) can
     # correctly upvar to gain visibility of them.
     #
     if {[info exists classes]} {
         foreach initpair [array names classes] {
-            lassign $initpair package_key init_class
+            set package_key [lindex $initpair 0]
+            set init_class  [lindex $initpair 1]
             set _aa_export {}
             set aa_init_class_logs([list $package_key $init_class]) {}
             set aa_in_init_class [list $package_key $init_class]
@@ -664,11 +643,12 @@ ad_proc -public aa_runseries {
     }
 
     #
-    # Run each initialization destructor script.
+    # Run each initialisation destructor script.
     #
     if {[info exists classes]} {
         foreach initpair [array names classes] {
-            lassign $initpair package_key init_class
+            set package_key [lindex $initpair 0]
+            set init_class  [lindex $initpair 1]
             set aa_in_init_class [list $package_key $init_class]
             _${package_key}__d_$init_class
         }
@@ -708,15 +688,14 @@ ad_proc -public aa_run_testcase {
     set testcase_bodys {}
     foreach testcase [nsv_get aa_test cases] {
         if {$testcase_id == [lindex $testcase 0]} {
-            set testcase_file       [lindex $testcase 2]
-            set package_key         [lindex $testcase 3]
-            set testcase_cats       [lindex $testcase 4]
-            set testcase_inits      [lindex $testcase 5]
-            set testcase_on_error   [lindex $testcase 6]
-            set testcase_bodys      [lindex $testcase 7]
-            set aa_error_level      [lindex $testcase 8]
-
+            set testcase_file     [lindex $testcase 2]
+            set package_key       [lindex $testcase 3]
             set aa_package_key    $package_key
+            set testcase_cats     [lindex $testcase 4]
+            set testcase_inits    [lindex $testcase 5]
+            set testcase_on_error [lindex $testcase 6]
+            set testcase_bodys    [lindex $testcase 7]
+            set aa_error_level       [lindex $testcase 8]
         }
     }
     if {[llength $testcase_bodys] == 0} {
@@ -780,10 +759,10 @@ ad_proc -public aa_equals {
     global aa_package_key
 
     if {$affirm_actual eq $affirm_value} {
-        aa_log_result "pass" [subst {$affirm_name, actual = "$affirm_actual"}]
+        aa_log_result "pass" "$affirm_name Affirm PASSED, actual = \"$affirm_actual\""
         return 1
     } else {
-        aa_log_result "fail" [subst {$affirm_name, actual = "$affirm_actual", expected = "$affirm_value"}]
+        aa_log_result "fail" "$affirm_name Affirm FAILED, actual = \"$affirm_actual\", expected = \"$affirm_value\""
         return 0
     }
 }
@@ -794,23 +773,21 @@ ad_proc -public aa_true {
 } {
     Tests that affirm_expr is true.<p>
     Call this function within a testcase, stub or component.
-
+    
     @return True if the affirmation passed, false otherwise.
 
     @author Peter Harper
     @creation-date 24 July 2001
 } {
+    global aa_testcase_id
+    global aa_package_key
+    
     set result [uplevel 1 [list expr $affirm_expr]]
-    if {$affirm_expr in {0 1 t f true false}} {
-        set expr ""
-    } else {
-        set expr [subst {"$affirm_expr" }]
-    }
     if { $result } {
-        aa_log_result "pass" "$affirm_name: $expr true"
+        aa_log_result "pass" "$affirm_name Affirm PASSED, \"$affirm_expr\" true"
         return 1
     } else {
-        aa_log_result "fail" "$affirm_name: $expr false"
+        aa_log_result "fail" "$affirm_name Affirm FAILED, \"$affirm_expr\" false"
         return 0
     }
 }
@@ -819,11 +796,11 @@ ad_proc -public aa_false {
     affirm_name
     affirm_expr
 } {
-    Tests that affirm_expr is false.
+    Tests that affirm_expr is false.<br>
     Call this function within a testcase, stub or component.
-
+    
     @return True if the affirmation passed, false otherwise.
-
+    
     @author Peter Harper
     @creation-date 24 July 2001
 } {
@@ -832,49 +809,31 @@ ad_proc -public aa_false {
 
     set result [uplevel 1 [list expr $affirm_expr]]
     if {!$result} {
-        aa_log_result "pass" [subst {$affirm_name: "$affirm_expr" false}]
+        aa_log_result "pass" "$affirm_name Affirm PASSED, \"$affirm_expr\" false"
         return 1
     } else {
-        aa_log_result "fail" [subst {$affirm_name: "$affirm_expr" true}]
+        aa_log_result "fail" "$affirm_name Affirm FAILED, \"$affirm_expr\" true"
         return 0
     }
-}
-
-ad_proc -public aa_section {
-        log_notes
-} {
-    Writes a log message indicating a new section to the log file.
-} {
-    aa_log_result "sect" $log_notes
 }
 
 ad_proc -public aa_log {
     log_notes
 } {
-    Writes a log message to the testcase log.
+    Writes a log message to the testcase log.<p>
     Call this function within a testcase, stub or component.
-
     @author Peter Harper
     @creation-date 24 July 2001
 } {
-    #global aa_testcase_id
-    #global aa_package_key
+    global aa_testcase_id
+    global aa_package_key
+    global aa_run_quietly_p
 
-    #
-    # When aa_run_quietly_p exists, we run inside the testing
-    # environment.
-    #
-    if {[info exists ::aa_run_quietly_p]} {
-        if {$::aa_run_quietly_p} {
-            return
-        }
-        aa_log_result "log" $log_notes
-    } else {
-        #
-        # Use plain ns_log reporting
-        #
-        ns_log notice "aa_log: $log_notes"
+    if {$aa_run_quietly_p} {
+        return
     }
+
+    aa_log_result "log" $log_notes
 }
 
 ad_proc -public aa_error {
@@ -910,7 +869,7 @@ ad_proc -public aa_log_result {
     global aa_error_level
 
     #
-    # If logging is happened whilst in a initialization class, store the log
+    # If logging is happened whilst in a initialisation class, store the log
     # entry, but don't write it to the database.  Individual testcase will make
     # their own copies of these log entries.
     #
@@ -944,7 +903,8 @@ ad_proc -public aa_log_result {
                 ns_log Bug "aa_log_result: FAILED: Automated test did not function as expected: $aa_testcase_id, $test_notes"
             }
         }
-    } elseif {$test_result ne "sect"} {
+
+    } else {
         ns_log Debug "aa_log_result: LOG: $aa_testcase_id, $test_notes"
         set test_result "log"
     }
@@ -981,7 +941,7 @@ ad_proc -public aa_run_with_teardown {
     {-teardown_code ""}
     -rollback:boolean
 } {
-    Execute code in test_code and guarantee that code in
+    Execute code in test_code and guarantee that code in 
     teardown_code will be executed even if error is thrown. Will catch
     errors in teardown_code as well and provide stack traces for both code blocks.
 
@@ -999,7 +959,7 @@ ad_proc -public aa_run_with_teardown {
             set errmsg {}
             db_transaction {
                aa_start_rollback_block
-
+ 
                $test_code
 
                 aa_end_rollback_block
@@ -1103,657 +1063,6 @@ ad_proc -private aa_execute_rollback_tests {} {
 }
 
 
-
-
-namespace eval acs::test {
-
-    ad_proc -public ::acs::test::form_reply {
-        -user_id:required
-        -url:required
-        {-update {}}
-        form_content
-    } {
-
-        Send a (POST) request to the specified URL based on the
-        provided form_content which has the form of a dict.  For
-        convenience the update fields are provided to overload the
-        form_content.
-
-    } {
-        foreach {att value} $update {
-            dict set form_content $att $value
-        }
-        #ns_log notice "final form_content $form_content"
-        #
-        # Transform the dict into export format. Since export_vars
-        # will skip all names containing a ":", such as
-        # "formbutton:ok", we do this "manually".
-        #
-        set export {}
-        foreach {att value} $form_content {
-            lappend export [ad_urlencode_query $att]=[ad_urlencode_query $value]
-        }
-        set body [join $export &]
-        ns_log notice "body=$body"
-        #
-        # Send the POST request
-        #
-        return [http \
-                    -user_id $user_id \
-                    -method POST -body $body \
-                    -headers {Content-Type application/x-www-form-urlencoded} \
-                    $url]
-    }
-
-    ad_proc -public ::acs::test::http {
-        {-user_id 0}
-        {-user_info ""}
-        {-method GET}
-        {-session ""}
-        {-body}
-        {-timeout 10}
-        {-headers ""}
-        {-prefix ""}
-        {-verbose:boolean 1}
-        request
-    } {
-
-        Run an HTTP request against the actual server inside test
-        cases.
-
-        @author Gustaf Neumann
-    } {
-        ns_log notice "::acs::test::http -user_id $user_id -user_info $user_info request $request"
-        #
-        # Check, if a testURL was specified in the config file
-        #
-        # ns_section ns/server/${server}/acs/acs-automated-testing
-        #         ns_param TestURL http://127.0.0.1:8080/
-        #
-        set url [parameter::get \
-                     -package_id [apm_package_id_from_key acs-automated-testing] \
-                     -parameter TestURL \
-                     -default ""]
-        if {$url ne ""} {
-            set urlInfo [ns_parseurl $url]
-            set proto   [dict get $urlInfo proto]
-            set address [dict get $urlInfo host]
-        } else {
-            #
-            # There is no configuration in the config file. So try to
-            # determine it form either the current connection, or from
-            # the configured driver.
-            #
-            try {
-                #
-                # First try to get actual information from the
-                # connection. This is however only available in newer
-                # versions of NaviServer. The actual information is
-                # e.g. necessary, when the driver address is set to
-                # "0.0.0.0" or "::0" etc, and therefore every address
-                # might be provided as peer address in the check in
-                # the security-procs.
-                #
-                set address [ns_conn currentaddr]
-                set port    [ns_conn currentport]
-                set proto   [ns_conn proto]
-            } on error {errorMsg} {
-                #
-                # If this fails, fall back to configured value.
-                #
-                set driverInfo [util_driver_info]
-                set address [dict get $driverInfo address]
-                set port    [dict get $driverInfo port]
-                set proto   [dict get $driverInfo proto]
-            }
-            set url "$proto://\[$address\]:$port/$request"
-        }
-
-        #
-        # either authenticate via user_info (when specified) or via user_id
-        #
-        if {$user_info ne ""} {
-        } else {
-            dict set user_info address $address
-            dict set user_info user_id $user_id
-        }
-
-        set session [::acs::test::set_user -session $session $user_info]
-
-        set login [dict get $session login]
-        #aa_log "login $login"
-
-        if {[dict exists $session cookies]} {
-            lappend headers Cookie [dict get $session cookies]
-        }
-
-
-        set extra_args {}
-        if {[info exists body]} {
-            lappend extra_args -body $body
-        }
-
-        if {[llength $headers] > 0} {
-            set requestHeaders [ns_set create]
-            foreach {tag value} $headers {
-                ns_set update $requestHeaders $tag $value
-            }
-            lappend extra_args -headers $requestHeaders
-        }
-
-
-        #
-        # Construct a nice log line
-        #
-        append log_line "${prefix}Run $method $request"
-        if {[llength $headers] > 0} {
-            append log_line " (headers: $headers)"
-        }
-        if {[info exists body]} {
-            append log_line "\n$body"
-        }
-        aa_log $log_line
-
-        #
-        # Run actual request
-        #
-        try {
-            ns_log notice "acs::test:http client request (timeout $timeout): $method $url"
-            set d [ns_http run \
-                       -timeout $timeout \
-                       -method $method \
-                       {*}$extra_args \
-                       $url]
-        } finally {
-            #
-            # always reset after the reqest the login data nsv
-            #
-            nsv_unset -nocomplain aa_test logindata
-        }
-        #ns_log notice "run $request returns $d"
-        #ns_log notice "... [ns_set array [dict get $d headers]]"
-        if {$verbose_p} {
-            set ms [format %.2f [expr {[ns_time format [dict get $d time]] * 1000.0}]]
-            aa_log "${prefix}$method $request returns [dict get $d status] in ${ms}ms"
-        }
-        if {[dict exists $d headers]} {
-            set cookies {}
-            set cookie_dict {}
-            if {[dict exists $session cookies]} {
-                foreach cookie [split [dict get $session cookies] ";"] {
-                    lassign [split [string trim $cookie] =] name value
-                    dict set cookie_dict $name $value
-                }
-            }
-            foreach {tag value} [ns_set array [dict get $d headers]] {
-                if {$tag eq "set-cookie"} {
-                    if {[regexp {^([^;]+);} $value . cookie]} {
-                        lassign [split [string trim $cookie] =] name value
-                        dict set cookie_dict $name $value
-                    } else {
-                        aa_log "Cookie has invalid syntax: $value"
-                    }
-                }
-            }
-            foreach cookie_name [dict keys $cookie_dict] {
-                lappend cookies $cookie_name=[dict get $cookie_dict $cookie_name]
-            }
-            dict set d cookies [join $cookies ";"]
-        }
-        dict set d login $login
-        return $d
-    }
-
-    ad_proc -public ::acs::test::set_user {
-        {-session ""}
-        user_info
-    } {
-
-        Depending on the provided user_info, either login in or
-        perform the direct test-specific authentication. When the
-        user_id is provided, use it directly.
-
-        @param user_info dict containing user_id and/or
-               email, last_name, username and password
-    } {
-        set already_logged_in 0
-        #
-        # First check, if the user is already logged in via cookies
-        #
-        if {[dict exists $session cookies]} {
-            #aa_log "session has cookies '[dict get $session cookies]'"
-            foreach cookie [split [dict get $session cookies] ";"] {
-                lassign [split [string trim $cookie] =] name value
-                #aa_log "session has cookie $cookie // NAME '$name' VALUE '$value'"
-                if {$name in {ad_user_login ad_user_login_secure} && $value ne "\"\""} {
-                    aa_log "user is already logged in via cookie $name"
-                    set already_logged_in 1
-                    dict set session login via_cookie
-                    break
-                }
-            }
-        }
-        if {!$already_logged_in} {
-            #
-            # The user is not logged in via cookies, check first
-            # available user_id. If this dies not exist, perform login
-            #
-            if {[dict exists $user_info user_id]
-                && [dict exists $user_info address]
-            } {
-                set user_id [dict get $user_info user_id]
-                if {$user_id ne 0} {
-                    aa_log "::acs::test::set_user set logindata"
-                    nsv_set aa_test logindata \
-                        [list \
-                             peeraddr [dict get $user_info address] \
-                             user_id [dict get $user_info user_id]]
-                    dict set session login via_logindata
-                } else {
-                    dict set session login none
-                }
-            } else {
-                aa_log "::acs::test::set_user perform login with $user_info"
-                foreach {att value} [::acs::test::login $user_info] {
-                    dict set session $att $value
-                }
-                dict set session login via_login
-            }
-        }
-        return $session
-    }
-
-
-    ad_proc -public ::acs::test::login {
-        user_info
-    } {
-        Login (register operation) in a web session
-
-        @param user_info dict containing at least
-               email, last_name, username and password
-    } {
-        aa_log $user_info
-        set d [acs::test::http -user_id 0 /register/]
-        acs::test::reply_has_status_code $d 200
-
-        set form [acs::test::get_form [dict get $d body ] {//form[@id='login']}]
-        set fields [dict get $form fields]
-        if {[dict exists $fields email]} {
-            aa_log "login via email [dict get $user_info email]"
-            dict set fields email [dict get $user_info email]
-        } else {
-            aa_log "login via username [dict get $user_info username]"
-            dict set fields username [dict get $user_info username]
-        }
-        dict set fields password [dict get $user_info password]
-
-        set d [::acs::test::form_reply \
-                   -user_id 0 \
-                   -url [dict get $form @action] \
-                   $fields]
-        acs::test::reply_has_status_code $d 302
-
-        return $d
-    }
-
-    ad_proc -public ::acs::test::logout {
-        -session:required
-    } {
-        Logout from the current web session
-
-        @param session reply dict containing cookies
-    } {
-        set d [acs::test::http -session $session /register/logout]
-        acs::test::reply_has_status_code $d 302
-        return $d
-    }
-
-    ad_proc -public ::acs::test::visualize_control_chars {lines} {
-        Quotes and therefore makes visible control chars in input lines
-    } {
-        set output $lines
-        regsub -all {\\} $output {\\\\} output
-        regsub -all {\r} $output {\\r} output
-        regsub -all {\n} $output "\\n\n" output
-        return $output
-    }
-
-    ad_proc -public ::acs::test::dom_html {var html body} {
-    } {
-        upvar $var root
-        dom parse -html $html doc
-        $doc documentElement root
-        uplevel $body
-    }
-
-    ad_proc -public get_form {body xpath} {
-
-        Locate the HTML forms matching the XPath expression and
-        retrieve its HTML attributes and the formfields in form of a
-        Tcl dict. This is a convenience function, combining
-        acs::test::dom_html and ::acs::test::xpath::get_form.
-
-        @return Tcl dict with form attributes (starting with "@" and fields)
-        @see acs::test::dom_html ::acs::test::xpath::get_form
-
-        @author Gustaf Neumann
-    } {
-        acs::test::dom_html root $body {
-            set form_data [::acs::test::xpath::get_form $root $xpath]
-        }
-        return $form_data
-    }
-
-    ad_proc -public follow_link {
-        {-user_id 0}
-        {-base /}
-        {-label ""}
-        {-html:required}
-    } {
-
-        Follow the first provided label and return the page info.
-        Probably, we want as well other mechanisms to locate the
-        anchor element later.
-
-        @author Gustaf Neumann
-    } {
-        set href ""
-        acs::test::dom_html root $html {
-            foreach a [$root selectNodes //a] {
-                set link_label [string trim [$a text]]
-                if {$label eq $link_label} {
-                    set href [$a getAttribute href]
-                    break
-                }
-                #
-                # There is something weird in tDOM: without the
-                # "string trim" we see something like
-                #
-                #       a TEXT 'DD25C9878' = 'DD25C9878' eq 0 77 9
-                #
-                # from the statements below.
-                # set eq [expr {$label eq $link_label}]
-                # aa_log "a TEXT '$link_label' = '$label' eq $eq [string length $link_label] [string length $label]"
-                # aa_log "a TEXT '[$a asHTML]'"
-            }
-        }
-        aa_true "Link label for '$label' is not empty: '$href'" {$href ne ""}
-        if {![string match "/*" $href]} {
-            set href $base/$href
-        }
-        return [http -user_id $user_id $href]
-    }
-
-
-    ad_proc -private detail_link {dict} {
-
-        Create a detail link, which is useful for web-requests, to
-        inspect the result in case a test fails.
-
-        Missing: cleanup, e.g. after a couple of days, or when the
-        testcase is executed again (for that we would need testcase_id
-        and package_key, that we do not want to pass around)
-
-    } {
-        set nonce REPLY-[clock clicks -microseconds].html
-        set F [open $::acs::rootdir/packages/acs-automated-testing/www/$nonce w]
-        puts $F [dict get $dict body]
-        close $F
-        return /test/$nonce
-    }
-
-    ad_proc -public reply_contains {{-prefix ""} dict string} {
-
-        Convenience function for test cases to check, whether the
-        resulting page contains the given string.
-
-        @param prefix  prefix for logging
-        @param dict    request reply dict, containing at least the request body
-        @param string  string to be checked on the page
-    } {
-        set result [string match *$string* [dict get $dict body]]
-        if {$result} {
-            aa_true "${prefix} Reply contains $string" $result
-        } else {
-            aa_true "${prefix} Reply contains $string (<a href='[detail_link $dict]'>Details</a>)" $result
-        }
-        return $result
-    }
-
-    ad_proc -public reply_contains_no {{-prefix ""} dict string} {
-
-        Convenience function for test cases to check, whether the
-        resulting page does not contains the given string.
-
-        @param prefix  prefix for logging
-        @param dict    request reply dict, containing at least the request body
-        @param string  string to be checked on the page
-    } {
-        set result [string match *$string* [dict get $dict body]]
-        if {$result} {
-            aa_false "${prefix} Reply contains no $string (<a href='[detail_link $dict]'>Details</a>)" $result
-        } else {
-            aa_false "${prefix} Reply contains no $string" $result
-        }
-        return [expr {!$result}]
-    }
-
-    ad_proc -public reply_has_status_code {{-prefix ""} dict status_code} {
-
-        Convenience function for test cases to check, whether the
-        reply has the given status code.
-
-        @param prefix       prefix for logging
-        @param dict         request reply dict, containing at least the request status
-        @param status_code  expected HTTP status codes
-
-    } {
-        set result [expr {[dict get $dict status] == $status_code}]
-        if {$result} {
-            aa_true "${prefix} Reply has status code $status_code" $result
-        } else {
-            aa_true "${prefix} Reply expected status code $status_code but got [dict get $dict status] (<a href='[detail_link $dict]'>Details</a>)" $result
-        }
-        return $result
-    }
-
-}
-
-namespace eval ::acs::test::xpath {
-
-    #
-    # All procs in this namespace have the signature
-    #   root xpath
-    # where root is a dom-node and xpath a an XPath expression.
-    #
-    ad_proc -public get_text {root xpath} {
-        Get a text element from tdom via XPath expression.
-        If the XPath expression matches multiple nodes,
-        return a list.
-    } {
-        set nodes [$root selectNodes $xpath]
-        switch [llength $nodes] {
-            0 {set result ""}
-            1 {set result [$nodes asText]}
-            default {
-                set result ""
-                foreach n $nodes {
-                    lappend result [$n asText]
-                }
-            }
-        }
-        return $result
-    }
-
-
-    ad_proc -public non_empty {node selectors} {
-
-        Test if provided selectors return non-empty results
-
-    } {
-        #
-        # if we have no node, use as default the root in the parent
-        # enviromnent
-        #
-        if {$node eq ""} {
-            set node [uplevel {set root}]
-        }
-        foreach q $selectors {
-            try {
-                set value [get_text $node $q]
-            } on error {errorMsg} {
-                aa_true "XPAth exception during evaluation of selector '$q': $errorMsg" 0
-                throw {XPATH {xpath triggered exception}} $errorMsg
-            }
-            aa_true "XPath $q <$value>:" {$value ne ""}
-        }
-    }
-
-    ad_proc -public equals {node pairs} {
-
-        Test whether provided selectors (first element of the pair)
-        return the specificed results (second element of the pair).
-
-    } {
-        foreach {q value} $pairs {
-            try {
-                set result [get_text $node $q]
-            } on error {errorMsg} {
-                aa_true "XPAth exception during evaluation of selector '$q': $errorMsg" 0
-                throw {XPATH {xpath triggered exception}} $errorMsg
-            }
-
-            aa_equals "XPath $q:" $result $value
-        }
-    }
-
-    ad_proc -public get_form {node xpath} {
-
-        Locate the HTML forms matching the XPath expression and
-        retrieve its HTML attributes and the formfields in form of a
-        Tcl dict.
-
-        @return Tcl dict with form attributes (keys starting with "@", and entry "fields")
-
-        @author Gustaf Neumann
-    } {
-        set d {}
-        set form [$node selectNodes $xpath]
-        if {[llength $form] > 1} {
-            error "XPath expression must point to at most one HTML form"
-        } else {
-            foreach form [$node selectNodes $xpath] {
-                foreach att [$node selectNodes $xpath/@*] {
-                    dict set d @[lindex $att 0] [lindex $att 1]
-                }
-                dict set d fields [::acs::test::xpath::get_form_values $node $xpath]
-            }
-        }
-        return $d
-    }
-
-
-    ad_proc -public get_form_values {node xpath} {
-
-        Obtain form values (input fields and textareas) in form of a
-        dict (attribute value pairs). The provided XPath expression
-        must point to the HTML form containing the values to be
-        extracted.
-
-    } {
-        set values {}
-        foreach n [$node selectNodes $xpath//input] {
-            set name  [$n getAttribute name]
-            #ns_log notice "aa_xpath::get_form_values from $className input node $n name $name:"
-            if {[$n hasAttribute value]} {
-                set value [$n getAttribute value]
-            } else {
-                set value ""
-            }
-            lappend values $name $value
-        }
-        foreach n [$node selectNodes $xpath//textarea] {
-            set name  [$n getAttribute name]
-            #ns_log notice "aa_xpath::get_form_values from $className textarea node $n name $name:"
-            set value [$n text]
-            lappend values $name $value
-        }
-        foreach n [$node selectNodes $xpath//select/option\[@selected='selected'\]] {
-            set name  [[$n parentNode] getAttribute name]
-            set value [$n getAttribute value]
-            lappend values $name $value
-        }
-
-        return $values
-    }
-}
-
-namespace eval acs::test::user {
-
-    ad_proc ::acs::test::user::create {
-        {-user_id ""}
-        {-admin:boolean}
-    } {
-        Create a test user with random email and password for testing
-
-        @param admin Provide this switch to make the user site-wide admin
-        @return The user_info dict returned by auth::create_user. Contains
-                the additional keys email and password.
-    } {
-        set username    "__test_user_[ad_generate_random_string]"
-        set email       "${username}@test.test"
-        set password    [ad_generate_random_string]
-        set first_names [ad_generate_random_string]
-        set last_name   [ad_generate_random_string]
-
-        set user_info [auth::create_user \
-                           -user_id $user_id \
-                           -username $username \
-                           -email $email \
-                           -first_names $first_names \
-                           -last_name $last_name \
-                           -password $password \
-                           -secret_question [ad_generate_random_string] \
-                           -secret_answer [ad_generate_random_string] \
-                           -authority_id [auth::authority::get_id -short_name "acs_testing"]]
-
-        if { [dict get $user_info creation_status] ne "ok" } {
-            # Could not create user
-            error "Could not create test user with username=$username user_info=[array get user_info]"
-        }
-
-        dict set user_info password $password
-        dict set user_info email $email
-        dict set user_info first_names $first_names
-        dict set user_info last_name $last_name
-
-        aa_log "Created user with email='$email' and password='$password'"
-
-        if { $admin_p } {
-            aa_log "Making user site-wide admin"
-            permission::grant -object_id \
-                [acs_magic_object "security_context_root"] \
-                -party_id [dict get $user_info user_id] \
-                -privilege "admin"
-        }
-
-        return $user_info
-    }
-
-    ad_proc ::acs::test::user::delete {
-        {-user_id:required}
-    } {
-        Remove a test user.
-    } {
-        acs_user::delete \
-            -user_id $user_id \
-            -permanent
-    }
-}
-
-
-
-
 namespace eval aa_test {}
 
 ad_proc -public aa_test::xml_report_dir {} {
@@ -1768,8 +1077,8 @@ ad_proc -private aa_test::test_file_path {
     {-install_file_path:required}
 } {
     set filename [file tail $install_file_path]
-    regexp {^(.+)-(.+)-(.+)\.xml$} $filename match hostname server
-    set test_path [file dirname $install_file_path]/${hostname}-${server}-testreport.xml
+    regexp {^(.+)-(.+)-(.+)\.xml$} $filename match hostname server    
+    set test_path [file dirname $install_file_path]/${hostname}-${server}-testreport.xml    
 
     return $test_path
 }
@@ -1786,9 +1095,9 @@ ad_proc -public aa_test::parse_install_file {
 
     set root_node [xml_doc_get_first_node $tree]
 
-    foreach entry {
-        name os dbtype dbversion webserver openacs_cvs_flag adminemail adminpassword
-        install_begin_epoch install_end_epoch install_end_timestamp num_errors
+    foreach entry { 
+        name os dbtype dbversion webserver openacs_cvs_flag adminemail adminpassword 
+        install_begin_epoch install_end_epoch install_end_timestamp num_errors 
         install_duration install_duration_pretty script_path description
     } {
         set service($entry) "n/a"
@@ -1807,7 +1116,7 @@ ad_proc -public aa_test::parse_install_file {
         if { $info_type eq "" } {
             append service(parse_error) "No type on info tag;"
             continue
-        }
+        } 
         set info_type [string map {- _} $info_type]
         set info_value [xml_node_get_content $child]
         set service($info_type) $info_value
@@ -1878,7 +1187,7 @@ ad_proc -private aa_test::write_test_file {} {
     on the server.
 
     @author Peter Marklund
-
+    
 } {
     set xml_doc ""
 
@@ -1890,7 +1199,7 @@ ad_proc -private aa_test::write_test_file {} {
         set file_path "$report_dir/${hostname}-${server}-testreport.xml"
 
         set xml_doc [get_test_doc]
-
+        
         if { [catch {template::util::write_file $file_path $xml_doc} errmsg] } {
             ns_log Error "Failed to write xml test report to path $file_path - $errmsg"
         }
@@ -1932,21 +1241,19 @@ ad_proc -public aa_test::parse_test_file {
     set test(testcase_failure) [array get testcase_failure]
 }
 
-
 ad_proc -public aa_get_first_url {
     {-package_key:required}
 } {
-    Procedure for getting the url of a mounted package with the
-    package_key. It uses the first instance that it founds. This is
-    useful for tclwebtest tests.
+    Procedure for geting the url of a mounted package with the package_key. It uses the first instance that it founds. This is useful for tclwebtest tests.
 } {
-    set url [site_node::get_package_url -package_key $package_key]
-    if {$url eq ""} {
+
+    if {![db_0or1row first_url {}]} {
         site_node::instantiate_and_mount -package_key $package_key
-        set url [site_node::get_package_url -package_key $package_key]
+        db_1row first_url {}
     }
 
     return $url
+
 }
 
 ad_proc -public aa_display_result {
@@ -1983,7 +1290,7 @@ ad_proc -public aa_selenium_init {} {
         # request.
         return $_acs_automated_testing_selenium_init
     }
-
+    
     set server_url [parameter::get_from_package_key \
                         -package_key acs-automated-testing \
                         -parameter "SeleniumRcServer" \

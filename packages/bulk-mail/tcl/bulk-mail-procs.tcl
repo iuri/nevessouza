@@ -4,7 +4,7 @@ ad_library {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-05-07
-    @cvs-id $Id: bulk-mail-procs.tcl,v 1.18 2018/05/09 15:33:29 hectorr Exp $
+    @cvs-id $Id: bulk-mail-procs.tcl,v 1.12.2.4 2017/06/30 17:41:28 gustafn Exp $
 
 }
 
@@ -108,11 +108,11 @@ namespace eval bulk_mail {
         @param message the body of the email, can be overridden by a value
                        selected in the query. will be interpolated with values
                        from the query.
-        @param message_type - "text" or "html" (added by mohan)
+        @param message_type - "text" or "html" (added by mohan) 
         @param query a query that must select the email address to send to as
                      'email' and can select any other values that will be
                      interpolated into the subject and message of the bulk_mail for
-                     each recipient. if column 'foo' is selected its value
+                     each recipient. if column 'foo' is selected it's value
                      will be interpolated anywhere that '{foo}' appears in the
                      subject or message of the bulk_mail. if columns 'from_addr',
                      'reply_to', 'subject', or 'message' are selected, their
@@ -178,10 +178,10 @@ namespace eval bulk_mail {
         ns_log Debug "bulk_mail::sweep starting"
 
         foreach bulk_mail [db_list_of_ns_sets select_bulk_mails_to_send {}] {
-            #Although the message may change for each recipient, it
-            # usually doesn't.
-            # We check by looking to see if message_old = the current message.
-            # This is initialized here for each bulk_mail.
+            #Although the message may change for each recipiant, it
+            # usually doesn't.  
+            # We check by looking to see if message_old = the current messag.  
+            # This is inicialized here for each bulk_mail.
             set message_old ""
 
             # NOTE: JCD: the query issued here is actually stored in the 
@@ -192,7 +192,7 @@ namespace eval bulk_mail {
                 # create a list of key, value pairs that will be used to
                 # interpolate the subject and the message. we will search
                 # for strings of the format {column_name} in the subject
-                # and message and replace them with the value of that
+                # and message and replace them witht the value of that
                 # column as returned by the query
                 set pairs [list]
                 for {set i 0} {$i < [ns_set size $recipient]} {incr i} {

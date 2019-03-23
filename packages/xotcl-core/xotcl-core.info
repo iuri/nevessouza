@@ -10,7 +10,7 @@
     <inherit-templates-p>t</inherit-templates-p>
     <auto-mount>xotcl</auto-mount>
 
-    <version name="5.10.0d14" url="http://media.wu-wien.ac.at/download/xotcl-core-5.10.0d14.apm">
+    <version name="5.9.1" url="http://media.wu-wien.ac.at/download/xotcl-core-5.9.1.apm">
         <owner url="mailto:neumann@wu-wien.ac.at">Gustaf Neumann</owner>
         <summary>XOTcl library functionality (e.g. thread handling, online documentation, Generic Form and List Classes)</summary>
         <release-date>2017-08-06</release-date>
@@ -21,7 +21,7 @@ applications using XOTcl. It includes
 XOTcl thread handling for OpenACS (supporting persistent and
 volatile threads) and a definitions for
 documenting XOTcl object, classes and methods 
-integrated with the API-browser of OpenACS. Documented
+integrated with the api-browser of OpenACS. Documented
 procs and instproc an be created using the methods ad_proc
 and ad_instproc. This component provides as 
 well an XOTcl Object and Class browser, as well as
@@ -43,12 +43,12 @@ Features:
         <license>BSD-Style</license>
         <maturity>2</maturity>
 
-        <provides url="xotcl-core" version="5.10.0d14"/>
-	<requires url="acs-kernel" version="5.10.0d11"/>
+        <provides url="xotcl-core" version="5.9.1"/>
+	<requires url="acs-kernel" version="5.9.1"/>
 	<requires url="acs-templating" version="5.9.1"/>
 	<requires url="acs-api-browser" version="5.9.1"/>
 	<requires url="acs-content-repository" version="5.9.1"/>
-        <requires url="acs-tcl" version="5.10.0d12"/>
+        <requires url="acs-tcl" version="5.9.1"/>
 
         <callbacks>
             <callback type="before-install"  proc="::xotcl-core::before-install"/>

@@ -4,7 +4,7 @@ ad_library {
 
     @author Jon Salz (jsalz@arsdigita.com)
     @creation-date 11 Aug 2000
-    @cvs-id $Id: object-procs.tcl,v 1.14 2018/03/21 08:53:23 gustafn Exp $
+    @cvs-id $Id: object-procs.tcl,v 1.11.12.1 2015/09/10 08:21:58 gustafn Exp $
 
 }
 
@@ -39,12 +39,7 @@ ad_proc -public acs_magic_object { name } {
 
     @error if no object exists with that magic name.
 } {
-    set key ::acs::magic_object($name)
-    if {[info exists $key]} {
-        return [set $key]
-    } else {
-        return [set $key [acs_lookup_magic_object $name]]
-    }
+    return [util_memoize [list acs_lookup_magic_object $name]]
 }
 
 ad_proc -public acs_object_name { object_id } {
@@ -98,7 +93,7 @@ ad_proc -public acs_object::package_id {
     return [util_memoize [list acs_object::package_id_not_cached -object_id $object_id]]
 }
 
-ad_proc -private acs_object::package_id_not_cached {
+ad_proc -public acs_object::package_id_not_cached {
     {-object_id:required}
 } {
     Gets the package_id of the object

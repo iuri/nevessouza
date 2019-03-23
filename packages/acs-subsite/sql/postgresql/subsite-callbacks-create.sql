@@ -7,7 +7,7 @@
 -- @author Michael Bryzek (mbryzek@arsdigita.com)
 -- @creation-date 2001-02-20
 
--- $Id: subsite-callbacks-create.sql,v 1.5 2017/08/07 23:47:58 gustafn Exp $
+-- $Id: subsite-callbacks-create.sql,v 1.4.4.1 2016/07/01 09:04:42 gustafn Exp $
 
 -- This is free software distributed under the terms of the GNU Public
 -- License.  Full text of the license is available from the GNU Project:

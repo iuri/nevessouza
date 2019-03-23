@@ -20,7 +20,7 @@ ad_library {
     "Day Summary". Not to be confused with the "full" calendar portlet.
 
     @author arjun@openforce.net
-    @cvs-id $Id: calendar-portlet-procs.tcl,v 1.35 2018/07/10 15:59:00 antoniop Exp $
+    @cvs-id $Id: calendar-portlet-procs.tcl,v 1.33.2.1 2015/09/10 08:30:17 gustafn Exp $
 
 }
 
@@ -38,16 +38,12 @@ namespace eval calendar_portlet {
 
     ad_proc -public get_pretty_name {
     } {
-        Get portlet pretty name.
-    } {
         return [parameter::get_from_package_key \
                     -package_key [my_package_key] \
                     -parameter pretty_name]
     }
 
     ad_proc -public link {
-    } {
-        Get portlet link (empty).
     } {
 	return ""
     }
@@ -62,7 +58,7 @@ namespace eval calendar_portlet {
 	{-param_action "overwrite"}
     } {
 	Adds a (normal) calendar PE to the given page or appends a
-        calendar_id to the current calendar portlet.
+        calendar_id to the current calendar portlet
 
 	@param portal_id The page to add self to
 	@param calendar_id The new calendar_id to add
@@ -105,10 +101,10 @@ namespace eval calendar_portlet {
         {-calendar_id:required}
     } {
         Removes a calendar PE from the given page or just
-        the given calendar_id.
+        the given calendar_id
 
-        @param portal_id The page to remove self from
-        @param calendar_id
+	  @param portal_id The page to remove self from
+	  @param calendar_id
     } {
         portal::remove_element_parameters \
             -portal_id $portal_id \
@@ -120,7 +116,6 @@ namespace eval calendar_portlet {
     ad_proc -public show {
 	 cf
     } {
-        Show calendar portlet.
     } {
         portal::show_proc_helper \
             -package_key [my_package_key] \

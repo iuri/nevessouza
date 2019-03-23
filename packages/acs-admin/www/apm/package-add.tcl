@@ -2,14 +2,15 @@ ad_page_contract {
     Adds a package to the package manager.
     @author Jon Salz (jsalz@arsdigita.com)
     @creation-date 17 April 2000
-    @cvs-id $Id: package-add.tcl,v 1.16 2018/08/05 21:10:39 gustafn Exp $
+    @cvs-id $Id: package-add.tcl,v 1.13.2.5 2016/11/30 11:16:29 antoniop Exp $
 } {
 }
 
 set user_id [ad_conn user_id]
-set user [acs_user::get -user_id $user_id]
-set user_name [dict get $user name]
-set email     [dict get $user email]
+
+db_1row apm_get_name { 
+    select first_names || ' ' || last_name user_name, email from cc_users where user_id = :user_id
+}
 
 set package_id [db_nextval acs_object_id_seq]
 set version_id [db_nextval acs_object_id_seq]
@@ -255,7 +256,7 @@ this package, please load them manually into your database.
 }]
 
 
-# Add event listener for updating URLs and checking mailto URLs
+# Add event listener for updating urls and checking mailto urls
 
 template::add_event_listener -CSSclass "update-url" -event change -script {updateURLs();}
 template::add_event_listener -CSSclass "check-mailto" -event change -script {checkMailto(this);}

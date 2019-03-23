@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Emmanuelle Raffenne (eraffenne@gmail.com)
     @creation-date 2008-10-16
-    @cvs-id $Id: site-map.tcl,v 1.6 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: site-map.tcl,v 1.4.4.1 2015/09/11 11:40:46 gustafn Exp $
 }
 
 # Make sure user is logged in

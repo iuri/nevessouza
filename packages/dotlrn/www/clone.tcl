@@ -18,7 +18,7 @@ ad_page_contract {
     clone a community
 
     @author arjun (arjun@openforce.net)
-    @cvs-id $Id: clone.tcl,v 1.13 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: clone.tcl,v 1.11.4.1 2015/09/11 11:40:41 gustafn Exp $
 } -query {
     {referer "one-community-admin"}
 } -properties {

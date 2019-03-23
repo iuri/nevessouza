@@ -3,7 +3,7 @@ ad_page_contract {
 
   @author Lee Denison (lee@xarg.co.uk)
 
-  $Id: default-master.tcl,v 1.2.4.1 2019/02/14 16:15:01 gustafn Exp $
+  $Id: default-master.tcl,v 1.2 2014/10/27 16:40:53 victorg Exp $
 }
 
 #
@@ -45,7 +45,7 @@ if {![template::multirow exists navigation]} {
         accesskey \
         class \
         id \
-        tabindex
+        tabindex 
 }
 for {set i 1} {$i <= [template::multirow size navigation]} {incr i} {
     template::multirow get navigation $i
@@ -65,7 +65,7 @@ template::multirow append link \
     en \
     "all"
 
-#
+# 
 # User information and top level navigation links
 #
 set user_id [ad_conn user_id]
@@ -108,7 +108,7 @@ if { $untrusted_user_id == 0 } {
 #
 util_get_user_messages -multirow user_messages
 
-#
+# 
 # Set acs-lang urls
 #
 set acs_lang_url [apm_package_url_from_key "acs-lang"]
@@ -161,7 +161,7 @@ ad_context_bar_multirow -- $context_tmp
 
 #
 # Curriculum specific bar
-#   TODO: remove this and add a more systematic / package independent way
+#   TODO: remove this and add a more systematic / package independent way 
 #   TODO  of getting this content here
 #
 set curriculum_bar_p [expr {

@@ -7,7 +7,7 @@
       Testcase for recursive <code>include</code> and <code>if</code>
     </h2>
     <p>
-      This page does two things:
+      This pages does two things:
     </p>
     <ol>
       <li>It exercises <code>include</code> recursively, passing

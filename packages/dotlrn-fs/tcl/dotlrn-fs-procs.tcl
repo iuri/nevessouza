@@ -20,7 +20,7 @@ ad_library {
 
     @author Ben Adida (ben@openforce.net)
     @author iArjun Sanyal (arjun@openforce.net)
-    @cvs-id $Id: dotlrn-fs-procs.tcl,v 1.102 2018/06/28 12:07:49 hectorr Exp $
+    @cvs-id $Id: dotlrn-fs-procs.tcl,v 1.96.2.3 2017/06/30 17:48:10 gustafn Exp $
 
 }
 
@@ -99,7 +99,7 @@ namespace eval dotlrn_fs {
     ad_proc -public add_applet_to_community {
         community_id
     } {
-        Add the fs applet to a specific dotlrn community
+        Add the fs applet to a specifc dotlrn community
     } {
         set portal_id [dotlrn_community::get_portal_id -community_id $community_id]
         set package_id [dotlrn::instantiate_and_mount $community_id [package_key]]
@@ -270,7 +270,7 @@ namespace eval dotlrn_fs {
     ad_proc -public remove_applet_from_community {
         community_id
     } {
-        remove the fs applet from a specific dotlrn community
+        remove the fs applet from a specifc dotlrn community
     } {
         ad_return_complaint 1 "[applet_key] remove_applet_from_community not implemented!"
     }
@@ -281,7 +281,14 @@ namespace eval dotlrn_fs {
         One time user-specific init
     } {
         # Message lookups below need variable user_name
-        set user_name [person::name -person_id $user_id]
+        set user_name [acs_user::get_element -user_id $user_id -element name]
+
+        # get the name of the user to stick in the folder name
+        set user_name [db_string select_user_name {
+            select first_names || ' ' || last_name
+            from persons
+            where person_id = :user_id
+        }]
 
         # get the root folder of dotlrn file storage instance
         set package_id [site_node_apm_integration::get_child_package_id \
@@ -365,7 +372,14 @@ namespace eval dotlrn_fs {
     } {
         # reverse the logic done by add_user
         # Message lookups below need variable user_name
-        set user_name [person::name -person_id $user_id]
+        set user_name [acs_user::get_element -user_id $user_id -element name]
+
+        # get the folder name we used for this user
+        set user_name [db_string select_user_name {
+            select first_names || ' ' || last_name
+            from persons
+            where person_id = :user_id
+        }]
 
         # get the root folder of this package instance
         set package_id [site_node_apm_integration::get_child_package_id \
@@ -414,7 +428,7 @@ namespace eval dotlrn_fs {
         community_id
         user_id
     } {
-        Add a user to a to a specific dotlrn community
+        Add a user to a to a specifc dotlrn community
     } {
         # Get the package_id by callback
         set package_id [dotlrn_community::get_applet_package_id -community_id $community_id -applet_key [applet_key]]
@@ -617,13 +631,13 @@ namespace eval dotlrn_fs {
         foreach object_id $old_root_contents {
 
             if {$object_id == $old_public_folder_id} {
-                # this is the old public folder so, copy
-                # its _contents_ into the new public folder
+                # this is the old public folder so, copy 
+                # it's _contents_ into the new public folder
                 set old_public_contents [fs::get_folder_objects \
                     -folder_id $object_id \
                     -user_id $user_id
                 ]
-
+                
                 foreach public_item_id $old_public_contents {
                     copy_fs_object  \
                         -object_id $public_item_id \

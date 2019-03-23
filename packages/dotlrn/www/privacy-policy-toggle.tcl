@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (aegrumet@alum.mit.edu)
     @creation-date 2004-02-17
-    @cvs-id $Id: privacy-policy-toggle.tcl,v 1.7 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: privacy-policy-toggle.tcl,v 1.4.4.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     {community_id:integer ""}
     policy:notnull
@@ -47,7 +47,7 @@ if {$policy eq "yes"} {
 }
 
 ad_returnredirect $referer
-ad_script_abort
+
 
 # Local variables:
 #    mode: tcl

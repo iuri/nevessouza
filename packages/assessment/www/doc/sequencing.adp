@@ -86,7 +86,7 @@ check_sql would look like ":item_1234 == 'blue' AND
 :item_4231 == 'red'". Additionally other variables
 might be defined by the API at a later stage,  e.g.
 ":percent_score", which would be replaced by the current
-percentage value (a.k.a. score) that subject had in the test so far
+percentage value (aka score) that subject had in the test so far
 (taken from the as_session_table). It might be interesting to pass
 these variables along in the API, this remains to be seen when
 actually implementing the system.<br><br>
@@ -97,7 +97,7 @@ hit the submit button. Depending on the result of the check (if it
 is true) the user will be taken to the section given by section_id
 or to the item given by item_id, depending whether this assessment
 is section based (questions are displayed in sections) or item
-based (each item will be displayed on a separate page). If there
+based (each item will be displayed on a seperate page). If there
 are multiple post checks for a given section/item the order will be
 defined by the relationship (which means this relationship has to
 have a sort_order attribute).<br><ul>
@@ -109,7 +109,7 @@ section.<br>
 items will be displayed in sections) and it is a
 post_check.<br>
 </li><li>item_id - Item to call if we are in "per item" mode
-(all items will be displayed on a separate page) and it is a
+(all items will be displayed on a seperate page) and it is a
 post_check.</li><li>Potential extension: item_list - list of item_ids that are used
 in the check_sql to speed up the check.<br>
 </li>

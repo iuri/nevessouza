@@ -1,7 +1,7 @@
-/chat-ajax-procs.tcl/1.23.2.1/Thu Feb 14 16:15:01 2019//Toacs-5-10
-/chat-init.tcl/1.9/Wed Oct 24 09:14:26 2018//Toacs-5-10
-/chat-procs-oracle.xql/1.3/Mon Aug  7 23:48:07 2017//Toacs-5-10
-/chat-procs-postgresql.xql/1.7/Mon Aug  7 23:48:07 2017//Toacs-5-10
-/chat-procs.tcl/1.24.2.1/Thu Feb 14 16:15:01 2019//Toacs-5-10
-/chat-procs.xql/1.5/Mon Aug  7 23:48:07 2017//Toacs-5-10
+/chat-ajax-procs.tcl/1.12.2.8/Fri Apr 21 20:21:49 2017//Topenacs-5-9-compat
+/chat-init.tcl/1.5/Fri Oct 10 11:30:35 2008//Topenacs-5-9-compat
+/chat-procs-oracle.xql/1.2.8.2/Fri Oct 28 18:57:36 2016//Topenacs-5-9-compat
+/chat-procs-postgresql.xql/1.6.6.4/Wed Nov 23 19:51:16 2016//Topenacs-5-9-compat
+/chat-procs.tcl/1.11.6.10/Thu Jun  8 18:15:16 2017//Topenacs-5-9-compat
+/chat-procs.xql/1.4.6.1/Wed Nov 23 19:51:16 2016//Topenacs-5-9-compat
 D

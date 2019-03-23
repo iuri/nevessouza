@@ -1,10 +1,13 @@
+# 
+
 ad_page_contract {
     
     Parameter Administration for Site Templates
     
     @author Victor Guerra (guerra@galileo.edu)
     @creation-date 2005-12-08
-    @cvs-id $Id: admin-params-site-templates.tcl,v 1.4 2018/08/15 16:43:08 gustafn Exp $
+    @arch-tag: f5015caa-41c8-4f82-bbef-44450f1c6ffc
+    @cvs-id $Id: admin-params-site-templates.tcl,v 1.2.10.2 2016/05/20 20:17:34 gustafn Exp $
 } {
     return_url:localurl,notnull
 } -properties {

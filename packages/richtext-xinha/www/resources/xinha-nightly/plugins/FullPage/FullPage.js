@@ -10,7 +10,7 @@
 // Version 3.0 developed by Mihai Bazon for InteractiveTools.
 //   http://dynarch.com/mishoo
 //
-// $Id: FullPage.js,v 1.2 2017/08/07 23:48:24 gustafn Exp $
+// $Id: FullPage.js,v 1.1.2.1 2016/01/03 20:48:21 gustafn Exp $
 
 function FullPage(editor) {
 	this.editor = editor;

@@ -20,7 +20,7 @@ ad_page_contract {
 
     @author Arjun Sanyal (arjun@openforce.net)
     @author Ben Adida (ben@openforce.net)
-    @cvs-id $Id: calendar-admin-portlet.tcl,v 1.6 2018/06/29 17:27:18 hectorr Exp $
+    @cvs_id $Id: calendar-admin-portlet.tcl,v 1.4.8.1 2015/09/10 08:30:17 gustafn Exp $
 } {
     {period_days:optional}
 } -properties {

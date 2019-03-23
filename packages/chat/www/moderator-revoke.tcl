@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 22, 2000
-    @cvs-id $Id: moderator-revoke.tcl,v 1.8.2.1 2019/02/14 16:15:01 gustafn Exp $
+    @cvs-id $Id: moderator-revoke.tcl,v 1.3.12.1 2016/06/20 08:40:23 gustafn Exp $
 } {
     room_id:naturalnum,notnull
     party_id:naturalnum,notnull
@@ -15,12 +15,8 @@ permission::require_permission -object_id $room_id -privilege chat_moderator_rev
 
 set context_bar [list [list "room?room_id=$room_id" "[_ chat.Room_Information]"] "[_ chat.Revoke_moderator]"]
 
-set party_pretty_name [acs_object_name $party_id]
+set party_pretty_name [db_string get_party_name {}]
 
 set pretty_name [chat_room_name $room_id]
 
-# Local variables:
-#    mode: tcl
-#    tcl-indent-level: 4
-#    indent-tabs-mode: nil
-# End:
+ad_return_template

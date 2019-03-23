@@ -3,7 +3,7 @@
 <queryset>
 <rdbms><type>postgresql</type><version>7.1</version></rdbms>
 
-<fullquery name="open_assessments">
+<fullquery name="open_asssessments">
 	<querytext>
 	select * from (select cr.item_id as assessment_id, cr.title, cr.description, a.password,
 	a.type,

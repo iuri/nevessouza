@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2003-12-09
-    @cvs-id $Id: edit.tcl,v 1.3 2017/08/07 23:48:11 gustafn Exp $
+    @cvs-id $Id: edit.tcl,v 1.2.14.1 2015/09/12 11:06:23 gustafn Exp $
 
 }
 

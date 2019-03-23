@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-03-15
-    @cvs-id $Id: approve.tcl,v 1.12 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: approve.tcl,v 1.9.4.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     {user_id:integer,multiple ""}
     {community_id:integer ""}
@@ -43,7 +43,7 @@ foreach uid $user_id {
 }
 
 ad_returnredirect $referer
-ad_script_abort
+
 
 # Local variables:
 #    mode: tcl

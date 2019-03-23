@@ -7,7 +7,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Wed Dec 13 20:00:25 2000
-    @cvs-id $Id: new-3.tcl,v 1.9 2018/01/19 14:09:48 gustafn Exp $
+    @cvs-id $Id: new-3.tcl,v 1.7.2.4 2016/05/20 20:02:44 gustafn Exp $
 
 } {
     group_id:integer,notnull
@@ -57,7 +57,7 @@ db_transaction {
 if { ![db_string segments_exists_p {}] } {
     # No more segments... can't create constraints
     ad_returnredirect $return_url
-    ad_script_abort
+    return
 }
 
 

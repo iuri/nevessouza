@@ -40,15 +40,13 @@ set email_forgotten_password_p [parameter::get \
                                     -package_id $subsite_id \
                                     -default 1]
 
-set untrusted_user_id [ad_conn untrusted_user_id]
-
-if { $email eq "" && $username eq "" && $untrusted_user_id != 0 } {
+if { $email eq "" && $username eq "" && [ad_conn untrusted_user_id] != 0 } {
+    acs_user::get -user_id [ad_conn untrusted_user_id] -array untrusted_user
     if { [auth::UseEmailForLoginP] } {
-        set email [party::get -party_id $untrusted_user_id -element email]
+        set email $untrusted_user(email)
     } else {
-        set user_info    [acs_user::get_user_info -user_id $untrusted_user_id]
-        set authority_id [dict get $user_info authority_id]
-        set username     [dict get $user_info username]
+        set authority_id $untrusted_user(authority_id)
+        set username $untrusted_user(username)
     }
 }
 
@@ -76,7 +74,7 @@ set system_name [ad_system_name]
 
 if { $return_url ne "" } {
     if { [util::external_url_p $return_url] } {
-      ad_returnredirect -message "only URLs without a host name are permitted" "."
+      ad_returnredirect -message "only urls without a host name are permitted" "."
       ad_script_abort
     }
 } else {

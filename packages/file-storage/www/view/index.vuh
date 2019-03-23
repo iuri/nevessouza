@@ -6,7 +6,7 @@ ad_page_contract {
     
     @author Unknown
     @creation-date Unknown
-    @cvs-id $Id: index.vuh,v 1.10 2017/08/07 23:48:11 gustafn Exp $
+    @cvs-id $Id: index.vuh,v 1.9.2.2 2016/06/09 09:13:26 gustafn Exp $
 } {    
     { revision_id "" }
 }

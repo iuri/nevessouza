@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Timo Hentschel (timo@timohentschel.de)
     @creation-date 2004-09-30
-    @cvs-id $Id: users-bulk-approve.tcl,v 1.8 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: 
 }
 
 #Pages in this directory are only runnable by dotlrn-wide admins.

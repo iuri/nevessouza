@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author David Dao (ddao@arsdigita.com)
     @creation-date January 18, 2001
-    @cvs-id $Id: message-delete-2.tcl,v 1.9.2.1 2019/02/14 16:15:01 gustafn Exp $
+    @cvs-id $Id: message-delete-2.tcl,v 1.7.6.2 2017/06/09 17:47:19 antoniop Exp $
 } {
     room_id:naturalnum,notnull
 }
@@ -19,9 +19,3 @@ if { [catch {chat_room_message_delete $room_id} errmsg] } {
 ::chat::Chat flush_messages -chat_id $room_id
 
 ad_returnredirect .
-
-# Local variables:
-#    mode: tcl
-#    tcl-indent-level: 4
-#    indent-tabs-mode: nil
-# End:

@@ -19,17 +19,14 @@ if { $return_url eq "" } {
     set return_url [ad_return_url]
 }
 
-acs_object::get -object_id $object_id -array obj
-set object_name $obj(object_name)
-set context_id  $obj(context_id)
-set parent_object_name [acs_object_name $obj(context_id)]
+db_1row object_info {}
 
 set elements [list]
 lappend elements grantee_name { 
     label "[_ acs-subsite.Name]"
     link_url_col name_url
     display_template {
-        <if @permissions.any_perm_p_@ gt 0>
+        <if @permissions.any_perm_p_@ true>
           @permissions.grantee_name@
         </if>
         <else>
@@ -72,7 +69,7 @@ lappend elements remove_all {
 
 set perm_url "[ad_conn subsite_url]permissions/"
 
-if { $user_add_url eq "" } {
+if { ![info exists user_add_url] || $user_add_url eq "" } {
     set user_add_url "${perm_url}perm-user-add"
 }
 set user_add_url [export_vars -base $user_add_url {

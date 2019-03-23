@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
+
 <queryset>
-  <rdbms><type>oracle</type><version>8.1.6</version></rdbms>
-  <fullquery name="select_folder_contents">
-    <querytext>
+   <rdbms><type>oracle</type><version>8.1.6</version></rdbms>
+    <fullquery name="select_folder_contents">
+        <querytext>
 
             select fs_objects.object_id,
                    fs_objects.name,
@@ -35,6 +36,23 @@
                      and m.privilege = 'read')
             $orderby
 
-    </querytext>
-  </fullquery>
+        </querytext>
+    </fullquery>
+
+    <fullquery name="get_folder_path">
+        <querytext>
+            declare begin
+                :1 := content_item.get_path(:folder_id, :root_folder_id);
+            end;
+        </querytext>
+    </fullquery>
+
+    <partialquery name="categories_limitation">
+        <querytext>
+
+            and fs_objects.object_id in ( select object_id from category_object_map where category_id = :category_id )
+
+        </querytext>
+    </partialquery>
+
 </queryset>

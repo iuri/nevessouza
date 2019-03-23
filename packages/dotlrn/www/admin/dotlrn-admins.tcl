@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Hector Amado (hr_amado@galileo.edu)
     @creation-date 2004-06-28
-    @cvs-id $Id: dotlrn-admins.tcl,v 1.10 2017/08/07 23:48:09 gustafn Exp $
+    @cvs-id $Id: dotlrn-admins.tcl,v 1.9.4.1 2015/09/11 11:40:51 gustafn Exp $
 }
 
 #Pages in this directory are only runnable by dotlrn-wide admins.

@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Fri Jan 12 20:52:33 2001
-    @cvs-id $Id: rels-list.tcl,v 1.6 2018/01/21 00:35:29 gustafn Exp $
+    @cvs-id $Id: rels-list.tcl,v 1.4.2.2 2015/10/28 09:38:37 gustafn Exp $
 
 } {
     rel_type:notnull
@@ -26,10 +26,8 @@ if { ![db_0or1row select_pretty_name {
       from acs_object_types t
      where t.object_type = :rel_type
 }] } {
-    ad_return_error \
-        "Relationship type doesn't exist" \
-        "Relationship type \"$rel_type\" doesn't exist"
-    ad_script_abort
+    ad_return_error "Relationship type doesn't exist" "Relationship type \"$rel_type\" doesn't exist"
+    return
 }
 
 db_multirow rels rels_select {}

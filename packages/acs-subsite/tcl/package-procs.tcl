@@ -6,7 +6,7 @@ ad_library {
 
     @author mbryzek@arsdigita.com
     @creation-date Wed Dec 27 16:02:44 2000
-    @cvs-id $Id: package-procs.tcl,v 1.40 2018/07/25 01:28:26 gustafn Exp $
+    @cvs-id $Id: package-procs.tcl,v 1.26.2.5 2016/06/13 07:44:32 gustafn Exp $
 
 }
 
@@ -18,9 +18,13 @@ ad_proc -public package_type_dynamic_p {
     @author Michael Bryzek (mbryzek@arsdigita.com)
     @creation-date 12/30/2000
 } {
-    return [db_0or1row object_type_dynamic_p {
-        select 1 from acs_object_types
-         where dynamic_p and object_type = :object_type
+    return [db_string object_type_dynamic_p {
+        	select case when exists (select 1 
+                                   from acs_object_types t
+                                  where t.dynamic_p = 't'
+                                    and t.object_type = :object_type)
+	            then 1 else 0 end
+	  from dual
     }]
 }
 
@@ -73,9 +77,11 @@ ad_proc -private package_create_attribute_list {
 } {
     if { $table eq "" || $column eq "" } {
         # pull out the table and column names based on the object type
-        acs_object_type::get -object_type $object_type -array acs_type
-        set table  $acs_type(table_name)
-        set column $acs_type(id_column)
+        db_1row select_type_info {
+            select t.table_name as table, t.id_column as column
+            from acs_object_types t
+            where t.object_type = :object_type
+        }
     }
 
     # set toupper for case-insensitive searching
@@ -182,7 +188,7 @@ ad_proc -private package_attribute_default {
     # We handle defaults grossly here, but I don't currently have
     # a better idea how to do this
     if { $attr_default ne "" } {
-        return [::ns_dbquotevalue $attr_default]
+        return "'[DoubleApos $attr_default]'"
     }
 
     # Special cases for acs_object and acs_rels
@@ -191,7 +197,7 @@ ad_proc -private package_attribute_default {
 
     if {$table eq "ACS_OBJECTS"} {
         switch -- $column {
-            "OBJECT_TYPE"   { return [::ns_dbquotevalue $object_type] }
+            "OBJECT_TYPE"   { return "'[DoubleApos $object_type]'" }
             "CREATION_DATE" { return [db_map creation_date] }
             "CREATION_IP"   { return "NULL" }
             "CREATION_USER" { return "NULL" }
@@ -200,7 +206,7 @@ ad_proc -private package_attribute_default {
         }
     } elseif {$table eq "ACS_RELS"} {
         switch -- $column {
-            "REL_TYPE"      { return [::ns_dbquotevalue $object_type] }
+            "REL_TYPE"      { return "'[DoubleApos $object_type]'" }
         }
     }
 
@@ -271,19 +277,18 @@ ad_proc -private package_create {
 
 } {
 
-    if {[catch {
-        acs_object_type::get -object_type $object_type -array acs_type
-    } errmsg]} {
-        error "The specified object, $object_type does not exist."
-    }
-    
-    if { ![string is true -strict $acs_type(dynamic_p)] } {
-        error "The specified object, $object_type is not dynamic. Therefore, a package cannot be created for it"
+    if { ![package_type_dynamic_p $object_type] } {
+        error "The specified object, $object_type, either does not exist or is not dynamic. Therefore, a package cannot be created for it"
     }
 
     # build up a list of the pl/sql to execute as it will make it
     # easier to return a string for debugging purposes.
-    set package_name $acs_type(package_name)
+
+    set package_name [db_string select_package_name {
+        select t.package_name
+        from acs_object_types t
+        where t.object_type = :object_type
+    }]
 
     lappend plsql \
         [list "package" "create_package" [package_generate_spec $object_type]] \
@@ -336,11 +341,11 @@ ad_proc -private package_generate_spec {
     @param object_type The object for which to create a package spec
 } {
     # First pull out some basic information about this object type
-    acs_object_type::get -object_type $object_type -array acs_type
-    set table_name   $acs_type(table_name)
-    set id_column    $acs_type(id_column)
-    set package_name [string tolower $acs_type(package_name)]
-    set supertype    $acs_type(supertype)
+    db_1row select_type_info {
+        select t.table_name, t.id_column, lower(t.package_name) as package_name, t.supertype
+        from acs_object_types t
+        where t.object_type = :object_type
+    }
 
     return [db_map spec]
 }
@@ -358,17 +363,19 @@ ad_proc -private package_generate_body {
 
 } {
     # Pull out information about this object type
-    acs_object_type::get -object_type $object_type -array acs_type
-    set table_name   $acs_type(table_name)
-    set id_column    $acs_type(id_column)
-    set package_name [string tolower $acs_type(package_name)]
-    set supertype    $acs_type(supertype)
+    db_1row select_type_info {
+        select t.table_name, t.id_column, lower(t.package_name) as package_name, t.supertype
+        from acs_object_types t
+        where t.object_type = :object_type
+    }
 
     # Pull out information about the supertype
-    acs_object_type::get -object_type $supertype -array acs_type
-    set supertype_table_name   $acs_type(table_name)
-    set supertype_id_column    $acs_type(id_column)
-    set supertype_package_name [string tolower $acs_type(package_name)]
+    db_1row select_type_info {
+        select t.table_name as supertype_table_name, t.id_column as supertype_id_column,
+        lower(t.package_name) as supertype_package_name
+        from acs_object_types t
+        where t.object_type = :supertype
+    }
 
     set attribute_list [package_create_attribute_list \
                             -supertype $supertype \
@@ -460,9 +467,13 @@ ad_proc -private package_object_view_helper {
     # separately in case there are no other attributes for this object type
     # Note that we also alias this primary key to object_id so
     # that the calling code can generically use it.
-    acs_object_type::get -object_type $object_type -array acs_type
-    set table_name $acs_type(table_name)
-    set id_column  $acs_type(id_column)
+
+    db_1row select_type_info {
+        select t.table_name, t.id_column
+        from acs_object_types t
+        where t.object_type = :object_type
+    }
+
 
     set columns [list "${table_name}.${id_column}"]
     if { [string tolower $id_column] ne "object_id" } {
@@ -519,10 +530,16 @@ ad_proc -private package_insert_default_comment { } {
     @creation-date 12/29/2000
 
 } {
-    set author [expr {[ad_conn isconnected] ?
-                      [acs_user::get_element -element name] : "Unknown"}]
-    set creation_date [db_string current_timestamp {
-        select current_timestamp from dual}]
+    if { [ad_conn isconnected] } {
+        set user_id [ad_conn user_id]
+        db_1row select_comments {}
+    } else {
+        db_1row select_author_unknwon {
+            select 'Unknown' as author,
+            sysdate as creation_date
+            from dual
+        }
+    }
     return "
   --/** THIS IS AN AUTO GENERATED PACKAGE. $author was the
   --    user who created it
@@ -573,29 +590,20 @@ ad_proc -private package_plsql_args {
     @creation-date 11/2001
 
     @param package_name The package which owns the function
+
     @param object_name The function name which we're looking up
-    @return list of parameters
 } {
     # Get just the args
-    set key ::acs::package_plsql_args($object_name-$package_name)
-    if {[info exists $key]} {
-        return [set $key]
-    }
-    return [set $key [db_list select_package_func_param_list {}]]
-
+    return [db_list select_package_func_param_list {}]
 }
 
 ad_proc -private package_function_p {
     -object_name:required
     package_name
 } {
-    @return true if the package's object is a function.
+    Returns true if the package's object is a function.
 } {
-    set key ::acs::package_function_p($object_name-$package_name)
-    if {[info exists $key]} {
-        return [set $key]
-    }
-    return [set $key [db_0or1row function_p ""]]
+    return [db_0or1row function_p ""]
 }
 
 ad_proc -private package_table_columns_for_type {
@@ -625,8 +633,11 @@ ad_proc -private package_table_columns_for_type {
 
     set object_name "NEW"
 
-    acs_object_type::get -object_type $object_type -array acs_type
-    set package_name $acs_type(package_name)
+    db_1row select_type_info {
+        select t.package_name
+        from acs_object_types t
+        where t.object_type = :object_type
+    }
 
     # We need to hit the data dictionary to find the table and column names
     # for all the arguments to the object_types function/procedure
@@ -713,16 +724,15 @@ ad_proc -public package_instantiate_object {
         append variable_prefix "."
     }
 
-    if {[catch {
-        acs_object_type::get -object_type $object_type -array acs_type
-        set package_name $acs_type(package_name)
-    } errmsg]} {
-        error "Object type \"$object_type\" does not exist"
-    }    
-    
     # Select out the package name if it wasn't passed in
-    if { $package_name eq "" } {        
-        set package_name $acs_type(package_name)
+    if { $package_name eq "" } {
+        if { ![db_0or1row package_select {
+            select t.package_name
+            from acs_object_types t
+            where t.object_type = :object_type
+        }] } {
+            error "Object type \"$object_type\" does not exist"
+        }
     }
 
     if { [ad_conn isconnected] } {
@@ -747,7 +757,7 @@ ad_proc -public package_instantiate_object {
     # This will prevent us from passing in any parameters that are
     # not defined
 
-    foreach arg [package_plsql_args $package_name] {
+    foreach arg [util_memoize [list package_plsql_args $package_name]] {
         set real_params([string toupper $arg]) 1
     }
 
@@ -793,7 +803,8 @@ ad_proc -public package_instantiate_object {
 
     if { $form_id ne ""} {
 
-        set __id_column $acs_type(id_column)
+        #DRB: This needs to be cached!
+        set __id_column [db_string get_id_column {}]
         if { [info exists real_params([string toupper $__id_column])]
              && ![info exists param_array([string toupper $__id_column])]
          } {
@@ -838,7 +849,7 @@ ad_proc -public package_exec_plsql {
 } {
 
     Calls a pl/[pg]sql proc/func defined within the object type's package.  Use of
-    this Tcl API proc avoids the need for the developer to write separate SQL for each
+    this Tcl APi proc avoids the need for the developer to write separate SQL for each
     RDBMS we support.
 
     @author Don Baccus (dhogaza@pacifier.com)
@@ -868,7 +879,7 @@ ad_proc -public package_exec_plsql {
     set __package_name $package_name
     set __object_name $object_name
 
-    foreach arg [package_plsql_args -object_name $__object_name $__package_name] {
+    foreach arg [util_memoize [list package_plsql_args -object_name $__object_name $__package_name]] {
         set real_params([string toupper $arg]) 1
     }
 
@@ -894,7 +905,7 @@ ad_proc -public package_exec_plsql {
         set $__key $__value
     }
 
-    if { [package_function_p -object_name $__object_name $__package_name] } {
+    if { [util_memoize [list package_function_p -object_name $__object_name $__package_name]] } {
         return [db_exec_plsql exec_func_plsql {}]
     } else {
         db_exec_plsql exec_proc_plsql {}

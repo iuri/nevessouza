@@ -122,7 +122,7 @@
   <msg key="Assessment_Imported_Correctly">Cuestionario importado correctamente</msg>
   <msg key="assessment_Name_help">Te permite dar un identificador único al cuestionario, que puede ser un código.</msg>
   <msg key="assessment_not_public">El cuestionario no es público.</msg>
-  <msg key="Assessment_portlet">Cuestionarios</msg>
+  <msg key="Assessment_porlet">Cuestionarios</msg>
   <msg key="assessment_restricted_ips">Acceso restringido, IP errónea.</msg>
   <msg key="Assessment_Title">Título</msg>
   <msg key="assessment_too_many_tries">Solo se permiten %number_tries% intentos.</msg>
@@ -220,7 +220,7 @@
   <msg key="data_type_timestamp">Hora</msg>
   <msg key="data_type_varchar">Texto corto</msg>
   <msg key="date_request">Fecha solicitada desde ...</msg>
-  <msg key="Default_Value_help">Valor por defecto para esta respuesta.</msg>
+  <msg key="Deafult_Value_help">Valor por defecto para esta respuesta.</msg>
   <msg key="Default_Path">Path por defecto</msg>
   <msg key="Default_Selected">Defecto: Seleccionado</msg>
   <msg key="Default_Selected_help">¿Se selecciona esta respuesta por defecto?</msg>

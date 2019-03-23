@@ -6,7 +6,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     
     @creation-date Mar 16, 2002
-    @cvs-id $Id: item-type-new.tcl,v 1.5 2018/01/19 14:27:15 gustafn Exp $
+    @cvs-id $Id: item-type-new.tcl,v 1.3.2.1 2015/09/10 08:30:15 gustafn Exp $
 } {
     calendar_id:naturalnum,notnull
     type:notnull
@@ -19,7 +19,8 @@ permission::require_permission -object_id $calendar_id -privilege calendar_admin
 calendar::item_type_new -calendar_id $calendar_id -type $type
 
 ad_returnredirect "calendar-item-types?calendar_id=$calendar_id"
-ad_script_abort
+
+
 
 # Local variables:
 #    mode: tcl

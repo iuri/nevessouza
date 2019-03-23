@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2001-11-04
-    @cvs-id $Id: user-new-2.tcl,v 1.39 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: user-new-2.tcl,v 1.36.4.2 2015/09/11 11:40:53 gustafn Exp $
 } -query {
     user_id:naturalnum
     {referer "[dotlrn::get_admin_url]/users" }
@@ -109,8 +109,6 @@ if {[form is_valid add_user]} {
         ad_return_error \
             "Error sending mail" \
             "There was an error sending email to $email."
-        ad_script_abort
-        
     } else {
 
         set admin_subject "The following email was just sent from [ad_system_name]"

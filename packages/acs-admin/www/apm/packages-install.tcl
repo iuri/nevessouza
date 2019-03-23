@@ -3,7 +3,7 @@ ad_page_contract {
     Select, dependency check, install and enable packages.
 
     @author Bryan Quinn (bquinn@arsdigita.com)
-    @cvs-id $Id: packages-install.tcl,v 1.28.2.2 2019/02/17 15:52:57 gustafn Exp $
+    @cvs-id $Id: packages-install.tcl,v 1.24.2.5 2016/10/02 16:47:30 gustafn Exp $
 
 } {
     {checked_by_default_p:boolean 0}
@@ -28,7 +28,7 @@ set dimensional_list [ad_dimensional $dimensional_list]
 
 ### Get all the spec files
 #
-# If a package is in the apm_workspace dir then we assume that this is
+# If a package is in the apm_workspace dir then we assume that that is
 # the package that should be installed and we ignore any such package
 # in the packages dir.  
 #
@@ -85,17 +85,18 @@ set body ""
 if { $spec_files eq "" } {
     # No spec files to work with.
     append body [subst {
-        <h2>No New Packages to $operation</h2><p>
+        <h2>No New Packages to Install</h2><p>
 
-        There are no new packages to [string tolower $operation].  Please load some
+        There are no new packages to install.  Please load some
         using the <a href="package-load">Package Loader</a>.<p>
         Return to the <a href="index">APM</a>.<p>
     }]
 } else {   
     
-    append body [subst {
-        <h2>Select Packages to $operation</h2><p>
-        <p>Please select the set of packages you'd like to [string tolower $operation].</p>
+    append body {
+        <h2>Select Packages to Install</h2><p>
+        <p>Please select the set of packages you'd like to install.</p>
+    } [subst {
         <div style="margin: 0 auto;">
         $dimensional_list
         </div>

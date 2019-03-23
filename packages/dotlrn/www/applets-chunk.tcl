@@ -20,7 +20,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-10-05
-    @cvs-id $Id: applets-chunk.tcl,v 1.14 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: applets-chunk.tcl,v 1.12.6.1 2015/09/11 11:40:41 gustafn Exp $
 } -query {
 }
 

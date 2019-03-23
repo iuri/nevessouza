@@ -21,7 +21,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2001-12-03
-    @cvs-id $Id: clubs.tcl,v 1.21 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: clubs.tcl,v 1.19.2.3 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     {orderby:token "pretty_name,asc"}
     page:naturalnum,optional

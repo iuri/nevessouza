@@ -2,7 +2,7 @@ ad_library {
     assessment -- callback routines
     @author eduardo.perez@uc3m.es
     @creation-date 2005-05-23
-    @cvs-id $Id: as-callback-procs.tcl,v 1.11 2018/03/23 23:53:01 hectorr Exp $
+    @cvs-id $Id: as-callback-procs.tcl,v 1.9.2.2 2016/07/04 11:35:25 gustafn Exp $
 }
 
 ad_proc -public -callback lors::import -impl qti {} {
@@ -65,7 +65,7 @@ ad_proc -callback merge::MergePackageUser -impl as {
     will be mapped to the to_user_id.
     
 } {
-    set msg "Merging assessment"
+    set msg "Merging assesment"
     set result [list $msg]
     ns_log Notice $msg
     db_transaction {

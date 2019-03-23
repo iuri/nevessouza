@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Mon Dec 11 12:00:12 2000
-    @cvs-id $Id: delete-2.tcl,v 1.7 2018/01/19 14:09:48 gustafn Exp $
+    @cvs-id $Id: delete-2.tcl,v 1.5.2.6 2017/04/22 18:28:25 gustafn Exp $
 
 } {
     rel_type:notnull,rel_type_dynamic_p
@@ -63,7 +63,6 @@ if { $operation ne "Yes, I really want to delete this relationship type" } {
 package_object_view_reset $rel_type
 
 ad_returnredirect $return_url
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

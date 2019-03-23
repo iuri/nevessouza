@@ -5,9 +5,9 @@
 
     <multiple name="items">
 <if @admin_p;literal@ true><p><a href="@items.item_edit_general_url@">Edit this question</a></p></if>
-<if @feedback_only_p;literal@ false or @items.has_feedback_p;literal@ true>
+<if @feedback_only_p@ eq 0 or @items.has_feedback_p@ eq 1>
      <if @show_item_name_p;literal@ true><p style="font-weight:bold;">@items.name@:</p></if>
-      <if @survey_p;literal@ false and @items.as_item_id@ ne @items.next_as_item_id@>
+      <if @survey_p@ ne t and @items.as_item_id@ ne @items.next_as_item_id@>
 	<if @items.max_time_to_complete@ not nil> (#assessment.max_time# @items.max_time_to_complete@) </if>
       </if>
      </if>
@@ -20,7 +20,7 @@
 	</if>
 	    <group column=as_item_id>
 	      @items.description;noquote@
-		<if @survey_p;literal@ false>
+		<if @survey_p@ ne t>
 		  <if @items.as_item_id@ eq @items.next_as_item_id@ or @items.groupnum@ gt 1>
 		    <if @items.presentation_type@ eq @items.next_pr_type@ or @items.choice_orientation@ eq horizontal>
 
@@ -32,17 +32,17 @@
 			<if @items.answered_p;literal@ true><p style="font-weight:bold;">#assessment.not_yet_reviewed#</p> </if>
 			<else><p style="font-weight:bold;">#assessment.not_answered#</p></else>
 		      </else>
-		      <if @edit_p;literal@ true and @items.answered_p;literal@ true><a href="@items.results_edit_url@">#assessment.Edit#</a></if>
+		      <if @edit_p@ eq 1 and @items.answered_p@ eq t><a href="@items.results_edit_url@">#assessment.Edit#</a></if>
 		      <include src="/packages/assessment/lib/results-messages" session_id="@session_id;literal@" section_id="@section_id;literal@" as_item_id="@items.as_item_id;literal@">
 		    </if>
 		    <else>
 		      <if @items.answered_p;literal@ true><p style="font-weight:bold">#assessment.not_yet_reviewed#</p> </if>
 		      <else><p style="font-weight:bold">#assessment.not_answered#</p> </else>
 		    </else>
-		    <if @edit_p;literal@ true and @items.answered_p;literal@ true>
+		    <if @edit_p@ eq 1 and @items.answered_p@ eq t>
               <a href="@items.results_edit_url@">#assessment.Edit#</a>
             </if>
-		    <include src="/packages/assessment/lib/results-messages" session_id="@session_id;literal@" section_id="@section_id;literal@" as_item_id="@items.as_item_id;literal@">
+		    <include src="/packages/assessment/lib/results-messages" session_id="@session_id;literal@" section_id="@section_id;literal@" as_item_id="@items.as_item_id;literal@"> 
 		  </if>
 		</if>
 	      <if @items.presentation_type@ eq rb or @items.presentation_type@ eq cb>
@@ -64,7 +64,7 @@
         </else>
 	</if>
 	  <elseif @items.presentation_type@ eq fitb>
-	    @items.html;noquote@
+	    @items.html;noquote@ 
 	  </elseif>
 	  <elseif @items.presentation_type@ eq f>
   	    <a href="@items.view@" id="p-type-f-@items.as_item_id"><formwidget id="response_to_item.@items.as_item_id@"></a>
@@ -80,11 +80,11 @@
 	  </if>
     </group>
 
-  <include src="/packages/assessment/lib/results-messages" session_id="@session_id;literal@" section_id="@section_id;literal@" as_item_id="@items.as_item_id;literal@" &=assessment>
-  <if @edit_p;literal@ true and @items.answered_p;literal@ true>
+  <include src="/packages/assessment/lib/results-messages" session_id="@session_id;literal@" section_id="@section_id;literal@" as_item_id="@items.as_item_id;literal@" &=assessment>    
+  <if @edit_p@ eq 1 and @items.answered_p@ eq t>
     <p><a href="@items.results_edit_url@" class="button">#assessment.Add_Comment#</a></p>
   </if>
-  <if @feedback_only_p;literal@ false and @assessment_data.type@ ne survey and @items.result_points@ not nil and @showpoints@ true and @items.points@ gt 0>
+  <if @feedback_only_p@ ne "t" and @assessment_data.type@ ne survey and @items.result_points@ not nil and @showpoints@ true and @items.points@ gt 0>
     <p style="font-weight: bold">@items.result_points@ / @items.points@ #assessment.points#</p>
   </if>
 

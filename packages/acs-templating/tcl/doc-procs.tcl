@@ -3,7 +3,7 @@ ad_library {
 
     @author Karl Goldstein    (karlg@arsdigita.com)
 
-    @cvs-id $Id: doc-procs.tcl,v 1.11 2018/05/09 15:33:29 hectorr Exp $
+    @cvs-id $Id: doc-procs.tcl,v 1.7.2.2 2016/10/03 18:52:07 antoniop Exp $
 }
 
 # Copyright (C) 1999-2000 ArsDigita Corporation
@@ -22,151 +22,151 @@ ad_library {
 namespace eval template {}
 
 ad_proc -public template::parse_directives {
-    code
+  code
 } {
-    Parse out directives embedded in the code parameter.
+  Parse out directives embedded in the code parameter.
 } {
 
-    # remove carriage returns if present
-    regsub -all {\r|\r\n} $code {\n} code
+  # remove carriage returns if present
+  regsub -all {\r|\r\n} $code {\n} code
 
-    # remove extra blank lines
-    regsub -all {(\n)\n} $code {\1} code
+  # remove extra blank lines
+  regsub -all {(\n)\n} $code {\1} code
 
-    set lines [split $code "\n"]
+  set lines [split $code "\n"]
 
-    # regular expression for match directive comments
-    set direxp {^\#[\s]*@([a-zA-Z0-9\-_]+)[\s]+(.*)$}
+  # regular expression for match directive comments
+  set direxp {^\#[\s]*@([a-zA-Z0-9\-_]+)[\s]+(.*)$}
 
-    set directives [list]
+  set directives [list]
 
-    foreach line $lines {
+  foreach line $lines {
 
-        if { [regexp $direxp $line x next_directive next_comment] } {
+    if { [regexp $direxp $line x next_directive next_comment] } {
 
-            # start a new directive
+      # start a new directive
 
-            if { [info exists directive] } {
+      if { [info exists directive] } {
 
-                # finish last directive
-                lappend directives [list $directive $comment]
-            }
+	# finish last directive
+	lappend directives [list $directive $comment]
+      }	
 
-            set directive $next_directive
-            set comment $next_comment
+      set directive $next_directive 
+      set comment $next_comment
+      
+    } elseif { [info exists directive] } {
 
-        } elseif { [info exists directive] } {
+      if { [regexp {^\#\s*(.*)$} $line x add_comment] } {
 
-            if { [regexp {^\#\s*(.*)$} $line x add_comment] } {
+	# append this line to the current directive
+	append comment " $add_comment"
 
-            # append this line to the current directive
-            append comment " $add_comment"
+      } else {
 
-            } else {
-
-                # finish directive
-                lappend directives [list $directive $comment]
-                unset directive
-                unset comment
-            }
-        }
+	# finish directive
+	lappend directives [list $directive $comment]
+	unset directive
+	unset comment
+      }
     }
+  }
 
-    if { [info exists directive] } {
-        lappend directives [list $directive $comment]
-    }
+  if { [info exists directive] } {
+    lappend directives [list $directive $comment]
+  }
 
-    return $directives
+  return $directives
 }
 
 ad_proc -public template::get_datasources { code } {
     Assemble directives into data source(s) for presentation.
 } {
 
-    upvar datasources:rowcount rowcount
-    set rowcount 0
+  upvar datasources:rowcount rowcount
+  set rowcount 0
 
-    #for debugging purposes
-    upvar output text
-    set text [parse_directives $code]
+  #for debugging purposes
+  upvar output text
+  set text [parse_directives $code]
 
-    foreach directive [parse_directives $code] {
+  foreach directive [parse_directives $code] {
+    
+    switch -exact [lindex $directive 0] {
 
-        switch -exact [lindex $directive 0] {
+      datasource {
 
-            datasource {
+	# directive is a new datasource
+	set info [lindex $directive 1]
+	set name [lindex $info 0]
+	set structure [lindex $info 1]
+	set comment [lrange $info 2 end]
 
-                # directive is a new datasource
-                set info [lindex $directive 1]
-                # Assign the first elements of $info to 'name' and 'structure',
-                # and the rest to 'comment'
-                set comment [lassign $info name structure]
+	if { [string match "one*" $structure] } {
 
-                if { [string match "one*" $structure] } {
+	  # directive is a onevalue or onelist.  add a row and move on
+	  incr rowcount
+	  upvar datasources:$rowcount datasource
 
-                    # directive is a onevalue or onelist.  add a row and move on
-                    incr rowcount
-                    upvar datasources:$rowcount datasource
+	  set datasource(rownum) $rowcount
+	  set datasource(name) $name
+	  set datasource(structure) $structure
+	  set datasource(comment) $comment
+	}
+      }
 
-                    set datasource(rownum) $rowcount
-                    set datasource(name) $name
-                    set datasource(structure) $structure
-                    set datasource(comment) $comment
-                }
-            }
+      data_input {
+	# directive is a new form
+	set info [lindex $directive 1]
+	set name [lindex $info 0]
+	set structure [lindex $info 1]
+	set comment [lrange $info 2 end]
+      }
+      
+      input {
+	set info [lindex $directive 1]
+	set input_name [lindex $info 0]
+	set input_type [lindex $info 1]
+	set input_comment [lrange $info 2 end]
+	  
+	incr rowcount
+	upvar datasources:$rowcount datasource
+	  
+	set datasource(rownum) $rowcount
+	set datasource(structure) $structure
+	set datasource(comment) $comment
+	set datasource(name) $name
 
-            data_input {
-                # directive is a new form
-                set info [lindex $directive 1]
-                # Assign the first elements of $info to 'name' and 'structure',
-                # and the rest to 'comment'
-                set comment [lassign $info name structure]
-            }
+	set datasource(input_name) $input_name
+	set datasource(input_type) $input_type
+	set datasource(input_comment) $input_comment
+      }
+ 
+      column {
 
-            input {
-                set info [lindex $directive 1]
-                # Assign the first elements of $info to 'input_name' and
-                # 'input_type', and the rest to 'input_comment'
-                set input_comment [lassign $info input_name input_type]
+	set info [lindex $directive 1]
+	set column_name [lindex $info 0]
+	set column_comment [lrange $info 1 end]
 
-                incr rowcount
-                upvar datasources:$rowcount datasource
+	incr rowcount
+	upvar datasources:$rowcount datasource
 
-                set datasource(rownum) $rowcount
-                set datasource(structure) $structure
-                set datasource(comment) $comment
-                set datasource(name) $name
+	set datasource(rownum) $rowcount
+	set datasource(name) $name
+	set datasource(structure) $structure
+	set datasource(comment) $comment
 
-                set datasource(input_name) $input_name
-                set datasource(input_type) $input_type
-                set datasource(input_comment) $input_comment
-            }
-
-            column {
-                set info [lindex $directive 1]
-                # Assign the first element of $info to 'column_name', and the
-                # rest to 'column_comment'
-                set column_comment [lassign $info column_name]
-
-                incr rowcount
-                upvar datasources:$rowcount datasource
-
-                set datasource(rownum) $rowcount
-                set datasource(name) $name
-                set datasource(structure) $structure
-                set datasource(comment) $comment
-
-                set datasource(column_name) $column_name
-                set datasource(column_comment) $column_comment
-            }
-        }
+	set datasource(column_name) $column_name
+	set datasource(column_comment) $column_comment
+      }	
     }
+  }
 }
 
 ad_proc -public template::verify_datasources {} {
-    @return True (1)
+  @return True (1)
 } {
-    return 1
+  return 1
 }
 
 

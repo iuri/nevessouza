@@ -119,10 +119,11 @@ presentation.</li>
 documentation for this software is linked off of</em></li><li><em>Design document</em></li><li><em>Developer&#39;s guide</em></li><li><em>User&#39;s guide</em></li><li>
 <em>Other-cool-system-related-to-this-one document</em><br><a href="http://www.li18nux.net/">LI18NUX 2000 Globalization
 Specification: http://www.li18nux.net/</a><p><a href="">Mozilla i18N Guidelines:
-http://www.mozilla.org/docs/refList/i18n/l12yGuidelines.html</a></p><p><a href="https://en.wikipedia.org/wiki/ISO_639">ISO 639:1988
-Code for the representation of names of languages</a></p><p><a href="https://en.wikipedia.org/wiki/ISO_3166-1">ISO
-3166-1:1997 Codes for the representation of names of countries and
-their subdivisions Part 1: Country codes</a></p><p><a href="">IANA Registry of Character Sets</a></p>
+http://www.mozilla.org/docs/refList/i18n/l12yGuidelines.html</a></p><p><a href="http://sunsite.berkeley.edu/amher/iso_639.html">ISO
+639:1988 Code for the representation of names of languages
+http://sunsite.berkeley.edu/amher/iso_639.html</a></p><p><a href="http://www.niso.org/3166.html">ISO 3166-1:1997 Codes
+for the representation of names of countries and their subdivisions
+Part 1: Country codes http://www.niso.org/3166.html</a></p><p><a href="">IANA Registry of Character Sets</a></p>
 </li><li><em>Test plan</em></li><li><em>Competitive system(s)</em></li>
 </ul>
 <h3>VI Requirements</h3>
@@ -198,7 +199,7 @@ hierarchical structure to it, so that sets of messages can be
 grouped with respect to a module name or package path.</p><p>
 <strong>40.30</strong> The API for lookup of a message will take
 a locale and message key as arguments, and return the appropriate
-translation of that message for the specified locale.</p><p>
+translation of that message for the specifed locale.</p><p>
 <strong>40.40</strong> The API for lookup of a message will
 accept an optional default string which can be used if the message
 key is not found in the catalog. This lets the developer get code
@@ -318,7 +319,7 @@ designer may create multiple locale-specific template files may be
 created (one per locale or language)
 <p>
 <strong>70.10</strong> For a given page request, the system must
-be able to select an appropriate locale-specific template file to
+be able to select an approprate locale-specific template file to
 use. The request locale is computed as per (see requirement
 20.0).</p><p><font color="#080EFF"><em>Design note: this would probably be
 implemented by suffixing the locale or a locale abbreviation to the
@@ -420,4 +421,4 @@ wording</td><td bgcolor="#E0E0E0">11/14/2000</td><td bgcolor="#E0E0E0">Henry Min
 </tbody></table>
 <hr>
 <address><a href="">hqm\@arsdigita.com</a></address>
-<p>Last modified: $Date: 2018/04/30 08:19:34 $</p>
+<p>Last modified: $Date: 2017/08/06 11:31:22 $</p>

@@ -1,3 +1,5 @@
+# 
+
 ad_library {
     
     These should probably just use the regular old
@@ -5,7 +7,8 @@ ad_library {
     
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2004-06-09
-    @cvs-id $Id: content-permission-procs.tcl,v 1.5 2018/08/15 16:24:28 gustafn Exp $
+    @arch-tag: da21d1e8-0729-4f3b-8bef-3b847a979fec
+    @cvs-id $Id: content-permission-procs.tcl,v 1.3.18.2 2017/04/21 14:53:08 gustafn Exp $
 }
 
 namespace eval ::content::permission {}

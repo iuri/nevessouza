@@ -8,7 +8,7 @@ ad_page_contract {
     
     @author stefan@arsdigita.com
     @creation-date 2000-12-20
-    @cvs-id $Id: process-2.tcl,v 1.8 2018/01/19 14:24:20 gustafn Exp $
+    @cvs-id $Id: process-2.tcl,v 1.4.22.2 2016/01/02 20:34:50 gustafn Exp $
 
 } {
  
@@ -22,14 +22,14 @@ ad_page_contract {
 }
 
 
-switch -- $action {
+switch $action {
     
     delete {
 	news_items_delete $n_items
     }
     
     "archive now" {
-	set when [clock format [clock seconds] -format %Y-%m-%d]
+	set when [db_string archive_now {}]
 	news_items_archive $n_items $when
     }
     
@@ -50,7 +50,94 @@ switch -- $action {
 }
 
 ad_returnredirect ""
-ad_script_abort
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Local variables:
 #    mode: tcl

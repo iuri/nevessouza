@@ -6,7 +6,7 @@ ad_page_contract {
     
     @author Emmanuelle Raffenne (eraffenne@gmail.com)
     @creation-date 2007-10-12
-    @cvs-id $Id: help-master.tcl,v 1.2 2017/08/07 23:48:09 gustafn Exp $
+    @cvs-id $Id: help-master.tcl,v 1.1.6.1 2015/09/11 11:40:55 gustafn Exp $
 } {
     
 } -properties {

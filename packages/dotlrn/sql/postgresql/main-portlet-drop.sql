@@ -20,7 +20,7 @@
 -- @author Ben Adida (ben@openforce.net)
 -- @creation-date 2001-11-04
 
--- $Id: main-portlet-drop.sql,v 1.5 2017/08/07 23:48:09 gustafn Exp $
+-- $Id: main-portlet-drop.sql,v 1.4.4.2 2017/04/21 20:45:16 gustafn Exp $
 
 -- This is free software distributed under the terms of the GNU Public
 -- License version 2 or higher.  Full text of the license is available

@@ -7,7 +7,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Sun Dec 10 16:57:10 2000
-    @cvs-id $Id: rel-type-add-2.tcl,v 1.8 2018/01/21 00:35:29 gustafn Exp $
+    @cvs-id $Id: rel-type-add-2.tcl,v 1.5.2.4 2016/05/20 20:02:44 gustafn Exp $
 
 } {
     group_type:trim,notnull
@@ -35,10 +35,8 @@ if { [catch {
 }   } err_msg] } {
     # Does this pair already exists?
     if { ![db_string exists_p {select count(*) from group_type_rels where group_type = :group_type and rel_type = :rel_type}] } {
-	ad_return_error \
-            "Error inserting to database" \
-            $err_msg
-	ad_script_abort
+	ad_return_error "Error inserting to database" $err_msg
+	return
     }
 
 }
@@ -50,7 +48,6 @@ if { $return_url eq "" } {
 }
 
 ad_returnredirect $return_url
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

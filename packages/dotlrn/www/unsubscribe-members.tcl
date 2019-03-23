@@ -13,11 +13,11 @@
 #
 
 ad_page_contract {
-
+    
     Subscribe group members to a forum and set autosubscription mode
-
+    
     @author Don Baccus (dhogaza@pacifier.com)
-    @cvs-id $Id: unsubscribe-members.tcl,v 1.7 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: unsubscribe-members.tcl,v 1.4.2.2 2016/05/20 20:17:34 gustafn Exp $
 } {
     forum_id:naturalnum,notnull
     community_id:naturalnum,notnull
@@ -30,7 +30,6 @@ db_transaction {
 }
 
 ad_returnredirect $return_url
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

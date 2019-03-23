@@ -49,4 +49,11 @@
       </querytext>
 </fullquery>
 
+<fullquery name="category_synonym::search_sweeper.delete_old_searches">
+      <querytext>
+		delete from category_search
+		where last_queried < sysdate - 1
+      </querytext>
+</fullquery>
+
 </queryset>

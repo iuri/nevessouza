@@ -18,7 +18,7 @@
 -- Initialize the dotLRN Students package
 --
 -- @author <a href="mailto:yon@openforce.net">yon@openforce.net</a>
--- @version $Id: students-init.sql,v 1.7 2017/08/07 23:48:09 gustafn Exp $
+-- @version $Id: students-init.sql,v 1.6.4.1 2016/09/09 08:14:42 gustafn Exp $
 --
 
 

@@ -20,7 +20,7 @@ ad_page_contract {
 
     @author 
     @creation-date 
-    @cvs-id $Id: render-element.tcl,v 1.16 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: render-element.tcl,v 1.12.4.2 2015/09/12 11:06:41 gustafn Exp $
 } -properties {
     element_id:onevalue
     region:onevalue
@@ -45,18 +45,15 @@ if { ![info exists element_num] } {
     incr element_num $element_first_num
 }
 
-ad_try {
-    portal::evaluate_element -portal_id $portal_id -edit_p $edit_p $element_id $theme_id
-
-} on error {errorMsg} {
+if { [catch {set element_data [portal::evaluate_element -portal_id $portal_id -edit_p $edit_p $element_id $theme_id] }  errmsg ]  } { 
     # An uncaught error happened when trying to evaluate the element.
     # If the error is in the element's "show" proc, the error will
     # be shown in the content of the portlet. This is for errors other
     # than with the "show" proc. It hides the entire PE
-    ns_log error "\n\n *** Error in portal/www/render_sytles_/individual/render-element.tcl\n Uncaught exception when calling portal::evaluate_element \n with element_id $element_id. errmsg: $errorMsg\n\n$::errorInfo"
+    ns_log error "\n\n *** Error in portal/www/render_sytles_/indiviudal/render-element.tcl \n Uncaught exception when calling portal::evaluate_element \n with element_id $element_id. errmsg: $errmsg\n\n$::errorInfo"
+    array set element {content {}}
 
-    return -code error "error during rendering portal element $element_id (render_style individual)"
-} on ok {element_data} {
+} else {
     # all is ok
     array set element $element_data
 }

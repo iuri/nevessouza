@@ -26,6 +26,16 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="dotlrn_class::new_instance.select_parent_node_id">
+        <querytext>
+            select node_id
+            from site_nodes
+            where object_id = (select package_id
+                               from dotlrn_classes_full
+                               where class_key = :class_key)
+        </querytext>
+    </fullquery>
+
     <fullquery name="dotlrn_class::get_term_id.get_term_id">
         <querytext>
             select term_id
@@ -51,14 +61,4 @@
         </querytext>
     </fullquery>
 
-    <fullquery name="dotlrn_class::can_instantiate.can_instantiate">
-        <querytext>
-            select count(*)
-            from dual
-            where exists (select 1
-                          from dotlrn_terms
-                          where dotlrn_terms.end_date > current_timestamp)
-        </querytext>
-    </fullquery>
-    
 </queryset>

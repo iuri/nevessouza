@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author ben (ben@openforce.net)
     @creation-date 2002-03-05
-    @cvs-id $Id: users-bulk-upload.tcl,v 1.8 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: users-bulk-upload.tcl,v 1.6.10.1 2015/09/11 11:40:54 gustafn Exp $
 }
 
 #Pages in this directory are only runnable by dotlrn-wide admins.

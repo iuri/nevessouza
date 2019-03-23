@@ -5,7 +5,7 @@ ad_page_contract {
     Taken from the index.vuh of the fs package		
 
     @creation-date Jun 2004
-    @version $Id: index.vuh,v 1.5 2017/08/07 23:48:10 gustafn Exp $
+    @version $Id: index.vuh,v 1.4.2.2 2016/06/09 13:03:12 gustafn Exp $
 
 } -query {
     {task_id:integer,notnull,optional}

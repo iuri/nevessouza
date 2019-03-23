@@ -3,12 +3,10 @@ ad_library {
 
     @author Simon Carstensen
     @creation-date 16 Nov 2003
-    @cvs-id $Id: acs-datetime-procs.tcl,v 1.3 2018/07/22 10:39:49 gustafn Exp $
+    @cvs-id $Id: acs-datetime-procs.tcl,v 1.1.20.1 2015/09/10 08:21:22 gustafn Exp $
 }
 
-aa_register_case \
-    -procs {dt_valid_time_p} \
-    dt_valid_time_p {
+aa_register_case dt_valid_time_p {
     Test dt_valid_time_p proc.
 } {    
 
@@ -24,9 +22,7 @@ aa_register_case \
         }
 }
 
-aa_register_case \
-    -procs {dt_ansi_to_julian_single_arg} \
-    dt_ansi_to_julian_single_arg {
+aa_register_case dt_ansi_to_julian_single_arg {
     Test dt_ansi_to_julian_single_arg proc.
 } {    
 
@@ -40,9 +36,7 @@ aa_register_case \
         }
 }
 
-aa_register_case \
-    -procs {dt_ansi_to_julian} \
-    dt_ansi_to_julian {
+aa_register_case dt_ansi_to_julian {
     Test dt_ansi_to_julian proc.
 } {    
 
@@ -56,9 +50,7 @@ aa_register_case \
         }
 }
 
-aa_register_case \
-    -procs {dt_julian_to_ansi} \
-    dt_julian_to_ansi {
+aa_register_case dt_julian_to_ansi {
     Test dt_julian_to_ansi proc.
 } {    
 
@@ -72,9 +64,7 @@ aa_register_case \
         }
 }
 
-aa_register_case \
-    -procs {dt_ansi_to_list} \
-    dt_ansi_to_list {
+aa_register_case dt_ansi_to_list {
     Test dt_ansi_to_list proc.
 } {    
 
@@ -88,9 +78,7 @@ aa_register_case \
         }
 }
 
-aa_register_case \
-    -procs {dt_num_days_in_month} \
-    dt_num_days_in_month {
+aa_register_case dt_num_days_in_month {
     Test dt_num_days_in_month proc.
 } {    
 

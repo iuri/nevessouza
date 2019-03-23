@@ -16,7 +16,7 @@ ad_page_contract {
 
     @author Don Baccus (dhogaza@pacifier.com)
     @creation-date 2002-01-18
-    @cvs-id $Id: spam-policy-toggle.tcl,v 1.8 2018/09/18 17:27:15 gernst Exp $
+    @version $Id: spam-policy-toggle.tcl,v 1.4.4.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     {community_id:integer ""}
     policy:notnull
@@ -44,8 +44,10 @@ if {$policy eq "all"} {
 permission::$action -party_id [dotlrn_community::get_members_rel_id -community_id $community_id] \
     -object_id $community_id -privilege dotlrn_spam_community
 
+# Make sure we flush everything that references this community and the spam privilege
+util_memoize_flush_regexp "${community_id}(.*)dotlrn_spam_community"
+
 ad_returnredirect $referer
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

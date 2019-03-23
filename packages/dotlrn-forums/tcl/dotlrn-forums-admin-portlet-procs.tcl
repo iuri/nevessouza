@@ -17,7 +17,7 @@ ad_library {
 
     @creation-date September 30 2001
     @author arjun@openforce.net
-    @cvs-id $Id: dotlrn-forums-admin-portlet-procs.tcl,v 1.7 2018/07/11 08:19:26 antoniop Exp $
+    @cvs-id $Id: dotlrn-forums-admin-portlet-procs.tcl,v 1.5.2.1 2015/09/11 11:40:56 gustafn Exp $
 }
 
 namespace eval dotlrn_forums_admin_portlet {
@@ -29,8 +29,6 @@ namespace eval dotlrn_forums_admin_portlet {
 
     ad_proc -public get_pretty_name {
     } {
-        Get the pretty name.
-    } {
         return "#forums-portlet.admin_pretty_name#"
     }
 
@@ -41,8 +39,6 @@ namespace eval dotlrn_forums_admin_portlet {
 
     ad_proc -public link {
     } {
-        Get the link. This is currently empty.
-    } {
         return ""
     }
 
@@ -50,7 +46,7 @@ namespace eval dotlrn_forums_admin_portlet {
         {-portal_id:required}
         {-package_id:required}
     } {
-        Adds a forums admin PE to the admin portal.
+        Adds a forums admin PE to the admin portal
 
         @return new element_id
     } {
@@ -66,7 +62,7 @@ namespace eval dotlrn_forums_admin_portlet {
     ad_proc -public remove_self_from_page {
         {-portal_id:required}
     } {
-        Removes the forums admin PE from the portal.
+        Removes the forums admin PE from the portal
     } {
         portal::remove_element \
             -portal_id $portal_id \
@@ -76,7 +72,6 @@ namespace eval dotlrn_forums_admin_portlet {
     ad_proc -public show {
         cf
     } {
-        Show forums admin portlet.
     } {
         portal::show_proc_helper \
             -package_key [my_package_key] \
@@ -87,7 +82,6 @@ namespace eval dotlrn_forums_admin_portlet {
     ad_proc -public edit {
         cf
     } {
-        Edit the portlet. This is currently empty.
     } {
         return ""
     }

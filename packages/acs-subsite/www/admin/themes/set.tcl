@@ -18,4 +18,3 @@ ad_page_contract {
 subsite::set_theme -theme $theme
 
 ns_returnredirect "."
-ad_script_abort

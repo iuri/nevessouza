@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Tue Nov  7 12:14:42 2000
-    @cvs-id $Id: enum-add-2.tcl,v 1.6 2018/01/19 14:09:48 gustafn Exp $
+    @cvs-id $Id: enum-add-2.tcl,v 1.4.2.5 2016/05/20 20:02:44 gustafn Exp $
 
 } {
     attribute_id:naturalnum,notnull
@@ -54,7 +54,6 @@ if {$operation eq "Add more values"} {
 }
 
 ad_returnredirect $return_url
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

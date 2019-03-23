@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2001-08-20
-    @cvs-id $Id: index.tcl,v 1.50 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: index.tcl,v 1.48.4.2 2017/01/26 08:53:27 gustafn Exp $
 } -query {
     {filter ""}
     {page_num:naturalnum,notnull 0}

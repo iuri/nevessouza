@@ -20,26 +20,21 @@ ad_page_contract {
 
     @author 
     @creation-date 
-    @cvs-id $Id: render-element.tcl,v 1.18 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: render-element.tcl,v 1.15.4.1 2015/09/12 11:06:39 gustafn Exp $
 } -properties {
     element_id:onevalue
     region:onevalue
 }
 
-#
-# Get the complete, evaluated element.  if there's an error, report it
-# to the user, when show_datasource_errors_p is true.
-#
-ad_try {
-    portal::evaluate_element $element_id $theme_id
-} on error {errorMsg} {
+# get the complete, evaluated element.
+# if there's an error, report it.
+if { [catch {set element_data [portal::evaluate_element $element_id $theme_id] } errmsg ] } {
     if { [parameter::get -parameter show_datasource_errors_p] == 1} {
-	set element(content) "<div class=portal_alert>[ns_quotehtml $errorMsg]</div>"
+	set element(content) "<div class=portal_alert>$errmsg</div>"
     } else {
-        ad_log Warning "ignoring error in portal element $element_id: $errorMsg"
-        ad_script_abort
+	return
     }
-} on ok {element_data} {
+} else {
     array set element $element_data
 }
 

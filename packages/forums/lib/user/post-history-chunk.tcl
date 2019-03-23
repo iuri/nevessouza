@@ -4,7 +4,7 @@ ad_include_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-29
-    @cvs-id $Id: post-history-chunk.tcl,v 1.10 2018/06/28 08:18:52 antoniop Exp $
+    @cvs-id $Id: post-history-chunk.tcl,v 1.8.2.2 2015/09/22 12:37:53 gustafn Exp $
 
 } {
     user_id:naturalnum,notnull
@@ -18,11 +18,14 @@ set package_id [ad_conn package_id]
 # provide screen_name functionality
 set useScreenNameP [parameter::get -parameter "UseScreenNameP" -default 0]
 
-set message(screen_name) [expr {$useScreenNameP ?
-                                [acs_user::get_user_info \
-                                     -user_id $user_id \
-                                     -element "screen_name"] : ""}]
+if {$useScreenNameP} {
 
+   acs_user::get -user_id $user_id -array user_info
+   set message(screen_name) $user_info(screen_name)
+
+} else {
+   set message(screen_name) ""
+}
 set user_link [acs_community_member_link -user_id $user_id]
 
 

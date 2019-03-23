@@ -3,7 +3,7 @@ ad_page_contract {
     Display a category tree
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: tree-view.tcl,v 1.23 2018/06/29 17:27:19 hectorr Exp $
+    @cvs-id $Id:
 } {
     tree_id:naturalnum,notnull
     {locale ""}
@@ -92,7 +92,7 @@ lappend elements category_name {
     label "#categories.Category#"
     display_template {
 	@one_tree.left_indent;noquote@<a href="@one_tree.usage_url@" title="Show usage of this category">@one_tree.category_name@</a>
-	<if @one_tree.deprecated_p;literal@ true>(#categories.Deprecated# - <a href="@one_tree.phase_in_url@">#categories.Restore#</a>)</if>
+	<if @one_tree.deprecated_p@ true>(#categories.Deprecated# - <a href="@one_tree.phase_in_url@">#categories.Restore#</a>)</if>
     }
 }
 

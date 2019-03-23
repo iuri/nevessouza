@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author ben (ben@openforce.net)
     @creation-date 2002-03-05
-    @cvs-id $Id: users-bulk-upload-2.tcl,v 1.27 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: users-bulk-upload-2.tcl,v 1.25.2.2 2016/09/12 11:16:15 gustafn Exp $
 }
 
 set context [list [list users [_ dotlrn.Users]] [_ dotlrn.Bulk_Upload]]

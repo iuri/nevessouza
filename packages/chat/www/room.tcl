@@ -3,7 +3,7 @@ ad_page_contract {
     Display information about chat room.
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 15, 2000
-    @cvs-id $Id: room.tcl,v 1.11.2.1 2019/02/14 16:15:01 gustafn Exp $
+    @cvs-id $Id: room.tcl,v 1.8.4.5 2016/11/23 19:51:16 antoniop Exp $
 } {
     room_id:naturalnum,notnull
 } -properties {
@@ -79,17 +79,12 @@ foreach property {
 set message_count [chat_message_count $room_id]
 
 # List user ban from chat
-db_multirow -extend {name email unban_url unban_text} banned_users list_user_ban {} {
-    set name "$last_name, $first_names"
-    set email [acs_user::get_element -user_id $party_id -element email]
+db_multirow -extend {unban_url unban_text} banned_users list_user_ban {} {
     if { $user_unban_p } {
         set unban_url [export_vars -base "user-unban" {room_id party_id}]
         set unban_text [_ chat.Unban_user]
     }
 }
-
-set xowiki_includelet_code "\{\{chat_room -chat_id $room_id\}\}"
-set xowiki_includelet_size [string length $xowiki_includelet_code]
 
 set actions ""
 if { $user_ban_p } {
@@ -120,9 +115,3 @@ list::create \
     }
 
 ad_return_template
-
-# Local variables:
-#    mode: tcl
-#    tcl-indent-level: 2
-#    indent-tabs-mode: nil
-# End:

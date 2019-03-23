@@ -4,7 +4,7 @@ ad_page_contract {
   Properties allowed
   doc(title) HTML title
   head code to be entered into head of document
-  body
+  body 
   focus HTML id of form element to focus
   skip_link href of link to skip to. Should be of format #skip_link
   main_content_p if true wrap in the main content divs (if false, provide your own
@@ -13,7 +13,7 @@ ad_page_contract {
   @author Lee Denison (lee@xarg.co.uk)
   @author Don Baccus (dhogaza@pacifier.com)
 
-  $Id: plain-master.tcl,v 1.6.2.1 2019/02/14 10:02:36 gustafn Exp $
+  $Id: plain-master.tcl,v 1.5.2.1 2015/09/12 19:00:43 gustafn Exp $
 }
 
 if { ![info exists main_content_p] } {
@@ -53,7 +53,7 @@ if { [template::multirow exists navigation] } {
     }
 }
 
-#
+# 
 # User information and top level navigation links
 #
 set user_id [ad_conn user_id]
@@ -96,7 +96,7 @@ if { $untrusted_user_id == 0 } {
 #
 util_get_user_messages -multirow user_messages
 
-#
+# 
 # Set acs-lang urls
 #
 set acs_lang_url [apm_package_url_from_key "acs-lang"]
@@ -144,7 +144,6 @@ if {[info exists context]} {
 } else {
     set context_tmp {}
 }
-# ns_log notice "context_tmp <$context_tmp>"
 
 ad_context_bar_multirow -- $context_tmp
 
@@ -154,7 +153,7 @@ set separator [parameter::get -package_id $subsite_id -parameter ContextBarSepar
 
 #
 # Curriculum specific bar
-#   TODO: remove this and add a more systematic / package independent way
+#   TODO: remove this and add a more systematic / package independent way 
 #   TODO  of getting this content here
 #
 set curriculum_bar_p [expr {

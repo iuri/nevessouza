@@ -5,7 +5,7 @@ ad_page_contract {
     @author Lars Pind (lars@collaboraid.biz)
 
     @creation-date 2003-08-15
-    @cvs-id $Id: message-delete.tcl,v 1.10 2018/04/07 19:48:03 gustafn Exp $
+    @cvs-id $Id: message-delete.tcl,v 1.8.2.1 2015/09/10 08:21:29 gustafn Exp $
 
 } {
     locale
@@ -31,9 +31,7 @@ set context [list [list [export_vars -base package-list { locale }] $locale_labe
 set form_export_vars [export_vars -form { locale package_key message_key show {confirm_p 1} }]
 
 
-if { [info exists confirm_p] && $confirm_p ne ""
-     && [template::util::is_true $confirm_p]
- } {
+if { ([info exists confirm_p] && $confirm_p ne "") && [template::util::is_true $confirm_p] } {
     lang::message::delete \
         -package_key $package_key \
         -message_key $message_key \

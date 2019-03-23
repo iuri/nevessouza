@@ -17,14 +17,14 @@ for the possibility to give and store ratings on objects within the
 system as part of a knowledge management solution.</span></p>
 <p><span class="context">The documents on these page will provide a
 solution that is flexible to meet ababove needs but still be
-focused enough to apply for special clients demands.</span></p>
+focused enought to apply for special clients demands.</span></p>
 <h1><span class="context">Assessments</span></h1>
 <span class="context">The current survey system will build the
 basis for a new assessment package and will consist of various
 areas:</span>
 <h2><span class="context">Question Catalogue</span></h2>
 <span class="context">The question catalogue stores all the
-questions of the assessment package. It is a pool where all the
+questions of the assesment package. It is a pool where all the
 questions from all assessments are stored in. This creates the
 opportunity to make the questions reusable, allowing for statistics
 across surveys and prevents the respondee from having to fill out a
@@ -33,7 +33,7 @@ administrators are given the possibility to add questions that do
 not store the results within the scope of the assessment package
 but in other database tables (e.g. the name of the user) or trigger
 some other events (e.g. send email to the email address filled out
-by the respondee). A detailed description can be found <a href="item_creation">here</a>.</span>
+by the respondee). A detailed description can be found <a href="question_catalogue">here</a>.</span>
 <h2><span class="context">Assessment creation</span></h2>
 <span class="context">An assessment is either a survey or a test.
 The functionality for both is nearly identical though a test needs
@@ -58,10 +58,10 @@ of the evaluation (what have the respondees answered, how have they
 done in total (points)). A description for this can be found
 <a href="tests">here</a>.</span>
 <p><span class="context">The backend for the test processing, that
-enables the automatic tests is described in a <a href="tests">separate document</a> as it will be parsed while
+enables the automatic tests is described in a <a href="test_processing">seperate document</a> as it will be parsed while
 the respondee answers the test, not manually. In addition this
 document describes how the grades are calculated (automatically or
-manually) for each question. The result is being stored in the
+manually) for each question. The result is beeing stored in the
 grading package.</span></p>
 <h1><span class="context">Scoring/Grading</span></h1>
 <span class="context">The grading package will be designed first of
@@ -72,26 +72,26 @@ that would be used as a basis for this). In general it should
 provide a very flexible way of adding scores into the system,
 either automatically (as described above) or manually (e.g. this
 student did a good oral exam).</span>
-<p><span class="context">In addition to the possibility to enter
+<p><span class="context">In addition to the possiblity to enter
 scores/rates, the grading package allows for automatic aggregation
 of scores. This holds especially true for tests and classes. A test
 result will depend on the result of all the answers (aggregated). A
 class result will depend on the result of all the tests a respondee
 did in addition to any manual grades the professor can come up
 with. Providing a clean UI for this is going to be the
-challenge.</span></p>
+challange.</span></p>
 <p><span class="context">Furthermore the grading package offers to
 transfer scores (which are stored as integer values) into a grade
 (e.g. the american A-F scheme, or the German 1-6). This is where it
 gets the name from I&#39;d say ;). Grading schemes are flexible and
 can be created on the fly. This allows us to support any grading
 scheme across the world&#39;s universities. In addition in the area
-of Knowledge Management, grades could be transferred into incentive
+of Knowledge Management, grades could be transfered into incentive
 points, that can be reused to reward employees for good work done
 (where they got good ratings for).</span></p>
-<p><span class="context">Last but not least, maybe embedded with
-the workflow system, is the possibility to execute actions based on
-the grade. An example would be the adding of the student to the
+<p><span class="context">Last but not least, maybe embeded with the
+workflow system, is the possibility to execute actions based on the
+grade. An example would be the adding of the student to the
 advanced class if his grade or score reaches a certain level.
 Alternatively this looks like a good thing for the curriculum
 module to achieve.</span></p>
@@ -121,24 +121,24 @@ the /pvt/home page as a collection of assessment data and the
 "change basic information" as one assessment among
 many.</span></p>
 <p><span class="context">With a little bit of tweaking and the
-possibility to add instant gratification, a.k.a. aggregated result
+possiblity to add instant gratification, aka aggregated result
 display, it could include the poll package and make it
 redundant.</span></p>
 <p><span class="context">Last but not least with the ability to
 display questions in a multi dimensional way to the user, the
-assessment system is useful for quality assurance (how important is
-this feature / how good do you think we implemented it). And as you
-might have guessed, for anything the current survey module has been
-used for as well (e.g. plain and simple surveys).</span></p>
+assessment system is usefull for quality assurance (how important
+is this feature / how good do you think we implemented it). And as
+you might have guessed, for anything the current survey module has
+been used for as well (e.g. plain and simple surveys).</span></p>
 <p><span class="context">The grading system on it&#39;s own would
-be useful for the OpenACS community as it would allow the handing
+be usefull for the OpenACS community as it would allow the handing
 out of "zorkmints" along with any benefits the collection
 of mints gives to the users. As mentioned earlier, this is also
 very important in a Knowledge Management environment, where you
 want to give rated feedback to users.</span></p>
 <blockquote><p><span class="context">
-<strong><a href="item_creation">Question Catalogue</a></strong><br><br><strong><a href="assessment_creation">Assessment
-Creation</a></strong><br><br><strong><a href="section_creation">Sections</a></strong><br><br><strong><a href="item_creation">Tests</a></strong><br><br><strong><a href="tests">Test Processing</a></strong><br><br><strong><a href="user_experience">User Experience</a></strong><br><br><strong><a href="current/"><br></a></strong>
+<strong><a href="question_catalogue">Question Catalogue</a></strong><br><br><strong><a href="assessment_creation">Assessment
+Creation</a></strong><br><br><strong><a href="sections">Sections</a></strong><br><br><strong><a href="tests">Tests</a></strong><br><br><strong><a href="test_processing">Test Processing</a></strong><br><br><strong><a href="user_experience">User Experience</a></strong><br><br><strong><a href="current/"><br></a></strong>
 </span></p></blockquote>
 <span class="context">
 <span class="etp-link"><a class="top" href="etp?name=index"></a></span><!-- END ETP LINK -->

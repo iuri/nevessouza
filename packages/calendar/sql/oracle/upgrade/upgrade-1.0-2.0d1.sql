@@ -2,7 +2,7 @@
 --
 -- @author Gary Jin (gjin@arsdigita.com)
 -- @creation-date Nov 17, 2000
--- @cvs-id $Id: upgrade-1.0-2.0d1.sql,v 1.3 2018/05/15 21:41:34 hectorr Exp $
+-- @cvs-id $Id: upgrade-1.0-2.0d1.sql,v 1.1.20.1 2017/04/22 12:25:25 gustafn Exp $
 --
 
 create or replace package cal_item
@@ -368,7 +368,7 @@ as
                 delete from     acs_permissions 
                 where           object_id = calendar.del.calendar_id;
 
-                  -- Delete all privileges of the cal_items that's associated 
+                  -- Delete all privilges of the cal_items that's associated 
                   -- with this calendar
                 delete from     acs_permissions
                 where           object_id in (

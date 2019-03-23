@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author jopez@galileo.edu
     @creation-date Mar 2004
-    @cvs-id $Id: answer-add-edit.tcl,v 1.4 2017/08/07 23:48:10 gustafn Exp $
+    @cvs-id $Id: answer-add-edit.tcl,v 1.3.2.2 2016/05/20 20:30:12 gustafn Exp $
 } {
     task_id:naturalnum,notnull
     grade_id:naturalnum,notnull

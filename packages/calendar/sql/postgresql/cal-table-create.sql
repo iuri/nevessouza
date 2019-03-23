@@ -2,7 +2,7 @@
 --
 -- @author Gary Jin (gjin@arsdigita.com)
 -- @creation-date Nov 30, 2000
--- @cvs-id $Id: cal-table-create.sql,v 1.7 2018/03/25 22:13:40 hectorr Exp $
+-- @cvs-id $Id: cal-table-create.sql,v 1.5 2001/10/15 18:46:59 donb Exp $
 --
 -- @ported by Charles Mok (mok_cl@eelab.usyd.edu.au)
 
@@ -77,14 +77,14 @@ create table cal_party_prefs (
                                 ),
           -- unique constraint between calendar_id and party_id
           -- this ensures that each party has only one set of 
-          -- preferences per calendar
+          -- perferences per calendar
         constraint cal_party_prefs_un unique(calendar_id, party_id)
 );
 
 
 comment on table cal_party_prefs is '
         Table cal_user_prefs would stores custom information
-        about each individual user. This would include time zone
+        about each indivdual user. This would include time zone
         which is the first day of the week, monday or sunday, 
         and the likes. 
 ';

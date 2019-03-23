@@ -20,7 +20,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-11-04
-    @cvs-id $Id: member-add-3.tcl,v 1.18 2018/09/18 17:27:15 gernst Exp $
+    @version $Id: member-add-3.tcl,v 1.14.6.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     user_id:naturalnum,multiple,notnull
     rel_type
@@ -49,6 +49,7 @@ foreach member_id $user_id {
             # so we do not want to call remove_user
             # as that removes subgroup rels as well
             relation_remove $rel_id
+            util_memoize_flush "dotlrn_community::list_users_not_cached -rel_type $rel_type -community_id $community_id"
             set change_rel_p 1
         }
     } else {
@@ -77,14 +78,13 @@ foreach member_id $user_id {
                 $rel_type \
                 $community_id \
                 $member_id
+            util_memoize_flush "dotlrn_community::list_users_not_cached -rel_type $rel_type -community_id $community_id"
         } else {
             dotlrn_community::add_user -rel_type $rel_type $community_id $member_id
         }
     }
 }
-
 ad_returnredirect $referer
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

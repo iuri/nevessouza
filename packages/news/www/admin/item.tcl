@@ -8,7 +8,7 @@ ad_page_contract {
    
     @author stefan@arsdigita.com
     @creation-date 2000-12-20
-    @cvs-id $Id: item.tcl,v 1.7 2017/08/07 23:48:12 gustafn Exp $
+    @cvs-id $Id: item.tcl,v 1.6.2.1 2015/09/12 11:06:43 gustafn Exp $
 
 } {
 

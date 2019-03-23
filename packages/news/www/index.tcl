@@ -6,7 +6,7 @@ ad_page_contract {
     
     @author Stefan Deusch (stefan@arsdigita.com)
     @creation-date 2000-12-20
-    @cvs-id $Id: index.tcl,v 1.22 2017/11/15 13:42:33 antoniop Exp $
+    @cvs-id $Id: index.tcl,v 1.20.2.2 2015/09/20 16:09:56 gustafn Exp $
 
 } {
 
@@ -38,7 +38,7 @@ if {"live" eq $view} {
     set title [apm_instance_name_from_id $package_id]
     set view_clause [db_map view_clause_live]
 
-    if { [db_0or1row archived_p {}]} {
+    if { [db_string archived_p {}]} {
         lappend actions_list [_ news.Show_archived_news] \
             [export_vars -base [ad_conn url] {{view archive}}] \
             [_ news.Show_archived_news]
@@ -49,7 +49,7 @@ if {"live" eq $view} {
     set title [apm_instance_name_from_id $package_id]
     set view_clause [db_map view_clause_archived]
 
-    if { [db_0or1row live_p {}] } {
+    if { [db_string live_p {}] } {
         lappend actions_list [_ news.Show_live_news] \
             [export_vars -base [ad_conn url] {{view live}}] \
             [_ news.Show_live_news]

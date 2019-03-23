@@ -21,7 +21,7 @@ ad_page_contract {
     @author yon (yon@openforce.net)
     @author Hector Amado (hr_amado@galileo.edu)
     @creation-date 2004-07-02
-    @cvs-id $Id: admin-add-2.tcl,v 1.6 2017/08/07 23:48:09 gustafn Exp $
+    @cvs-id $Id: admin-add-2.tcl,v 1.5.4.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     user_id:naturalnum,notnull
     {referer "dotlrn-admins"}

@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author Henry Minsky (hqm@ardigita.com)
     @creation-date 29 September 2000
-    @cvs-id $Id: show-catalog.tcl,v 1.2 2017/08/07 23:47:57 gustafn Exp $
+    @cvs-id $Id: show-catalog.tcl,v 1.1.24.1 2015/09/10 08:21:30 gustafn Exp $
 } { }
 
 set title "Show Message Catalog"

@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-01-30
-    @cvs-id $Id: users.tcl,v 1.26 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: users.tcl,v 1.23.4.1 2015/09/11 11:40:55 gustafn Exp $
 } -query {
     {type "pending"}
 } -properties {
@@ -29,9 +29,7 @@ ad_page_contract {
 }
 
 #Pages in this directory are only runnable by dotlrn-wide admins.
-dotlrn::require_admin
-
-set registered_users_id [acs_magic_object "registered_users"]
+dotlrn::require_admin 
 
 set context_bar [_ dotlrn.Users]
 

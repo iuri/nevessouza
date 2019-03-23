@@ -1,7 +1,4 @@
-::xo::library doc {
-
-  XOTcl functionality for handling recreation of objects
-  
+ad_library {
   Support for the recreation of classes objects without
   destroying foreign references. Normally, when a class
   definition is reloaded, the class is destroyed and created
@@ -13,7 +10,7 @@
 
   @author Gustaf Neumann (neumann@wu-wien.ac.at)
   @creation-date 2005-05-13
-  @cvs-id $Id: 10-recreation-procs.tcl,v 1.13 2017/12/13 20:42:31 gustafn Exp $
+  @cvs-id $Id: 10-recreation-procs.tcl,v 1.10.2.3 2017/04/22 16:59:39 gustafn Exp $
 }
 
 if {![::xotcl::Object isclass ::xotcl::RecreationClass]} {
@@ -61,12 +58,12 @@ if {![::xotcl::Object isclass ::xotcl::RecreationClass]} {
         # the minimal reconfiguration is to set the class and remove methods
         $obj class [self]
         foreach p [$obj info procs] {$obj proc $p {} {}}
-        if {![info exists :instrecreate]} {
+        if {![my exists instrecreate]} {
           #my log "### no instrecreate for $obj <$args>"
           next
           return
         }
-        if {[info exists :instreconfigure]} {
+        if {[my exists instreconfigure]} {
           # before we set defaults, we must unset vars
           foreach var [$obj info vars] {$obj unset $var}
           # set defaults and run configure
@@ -74,7 +71,7 @@ if {![::xotcl::Object isclass ::xotcl::RecreationClass]} {
           $obj configure {*}$args
           #my log "### instproc recreate $obj + configure $args ..."
         }
-        if {[info exists :instreinit]} {
+        if {[my exists instreinit]} {
           #my log "### instreinit for $obj <$args>"
           $obj init 
           #my log "### instproc recreate $obj + init ..."
@@ -84,14 +81,14 @@ if {![::xotcl::Object isclass ::xotcl::RecreationClass]} {
         # the minimal reconfiguration is to set the class and remove methods
         $obj class [self]
         foreach p [$obj info instprocs] {$obj instproc $p {} {}}
-        if {[info exists :reconfigure]} {
+        if {[my exists reconfigure]} {
           # before we set defaults, we must unset vars
           foreach var [$obj info vars] {$obj unset $var}
           # set defaults and run configure
           $obj set_instance_vars_defaults
           $obj configure {*}$args
         }
-        if {[info exists :reinit]} {
+        if {[my exists reinit]} {
           $obj init
         }
       }
@@ -141,7 +138,7 @@ if {[string match "1.3.*" $version]} {
     set cl [self] 
     foreach p [$obj info commands] {$obj proc $p {} {}}
     foreach c [$obj info children] {
-      :log "recreate destroy <$c destroy"
+      my log "recreate destroy <$c destroy"
       $c destroy
     }
     foreach var [$obj info vars] {
@@ -152,7 +149,7 @@ if {[string match "1.3.*" $version]} {
     $obj set_instance_vars_defaults
 
     # we use uplevel to handle -volatile correctly
-    set pos [:uplevel $obj configure $args]
+    set pos [my uplevel $obj configure $args]
     if {"-init" ni $args} {
       incr pos -1
       $obj init {*}[lrange $args 0 $pos]
@@ -171,14 +168,13 @@ if {[string match "1.3.*" $version]} {
   ::xotcl::configure softrecreate true
 
   Class create RR -instproc recreate args { 
-    :log "-- [self args]"; next
+    my log "-- [self args]"; next
   } -instproc create args { 
-    :log "-- [self args]"; next
+    my log "-- [self args]"; next
   }
   #::xotcl::Class instmixin RR
 }
 
-::xo::library source_dependent
 #
 # Local variables:
 #    mode: tcl

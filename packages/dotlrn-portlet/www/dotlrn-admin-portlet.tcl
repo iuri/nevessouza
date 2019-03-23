@@ -22,7 +22,7 @@ ad_page_contract {
 
     @author Arjun Sanyal (arjun@openforce.net)
     @author Ben Adida (ben@openforce)
-    @cvs-id $Id: dotlrn-admin-portlet.tcl,v 1.21 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: dotlrn-admin-portlet.tcl,v 1.19.2.1 2015/09/11 11:41:00 gustafn Exp $
 } -properties {
 }
 

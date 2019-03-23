@@ -32,7 +32,7 @@ mentioned below has to be selected.
       <li>All questions at once
       </li>
       <li>One question per page. If you have selected respondee may not
-edit their responses, it will not be possible for them to go back and
+edit their reponses, it will not be possible for them to go back and
 choose another answer to that question.
       </li>
       <li>Sectioned
@@ -40,7 +40,7 @@ choose another answer to that question.
     </ul>
   </li>
   <li>Reuse responses: boolean (yes/no). If yes, the system will look
-for previous responses to the questions and prefill the last answer
+for previous responses to the the questions and prefill the last answer
 the respondee has given in the assessment form of the respondee. <em>It
 is debatable whether this function should be per assessment and/or per
 question</em>
@@ -67,11 +67,11 @@ the assessment.
   <li>Styles
     <ul>
       <li>Custom header / footer: richtext. Custom header and footer
-that will be displayed to the respondee when answering an assessment.
+that will be displayed the the respondee when answering an assessment.
 Possibility to include system variables (e.g. first name).
       </li>
       <li>Select presentation style. Style (form_template) that will be
-used for this assessment
+used for this assesment
       </li>
       <li>Upload new: file. Possibility to upload a new style
       </li>
@@ -95,9 +95,9 @@ thank you page context, so we can have a "continue" URL.
   </li>
   <li>Times
     <ul>
-      <li>Availability: 2 date widgets (from, and to). This will set the
+      <li>Availabilty: 2 date widgets (from, and to). This will set the
 time the time the survey will become visible for the respondees. It is
-overridden by the parameter enabled (if a accessment is not enabled, it
+overriden by the parameter enabled (if a accessment is not enabled, it
 will never be visible, regardless of date).
       </li>
       <li>How often can a accessment be taken: Number of times a survey
@@ -126,7 +126,7 @@ questions which he answered in correctly.
   </li>
   <li>Permissions
     <ul>
-      <li>Grant explicit permissions: Link to a separate page that will
+      <li>Grant explicit permissions: Link to a seperate page that will
 allow the creator to grant and revoke permission for this survey.
 Permissions are (take_survey, administer_survey)
       </li>
@@ -146,7 +146,7 @@ box. look in oacs_dav::authenticate for an example of how to check the
 username/password<br>
       </li>
       <li>IP Netmask. short_text. Netmask that will be matched against
-the IP-Address of the respondee. If it does not match, the user will not
+the IP-Adress of the respondee. If it does not match, the user will not
 be given access. Again this should be handled by the creation of a
 registered filter on the URL where the assessment resides (for the
 respondee that is, meaning the entry URL for responding to the
@@ -190,7 +190,7 @@ messages:<br>
       </li>
       <li>Possible Messages for the staff
         <ul>
-          <li>Inform the staff about responses to be looked at
+          <li>Inform the staff about reponses to be looked at
           </li>
           <li>Remind the staff about responses
           </li>
@@ -200,7 +200,7 @@ messages:<br>
       </li>
     </ul>
   </li>
-  <li>Responses
+  <li>Reponses
     <ul>
       <li>View responses per User (resulting in a page with all
 responses with checkboxes in front for deletion and a check/uncheck all
@@ -217,7 +217,7 @@ questions with a negative distractor)
         <li>Closed - Only the owner of the assessment can see the
 responses<br>
         </li>
-        <li>Admin - Only admins of the assessment can see the responses<br>
+        <li>Admin - Only admins of the assessment can see the reponses<br>
         </li>
         <li>Respondees - Only respondees can see the responses<br>
         </li>

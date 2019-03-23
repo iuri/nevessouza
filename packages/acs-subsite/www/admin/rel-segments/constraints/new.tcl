@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Mon Dec 11 11:45:21 2000
-    @cvs-id $Id: new.tcl,v 1.9 2018/06/20 09:06:10 antoniop Exp $
+    @cvs-id $Id: new.tcl,v 1.6.2.4 2016/05/20 20:02:44 gustafn Exp $
 
 } {
     rel_segment:notnull,integer
@@ -39,19 +39,7 @@ set context [list [list "../" "Relational segments"] [list [export_vars -base ..
 
 set package_id [ad_conn package_id]
 
-db_1row select_rel_properties {
-    select s.segment_name,
-           (select pretty_name from acs_rel_roles
-             where role = t.role_one) as role_one_name,
-           (select pretty_name from acs_rel_roles
-             where role = t.role_two) as role_two_name
-      from rel_segments s, acs_rel_types t
-     where s.rel_type = t.rel_type
-       and s.segment_id = :rel_segment    
-}
-
-set role_one_name [lang::util::localize $role_one_name]
-set role_two_name [lang::util::localize $role_two_name]
+db_1row select_rel_properties {}
 
 template::form create constraint_new
 
@@ -83,22 +71,18 @@ template::element create constraint_new rel_side \
 	-options $option_list \
 	-label "Add constraint for which side?"
 
-set segment_list [list]
-db_foreach select_segments {
+set segment_list [db_list_of_lists select_segments {
     select s.segment_name, s.segment_id
       from application_group_segments s
      where s.segment_id <> :rel_segment
        and s.package_id = :package_id
 
      order by lower(s.segment_name)
-} {
-    lappend segment_list [list [lang::util::localize $segment_name] $segment_id]
-}
+}]
 
 if { [llength $segment_list] == 0 } {
-    ad_return_complaint 1 \
-        "<li> There are currently no other segments. You must have at least two segments before you can create a constraint"
-    ad_script_abort
+    ad_return_complaint 1 "<li> There are currently no other segments. You must have at least two segments before you can create a constraint"
+    return
 }
 
 template::element create constraint_new required_rel_segment \
@@ -129,16 +113,14 @@ if { [template::form is_valid constraint_new] } {
     } on_error {
 	if { $ctr == 0 } {
 	    # Return the error message
-	    ad_return_error \
-                "Error creating the constraint" \
-                "We got the following error while trying to create the constraint: <pre>$errmsg</pre>"
-	    ad_script_abort
+	    ad_return_error "Error creating the constraint" "We got the following error while trying to create the constraint: <pre>$errmsg</pre>"
+	    return
 	} 
     }
     if { $ctr > 0 } {
 	# show the user the erroneous relations, then abort
 	ad_return_template violations
-	ad_script_abort
+	return
     }
     if { $return_url eq "" } {
 	set return_url "../one?segment_id=$rel_segment"

@@ -108,7 +108,7 @@
   <msg key="Assessment_Imported_Correctly">Qüestionari importat correctament</msg>
   <msg key="assessment_Name_help">Us permet donar un identificador únic al qüestionari, que pot ser un codi.</msg>
   <msg key="assessment_not_public">El qüestionari no és públic.</msg>
-  <msg key="Assessment_portlet">Qüestionaris</msg>
+  <msg key="Assessment_porlet">Qüestionaris</msg>
   <msg key="assessment_restricted_ips">Accés restringit, IP errònia. </msg>
   <msg key="Assessment_Title">Títol </msg>
   <msg key="assessment_too_many_tries">Només es permeten %number_tries% intents.</msg>
@@ -190,7 +190,7 @@
   <msg key="data_type_timestamp">Hora</msg>
   <msg key="data_type_varchar">Text curt </msg>
   <msg key="date_request">Data sol·licitada des de...</msg>
-  <msg key="Default_Value_help">Introduïu un valor per defecte per a aquesta resposta.</msg>
+  <msg key="Deafult_Value_help">Introduïu un valor per defecte per a aquesta resposta.</msg>
   <msg key="Default_Path">Path per defecte </msg>
   <msg key="Default_Selected">Per defecte: Seleccionat</msg>
   <msg key="Default_Selected_help">Aquesta resposta està seleccionada per defecte?</msg>

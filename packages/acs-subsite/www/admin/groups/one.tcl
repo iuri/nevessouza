@@ -6,7 +6,7 @@ ad_page_contract {
     @author Michael Bryzek (mbryzek@arsdigita.com)
 
     @creation-date 2000-12-05
-    @cvs-id $Id: one.tcl,v 1.13 2018/12/12 18:20:08 antoniop Exp $
+    @cvs-id $Id: one.tcl,v 1.8.2.4 2017/10/07 10:58:52 gustafn Exp $
 } {
     group_id:integer,notnull
 } -properties {
@@ -21,14 +21,14 @@ ad_page_contract {
     join_policy:onevalue
 } -validate {
     groups_exists_p -requires {group_id:notnull} {
-        if { ![permission::permission_p -object_id $group_id -privilege "read"] } {
-            ad_complain "The group either does not exist or you do not have permission to view it"
-        }
+	if { ![group::permission_p $group_id] } {
+	    ad_complain "The group either does not exist or you do not have permission to view it"
+	}
     }
     group_in_scope_p -requires {group_id:notnull} {
-        if { ![application_group::contains_party_p -include_self -party_id $group_id]} {
-            ad_complain "The group either does not exist or does not belong to this subsite."
-        }
+	if { ![application_group::contains_party_p -include_self -party_id $group_id]} {
+	    ad_complain "The group either does not exist or does not belong to this subsite."
+	}
     }
 }
 
@@ -44,12 +44,12 @@ set return_url_enc [ad_urlencode $return_url]
 
 db_1row group_info_pretty {
     select g.group_name, g.join_policy,
-           o.object_type as group_type,
-           t.pretty_name as group_type_pretty_name
-      from groups g, acs_objects o, acs_object_types t
-     where g.group_id = o.object_id
-       and o.object_type = t.object_type
-       and g.group_id = :group_id
+    o.object_type as group_type,
+    t.pretty_name as group_type_pretty_name
+    from groups g, acs_objects o, acs_object_types t
+    where g.group_id = o.object_id
+    and o.object_type = t.object_type
+    and g.group_id = :group_id
 }
 
 set context [list [list "[ad_conn package_url]admin/groups/" "Groups"] "One Group"]
@@ -77,12 +77,7 @@ if {[apm_package_installed_p categories]} {
     set category_trees [join $category_trees ,]
 }
 
-set add_subgroup_url [export_vars -base "new" {
-    {add_to_group_id $group_id}
-    {group_type $group_type}
-    {add_with_rel_type composition_rel}
-    return_url
-}]
+ad_return_template
 
 # Local variables:
 #    mode: tcl

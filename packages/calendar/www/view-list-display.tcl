@@ -1,48 +1,45 @@
-ad_include_contract {
-    Display list calendar view
-
-    Expects:
-      date: ignored, looks like passed in for symmetry
-      start_date: starting date for the list
-      period_days:integer
-      show_calendar_name_p (optional): 0 or 1
-      calendar_id_list: optional list of calendar_ids
-      export: may be "print"
-} {
-    {period_days:integer,notnull {[parameter::get -parameter ListView_DefaultPeriodDays -default 31]}}
-    {show_calendar_name_p:boolean 1}
-    {sort_by "start_date"}
-    {start_date {[clock format [clock seconds] -format "%Y-%m-%d 00:00"]}}
-    {cal_system_type ""}
-    {date:optional}
-    {calendar_id_list ""}
-    {export ""}
-    {return_url:optional}
-} -validate {
-    valid_period_days -requires { period_days } {
-        # Tcl allows in for relative times just 6 digits, including the "+"
-        if {$period_days > 99999} {
-            ad_complain "Invalid time period"
-        }
-    }
-    valid_start_date -requires { start_date } {
-        if {[catch {clock scan $start_date} errorMsg]} {
-            ad_complain "invalid start date"
+if { ![info exists period_days] } {
+    ad_page_contract  {
+     Some documentation.
+     @author Sven Schmitt (s.lrn@gmx.net)
+     @cvs-id $Id: view-list-display.tcl,v 1.35.2.6 2017/06/30 17:42:16 gustafn Exp $
+    } {
+	{period_days:integer,notnull {[parameter::get -parameter ListView_DefaultPeriodDays -default 31]}}
+    } -validate {
+        valid_period_days  -requires { period_days } {
+            # Tcl allows in for relative times just 6 digits, including the "+"
+            if {$period_days > 99999} {
+                ad_complain "Invalid time period."
+            }
         }
     }
 }
 
-#
-# sort_by is passed down, maybe as empty
-#
-if {$sort_by eq ""} {
+if { ![info exists show_calendar_name_p] || $show_calendar_name_p eq "" } {
+    set show_calendar_name_p 1
+}
+if { ![info exists sort_by] || $sort_by eq ""} {
     set sort_by "start_date"
 }
 
-if { $calendar_id_list ne "" } {
-    set calendars_clause [db_map dbqd.calendar.www.views.openacs_in_portal_calendar]
+if { ![info exists start_date] || $start_date eq "" } {
+    set start_date [clock format [clock seconds] -format "%Y-%m-%d 00:00"]
+} elseif {[catch {clock scan $start_date} errorMsg]} {
+    ad_page_contract_handle_datasource_error "invalid start date"
+    ad_script_abort
+}
+
+if { ![info exists end_date] || $end_date eq "" } {
+    set end_date [clock format [clock scan "+30 days" -base [clock scan $start_date]] -format "%Y-%m-%d 00:00"]
+} elseif {[catch {clock scan $end_date} errorMsg]} {
+    ad_page_contract_handle_datasource_error "invalid end date"
+    ad_script_abort
+}
+
+if { [info exists calendar_id_list] && $calendar_id_list ne "" } {
+    set calendars_clause [db_map dbqd.calendar.www.views.openacs_in_portal_calendar] 
 } else {
-    set calendars_clause [db_map dbqd.calendar.www.views.openacs_calendar]
+    set calendars_clause [db_map dbqd.calendar.www.views.openacs_calendar] 
 }
 
 set end_date [clock format [clock scan "+${period_days} days" -base [clock scan $start_date]] -format "%Y-%m-%d 00:00"]
@@ -66,7 +63,7 @@ if {$start_date ne "" && $end_date ne ""} {
     set title "[_ acs-datetime.Items_from] [lc_time_fmt $start_date "%q"] [_ acs-datetime.to] [lc_time_fmt $end_date "%q"]"
 }
 
-set today_date [dt_sysdate]
+set today_date [dt_sysdate]    
 set today_ansi_list [dt_ansi_to_list $today_date]
 set today_julian_date [dt_ansi_to_julian [lindex $today_ansi_list 0] [lindex $today_ansi_list 1] [lindex $today_ansi_list 2]]
 
@@ -94,11 +91,16 @@ set last_pretty_start_date ""
 set interval_limitation_clause [db_map dbqd.calendar.www.views.list_interval_limitation]
 set order_by_clause " order by $sort_by"
 set additional_limitations_clause ""
-if { $cal_system_type ne "" } {
+if { ([info exists cal_system_type] && $cal_system_type ne "") } {
     append additional_limitations_clause " and system_type = :cal_system_type "
 }
 
-set additional_select_clause " , to_char(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as ansi_today, recurrence_id"
+if {[string match [db_type] "postgresql"]} {
+    set sysdate "now()"
+} else {
+    set sysdate "sysdate"
+}
+set additional_select_clause " , to_char($sysdate, 'YYYY-MM-DD HH24:MI:SS') as ansi_today, recurrence_id"
 
 db_foreach dbqd.calendar.www.views.select_items {} {
     # Timezonize
@@ -144,25 +146,23 @@ db_foreach dbqd.calendar.www.views.select_items {} {
         set today ""
     }
 
-    set event_url [export_vars -base [site_node::get_url_from_object_id -object_id $cal_package_id]cal-item-view {
-        return_url {cal_item_id $item_id}
-    }]
-
+    set event_url [export_vars -base [site_node::get_url_from_object_id -object_id $cal_package_id]cal-item-view {return_url {cal_item_id $item_id}}]
+    
     if { !$show_calendar_name_p } {
         set calendar_name ""
     }
 
     multirow append items \
-        $name \
-        $event_url \
-        $calendar_name \
-        $item_type \
-        $pretty_weekday \
-        $pretty_start_date \
-        $pretty_end_date \
-        $pretty_start_time \
-        $pretty_end_time \
-        $today \
+	$name \
+	$event_url \
+	$calendar_name \
+	$item_type \
+	$pretty_weekday \
+	$pretty_start_date \
+	$pretty_end_date \
+	$pretty_start_time \
+	$pretty_end_time \
+	$today \
     $description \
         $calendar_name
 }
@@ -212,30 +212,29 @@ foreach i {1 7 14 21 30 60} {
     set period_url_$i "[export_vars -base $self_url -url -entire_form {{period_days $i}}]\#calendar"
 }
 
-if { $export eq "print" } {
-    set print_html [template::adp_parse [acs_root_dir]/packages/calendar/www/view-print-display \
-                        [list &items items show_calendar_name_p $show_calendar_name_p]]
+if { [info exists export] && $export eq "print" } {
+    set print_html [template::adp_parse [acs_root_dir]/packages/calendar/www/view-print-display [list &items items show_calendar_name_p $show_calendar_name_p]]
     ns_return 200 text/html $print_html
     ad_script_abort
 }
 
 
-set excluded_vars {}
-set the_form [ns_getform]
-if { $the_form ne "" } {
-    for { set i 0 } { $i < [ns_set size $the_form] } { incr i } {
-        set varname [ns_set key $the_form $i]
-        if {$varname eq "period_days" ||
-            [string match "__*" $varname] ||
-            [string match "form:*" $varname]} {
-            lappend excluded_vars $varname
-        }
+set noprocessing_vars [list]
+
+
+    set the_form [ns_getform]
+    if { $the_form ne "" } {
+	for { set i 0 } { $i < [ns_set size $the_form] } { incr i } {
+	    set varname [ns_set key $the_form $i]
+	    set varvalue [ns_set value $the_form $i]
+	    if {!($varname eq "period_days") && !([string match "__*" $varname]) && !([string match "form:*" $varname])} {
+		lappend noprocessing_vars [list $varname $varvalue]
+	    }
+	}
     }
-}
 
-set exported_vars [export_vars -entire_form -no_empty -form -exclude $excluded_vars]
 
-ad_form -name frmdays -has_submit 1 -html {class "inline-form"} -form {
+ad_form -name frmdays -has_submit 1 -html {class "inline-form"} -export $noprocessing_vars -form {
     {period_days:integer,optional
         {label "[_ calendar.days]"}
         {html {size 3 maxlength 3 class "cal-input-field"}}

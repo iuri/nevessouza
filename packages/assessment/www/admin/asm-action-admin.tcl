@@ -1,8 +1,8 @@
 ad_page_contract {
     This page admin the new actions to be used on the checks
-    @author vivian@viaro.net Viaro Networks (www.viaro.net)
-    @creation-date 07-01-2005
-    @cvs-id $Id: asm-action-admin.tcl,v 1.9 2018/06/29 17:27:18 hectorr Exp $
+    @authos vivian@viaro.net Viaro Networks (www.viaro.net)
+    @date 07-01-2005
+    @cvs-id $Id:
 } {
    
 }

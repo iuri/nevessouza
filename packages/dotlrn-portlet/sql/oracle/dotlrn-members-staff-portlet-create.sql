@@ -16,13 +16,13 @@
 
 --
 
--- Creates dotlrn datasource for showing staff members for a community
+-- Creates dotlrn datasource for showing staff members for a comunity
 
 -- Copyright (C) 2001 MIT
 -- @author Arjun Sanyal (arjun@openforce.net)
 -- @creation-date 2001-30-09
 
--- $Id: dotlrn-members-staff-portlet-create.sql,v 1.7 2018/07/11 21:57:26 hectorr Exp $
+-- $Id: dotlrn-members-staff-portlet-create.sql,v 1.6 2003/09/30 13:11:40 mohanp Exp $
 
 -- This is free software distributed under the terms of the GNU Public
 -- License version 2 or higher.  Full text of the license is available

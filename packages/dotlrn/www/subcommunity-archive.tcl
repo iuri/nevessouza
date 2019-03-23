@@ -18,7 +18,7 @@ ad_page_contract {
     Archive a group (need to rename file)
 
     @author arjun (arjun@openforce.net)
-    @cvs-id $Id: subcommunity-archive.tcl,v 1.13 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: subcommunity-archive.tcl,v 1.11.4.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     {community_id:integer ""}
     {referer "one-community-admin"}

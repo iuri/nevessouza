@@ -21,7 +21,7 @@ ad_page_contract {
 
     @author Arjun Sanyal (arjun@openforce.net)
     @creation-date 10/20/2001
-    @cvs-id $Id: portal-config.tcl,v 1.11 2017/08/07 23:48:12 gustafn Exp $
+    @cvs-id $Id: portal-config.tcl,v 1.10.20.1 2015/09/12 11:06:39 gustafn Exp $
 } {
     {referer:optional ""}
     portal_id:naturalnum,notnull

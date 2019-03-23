@@ -6,7 +6,7 @@ ad_library {
     @author Ben Adida (ben@mit.edu)
     @author Bart Teeuwisse (bart.teeuwisse@thecodemill.biz)
     @creation-date Fri Oct  6 21:47:39 2000
-    @cvs-id $Id: apm-xml-procs.tcl,v 1.33 2018/07/25 01:39:50 gustafn Exp $
+    @cvs-id $Id: apm-xml-procs.tcl,v 1.31.2.4 2016/01/05 17:24:43 gustafn Exp $
 } 
 
 ad_proc -private apm_required_attribute_value { element attribute } {
@@ -22,7 +22,7 @@ ad_proc -private apm_required_attribute_value { element attribute } {
     return $value
 }
 
-ad_proc -public apm_attribute_value {
+ad_proc -private apm_attribute_value {
     {-default ""}
     element attribute
 } {

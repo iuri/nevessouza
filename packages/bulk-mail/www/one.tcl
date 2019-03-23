@@ -2,7 +2,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-05-13
-    @cvs-id $Id: one.tcl,v 1.8 2017/08/07 23:48:04 gustafn Exp $
+    @cvs-id $Id: one.tcl,v 1.7.2.2 2015/09/18 08:01:34 gustafn Exp $
 
 } -query {
     bulk_mail_id:naturalnum,notnull

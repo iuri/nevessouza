@@ -16,7 +16,7 @@
 
 ad_page_contract {
 
-    @cvs-id $Id: zen1.tcl,v 1.6 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: zen1.tcl,v 1.4.2.1 2015/09/12 19:00:46 gustafn Exp $
 
 } -properties {
     element_list:onevalue

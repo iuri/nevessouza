@@ -10,7 +10,7 @@ as_items (or questions if you like) and groups of as_items (e.g.
 Sections) that can be used in an assessment. You are able to
 add/edit/delete an as_item of a certain type to a certain scope.
 Furthermore it allows you to search and browse for questions for
-inclusion in your assessment as well as import and export multiple
+inclusion in your assesment as well as import and export multiple
 questions using various formats.</span></p>
 <p><span class="context">In this description here we will only
 discuss the design implications for as_items. Green colored tables
@@ -37,7 +37,7 @@ as_item_display instance.<br>
 </span></p>
 <p><span class="context">Categorization and internationalization
 will make it into OpenACS 5.2, therefore we are not dealing with it
-in Assessment separately but use the (to be) built in functionality
+in Assessment seperately but use the (to be) built in functionality
 of OpenACS 5.2</span></p>
 <p><span class="context">Additionally we have support functionality
 for an as_item. This includes the help functionality. To give
@@ -46,8 +46,8 @@ messages, etc for use in different Assessments, we abstract out a
 number of attributes from as_items into mapping tables where
 "override" values for these attributes can optionally be
 set by authors. If they choose not to set overrides, then the
-values originally created in the as_item supersede.</span></p>
-<p><span class="context">Separately we will deal with Checks on
+values originally created in the as_item supercede.</span></p>
+<p><span class="context">Seperately we will deal with Checks on
 as_items. These will allow us to make checks on the input (is the
 value given by the user actually a valid value??), branches (if we
 display this as_item, which responses have to have been given) and
@@ -73,7 +73,7 @@ attached to an as_item&#39;s display</span></li><li><span class="context">cr::de
 text</span></li><li><span class="context">subtext - a secondary label, needed for
 many kinds of questions</span></li><li><span class="context">field_code - a short label for use in
 data output header rows, etc</span></li><li><span class="context">required_p - whether as_item must be
-answered (default value, can be overridden)</span></li><li>
+answered (default value, can be overriden)</span></li><li>
 <span class="context">data_type - This is the expected
 data_type of the answer. Previously "abstract_data_type"
 but omitting the superfluous "abstract" term; selected
@@ -97,7 +97,7 @@ of defining a special scope variable we will use the acs permission
 system to grant access rights to an as_item.</span></p><ul>
 <li><span class="context">Read: An assessment author (who is
 granted this permission) can reuse this as_item in one of his
-sections. (NB: Usually the original author has admin privileges.).
+sections. (NB: Usually the original author has admin priviledges.).
 This is a finer granulation than the previous "enabled_p"
 as it allows specific access to an item.</span></li><li><span class="context">Write: Author can reuse and change this
 as_item.</span></li><li><span class="context">Admin: Author can reuse, change and give
@@ -127,7 +127,7 @@ requirements section.</a>
 <ul>
 <li><span class="context"><span class="reg"><span class="context"><span class="reg"><strong><font color="green">Open
 Question
-(as_item_type_oq):</font></strong></span></span></span></span></li><li style="list-style: none; display: inline"><ul>
+(as_item_type_oq):</font></strong></span></span></span></span></li><li style="list-style: none"><ul>
 <li>as_item_type_id<br>
 </li><li>cr::name - Identifier<br>
 </li><li>default_value: The content of this field will be prefilled in
@@ -136,7 +136,7 @@ contents of this box as correct answer for comparison with the user
 response.</li>
 </ul></li><li><span class="context"><span class="reg"><span class="context"><span class="reg"><strong><font color="green">Short
 Answer
-(as_item_type_sa):</font></strong></span></span></span></span></li><li style="list-style: none; display: inline"><ul>
+(as_item_type_sa):</font></strong></span></span></span></span></li><li style="list-style: none"><ul>
 <li>as_item_type_id<br>
 </li><li>cr::name - Identifier</li><li>increasing_p:  Increasing will give (number of correct
 matches / number of total matches) *100% points. All or nothing
@@ -148,7 +148,7 @@ else.</li><li>allow_negative_p: This will allow a negative percentage as well
 <ul>
 <li><span class="context"><span class="reg"><span class="context"><span class="reg"><strong><font color="green">Short
 Answer Answers
-(as_item_sa_answers):</font></strong></span></span></span></span></li><li style="list-style: none; display: inline"><ul>
+(as_item_sa_answers):</font></strong></span></span></span></span></li><li style="list-style: none"><ul>
 <li>answer_id<br>
 </li><li>cr::name - Identifier</li><li>cr::title - Answer string that will be matched against the
 response</li><li>data_type - Integer vs. real number vs. text</li><li>case_sensitive_p - Shall the match be case sensitive</li><li>percent_score - Percentage a correct match gives<br>
@@ -166,7 +166,7 @@ relationship.<br>
 <li><span class="context"><span class="reg"><span class="context"><span class="reg"><strong><font color="green">Multiple
 Choice Item
 (as_item_type_mc)<br>
-</font></strong></span></span></span></span></li><li style="list-style: none; display: inline"><ul>
+</font></strong></span></span></span></span></li><li style="list-style: none"><ul>
 <li>cr::name - Identifier<br>
 </li><li>increasing_p:  Increasing will give (number of correct
 matches / number of total matches) *100% points. All or nothing
@@ -211,7 +211,7 @@ image, audio file, or video file</li><li>feedback_text - where optionally some p
 specified by the author</li><li>selected_p - Is this choice selected by default (when the item
 is presented to the user)</li><li>correct_answer_p - Is this choice the correct answer<br>
 </li><li>sort_order - In which order shall this choice appear with
-regards to the MC item. Note, this can be overridden by the display
+regards to the MC item. Note, this can be overriden by the display
 type.<br>
 </li><li>percent_score - Score given to the user if this choice is
 selected (in percent).<br>
@@ -223,7 +223,7 @@ Inter-as_item Checks.</p>
 </li><li><span class="context"><span class="reg"><span class="context"><span class="reg"><strong><font color="green">Image Map
 Multiple Choice Item
 (as_item_type_im):<br>
-</font></strong></span></span></span></span></li><li style="list-style: none; display: inline"><ul>
+</font></strong></span></span></span></span></li><li style="list-style: none"><ul>
 <li>cr::name - Identifier</li><li>cr::title - Title of the image map.<br>
 </li><li>increasing_p:  Increasing will give (number of correct
 matches / number of total matches) *100% points. All or nothing
@@ -239,7 +239,7 @@ cr_revisions<br>
 <li><span class="context"><span class="reg"><span class="context"><span class="reg"><strong><font color="green">Image Map
 Choices
 (as_item_image_choices):<br>
-</font></strong></span></span></span></span></li><li style="list-style: none; display: inline"><ul>
+</font></strong></span></span></span></span></li><li style="list-style: none"><ul>
 <li>choice_id</li><li>cr::parent_id (belonging to an as_item_type_im object).</li><li>cr::name - Identifier<br>
 </li><li>cr::title - what is displayed in the choice&#39;s
 "label"</li><li>data_type - which of the value columns has the information this
@@ -276,13 +276,13 @@ other stuff like textarea dimensions ("rows=10 cols=50"
 eg)</span></li>
 </ul>
 <p><span class="context">Depending on the presentation_types
-<font color="red">additional attributes (presentation_type
+<font color="red">additonal attributes (presentation_type
 attributes)</font> come into play (are added as attributes to the
 CR item type) (mark: this is not feature complete. It really is up
 to the coder to decide what attributes each widget should have,
 down here are only *suggestions*). Additionally we&#39;re not
 mentioning all HTML possibilities associated with each type (e.g. a
-textarea has width and height..) as these can be parsed in via the
+textarea has width and heigth..) as these can be parsed in via the
 html_display_options.<br>
 </span></p>
 <ul>
@@ -309,7 +309,7 @@ the "question"</span></li>
 </li>
 </ul>
 </li><li>short_answer (as_item_display_sa) - Multiple textboxes in one
-item.</li><li style="list-style: none; display: inline"><ul>
+item.</li><li style="list-style: none"><ul>
 <li><span class="context"><span class="reg">abs_size - An
 abstraction of the real size value in
 "small","medium","large". Up to the
@@ -383,7 +383,7 @@ the "question"</span></li>
 </li><li>checkbox (as_item_display_cb) - multiple-choice multiple-option
 <ul>
 <li>choice_orientation (see above)</li><li>choice_label_orientation<br>
-</li><li>allow_multiple_p - Is it allow one to select multiple values ?</li><li>sort_order_type: Numerical, alphabetic, randomized or by order
+</li><li>allow_multiple_p - Is it allow to select multiple values ?</li><li>sort_order_type: Numerical, alphabetic, randomized or by order
 of entry (sort_order field).</li><li>
 <span class="context"><span class="reg"><span class="context"><span class="reg">item_answer_alignment - the orientation
 between the "question part" of the Item (the
@@ -402,10 +402,10 @@ the "question"</span></li>
 </ul>
 </li><li>select (as_item_display_sb) - multiple-option displayed in
 "popup menu" (select box)<br>
-</li><li style="list-style: none; display: inline"><ul>
+</li><li style="list-style: none"><ul>
 <li>sort_order_type: Numerical, alphabetic, randomized or by order
 of entry (sort_order field).</li><li><span class="context"><span class="reg">allow_multiple_p - Is
-it allow one to select multiple values ?</span></span></li><li>
+it allow to select multiple values ?</span></span></li><li>
 <span class="context"><span class="reg"><span class="context"><span class="reg">item_answer_alignment - the orientation
 between the "question part" of the Item (the
 title/subtext) and the "answer part" -- the native Item
@@ -420,10 +420,10 @@ the "question"</span></li><li><span class="context">above - the "answers" are ab
 the "question"</span></li>
 </ol><span class="context"><br></span>
 </li>
-</ul></li><li>image map (as_item_display_im) - Title with picture</li><li style="list-style: none; display: inline"><ul>
+</ul></li><li>image map (as_item_display_im) - Title with picture</li><li style="list-style: none"><ul>
 <li>
 <span class="context"><span class="reg">allow_multiple_p - Is
-it allow one to select multiple values ?</span></span><br>
+it allow to select multiple values ?</span></span><br>
 </li><li>
 <span class="context"><span class="reg"><span class="context"><span class="reg"><span class="context"><span class="reg">item_answer_alignment - the orientation between the
 "question part" of the Item (the title/subtext) and the
@@ -467,9 +467,9 @@ the "question"</span></li>
 </ul><br>
 </li><li>pop-up_date - a widget with month-day-year select elements that
 resets the day element based on year and month (ie include Feb 29
-during leap years -- via Javascript) and tests for valid dates</li><li style="list-style: none; display: inline"><ul><li><br></li></ul></li><li>typed_date - similar to pop-up_date but month-day-year elements
+during leap years -- via Javascript) and tests for valid dates</li><li style="list-style: none"><ul><li><br></li></ul></li><li>typed_date - similar to pop-up_date but month-day-year elements
 are textboxes for all-keyboard entry; needs no resetting scripts
-but does need date validity check</li><li style="list-style: none; display: inline"><ul><li><br></li></ul></li><li>file_upload - present a File box (browse button, file_name
+but does need date validity check</li><li style="list-style: none"><ul><li><br></li></ul></li><li>file_upload - present a File box (browse button, file_name
 textbox, and submit button together) so user can upload a file</li>
 </ul>
 <h2><span class="context">Help System</span></h2>

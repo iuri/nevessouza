@@ -1,7 +1,7 @@
 ad_library {
 
-    The template::head::* API manipulates the head section of the document that
-    will be returned to the users client.  Packages should use this API to add
+    The template::head::* api manipulates the head section of the document that
+    will be returned to the users client.  Packages should use this api to add
     package specific javascripts, CSS, link tags and meta tags to the HTML
     document.
 
@@ -14,7 +14,7 @@ namespace eval template {}
 namespace eval template::head {}
 
 ad_proc -private template::reset_request_vars {} {
-    Resets all global data structures used to manage the head section of the
+    Resets all global datastructures used to manage the head section of the
     returned document.  This should be called at the beginning of any request
     handled by the templating system.
 } {
@@ -27,40 +27,6 @@ ad_proc -private template::reset_request_vars {} {
     set ::template::headers [list]
     set ::template::footers [list]
 }
-
-ad_proc -public template::register_urn {
-    -urn:required
-    -resource:required
-} {
-
-    Register a URN for a resource. These URNs provide a single place
-    for e.g updating references to external resources when switching
-    between a CDN and a local resource, or when a resource should be
-    updated.
-
-    We could consider a dns-prefetch for CDN requests. When the
-    url-check is performed at register time, the performance for
-    processing the url can be neglected.
-
-} {
-    set key ::template::head::urn($urn)
-    if {[info exists $key]} {
-        set old_resource [set $key]
-        #
-        # Prefer local URNs over non-local ones
-        #
-        if {[string match //* $old_resource] || [string match http* $old_resource]} {
-            ns_log notice "overwrite URN: $urn <$old_resource> with <$resource>"
-            set $key $resource
-        } else {
-            ns_log notice "keep old URN: $urn <$old_resource> instead of <$resource>"
-        }
-    } else {
-        set $key $resource
-        ns_log notice "add URN: $urn <$resource>"
-    }
-}
-
 
 ad_proc -public template::add_script {
     {-async:boolean}
@@ -76,35 +42,34 @@ ad_proc -public template::add_script {
 } {
     @param async   whether execution of the script should be executed asynchronously
                    as soon as it is available
-    @param charset the charset attribute of the script tag, i.e. the character
+    @param charset the charset attribute of the script tag, ie. the character
                    set of the script if it differs from the main document
     @param crossorigin  Enumerated attribute to indicate whether CORS
                    (Cross-Origin Resource Sharing) should be used
-    @param defer   whether execution of the script should be deferred until after
+    @param defer   whether execution of the script should be defered until after
                    the page has been loaded
-    @param integrity provide hash values for W3C Subresource Integrity recommendation
+    @param integrity provide hash values for W3C Subresource Integrity recommentation
     @param order   specify inclusion order
     @param script  the inline script for the body of the script tag.  This
                    parameter will be ignored if a value has been supplied for src
     @param section section, where script is added ("head" or "body")
-    @param src     the src attribute of the script tag, i.e. the source url of the
+    @param src     the src attribute of the script tag, ie. the source url of the
                    script
-    @param type    the type attribute of the script tag, e.g. 'text/javascript'
+    @param type    the type attribute of the script tag, eg. 'text/javascript'
 } {
-
     if {$section eq "head"} {
-        #
-        # A head script
-        #
-        ::template::head::add_script -type $type -defer=$defer_p -async=$async_p \
-            -src $src -charset $charset -script $script -order $order \
+	#
+	# A head script
+	#
+	::template::head::add_script -type $type -defer=$defer_p -async=$async_p \
+	    -src $src -charset $charset -script $script -order $order \
             -crossorigin $crossorigin -integrity $integrity
     } else {
-        #
-        # A body script. The order is ignored.
-        #
-        ::template::add_body_script -type $type -defer=$defer_p -async=$async_p \
-            -src $src -charset $charset -script $script \
+	#
+	# A body script. The order is ignored.
+	#
+	::template::add_body_script -type $type -defer=$defer_p -async=$async_p \
+	    -src $src -charset $charset -script $script \
             -crossorigin $crossorigin -integrity $integrity
     }
 }
@@ -129,19 +94,19 @@ ad_proc -public template::head::add_script {
 
     @param async   whether execution of the script should be executed asynchronously
                    as soon as it is available
-    @param charset the charset attribute of the script tag, i.e. the character
+    @param charset the charset attribute of the script tag, ie. the character
                    set of the script if it differs from the main document
     @param crossorigin  Enumerated attribute to indicate whether CORS
                    (Cross-Origin Resource Sharing) should be used
-    @param defer   whether execution of the script should be deferred until after
+    @param defer   whether execution of the script should be defered until after
                    the page has been loaded
-    @param integrity provide hash values for W3C Subresource Integrity recommendation
+    @param integrity provide hash values for W3C Subresource Integrity recommentation
     @param order   specify inclusion order
     @param script  the inline script for the body of the script tag.  This
                    parameter will be ignored if a value has been supplied for src
-    @param src     the src attribute of the script tag, i.e. the source url of the
+    @param src     the src attribute of the script tag, ie. the source url of the
                    script
-    @param type    the type attribute of the script tag, e.g. 'text/javascript'
+    @param type    the type attribute of the script tag, eg. 'text/javascript'
 
 } {
     if {$defer_p} {
@@ -154,16 +119,6 @@ ad_proc -public template::head::add_script {
         set async async
     } else {
         set async ""
-    }
-
-    #
-    # Replace potential URN in src with resolved value
-    #
-    set key ::template::head::urn($src)
-    if {[info exists $key]} {
-        set src [set $key]
-    } elseif {[string match urn:* $src]} {
-        ns_log error "URN <$src> could not be resolved"
     }
 
     if {$src eq ""} {
@@ -180,33 +135,12 @@ ad_proc -public template::head::add_script {
         # browsers by checking the user agent.
         #
         security::csp::require script-src 'unsafe-inline'
-        #security::csp::require script-src 'strict-dynamic'
 
         lappend ::template::head::scripts(anonymous) $type "" $charset $defer $async $script $order $crossorigin $integrity
     } else {
         set ::template::head::scripts($src) [list $type $src $charset $defer $async "" $order $crossorigin $integrity]
     }
 }
-
-ad_proc -public template::head::flush_script {
-    {-src:required}
-} {
-
-    Flush a script tag, which was previously set in the head section
-    via template::add_script.  One can delete multiple entries by
-    providing a glob pattern.
-
-    @author Gustaf Neumann
-    @creation-date 2018-03-09
-
-    @param src     src attribute of the script tag, i.e. the source url of the
-                   script. A glob pattern similar link in "string match" can be provided.
-    @see ::template::head::add_script
-} {
-    array unset ::template::head::scripts $src
-    flush_included $src
-}
-
 
 ad_proc -public template::head::add_link {
     {-crossorigin ""}
@@ -226,109 +160,23 @@ ad_proc -public template::head::add_link {
 
     @param crossorigin  Enumerated attribute to indicate whether CORS
                    (Cross-Origin Resource Sharing) should be used
-    @param href    the href attribute of the link tag, e.g. the target document
+    @param href    the href attribute of the link tag, eg. the target document
                    of the link
-    @param integrity provide hash values for W3C Subresource Integrity recommendation
+    @param integrity provide hash values for W3C Subresource Integrity recommentation
     @param lang    the lang attribute of the link tag specifying the language
                    of its attributes if they differ from the document language
     @param media   the media attribute of the link tag describing which display
                    media this link is relevant to.  This may be a comma
     @param order   specify inclusion order
     @param rel     the rel attribute of the link tag defining the relationship
-                   of the linked document to the current one, e.g. 'stylesheet'
+                   of the linked document to the current one, eg. 'stylesheet'
     @param title   the title attribute of the link tag describing the target of
                    this link
-    @param type    the type attribute of the link tag, e.g. 'text/css'
-                   separated list of values, e.g. 'screen,print,braille'
-
-    @see ::template::head::flush_link
+    @param type    the type attribute of the link tag, eg. 'text/css'
+                   separated list of values, eg. 'screen,print,braille'
 } {
     set ::template::head::links($rel,$href) [list $rel $href $type $media $title $lang $order $crossorigin $integrity]
 }
-
-ad_proc -public template::head::flush_link {
-    {-href:required}
-    {-rel:required}
-} {
-    Flush a link tag, which was previously set in the head section via template::head::add_link
-
-    @author Gustaf Neumann
-    @creation-date 2018-03-09
-
-    @param href    the href attribute of the link tag, e.g. the target document
-                   of the link. A glob pattern similar link in "string match"
-                   can be provided.
-
-    @param rel     the rel attribute of the link tag defining the relationship
-                   of the linked document to the current one, e.g. 'stylesheet'
-    @see ::template::head::add_link
-} {
-    array unset ::template::head::links $rel,$href
-    flush_included $href
-}
-
-ad_proc -public template::head::includes {
-    {-container:required}
-    {-parts:required}
-} {
-
-    Define, that a compound resource (container) contains multiple
-    parts.  Container and parts are typically URLs, which are referred
-    to by a "href" attribute or by link or a "src" attribute of a
-    script.
-
-    @author Gustaf Neumann
-    @creation-date 2018-03-09
-
-    @param container compound resource
-    @param parts     list of resources, which are included in a compound resource (container).
-
-    @see ::template::head::add_link
-    @see ::template::head::add_script
-    @see ::template::head::included_p
-} {
-    set ::template::head::includes($container) $parts
-    foreach p $parts {
-        set ::template::head::included($p) $container
-    }
-}
-
-ad_proc -private template::head::included_p {
-    resource
-} {
-
-    Check, if the provided resource is included by some other resource.
-
-    @author Gustaf Neumann
-    @creation-date 2018-03-09
-
-    @param resource uri resource
-    @see ::template::head::includes
-} {
-    return [info exists ::template::head::included($resource)]
-}
-
-ad_proc -private template::head::flush_included {
-    resource
-} {
-    Flush a part relations ships of a compound resource
-
-    @author Gustaf Neumann
-    @creation-date 2018-03-09
-
-    @param resource compound resource
-    @see ::template::head::add_link
-} {
-    #ns_log notice "flush_included <$resource> includes: [array get ::template::head::includes $resource]"
-    foreach {container parts} [array get ::template::head::includes $resource] {
-        unset ::template::head::includes($container)
-        foreach p $parts {
-            unset ::template::head::included($p)
-        }
-    }
-}
-
-
 
 ad_proc -public template::head::add_meta {
     {-http_equiv ""}
@@ -342,14 +190,14 @@ ad_proc -public template::head::add_meta {
     once; subsequent calls to add_meta will replace the existing entry.  You
     <strong>must</strong> supply either name or http_equiv.
 
-    @param http_equiv the http-equiv attribute of the meta tag, i.e. the
+    @param http_equiv the http-equiv attribute of the meta tag, ie. the
                       HTTP header which this metadata is equivalent to
-                      e.g. 'content-type'
-    @param name       the name attribute of the meta tag, i.e. the metadata
+                      eg. 'content-type'
+    @param name       the name attribute of the meta tag, ie. the metadata
                       identifier
     @param scheme     the scheme attribute of the meta tag defining which
                       metadata scheme should be used to interpret the metadata,
-                      e.g. 'DC' for Dublin Core (http://dublincore.org/)
+                      eg. 'DC' for Dublin Core (http://dublincore.org/)
     @param content    the content attribute of the meta tag, ie the metadata
                       value
     @param lang       the lang attribute of the meta tag specifying the language
@@ -384,10 +232,10 @@ ad_proc -public template::head::add_style {
     @creation-date 2007-11-30
 
     @param style CSS content to be included in the style tag
-    @param type    the type attribute of the link tag, e.g. 'text/css'
+    @param type    the type attribute of the link tag, eg. 'text/css'
     @param media   the media attribute of the link tag describing which display
                    media this link is relevant to.  This may be a comma
-                   separated list of values, e.g. 'screen,print,braille'
+                   separated list of values, eg. 'screen,print,braille'
     @param title   the title attribute of the link tag describing the target of
                    this link
     @param lang    the lang attribute of the link tag specifying the language
@@ -429,18 +277,18 @@ ad_proc -public template::head::add_javascript {
 
     @param async   whether execution of the script should be executed asynchronously
                    as soon as it is available
-    @param charset the charset attribute of the script tag, i.e. the character
+    @param charset the charset attribute of the script tag, ie. the character
                    set of the script if it differs from the main document
     @param crossorigin  Enumerated attribute to indicate whether CORS
                    (Cross-Origin Resource Sharing) should be used
-    @param defer   whether execution of the script should be deferred until after
+    @param defer   whether execution of the script should be defered until after
                    the page has been loaded
-    @param integrity provide hash values for W3C Subresource Integrity recommendation
+    @param integrity provide hash values for W3C Subresource Integrity recommentation
     @param order   specify inclusion order
     @param script  the inline script for the body of the script tag.  This
                    parameter will be ignored if a value has been supplied for
                    src
-    @param src     the src attribute of the script tag, i.e. the source url of the
+    @param src     the src attribute of the script tag, ie. the source url of the
                    script
 
     @see template::head::add_script
@@ -469,14 +317,14 @@ ad_proc -public template::head::add_css {
     subsequent calls to add_css will replace the existing entry.  This function
     is a wrapper around template::head::add_link.
 
-    @param href      the href attribute of the link tag, e.g. the target
+    @param href      the href attribute of the link tag, eg. the target
                      stylesheet
     @param alternate sets the rel attribute of the link tag defining to
                      'alternate stylesheet' if set, sets it to 'stylesheet'
                      otherwise
     @param media     the media attribute of the link tag describing which
                      display media this link is relevant to.  This may be a
-                     comma separated list of values, e.g. 'screen,print,braille'
+                     comma separated list of values, eg. 'screen,print,braille'
     @param title     the title attribute of the link tag describing the target
                      of this link
     @param lang      the lang attribute of the link tag specifying the language
@@ -504,8 +352,8 @@ ad_proc -public template::add_body_handler {
     {-script:required}
     {-identifier anonymous}
 } {
-    Adds JavaScript code to an event handler in the body tag.  Several
-    JavaScript code blocks may be assigned to each handler by subsequent calls
+    Adds javascript code to an event handler in the body tag.  Several
+    javascript code blocks may be assigned to each handler by subsequent calls
     to template::add_body_handler.
 
     <p>If your script may only be added once you may supply an identifier.
@@ -530,8 +378,8 @@ ad_proc -public template::add_body_handler {
 
     @param event      the event during which the supplied script should be
                       executed
-    @param script     the JavaScript code to execute
-    @param identifier a name, if supplied, used to ensure this JavaScript code
+    @param script     the javascript code to execute
+    @param identifier a name, if supplied, used to ensure this javascript code
                       is only added to the handler once
 } {
     variable ::template::body_handlers
@@ -561,19 +409,19 @@ ad_proc -public template::add_body_script {
 
     @param async   whether execution of the script should be executed asynchronously
                    as soon as it is available
-    @param charset the charset attribute of the script tag, i.e. the character
+    @param charset the charset attribute of the script tag, ie. the character
                    set of the script if it differs from the main document
     @param crossorigin  Enumerated attribute to indicate whether CORS
                    (Cross-Origin Resource Sharing) should be used
-    @param defer   whether execution of the script should be deferred until after
+    @param defer   whether execution of the script should be defered until after
                    the page has been loaded
-    @param integrity provide hash values for W3C Subresource Integrity recommendation
+    @param integrity provide hash values for W3C Subresource Integrity recommentation
     @param script  the inline script for the body of the script tag.  This
                    parameter will be ignored if a value has been supplied for
                    src
-    @param src     the src attribute of the script tag, i.e. the source url of the
+    @param src     the src attribute of the script tag, ie. the source url of the
                    script
-    @param type    the type attribute of the script tag, e.g. 'text/javascript'
+    @param type    the type attribute of the script tag, eg. 'text/javascript'
 } {
 
     if {$defer_p} {
@@ -593,8 +441,6 @@ ad_proc -public template::add_body_script {
 
     if {$script ne ""} {
         #
-        # We have an inline script.
-        #
         # For the time being, not all browsers support
         # nonces. According to the specs the added 'unsafe-inline',
         # is ignored on browsers supporting nonces.
@@ -607,7 +453,6 @@ ad_proc -public template::add_body_script {
 
     lappend ::template::body_scripts $type $src $charset $defer $async $script $crossorigin $integrity
 }
-
 
 ad_proc -public template::add_header {
     {-direction "outer"}
@@ -644,10 +489,10 @@ ad_proc -public template::add_header {
     }
 
     if {[info exists headers]} {
-      switch -- $direction {
-        outer {set headers [linsert $headers 0 $values]}
-        inner {lappend headers $values}
-        default {error "unknown direction $direction"}
+      switch $direction {
+	outer {set headers [concat [list $values] $headers]}
+	inner {lappend headers $values}
+	default {error "unknown direction $direction"}
       }
     } else {
       set headers [list $values]
@@ -689,27 +534,14 @@ ad_proc -public template::add_footer {
     }
 
     if {[info exists footers]} {
-      switch -- $direction {
-        outer {lappend footers $values}
-        inner {set footers [linsert $footers 0 $values]}
-        default {error "unknown direction $direction"}
+      switch $direction {
+	outer {lappend footers $values}
+	inner {set footers [concat [list $values] $footers]}
+	default {error "unknown direction $direction"}
       }
     } else {
       set footers [list $values]
     }
-}
-
-ad_proc -private template::head::resolve_urn {
-    resource
-} {
-    Replace potential URN in provided resource name with resolved
-    value
-} {
-    set key ::template::head::urn($resource)
-    if {[info exists $key]} {
-        set resource [set $key]
-    }
-    return $resource
 }
 
 ad_proc template::head::prepare_multirows {} {
@@ -736,17 +568,6 @@ ad_proc template::head::prepare_multirows {} {
 
     # Generate the <link> tag multirow
     variable ::template::head::links
-
-    #
-    # Filter out included links, such we have to do this only once.
-    #
-    foreach name [array names links] {
-        lassign [split $name ,] rel href
-        if {[::template::head::included_p $href]} {
-            template::head::flush_link -href $ref -rel $rel
-        }
-    }
-
     template::multirow create link rel type href title lang media order crossorigin integrity
     if {[array exists links]} {
         # first non alternate stylesheet
@@ -756,7 +577,7 @@ ad_proc template::head::prepare_multirows {} {
                     template::multirow append link \
                         $rel \
                         $type \
-                        [resolve_urn $href] \
+                        $href \
                         $title \
                         $lang \
                         $media \
@@ -775,7 +596,7 @@ ad_proc template::head::prepare_multirows {} {
                     template::multirow append link \
                         $rel \
                         $type \
-                        [resolve_urn $href] \
+                        $href \
                         $title \
                         $lang \
                         $media \
@@ -807,20 +628,13 @@ ad_proc template::head::prepare_multirows {} {
 
     # Generate the head <script /> tag multirow
     variable ::template::head::scripts
-
     template::multirow create headscript type src charset defer async content order crossorigin integrity
     if {[array exists scripts]} {
-
         foreach name [array names scripts] {
-            if {[::template::head::included_p $name]} {
-                continue
-            }
-
             foreach {type src charset defer async content order crossorigin integrity} $scripts($name) {
-                #ns_log notice "ADD order $order src $src"
                 template::multirow append headscript \
                     $type \
-                    [resolve_urn $src] \
+                    $src \
                     $charset \
                     $defer \
                     $async \
@@ -862,7 +676,9 @@ ad_proc template::get_header_html {
     set header ""
     if {[info exists headers]} {
         foreach header_list $headers {
-            lassign $header_list type src params
+            set type [lindex $header_list 0]
+            set src [lindex $header_list 1]
+            set params [lindex $header_list 2]
             if {$type eq "literal"} {
                 append header $src
             } else {
@@ -882,15 +698,15 @@ ad_proc template::get_footer_html {
     # Generate the body footers
     variable ::template::footers
     set footer ""
-
     if {[info exists footers]} {
         foreach footer_list $footers {
-            lassign $footer_list type src params
+            set type [lindex $footer_list 0]
+            set src [lindex $footer_list 1]
+            set params [lindex $footer_list 2]
             if {$type eq "literal"} {
                 append footer $src
             } else {
-                set themed_template [template::themed_template $src]
-                append footer [template::adp_include $themed_template $params]
+                append footer [template::adp_include $src $params]
             }
         }
         unset footers
@@ -903,7 +719,7 @@ ad_proc template::get_body_event_handlers {
     Get body event handlers specified with template::add_body_handler
 } {
     #
-    # Concatenate the JavaScript event handlers for the body tag
+    # Concatenate the javascript event handlers for the body tag
     #
     variable ::template::body_handlers
     set event_handlers ""
@@ -915,8 +731,8 @@ ad_proc template::get_body_event_handlers {
         #
         foreach name [array names body_handlers] {
             set event [lindex [split $name ","] 0]
-            foreach js $body_handlers($name) {
-                lappend body_handlers($event) "[string trimright $js {; }];"
+            foreach javascript $body_handlers($name) {
+                lappend body_handlers($event) "[string trimright $javascript {; }];"
             }
             unset body_handlers($name)
         }
@@ -991,27 +807,6 @@ ad_proc template::add_confirm_handler {
     {*}$cmd
 }
 
-ad_proc template::add_refresh_on_history_handler {} {
-    Register an event handler which will trigger a complete page
-    refresh when we land on this page by accessing the browser's
-    history (back and forward buttons).
-
-    This is useful e.g. for those pages where some push interaction is
-    happening and retrieving the page from the browser history would
-    display it in an inconsistent state.
-} {
-    # courtesy of: vasleo@gmail.com from Stack Overflow
-    template::add_body_script -script {
-        window.addEventListener( "pageshow", function ( event ) {
-            var historyTraversal = event.persisted ||
-            ( typeof window.performance != "undefined" &&
-              window.performance.navigation.type === 2 );
-            if ( historyTraversal ) {
-                window.location.reload();
-            }
-        });
-    }
-}
 
 ad_proc template::add_event_listener {
     {-event click}

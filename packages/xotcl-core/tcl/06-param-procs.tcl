@@ -5,7 +5,7 @@
 #    Galileo: > 2mio (2nd most frequent kind of object type)
 #    Small oacs installations: 1000 objects (38 package instances)
 #
-#  - High growth, when parameters are used more intensively
+#  - High growth, when parmeters are used more intensively
 #    Size grows quadratically: #parameter * #package_instances,
 #     independent of changed parameter values
 #    -> does not scale well.
@@ -159,15 +159,41 @@ namespace eval ::xo {
   #
   # Methods on the parameter class object
   #
-  parameter proc get_package_key_from_id {-package_id:required} {
+  parameter proc get_package_key_from_id {
+                                          -package_id:required
+                                        } {
     return [apm_package_key_from_id $package_id]
+    #return [ns_cache eval xotcl_object_type_cache package_key-$package_id {
+    #  ::xo::dc get_value get_package_key \
+    #      "select package_key from apm_packages where package_id = :package_id"
+    #}]
   }
-  parameter proc get_package_id_from_package_key {-package_key:required} {
-    return [ns_cache eval xotcl_package_cache package_id-$package_key {
+  parameter proc get_package_id_from_package_key {
+                                                  -package_key:required
+                                                } {
+    return [ns_cache eval xotcl_object_type_cache package_id-$package_key {
       ::xo::dc get_value get_package_id \
           [::xo::dc select -vars package_id -from apm_packages \
                -where "package_key = :package_key" -limit 1]
     }]
+  }
+
+  parameter proc get_package_class_from_package_key {-package_key:required} {
+    # Look up the parameter class from a package_key.
+    # TODO: should be done from object_type of package_id, 
+    # but first, we have to store it there).  
+    # We simply iterate here of the classes of packages (only a few exist).
+    set r ""
+    while {1} {
+      set r [ns_cache eval xotcl_object_type_cache package_class-$package_key {
+        foreach p [::xo::PackageMgr info instances] {
+          if {[$p set package_key] eq $package_key} { return $p }
+        }
+        break; # don't cache
+      }]
+      break
+    }
+    return $r
   }
 
   parameter proc get_parameter_object {
@@ -176,14 +202,14 @@ namespace eval ::xo {
                                        -package_key
                                        {-retry true}
                                      } {
-    #::xo::PackageMgr instvar package_class
+    ::xo::PackageMgr instvar package_class
     if {![info exists package_key]} {
-      set package_key [:get_package_key_from_id -package_id $package_id]
+      set package_key [my get_package_key_from_id -package_id $package_id]
     }
     while {$package_key ne ""} {
       set key Parameter_id($package_key,$parameter_name)
-      if {[info exists :$key]} {
-        return [set :$key]
+      if {[my exists $key]} {
+        return [my set $key]
       }
       # 
       # We did not find the parameter object for the current package
@@ -194,7 +220,7 @@ namespace eval ::xo {
       # 
       #my log "--p looking for $parameter_name in superclass of package_key=$package_key"
       set success 0
-      set pkg_class [::xo::PackageMgr get_package_class_from_package_key $package_key]
+      set pkg_class [my get_package_class_from_package_key -package_key $package_key]
       if {$pkg_class ne ""} {
         set sc [$pkg_class info superclass]
         if {[$sc exists package_key]} {
@@ -226,7 +252,7 @@ namespace eval ::xo {
         # seems as if this parameter was newly defined
         #
         if {![info exists package_id]} {set package_id ""}
-        return [:get_parameter_object \
+        return [my get_parameter_object \
                     -retry false \
                     -parameter_name $parameter_name \
                     -package_id $package_id \
@@ -234,7 +260,7 @@ namespace eval ::xo {
       }
     }
     #
-    # If everything fails, return empty.
+    # if everything fails, return empty
     #
     return ""
   }
@@ -244,12 +270,12 @@ namespace eval ::xo {
                                        -parameter:required
                                        -default
                                      } {
-    set parameter_obj [:get_parameter_object -package_key $package_key -parameter_name $parameter]
+    set parameter_obj [my get_parameter_object -package_key $package_key -parameter_name $parameter]
     if {$parameter_obj eq ""} {
       if {[info exists default]} {return $default}
       error "No parameter '$parameter' for package_key '$package_key' defined"
     }
-    set package_id [:get_package_id_from_package_key -package_key $package_key]
+    set package_id [my get_package_id_from_package_key -package_key $package_key]
     set value [$parameter_obj get -package_id $package_id]
     if {$value eq "" && [$parameter_obj set __success] == 0 && [info exists default]} {
       return $default
@@ -265,15 +291,13 @@ namespace eval ::xo {
                       {-retry true}
                     } {
     if {![info exists package_id]} {
-      #
-      # Try to get the package id; if everything fails, use kernel_id
-      # (to be compatible with traditional parameter::get)
-      #
+      # try to get the package id; 
+      # if everything fails, use kernel_id (to be compatible with trad. parameter::get)
       set package_id [expr {[info commands ::xo::cc] ne "" ? 
                             [::xo::cc package_id] : 
                             [ns_conn isconnected] ? [ad_conn package_id] : [ad_acs_kernel_id]}]
     }
-    set parameter_obj [:get_parameter_object -parameter_name $parameter -package_id $package_id -retry $retry]
+    set parameter_obj [my get_parameter_object -parameter_name $parameter -package_id $package_id -retry $retry]
     if {$parameter_obj ne ""} {
       set value [$parameter_obj get -package_id $package_id]
       if {$value eq "" && [$parameter_obj set __success] == 0} {return $default}
@@ -287,17 +311,18 @@ namespace eval ::xo {
   # Methods for parameter instances
   #
   parameter instproc set_per_package_instance_value {package_id value} {
-    set array [:per_package_id_name $package_id]
-    nsv_set $array [:parameter_name] $value
+    set array [my per_package_id_name $package_id]
+    nsv_set $array [my parameter_name] $value
   }
   parameter instproc clear_per_package_instance_value {package_id value} {
-    set array [:per_package_id_name $package_id]
-    if {[nsv_exists $array [:parameter_name]]} {
-      nsv_unset $array [:parameter_name]
+    set array [my per_package_id_name $package_id]
+    if {[nsv_exists $array [my parameter_name]]} {
+      nsv_unset $array [my parameter_name]
     }
   }
   parameter instproc initialize_loaded_object {} {
-    [self class] set Parameter_id(${:package_key},${:parameter_name}) [self]
+    my instvar package_key parameter_name
+    [self class] set Parameter_id($package_key,$parameter_name) [self]
   }
   parameter instproc per_package_id_name {package_id} {
     return "CFG-$package_id"
@@ -306,11 +331,11 @@ namespace eval ::xo {
   #     return "CFG-$package_class"
   #   }
   parameter instproc get {-package_id:required} {
-    set key [:parameter_name]
-    set nsv_array_name [:per_package_id_name $package_id]
+    set key [my parameter_name]
+    set nsv_array_name [my per_package_id_name $package_id]
     if {[nsv_exists $nsv_array_name $key]} {
       #my log "--parameter get <$key> from $nsv_array_name --> '[nsv_get $nsv_array_name $key]'"
-      set :__success 1
+      my set __success 1
       return [nsv_get $nsv_array_name $key]
     }
     # We could as well store per-package-key values,
@@ -320,16 +345,16 @@ namespace eval ::xo {
     # a very simple "reset to default" for package-key values.
     #
     #     foreach cls $package_class_hierarchy {
-    #       set nsv_array_name [:per_package_class_name $cls]
+    #       set nsv_array_name [my per_package_class_name $cls]
     #       if {[nsv_exists $nsv_array_name $key]} {
     #         #my log "--parameter get <$key> from $nsv_array_name --> '[nsv_get $nsv_array_name $key]'"
     #         return [nsv_get $nsv_array_name $key]
     #       }
     #     }
     #
-    #my log "--parameter get <$key> from default of [:package_key] --> '[:default_value]'"
-    set :__success 0
-    return [:default_value]
+    #my log "--parameter get <$key> from default of [my package_key] --> '[my default_value]'"
+    my set __success 0
+    return [my default_value]
   }
 
   # get apm_parameter objects

@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Thu Jan  4 11:20:37 2001
-    @cvs-id $Id: constraints-redirect.tcl,v 1.6 2018/01/19 14:09:48 gustafn Exp $
+    @cvs-id $Id: constraints-redirect.tcl,v 1.4.2.3 2016/05/20 20:02:44 gustafn Exp $
 
 } {
     segment_id:naturalnum,notnull
@@ -24,7 +24,7 @@ if {$operation eq "yes"} {
     }
     ad_returnredirect $return_url
 }
-ad_script_abort
+
 
 # Local variables:
 #    mode: tcl

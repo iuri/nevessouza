@@ -1,7 +1,5 @@
-xo::library doc  {
-  Context handling interface
-  
-  Definition of a connection context, containing user info, URLs, parameters.
+ad_library {
+  Definition of a connection context, containing user info, urls, parameters.
   this is used via "Package initialize"... similar as page_contracts and
   for included content (includelets), and used for per-connection caching as well.
   The intention is similar as with ad_conn, but based on objects.
@@ -9,7 +7,7 @@ xo::library doc  {
 
   @author Gustaf Neumann (neumann@wu-wien.ac.at)
   @creation-date 2006-08-06
-  @cvs-id $Id: context-procs.tcl,v 1.75 2018/08/05 21:16:25 gustafn Exp $
+  @cvs-id $Id: context-procs.tcl,v 1.65.2.7 2017/04/21 14:00:24 gustafn Exp $
 }
 
 namespace eval ::xo {
@@ -33,7 +31,7 @@ namespace eval ::xo {
   # for "Package initialize ...."; however, we do not allow currently
   # do switch user or package id etc., just the parameter declaration
   Context instproc initialize {{-parameter ""}} {
-    set :parameter_declaration $parameter
+    my set parameter_declaration $parameter
   }
 
   Context instproc process_query_parameter {
@@ -41,16 +39,17 @@ namespace eval ::xo {
     {-all_from_caller:boolean true}
     {-caller_parameters}
   } {
-    :proc __parse [:parameter_declaration]  {
-      foreach v [info vars] { uplevel [list set :queryparm($v) [set $v]]}
+    my instvar queryparm actual_query 
+    my proc __parse [my parameter_declaration]  {
+      foreach v [info vars] { uplevel [list set queryparm($v) [set $v]]}
     }
     
-    foreach v [:parameter_declaration] {
+    foreach v [my parameter_declaration] {
       set ([lindex [split [lindex $v 0] :] 0]) 1
     }
-    if {${:actual_query} eq " "} {
+    if {$actual_query eq " "} {
       if {[ns_conn isconnected]} {
-        set :actual_query [ns_conn query]
+        set actual_query [ns_conn query]
       }
       #my log "--CONN ns_conn query = <$actual_query>"
     }
@@ -59,8 +58,8 @@ namespace eval ::xo {
     if {$::xo::naviserver} {lappend decodeCmd --}
 
     # get the query parameters (from the url)
-    #my log "--P processing actual query ${:actual_query}"
-    foreach querypart [split ${:actual_query} &] {
+    #my log "--P processing actual query $actual_query"
+    foreach querypart [split $actual_query &] {
       set name_value_pair [split $querypart =]
       set att_name [{*}$decodeCmd [lindex $name_value_pair 0]]
       if {$att_name eq ""} continue
@@ -72,19 +71,19 @@ namespace eval ::xo {
       if {[info exists (-$att_name)]} {
         lappend passed_args(-$att_name) $att_value
       } elseif {$all_from_query} {
-        set :queryparm($att_name) $att_value
+        set queryparm($att_name) $att_value
       }
     }
 
     # get the query parameters (from the form if necessary)
-    if {[:istype ::xo::ConnectionContext]} {
+    if {[my istype ::xo::ConnectionContext]} {
       foreach param [array names ""] {
         #my log "--cc check $param [info exists passed_args($param)]"
         set name [string range $param 1 end]
         if {![info exists passed_args($param)] &&
-            [:exists_form_parameter $name]} {
-          #my log "--cc adding passed_args(-$name) [:form_parameter $name]"
-          set passed_args($param) [:form_parameter $name]
+            [my exists_form_parameter $name]} {
+          #my log "--cc adding passed_args(-$name) [my form_parameter $name]"
+          set passed_args($param) [my form_parameter $name]
         }
       }
     }
@@ -98,7 +97,7 @@ namespace eval ::xo {
         if {[info exists ($param)]} { 
           set passed_args($param) $caller_param($param) 
         } elseif {$all_from_caller} {
-          set :queryparm([string range $param 1 end]) $caller_param($param) 
+          set queryparm([string range $param 1 end]) $caller_param($param) 
         }
       }
     }
@@ -113,43 +112,46 @@ namespace eval ::xo {
       ad_return_complaint 1 [ns_quotehtml $errorMsg]
       ad_script_abort
     }
-    #my msg "--cc qp [array get :queryparm] // ${:actual_query}"
+    #my msg "--cc qp [array get queryparm] // $actual_query"
   }
 
   Context instproc original_url_and_query args {
     if {[llength $args] == 1} {
-      set :original_url_and_query [lindex $args 0]
-    } elseif {[info exists :original_url_and_query]} {
-      return ${:original_url_and_query}
+      my set original_url_and_query [lindex $args 0]
+    } elseif {[my exists original_url_and_query]} {
+      return [my set original_url_and_query]
     } else {
-      return ${:url}?${:actual_query}
+      return [my url]?[my actual_query]
     }
   }
 
   Context instproc query_parameter {name {default ""}} {
-    if {[info exists :queryparm($name)]} {
-      return [set :queryparm($name)]
+    my instvar queryparm
+    if {[info exists queryparm($name)]} {
+      return $queryparm($name)
     } 
     return $default
   }
   
   Context instproc exists_query_parameter {name} {
-    #my log "--qp exists $name => [info exists :queryparm($name)]"
-    info exists :queryparm($name)
+    #my log "--qp my exists $name => [my exists queryparm($name)]"
+    my exists queryparm($name)
   }
   Context instproc get_all_query_parameter {} {
-    return [array get :queryparm]
+    return [my array get queryparm]
   }
 
   Context ad_instproc export_vars {{-level 1}} {
     Export the query variables
     @param level target level
   } {
-    foreach p [array names :queryparm] {
+    my instvar queryparm package_id
+
+    foreach p [my array names queryparm] {
       regsub -all : $p _ varName
-      uplevel $level [list set $varName [set :queryparm($p)]]
+      uplevel $level [list set $varName [my set queryparm($p)]]
     }
-    uplevel $level [list set package_id ${:package_id}]
+    uplevel $level [list set package_id $package_id]
     #::xo::show_stack
   }
 
@@ -160,24 +162,22 @@ namespace eval ::xo {
     the values from the url (second priority) and the default
     values from the signature
   } {
-    set source [expr {[info exists :__caller_parameters] ? 
-                      [self] : [:info parent]}]
+    set source [expr {[my exists __caller_parameters] ? 
+                      [self] : [my info parent]}]
     $source instvar __caller_parameters
     
-    if {![info exists :__including_page]} {
-      #
-      # An includelet is called from the toplevel. The actual_query
-      # might be cached, so we reset it here.
-      #
-      set :actual_query [::xo::cc actual_query]
+    if {![my exists __including_page]} {
+      # a includelet is called from the toplevel. the actual_query might
+      # be cached, so we reset it here.
+      my actual_query [::xo::cc actual_query]
     }
 
     if {[info exists __caller_parameters]} {
-      :process_query_parameter -all_from_query false -caller_parameters $__caller_parameters
+      my process_query_parameter -all_from_query false -caller_parameters $__caller_parameters
     } else {
-      :process_query_parameter -all_from_query false
+      my process_query_parameter -all_from_query false
     }
-    :export_vars -level 2 
+    my export_vars -level 2 
   }
 
 
@@ -201,10 +201,10 @@ namespace eval ::xo {
     }
     if {![info exists ::ad_conn(node_id)]} {
       # 
-      # The following should not be necessary, but is here for
+      # The following should not be necessary, but is is here for
       # cases, where some oacs-code assumes wrongly it is running in a
       # connection thread (e.g. the site master requires to have a
-      # node_id and a URL accessible via ad_conn)
+      # node_id and a url accessible via ad_conn)
       #
       if {![info exists (node_id)]} {
         if {$url eq ""} {
@@ -227,7 +227,7 @@ namespace eval ::xo {
                                   {-actual_query " "}
                                   {-keep_cc false}
                                 } {
-    set exists_cc [:isobject ::xo::cc]
+    set exists_cc [my isobject ::xo::cc]
 
     # if we have a connection context and we want to keep it, do
     # nothing and return.
@@ -243,24 +243,22 @@ namespace eval ::xo {
       #my log "--CONN ns_conn url"
       set url [ns_conn url]
     }
-    set package_id [:require_package_id_from_url -package_id $package_id $url]
+    set package_id [my require_package_id_from_url -package_id $package_id $url]
     #my log "--i [self args] URL='$url', pkg=$package_id"
 
     # get locale; TODO at some time, we should get rid of the ad_conn init problem
     if {[ns_conn isconnected]} {
       # This can be called, before ad_conn is initialized. 
       # Since it is not possible to pass the user_id and ad_conn barfs
-      # when it tries to detect it, we try to get it and reset it later
-      ad_try {
-        set locale [lang::conn::locale -package_id $package_id]
-      } on error {errorMsg} {
+      # when it tries to detect it, we use the catch and reset it later
+      if {[catch {set locale [lang::conn::locale -package_id $package_id]}]} {
         set locale en_US
       }
     } else {
       set locale [lang::system::locale -package_id $package_id]
     }
     if {!$exists_cc} {
-      :create ::xo::cc \
+      my create ::xo::cc \
           -package_id $package_id \
           [list -parameter_declaration $parameter] \
           -user_id $user_id \
@@ -277,7 +275,9 @@ namespace eval ::xo {
           -actual_query $actual_query \
           -locale $locale \
           [list -parameter_declaration $parameter]
-
+      #if {$package_id ne ""} {
+      #  ::xo::cc package_id $package_id 
+      #}
       ::xo::cc package_id $package_id 
       ::xo::cc set_user_id $user_id
       ::xo::cc process_query_parameter
@@ -297,25 +297,23 @@ namespace eval ::xo {
     }
   }
   ConnectionContext instproc lang {} {
-    return [string range [:locale] 0 1]
+    return [string range [my locale] 0 1]
   }
   ConnectionContext instproc set_user_id {user_id} {
     if {$user_id == -1} {  ;# not specified
       if {[info exists ::ad_conn(user_id)]} {
-        set :user_id [ad_conn user_id]
-        ad_try {
-          set :untrusted_user_id [ad_conn untrusted_user_id]
-        } on error {errorMsg} {
-          set :untrusted_user_id ${:user_id}
+        my set user_id [ad_conn user_id]
+        if {[catch {my set untrusted_user_id [ad_conn untrusted_user_id]}]} {
+          my set untrusted_user_id [my user_id]
         }
       } else {
-        set :user_id 0
-        set :untrusted_user_id 0
+        my set user_id 0
+        my set untrusted_user_id 0
         array set ::ad_conn [list user_id $user_id untrusted_user_id $user_id session_id ""]
       }
     } else {
-      set :user_id $user_id
-      set :untrusted_user_id $user_id
+      my set user_id $user_id
+      my set untrusted_user_id $user_id
       if {![info exists ::ad_conn(user_id)]} {
         array set ::ad_conn [list user_id $user_id untrusted_user_id $user_id session_id ""]
       }
@@ -328,75 +326,76 @@ namespace eval ::xo {
     # cookie was expired. If no untrusted_user_id exists Otherwise
     # (maybe in a remoting setup), return the user_id.
     #
-    if {[info exists :untrusted_user_id]} {
-      return ${:untrusted_user_id}
+    if {[my exists untrusted_user_id]} {
+      return [my set untrusted_user_id]
     }
-    return [:user_id]
+    return [my user_id]
   }
 
   ConnectionContext instproc returnredirect {-allow_complete_url:switch url} {
     #my log "--rp"
-    set :__continuation [expr {$allow_complete_url 
+    my set __continuation [expr {$allow_complete_url 
                                  ? [list ad_returnredirect -allow_complete_url $url] 
                                  : [list ad_returnredirect $url]}]
     return ""
   }
 
   ConnectionContext instproc init {} {
-    :set_user_id ${:user_id}
+    my instvar requestor user user_id
+    my set_user_id $user_id
     set pa [expr {[ns_conn isconnected] ? [ad_conn peeraddr] : "nowhere"}]
 
-    if {${:user_id} != 0} {
-      set :requestor ${:user_id}
+    if {[my user_id] != 0} {
+      set requestor $user_id
     } else {
       # for requests bypassing the ordinary connection setup (resources in oacs 5.2+)
       # we have to get the user_id by ourselves
-      ad_try {
+      if { [catch {
         set cookie_list [ad_get_signed_cookie_with_expr "ad_session_id"]
         set cookie_data [split [lindex $cookie_list 0] {,}]
         set untrusted_user_id [lindex $cookie_data 1]
-        set :requestor $untrusted_user_id
-      } on error {errorMsg } {
-        set :requestor 0
+        set requestor $untrusted_user_id
+      } errmsg] } {
+        set requestor 0
       }
     }
     
     # if user not authorized, use peer address as requestor key
-    if {${:requestor} == 0} {
-      set :requestor $pa
-      set :user "client from $pa"
+    if {$requestor == 0} {
+      set requestor $pa
+      set user "client from $pa"
     } else {
-      set user_url [acs_community_member_admin_url -user_id ${:requestor}]
-      set :user "<a href='$user_url'>${:requestor}</a>"
+      set user_url [acs_community_member_admin_url -user_id $requestor]
+      set user "<a href='$user_url'>$requestor</a>"
     }
-    #my log "--i requestor = ${:requestor}"
+    #my log "--i requestor = $requestor"
     
-    :process_query_parameter
+    my process_query_parameter
   }
 
   ConnectionContext instproc cache {cmd} {
-    set key :cache($cmd)
-    if {![info exists $key]} {set $key [:uplevel $cmd]}
-    return [set $key]
+    set key cache($cmd)
+    if {![my exists $key]} {my set $key [my uplevel $cmd]}
+    return [my set $key]
   }
   ConnectionContext instproc cache_exists {cmd} {
-    return [info exists :cache($cmd)]
+    return [my exists cache($cmd)]
   }
   ConnectionContext instproc cache_get {cmd} {
-    return [set :cache($cmd)]
+    return [my set cache($cmd)]
   }
   ConnectionContext instproc cache_set {cmd value} {
-    return [set :cache($cmd) $value]
+    return [my set cache($cmd) $value]
   }
   ConnectionContext instproc cache_unset {cmd} {
-    return [unset :cache($cmd)]
+    return [my unset cache($cmd)]
   }
 
   ConnectionContext instproc role=all {-user_id:required -package_id} {
     return 1
   }
   ConnectionContext instproc role=swa {-user_id:required -package_id} {
-    return [:cache [list acs_user::site_wide_admin_p -user_id $user_id]]
+    return [my cache [list acs_user::site_wide_admin_p -user_id $user_id]]
   }
   ConnectionContext instproc role=registered_user {-user_id:required -package_id} {
     return [expr {$user_id != 0}]
@@ -405,24 +404,24 @@ namespace eval ::xo {
     return [expr {$user_id == 0}]
   }
   ConnectionContext instproc role=admin {-user_id:required -package_id:required} {
-    return [:permission -object_id $package_id -privilege admin -party_id $user_id]
+    return [my permission -object_id $package_id -privilege admin -party_id $user_id]
   }
   ConnectionContext instproc role=creator {-user_id:required -package_id -object:required} {
     $object instvar creation_user
     return [expr {$creation_user == $user_id}]
   }
   ConnectionContext instproc role=app_group_member {-user_id:required -package_id} {
-    return [:cache [list application_group::contains_party_p \
-                        -party_id $user_id \
-                        -package_id $package_id]]
+    return [my cache [list application_group::contains_party_p \
+                          -party_id $user_id \
+                          -package_id $package_id]]
   }
   ConnectionContext instproc role=community_member {-user_id:required -package_id} {
     if {[info commands ::dotlrn_community::get_community_id] ne ""} {
-      set community_id [:cache [list [dotlrn_community::get_community_id -package_id $package_id]]]
+      set community_id [my cache [list [dotlrn_community::get_community_id -package_id $package_id]]]
       if {$community_id ne ""} {
-        return [:cache [list dotlrn::user_is_community_member_p \
-                            -user_id $user_id \
-                            -community_id $community_id]]
+        return [my cache [list dotlrn::user_is_community_member_p \
+                              -user_id $user_id \
+                              -community_id $community_id]]
       }
     }
     return 0
@@ -433,18 +432,18 @@ namespace eval ::xo {
     session through caching in the connection context
   } {
     if {![info exists party_id]} {
-      set party_id ${:user_id}
+      set party_id [my user_id]
     }
-    # :log "--  context permission user_id=$party_id uid=[::xo::cc user_id] untrusted=[::xo::cc set untrusted_user_id]"
+    # my log "--  context permission user_id=$party_id uid=[::xo::cc user_id] untrusted=[::xo::cc set untrusted_user_id]"
     if {$party_id == 0} {
-      set key :permission($object_id,$privilege,$party_id)
-      if {[info exists $key]} {return [set $key]}
+      set key permission($object_id,$privilege,$party_id)
+      if {[my exists $key]} {return [my set $key]}
       set granted [permission::permission_p -no_login -party_id $party_id \
                        -object_id $object_id \
                        -privilege $privilege]
-      #my msg "--p lookup $key ==> $granted uid=[:user_id] uuid=${:untrusted_user_id}"
-      if {$granted || ${:user_id} == ${:untrusted_user_id}} {
-        set $key $granted
+      #my msg "--p lookup $key ==> $granted uid=[my user_id] uuid=[my set untrusted_user_id]"
+      if {$granted || [my user_id] == [my set untrusted_user_id]} {
+        my set $key $granted
         return $granted
       }
       # The permission is not granted for the public.
@@ -454,19 +453,19 @@ namespace eval ::xo {
       return 0
     }
 
-    set key :permission($object_id,$privilege,$party_id)
-    if {[info exists $key]} {return [set $key]}
+    set key permission($object_id,$privilege,$party_id)
+    if {[my exists $key]} {return [my set $key]}
     #my msg "--p lookup $key"
-    set $key [permission::permission_p -no_login \
-                  -party_id $party_id \
-                  -object_id $object_id \
-                  -privilege $privilege]
-    #my log "--  context return [set :$key]"
-    #set :$key
+    my set $key [permission::permission_p -no_login \
+                     -party_id $party_id \
+                     -object_id $object_id \
+                     -privilege $privilege]
+    #my log "--  context return [my set $key]"
+    #my set $key
   }
   
   #   ConnectionContext instproc destroy {} {
-  #     :log "--i destroy [:url]"
+  #     my log "--i destroy [my url]"
   #     #::xo::show_stack
   #     next
   #   }
@@ -476,51 +475,53 @@ namespace eval ::xo {
       # For some unknown reasons, Safari 3.* returns sometimes
       # entries with empty names... We ignore these for now
       if {$att eq ""} continue
-      if {[info exists :form_parameter($att)]} {
-        set :form_parameter_multiple($att) 1
+      if {[my exists form_parameter($att)]} {
+        my set form_parameter_multiple($att) 1
       }
-      lappend :form_parameter($att) $value
+      my lappend form_parameter($att) $value
     }
   }
 
   ConnectionContext instproc load_form_parameter {} {
     if {[ns_conn isconnected] && [ns_conn method] eq "POST"} {
-      :load_form_parameter_from_values [ns_set array [ns_getform]]
+      my load_form_parameter_from_values [ns_set array [ns_getform]]
     } else {
-      array set :form_parameter {}
+      my array set form_parameter {}
     }
   }
 
   ConnectionContext instproc form_parameter {name {default ""}} {
-    if {![info exists :form_parameter]} {
-      :load_form_parameter
+    my instvar form_parameter form_parameter_multiple
+    if {![info exists form_parameter]} {
+      my load_form_parameter
     }
-    if {[info exists :form_parameter($name)]} {
-      if {[info exists :form_parameter_multiple($name)]} {
-        return [set :form_parameter($name)]
+    if {[info exists form_parameter($name)]} {
+      if {[info exists form_parameter_multiple($name)]} {
+        return $form_parameter($name)
       } else {
-        return [lindex [set :form_parameter($name)] 0]
+        return [lindex $form_parameter($name) 0]
       }
     } else {
       return $default
     }
   }
   ConnectionContext instproc exists_form_parameter {name} {
-    if {![info exists :form_parameter]} {
-      :load_form_parameter
+    my instvar form_parameter
+    if {![info exists form_parameter]} {
+      my load_form_parameter
     }
-    info exists :form_parameter($name)
+    my exists form_parameter($name)
   }
   ConnectionContext instproc get_all_form_parameter {} {
-    return [array get :form_parameter]
+    return [my array get form_parameter]
   }
 
   #
   # Version of query_parameter respecting set-parameter
   #
   ConnectionContext instproc query_parameter {name {default ""}} {
-    if {[:exists_parameter $name]} {
-      return [:get_parameter $name]
+    if {[my exists_parameter $name]} {
+      return [my get_parameter $name]
     }
     next
   }
@@ -528,14 +529,15 @@ namespace eval ::xo {
   
   ConnectionContext instproc set_parameter {name value} {
     set key [list get_parameter $name]
-    if {[:cache_exists $key]} {my cache_unset $key}
-    set :perconnectionparam($name) $value
+    if {[my cache_exists $key]} {my cache_unset $key}
+    my set perconnectionparam($name) $value
   }
   ConnectionContext instproc get_parameter {name {default ""}} {
-    return [expr {[info exists :perconnectionparam($name)] ? [set :perconnectionparam($name)] : $default}]
+    my instvar perconnectionparam
+    return [expr {[info exists perconnectionparam($name)] ? $perconnectionparam($name) : $default}]
   }
   ConnectionContext instproc exists_parameter {name} {
-    info exists :perconnectionparam($name)
+    my exists perconnectionparam($name)
   }
 
 }
@@ -544,7 +546,7 @@ namespace eval ::xo {
   
   proc ::xo::update_query_variable {old_query var value} {
     #
-    # Replace in a URL-query old occurrences of var with new value.
+    # Replace in a url-query old occurrences of var with new value.
     #
     # @return pairs in a form suitable for export_vars
     #
@@ -562,7 +564,7 @@ namespace eval ::xo {
 
   proc ::xo::update_query {old_query var value} {
     #
-    # Replace in a URL-query old occurrences of var with new value.
+    # Replace in a url-query old occurrences of var with new value.
     #
     # @return encoded HTTP query
     #
@@ -580,8 +582,6 @@ namespace eval ::xo {
   }
 
 }
-
-::xo::library source_dependent
 
 #
 # Local variables:

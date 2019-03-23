@@ -1,10 +1,13 @@
+# packages/acs-content-repository/tcl/content-extlink-procs.tcl 
+
 ad_library {
-
+    
     Procedures for content_extlink
-
+    
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2004-06-09
-    @cvs-id $Id: content-extlink-procs.tcl,v 1.12 2018/08/15 16:24:28 gustafn Exp $
+    @arch-tag: f8f62c6c-bf3b-46d9-8e1e-fa5e60ba1c05
+    @cvs-id $Id: content-extlink-procs.tcl,v 1.8.2.1 2015/09/10 08:21:16 gustafn Exp $
 }
 
 namespace eval ::content::extlink {}
@@ -17,7 +20,7 @@ ad_proc -public content::extlink::copy {
 } {
     @param extlink_id extlink to copy
     @param target_folder_id folder to copy extlink into
-    @param creation_user
+    @param creation_user 
     @param creation_ip
     @return 0
 } {
@@ -38,8 +41,7 @@ ad_proc -public content::extlink::new {
     {-description ""}
     {-package_id ""}
 } {
-    Create a new external link.
-
+    @param Create a new external link.
     @return 0
 } {
     return [package_exec_plsql -var_list [list \

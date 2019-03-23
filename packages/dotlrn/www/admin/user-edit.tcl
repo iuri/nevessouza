@@ -20,7 +20,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-12-10
-    @cvs-id $Id: user-edit.tcl,v 1.25 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: user-edit.tcl,v 1.23.10.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     {return_url:localurl "[dotlrn::get_admin_url]/users"}
     user_id:naturalnum,notnull

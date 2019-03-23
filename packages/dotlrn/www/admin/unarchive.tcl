@@ -19,6 +19,7 @@ ad_page_contract {
 
     @author Nima Mazloumi
     @creation-date 2004-04-25
+    @version $Id: unarchive.tcl
 } -query {
     {community_id:integer ""}
     {referer "."}
@@ -27,10 +28,8 @@ ad_page_contract {
 #Pages in this directory are only runnable by dotlrn-wide admins.
 dotlrn::require_admin 
 
-if { $community_id ne "" } {
-    set is_archived_p [db_0or1row select_is_archived {
-        select archived_p from dotlrn_communities_all where community_id = :community_id
-    }]
+if { ([info exists community_id] && $community_id ne "") } {
+    set is_archived_p [db_0or1row select_is_archived "select archived_p from dotlrn_communities_all where community_id = :community_id"]
     if { $is_archived_p } {
         ns_log Notice "Unarchiving $community_id"
         dotlrn_community::unarchive -community_id $community_id
@@ -40,9 +39,7 @@ if { $community_id ne "" } {
 } else {
     return -code error "community id expected to unarchive a community"
 }
-
 ad_returnredirect $referer
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

@@ -2,7 +2,7 @@ ad_page_contract {
     Confirmation form to remove an item from a section.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: item-delete.tcl,v 1.10 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     assessment_id:naturalnum,notnull
     section_id:naturalnum,notnull

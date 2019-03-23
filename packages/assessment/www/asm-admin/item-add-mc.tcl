@@ -2,7 +2,7 @@ ad_page_contract {
     Form to add a multiple choice item.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: item-add-mc.tcl,v 1.14 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     assessment_id:naturalnum,notnull
     section_id:naturalnum,notnull
@@ -150,7 +150,7 @@ set edit_data "{
 	
 	set count 0
 	foreach i \[lsort -integer \[array names choice\]\] {
-	    if { \$choice(\$i) ne \"\" } {
+	    if {!\[empty_string_p \$choice(\$i)\]} {
 		incr count
 		set choice_id \[as::item_choice::new -mc_id \$mc_id \\
 				   -title \$choice(\$i) \\

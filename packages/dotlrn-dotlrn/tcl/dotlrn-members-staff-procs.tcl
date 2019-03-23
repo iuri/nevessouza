@@ -17,7 +17,7 @@
 #
 # Procs for DOTLRN "staff list" Applet
 #
-# $Id: dotlrn-members-staff-procs.tcl,v 1.17 2018/03/27 14:22:30 hectorr Exp $
+# $Id: dotlrn-members-staff-procs.tcl,v 1.15.20.1 2015/09/11 11:40:56 gustafn Exp $
 #
 
 ad_library {
@@ -133,7 +133,7 @@ namespace eval dotlrn_members_staff {
         @param args a list-ified array of args defined in add_applet_to_community
     } {
         ns_log notice "** Error in [get_pretty_name]: 'add_portlet' not implemented!"
-        ad_return_complaint 1  "Please notify the administrator of this error:
+        ad_return_complaint 1  "Please notifiy the administrator of this error:
         ** Error in [get_pretty_name]: 'add_portlet' not implemented!"
     }
 
@@ -145,7 +145,7 @@ namespace eval dotlrn_members_staff {
         @param args a list-ified array of args defined in remove_applet_from_community
     } {
         ns_log notice "** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
-        ad_return_complaint 1  "Please notify the administrator of this error:
+        ad_return_complaint 1  "Please notifiy the administrator of this error:
         ** Error in [get_pretty_name]: 'remove_portlet' not implemented!"
     }
 

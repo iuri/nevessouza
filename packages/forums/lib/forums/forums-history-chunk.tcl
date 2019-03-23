@@ -15,11 +15,8 @@ set table_border_color [parameter::get -parameter table_border_color]
 set table_bgcolor [parameter::get -parameter table_bgcolor]
 set table_other_bgcolor [parameter::get -parameter table_other_bgcolor]
 
-set visitor_name [_ acs-kernel.Unregistered_Visitor]
 # provide screen_name functionality
-set screen_name [expr {$user_id > 0 ?
-                       [acs_user::get_element -user_id $user_id -element screen_name] :
-                       $visitor_name}]
+set screen_name [db_string select_screen_name { select screen_name from users where user_id = :user_id}]
 set useScreenNameP [parameter::get -parameter "UseScreenNameP" -default 0]
 
 template::list::create \
@@ -32,16 +29,7 @@ template::list::create \
 	name {
 	    label "\#forums.User\#"
 	    html {align left}
-            display_template {
-                <if @useScreenNameP;literal@ true>
-                    @screen_name@
-                </if>
-                <else>
-                <if @persons.user_id;literal@ ne 0><a href="@persons.user_url@"></if>
-                @persons.user_name@
-                <if @persons.user_id;literal@ ne 0></a></if>
-                </else>
-            }
+            display_template {<if @useScreenNameP@>@screen_name@</if><else><a href="user-history?user_id=@persons.user_id@">@persons.first_names@ @persons.last_name@</a></else>}
 	}
 	num_msg {
 	    label "\#forums.Number_of_Posts\#"
@@ -53,27 +41,9 @@ template::list::create \
 	}
     }
 
-db_multirow -extend {
-    user_name
-    user_url
-} persons select_users_wrote_post {
-    select user_id,
-           count(*) as num_msg,
-           to_char(max(last_child_post), 'YYYY-MM-DD HH24:MI:SS') as last_post
-      from forums_messages
-     where forum_id = :forum_id 
-     group by user_id
-} {
-    if {$user_id > 0} {
-        set user_name [person::name -person_id $user_id]
-        set user_url user-history?user_id=$user_id
-    } else {
-        set user_name $visitor_name
-        set user_url "#"
-    }
-}
+db_multirow persons select_users_wrote_post {} 
 
-if {[info exists alt_template] && $alt_template ne ""} {
+if {([info exists alt_template] && $alt_template ne "")} {
   ad_return_template $alt_template
 }
 

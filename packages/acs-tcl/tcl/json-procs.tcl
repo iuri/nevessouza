@@ -35,7 +35,7 @@ ad_library {
 
     @creation-date 2010/04/09
     @author Don Baccus
-    @cvs-id $Id: json-procs.tcl,v 1.11 2018/07/25 21:19:26 hectorr Exp $
+    @cvs-id $Id: json-procs.tcl,v 1.6.2.2 2017/04/22 18:11:54 gustafn Exp $
 }
 
 namespace eval util {
@@ -403,7 +403,7 @@ ad_proc -private util::json::array2json {arrayVal} {
 
     Generate a JSON string for a two-element Tcl JSON array list.
 
-    @param arrayVal [list array values]
+    @param objectVal [list array values]
     @return Valid JSON array string.
 } {
     set values {}
@@ -439,16 +439,16 @@ ad_proc util::json::json_value_to_sql_value {value} {
     @param value A value from a parsed JSON string
     @return Something that works in Real SQL, not to be confused with MySQL. This
             includes not trying to insert '' into columns of type real, when
-            "null" is meant (we mimic Oracle bindvar/PG bindvar emulation semantics).
+            "null" is meant (we mimic Oracle bindvar/PG bindvar emulation sematics).
             The Ilias RTE JavaScript returns '' rather than null for JS null variables.
 
 } {
-    switch -- $value {
+    switch $value {
         false { return 0 }
         true { return 1 }
         null -
         "" { return null }
-        default { return "[::ns_dbquotevalue $value]" }
+        default { return "'[DoubleApos $value]'" }
     }
 }
 

@@ -2,7 +2,7 @@ ad_page_contract {
     Form to add a multiple choice item.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: item-add-mc-existing.tcl,v 1.7 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     assessment_id:naturalnum,notnull
     section_id:naturalnum,notnull

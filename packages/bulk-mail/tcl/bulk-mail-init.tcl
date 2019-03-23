@@ -4,7 +4,7 @@ ad_library {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-05-07
-    @cvs-id $Id: bulk-mail-init.tcl,v 1.5 2017/08/07 23:48:04 gustafn Exp $
+    @cvs-id $Id: bulk-mail-init.tcl,v 1.4.8.1 2015/09/10 08:30:13 gustafn Exp $
 
 }
 

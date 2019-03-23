@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author jopez@galileo.edu 
     @creation-date Mar 2004
-    @cvs_id $Id: evaluate-students-2.tcl,v 1.21 2018/07/25 02:16:04 gustafn Exp $
+    @cvs_id $Id: evaluate-students-2.tcl,v 1.19.2.2 2017/02/13 14:32:20 gustafn Exp $
 } { 
     task_id:naturalnum,notnull
     max_grade:integer,notnull,optional
@@ -182,7 +182,7 @@ if { $tmp_filename ne "" } {
 	    if { ![info exists comments_gs($party_id)] } {
 		set comments_gs($party_id) ""
 	    } else {
-		set comments_gs($party_id) $comments_gs($party_id)
+		set comments_gs($party_id) [DoubleApos $comments_gs($party_id)]
 	    }
 	    
 	    if { [info exists grades_gs($party_id)] && $grades_gs($party_id) ne "" } {
@@ -215,7 +215,7 @@ db_transaction {
 	if { ![info exists comments_wa($party_id)] } {
 	    set comments_wa($party_id) ""
 	} else {
-	    set comments_wa($party_id) $comments_wa($party_id)
+	    set comments_wa($party_id) [DoubleApos $comments_wa($party_id)]
 	}
 	
 	if { [info exists grades_wa($party_id)] && $grades_wa($party_id) ne "" } {
@@ -226,17 +226,9 @@ db_transaction {
 		set new_item_p 1
 	    }
 	    set grades_wa($party_id) [expr ($grades_wa($party_id)*100)/[format %0.3f $max_grade]]
-	    set revision_id [evaluation::new_evaluation \
-                                 -new_item_p $new_item_p \
-                                 -item_id $item_ids($party_id) \
-                                 -content_type evaluation_student_evals \
-				 -content_table evaluation_student_evals \
-                                 -content_id evaluation_id \
-                                 -description $comments_wa($party_id) \
-				 -show_student_p $show_student_wa($party_id) \
-                                 -grade $grades_wa($party_id) \
-                                 -task_item_id $task_item_id \
-                                 -party_id $party_id]
+	    set revision_id [evaluation::new_evaluation -new_item_p $new_item_p -item_id $item_ids($party_id) -content_type evaluation_student_evals \
+				 -content_table evaluation_student_evals -content_id evaluation_id -description $comments_wa($party_id) \
+				 -show_student_p $show_student_wa($party_id) -grade $grades_wa($party_id) -task_item_id $task_item_id -party_id $party_id]
 	    
 	    content::item::set_live_revision -revision_id $revision_id
         # notify the user if suscribed
@@ -250,7 +242,7 @@ db_transaction {
 	if { ![info exists comments_na($party_id)] } {
 	    set comments_na($party_id) ""
 	} else {
-	    set comments_na($party_id) $comments_na($party_id)
+	    set comments_na($party_id) [DoubleApos $comments_na($party_id)]
 	}
 	if { [info exists grades_na($party_id)] && $grades_na($party_id) ne "" } {
 	    # new file?

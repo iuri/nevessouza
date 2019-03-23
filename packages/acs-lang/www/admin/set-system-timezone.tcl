@@ -38,17 +38,17 @@ set system_utc_offset [lang::system::timezone_utc_offset]
 multirow create timezones label value selected_p
 foreach entry [lc_list_all_timezones] {
     set tz [lindex $entry 0]
-
+    
     multirow append timezones $entry $tz [string equal $tz $system_timezone]>
 }
 
 # Try to get the correct UTC time from www.timeanddate.com
-ad_try {
+if { [catch {
     set h [ns_set create headers Accept-Language en-us]
     set result [util::http::get -url "http://www.timeanddate.com/worldclock/" -headers $h]
     set time_and_date_page [dict get $result page]
-} on error {errorMsg} {
-    ad_log Error "set-system-timezone.tcl: Error trying to get timeanddate.com/worldclock/"
+} errmsg] } {
+    ns_log Error "set-system-timezone.tcl: Error trying to get timeanddate.com/worldclock/"
     set utc_ansi {Couldn't get time from timeanddate.com, sorry.}
 }
 
@@ -57,7 +57,7 @@ ad_try {
 
 if { [regexp {<strong>UTC</strong>[^:]+[:][ ]*<strong[^>]*>([^<]+)</strong>} $time_and_date_page match utc_from_page] } {
     # UTC in format (including some historical ones to help keep a robust regexp:
-    # Friday, July 27, 2012 at 19:20:27
+    # Friday, July 27, 2012 at 19:20:27  
     # Wednesday, 20 November 2002, at 2:49:07 PM
     # Wednesday, 6 August  2003, at 12:11:48
     # this regexp is a little more flexible and accepting of data types to help with parsing
@@ -90,7 +90,7 @@ if { [regexp {<strong>UTC</strong>[^:]+[:][ ]*<strong[^>]*>([^<]+)</strong>} $ti
 set correct_p {}
 
 if { [info exists utc_epoch] } {
-    ad_try {
+    with_catch errmsg {
         set sysdate_utc_epoch [clock scan $sysdate_utc]
         set delta_hours [expr {round(($sysdate_utc_epoch - $utc_epoch)*4.0 / (60*60)) / 4.0}]
         set recommended_offset [expr {$system_utc_offset + $delta_hours}]
@@ -102,7 +102,7 @@ if { [info exists utc_epoch] } {
         } else {
             set correct_p 0
         }
-
+        
         set try_offsets [list]
         foreach offset [list $recommended_offset [expr {$recommended_offset -24}]] {
             if { $offset < 0 } {
@@ -114,7 +114,7 @@ if { [info exists utc_epoch] } {
 
         set query "
             select tz.tz, tz.gmt_offset
-            from   timezones tz,
+            from   timezones tz, 
                    timezone_rules tzr
             where  tzr.gmt_offset in ([join $try_offsets ", "])
             and    tzr.tz_id = tz.tz_id
@@ -127,9 +127,9 @@ if { [info exists utc_epoch] } {
             set value $tz
             set label "$tz $gmt_offset"
         }
-    } on error {errorMsg} {
+    } {
         # Didn't work, too bad
-        error $errorMsg $::errorInfo
+        error $errmsg $::errorInfo
     }
 }
 

@@ -4,7 +4,7 @@
 
 @dimensional_slider;noquote@
 
-<if @orderby;literal@ eq "file">
+<if @sort_by@ eq "file">
   <% set last_file ""; set count 0 %>
   <multiple name="proc_list">
   <% if { $proc_list(file) != $last_file } { %>
@@ -24,7 +24,7 @@
   </ul>
 </else>
 
-<if @proc_list:rowcount;literal@ eq 0>
+<if @proc_list:rowcount@ eq 0>
 Sorry, no procedures found
 </if>
 <else>

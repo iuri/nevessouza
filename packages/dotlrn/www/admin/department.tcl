@@ -20,10 +20,10 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-11-07
-    @cvs-id $Id: department.tcl,v 1.19 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: department.tcl,v 1.16.4.2 2015/09/18 08:05:10 gustafn Exp $
 } -query {
     {department_key ""}
-    {page:naturalnum ""}
+    {page ""}
 } -properties {
     pretty_name:onevalue
     external_url:onevalue

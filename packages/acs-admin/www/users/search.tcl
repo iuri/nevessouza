@@ -5,7 +5,7 @@ ad_page_contract {
     ast_name_from_search, and email_from_search, and passing along all
     form variables listed in "passthrough".
     
-    @cvs-id $Id: search.tcl,v 1.10 2017/08/07 23:47:45 gustafn Exp $
+    @cvs-id $Id: search.tcl,v 1.9.2.3 2016/08/31 18:37:40 gustafn Exp $
 
     @param email search string
     @param last_name search string

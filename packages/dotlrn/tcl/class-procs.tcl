@@ -20,7 +20,7 @@ ad_library {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-08-18
-    @cvs-id $Id: class-procs.tcl,v 1.54 2017/08/07 23:48:09 gustafn Exp $
+    @cvs-id $Id: class-procs.tcl,v 1.53.2.1 2015/09/11 11:40:39 gustafn Exp $
 }
 
 namespace eval dotlrn_class {

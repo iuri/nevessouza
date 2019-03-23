@@ -19,7 +19,7 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date Jan 08, 2002
-    @cvs-id $Id: members-chunk.tcl,v 1.25 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: members-chunk.tcl,v 1.22.4.1 2015/09/11 11:40:45 gustafn Exp $
 } -query {
     parent_user_role:multiple,array,optional
 } -properties {
@@ -107,7 +107,6 @@ if {$subcomm_p} {
 	    set return_url [ns_conn url]
 	}
         ad_returnredirect $return_url
-        ad_script_abort
     }
 
     set selected_users_options [list]

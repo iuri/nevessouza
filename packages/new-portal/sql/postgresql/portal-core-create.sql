@@ -18,7 +18,7 @@
 -- The New Portal Package
 --
 -- @author arjun@openforce.net
--- @version $Id: portal-core-create.sql,v 1.7 2017/08/07 23:48:12 gustafn Exp $
+-- @version $Id: portal-core-create.sql,v 1.6.8.2 2016/05/14 17:08:09 gustafn Exp $
 --
 
 select acs_privilege__create_privilege('portal_create_portal');

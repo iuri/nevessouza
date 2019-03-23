@@ -4,7 +4,8 @@
 #
 # @author Deds Castillo (deds@i-manila.com.ph)
 # @creation-date 2004-08-03
-# @cvs-id $Id: views-chunk.tcl,v 1.8 2018/08/15 16:29:24 gustafn Exp $
+# @arch-tag: c2038e8f-832a-4d9c-913b-6fbd5d429375
+# @cvs-id $Id: views-chunk.tcl,v 1.4.4.2 2016/04/29 07:10:28 gustafn Exp $
 
 foreach required_param {package_id object_type} {
     if {![info exists $required_param]} {
@@ -32,7 +33,7 @@ if {!$admin_p} {
 } else {
     if {[info exists viewer_id]} {
         if {$viewer_id ne ""} {
-            set user_filter_label [person::name -person_id $viewer_id]
+            set user_filter_label [acs_user::get_element -user_id $viewer_id -element name]
         } else {
             set user_filter_label "Current User"
             unset viewer_id

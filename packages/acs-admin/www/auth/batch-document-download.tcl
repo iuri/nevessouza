@@ -13,7 +13,6 @@ set document [db_string select_document {
 }]
 
 ns_return 200 text/plain $document
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

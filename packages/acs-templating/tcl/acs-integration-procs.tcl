@@ -2,10 +2,10 @@ ad_library {
     Interface to the ACS for the ArsDigita Templating System
     Procedures in this file only make sense if you use the template system
     together with the ArsDigita Community System
-
+    
     @author Christian Brechbuehler <christian@arsdigita.com>
-
-    @cvs-id $Id: acs-integration-procs.tcl,v 1.27 2018/08/24 13:36:43 hectorr Exp $
+    
+    @cvs-id $Id: acs-integration-procs.tcl,v 1.23.2.5 2017/04/22 18:15:50 gustafn Exp $
 }
 
 # Copyright (C) 1999-2000 ArsDigita Corporation
@@ -19,10 +19,10 @@ ad_proc -public ad_return_template {
     -string:boolean
     {template ""}
 } {
-    This function is a wrapper for sundry template:: procs. Will set the
-    template for the current page to the file named in 'template'.
+    This function is a wrapper for sundry template:: procs. Will set the 
+    template for the current page to the file named in 'template'. 
 
-    @param template Name of template file
+    @param template Name of template file 
 
     @param string If specified, will return the resulting page to the caller
     string instead sending it to the connection.
@@ -31,7 +31,7 @@ ad_proc -public ad_return_template {
         template::set_file \
             [template::util::url_to_file $template [ad_conn file]]
     }
-
+    
     if { $string_p } {
         return [template::adp_parse \
                     [template::util::url_to_file $template [ad_conn file]] {}]
@@ -85,9 +85,15 @@ ad_proc -public ad_return_exception_template {
     ad_script_abort
 }
 
+ad_proc -public get_server_root {} {
+    Get the server root directory (supposing we run under ACS)
+} {
+    return $::acs::rootdir
+}
+
 
 ad_proc adp_parse_ad_conn_file {} {
-
+    
     Handle a request for an adp and/or Tcl file in the template system
     based on the current setting of [ad_conn file]. This file is
     registered via rp_register_extension_handler
@@ -109,17 +115,17 @@ ad_proc adp_parse_ad_conn_file {} {
     set parsed_template [template::adp_parse $themed_template {}]
 
     if {$parsed_template ne ""} {
-
+        
         #
         # acs-lang translator mode
         #
 
         if { [lang::util::translator_mode_p] } {
             set apm_package_url [apm_package_url_from_key "acs-lang"]
-
+            
             # Attempt to move all message keys outside of tags
             while { [regsub -all {(<[^>]*)(\x02\(\x01[^\x01]*\x01\)\x02)([^>]*>)} $parsed_template {\2\1\3} parsed_template] } {}
-
+            
             # Attempt to move all message keys outside of <select>...</select> statements
             regsub -all -nocase {(<option\s[^>]*>[^<]*)(\x02\(\x01[^\x01]*\x01\)\x02)([^<]*</option[^>]*>)} $parsed_template {\2\1\3} parsed_template
 
@@ -148,7 +154,7 @@ ad_proc adp_parse_ad_conn_file {} {
                 set key [string range $parsed_template [lindex $key 0] [lindex $key 1]]
                 lassign [split $key "."] package_key message_key
 
-                set edit_url [export_vars -base "${apm_package_url}admin/edit-localized-message" {
+                set edit_url [export_vars -base "${apm_package_url}admin/edit-localized-message" { 
                     { locale {[ad_conn locale]} } package_key message_key { return_url [ad_return_url] } }]
 
                 if { [lang::message::message_exists_p [ad_conn locale] $key] } {
@@ -159,7 +165,7 @@ ad_proc adp_parse_ad_conn_file {} {
                         set edit_link [subst {<a href="[ns_quotehtml $edit_url]" title="$key" style="background-color: yellow; color: red;"><b>*</b></a>}]
                     } else {
                         # Message key missing entirely
-                        set new_url [export_vars -base "${apm_package_url}admin/localized-message-new" {
+                        set new_url [export_vars -base "${apm_package_url}admin/localized-message-new" { 
                             { locale en_US } package_key message_key { return_url [ad_return_url] }
                         }]
                         set edit_link [subst {<a href="[ns_quotehtml $new_url]" title="$key" style="background-color: red; color: white;"><b>@</b></a>}]
@@ -178,24 +184,10 @@ ad_proc adp_parse_ad_conn_file {} {
     }
 }
 
-
-#
-### Deprecated procs
-#
-
-ad_proc -deprecated -public get_server_root {} {
-    Get the server root directory (supposing we run under ACS)<br>
-    THIS PROC IS SUPERSEDED BY acs_root_dir
-
-    @see acs_root_dir
-} {
-    return $::acs::rootdir
-}
-
-
 #
 # Local variables:
 #    mode: tcl
 #    tcl-indent-level: 4
 #    indent-tabs-mode: nil
 # End:
+

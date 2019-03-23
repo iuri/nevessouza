@@ -5,7 +5,7 @@ ad_page_contract {
     @author Kevin Scaldeferri (kevin@arsdigita.com)
     @author Don Baccus (dhogaza@pacifier.com)
     @creation-date 10 November 2000
-    @cvs-id $Id: folder-delete.tcl,v 1.6 2017/08/07 23:48:10 gustafn Exp $
+    @cvs-id $Id: folder-delete.tcl,v 1.5.2.1 2015/09/11 11:40:59 gustafn Exp $
 } {
     folder_id:integer,notnull
     {confirmed_p:boolean "f"}

@@ -55,12 +55,21 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="attachments::toggle_approved.select_attachment_approved_p">
+        <querytext>
+            select approved_p
+            from attachments
+            where object_id = :object_id
+            and item_id = :item_id
+        </querytext>
+    </fullquery>
+
     <fullquery name="attachments::toggle_approved.toggle_approved_p">
         <querytext>
-          update attachments set
-             approved_p = coalesce(:approved_p, not approved_p)
+            update attachments
+            set approved_p = :approved_p
             where object_id = :object_id
-              and item_id = :item_id
+            and item_id = :item_id
         </querytext>
     </fullquery>
 

@@ -7,7 +7,7 @@ ad_page_contract {
     Modified by Christian Hvid
 
     @creation-date 19 march 2002
-    @cvs-id $Id: locale-edit.tcl,v 1.12 2018/03/24 00:14:57 hectorr Exp $
+    @cvs-id $Id: locale-edit.tcl,v 1.10.6.1 2015/09/10 08:21:28 gustafn Exp $
 } {
     locale
 }
@@ -61,7 +61,7 @@ catch {
 }
 
 
-# Greenpeace had a table of countries and languages and their two-digit ISO-code
+# Greenpeace had a table of contries and languages and their two-digit ISO-code
 # but not so in ACS-LANG - here you must provide the two-digit ISO-code
 
 element create locale_editing locale -label "Locale" \

@@ -18,7 +18,7 @@
 -- The New Portal Package
 --
 -- @author arjun@openforce.net
--- @version $Id: portal-core-create.sql,v 1.48 2017/08/07 23:48:12 gustafn Exp $
+-- @version $Id: portal-core-create.sql,v 1.47.8.1 2015/10/02 12:53:44 gustafn Exp $
 --
 
 begin

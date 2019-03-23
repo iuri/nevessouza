@@ -20,7 +20,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-11-27
-    @cvs-id $Id: one-community-admin.tcl,v 1.33 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: one-community-admin.tcl,v 1.31.4.1 2015/09/11 11:40:45 gustafn Exp $
 } -query {
 } -properties {
     community_id:onevalue

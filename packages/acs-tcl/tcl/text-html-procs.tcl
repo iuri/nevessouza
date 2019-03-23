@@ -4,7 +4,7 @@ ad_library {
 
     @author Lars Pind (lars@pinds.com)
     @creation-date 19 July 2000
-    @cvs-id $Id: text-html-procs.tcl,v 1.109 2018/12/15 17:46:28 gustafn Exp $
+    @cvs-id $Id: text-html-procs.tcl,v 1.67.2.30 2017/07/31 16:31:01 antoniop Exp $
 }
 
 
@@ -30,7 +30,7 @@ ad_proc -public ad_text_to_html {
     semi-HTML input and preserve that formatting. This will also cause spaces/tabs to not be
     replaced with nbsp's, because this can too easily mess up HTML tags.
     @param includes_html Set this if the text parameter already contains some HTML which should be preserved.
-    @param encode This will encode international characters into its html equivalent, like "ü" into &uuml;
+    @param encode This will encode international characters into it's html equivalent, like "ü" into &uuml;
 
     @author Branimir Dolicki (branimir@arsdigita.com)
     @author Lars Pind (lars@pinds.com)
@@ -39,7 +39,6 @@ ad_proc -public ad_text_to_html {
     if { $text eq "" } {
         return ""
     }
-    set orig_text $text
 
     set space_added 0
     set nr_links 0
@@ -70,14 +69,14 @@ ad_proc -public ad_text_to_html {
         # email links have the form xxx@xxx.xxx
         #
         # JCD: don't treat things =xxx@xxx.xxx as email since most
-        # common occurrence seems to be in URLs (although VPATH bounce
+        # common occurrence seems to be in urls (although VPATH bounce
         # emails like bounce-user=domain.com@sourcehost.com will then
         # not work correctly).  Another tricky case is
         #     http://www.postgresql.org/message-id/20060329203545.M43728@narrowpathinc.com
         # where we do not want turn the @ into a mailto.
 
         incr nr_links [regsub -nocase -all \
-                           {([^a-zA-Z0-9=/.-]+)(mailto:)?([^=\(\)\s:;,@<>/]+@[^\(\)\s.:;,@<>]+[.][^\(\)\s:;,@<>]+)} $text \
+                           {([^a-zA-Z0-9=/.]+)(mailto:)?([^=\(\)\s:;,@<>/]+@[^\(\)\s.:;,@<>]+[.][^\(\)\s:;,@<>]+)} $text \
                            "\\1\u0002mailto:\\3\u0003" text]
 
         #
@@ -159,7 +158,7 @@ ad_proc -public ad_text_to_html {
             # to debug.
             #
             if {$changed_back > 0} {
-                ad_log warning "Replaced spurious magic marker in ad_text_to_html, orig:\n$orig_text"
+                ad_log warning "Replaced spurious magic marker in ad_text_to_html"
             }
         }
     }
@@ -172,7 +171,6 @@ ad_proc -public ad_text_to_html {
 }
 
 ad_proc -public ad_html_qualify_links {
-    -location
     -path
     html
 } {
@@ -180,23 +178,13 @@ ad_proc -public ad_html_qualify_links {
     Convert in the HTML text relative URLs into fully qualified URLs
     including the host name. It performs the following operations:
 
-    1. prepend paths starting with a "/" by the location (protocol and host).
-    2. prepend paths not starting a "/" by the path, in case it was passed in.
+    1) prepend paths starting with a "/" by the protocol and host.
+2) prepend paths not starting a "/" by the package_url, in case it was passed in.
 
-    Links, which are already fully qualified are not modified.
-
-    @param location protocol and host (defaults to [ad_url])
-    @param path optional path to be prepended to paths not starting with a "/"
-    @param html HTML text, in which substitutions should be performed.
+links, which are already fully qualified are not modified.
 
 } {
-    if {![info exists location]} {
-        set location [util_current_location]
-    }
-    #
-    # Make sure, location ends with a "/".
-    #
-    set location "[string trimright $location /]/"
+    set host "[string trimright [ad_url] /]/"
 
     #
     # Protect all full qualified URLs with special characters (one
@@ -204,33 +192,25 @@ ad_proc -public ad_html_qualify_links {
     #
     regsub -nocase -all \
         {(href|src)\s*=\s*'((http|https|ftp|mailto):[^'\"]+)'} $html \
-        "\\1='\u0001\\2\u0002'" html
-    regsub -nocase -all \
-        {(href|src)\s*=\s*[\"]((http|https|ftp|mailto):[^'\"]+)[\"]} $html \
-        "\\1=\"\u0001\\2\u0002\"" html
+    "\\1='\u0001\\2\u0002'" html
+regsub -nocase -all \
+    {(href|src)\s*=\s*[\"]((http|https|ftp|mailto):[^'\"]+)[\"]} $html \
+    "\\1=\"\u0001\\2\u0002\"" html
 
-    #
-    # If a path is specified, prefix all relative URLs (i.e. not
-    # starting with a slash) with the specified path.
-    #
-    if {[info exists path]} {
-        set path "[string trim $path /]/"
-        regsub -all {(href|src)\s*=\s*['\"]([^/][^\u0001:'\"]+?)['\"]} $html \
-            "\\1='${location}${path}\\2'" html
-    }
+if {[info exists path]} {
+    set path "[string trim $path /]/"
+    regsub -all {(href|src)\s*=\s*['\"]([^/][^\u0001:'\"]+?)['\"]} $html \
+        "\\1='${host}${path}\\2111'" html
+}
+regsub -all {(href|src)\s*=\s*['\"]/([^\u0001:'\"]+?)['\"]} $html \
+    "\\1=\"${host}\\2222\"" html
 
-    #
-    # Prefix every URL starting with a slash by the location.
-    #
-    regsub -nocase -all {(href|src)\s*=\s*['\"]/([^\u0001:'\"]+?)['\"]} $html \
-        "\\1='${location}\\2'" html
+#
+# Remove all protection characters again.
+#
+regsub -nocase -all {((href|src)\s*=\s*['\"]?)\u0001([^\u0002]*)\u0002} $html {\1\3} html
 
-    #
-    # Remove all protection characters again.
-    #
-    regsub -nocase -all {((href|src)\s*=\s*['\"]?)\u0001([^\u0002]*)\u0002} $html {\1\3} html
-
-    return $html
+return $html
 }
 
 
@@ -274,8 +254,8 @@ ad_proc -public util_convert_line_breaks_to_html {
 ad_proc -public ad_quotehtml { arg } {
 
     Quotes ampersands, double-quotes, and angle brackets in $arg.
-    Analogous to ns_quotehtml except that it quotes double-quotes
-    (which ns_quotehtml does not).
+    Analogous to ns_quotehtml except that it quotes double-quotes (which
+                                                                   ns_quotehtml does not).
 
     @see ad_unquotehtml
 } {
@@ -377,12 +357,10 @@ ad_proc -private util_close_html_tags {
         #
         set frag [string map [list &# "\0&amp;#\0"] $html_fragment]
 
-        try {
-            dom parse -html <body>$frag doc
-        } on error {errorMsg} {
-            # we got an error, so do Tcl based html completion processing
-            ad_log notice "tdom can't parse the provided HTML, error=$errorMsg, checking fragment without tdom\n$frag"
-        } on ok {r} {
+        if {[catch {dom parse -html <body>$frag doc} errorMsg]} {
+            # we got an error, so do normal processing
+            ns_log notice "tdom can't parse the provided HTML, error=$errorMsg,\nchecking fragment without tdom"
+        } else {
             $doc documentElement root
             set html ""
             # discard forms
@@ -468,7 +446,9 @@ ad_proc -private util_close_html_tags {
     }
 
     set broken_p 0
+
     set discard 0
+
     set tagptr -1
 
     # First try to fix up < not part of a tag.
@@ -551,7 +531,7 @@ ad_proc -private util_close_html_tags {
                                 set tagstack($tagptr) $tag
                             }
                         } else {
-                            switch -- $syn($tag) {
+                            switch $syn($tag) {
                                 nobr {
                                     if { ! $nobr } {
                                         set nobr_out_point [string length $out]
@@ -705,7 +685,7 @@ ad_proc ad_parse_html_attributes_upvar {
     @param pos_varname the name of the variable holding the position
     within the <code>html_varname</code> string from which we should
     start. This should point to a character inside the tag, just after
-    the tag name, and before the first attribute. Note that we <i>will</i> modify this variable.
+    the tag name, and before the first attribute. Note, that we <i>will</i> modify this variable.
     When this proc is done, this variable will point to the tag-closing <code>&gt;</code>.
     Example:
     if the tag is &lt;img src="foo"&gt;, <code>pos_varname</code> should point to either the space between
@@ -899,12 +879,12 @@ ad_proc ad_parse_html_attributes_upvar {
     # proc might also be used in order to improve some OpenACS
     # routines, like util_close_html_tags. As it has some limitations,
     # this is left to future considerations.
-    ad_proc -public ad_dom_fix_html {
+    ad_proc ad_dom_fix_html {
         -html:required
         {-marker "root"}
         -dom:boolean
     } {
-
+        
         Similar in spirit to the famous Tidy command line utility,
         this proc takes a piece of possibly invalid markup and returns
         a 'fixed' version where unopened tags have been closed and
@@ -912,7 +892,7 @@ ad_proc ad_parse_html_attributes_upvar {
         in the form <code>attribute-name="attribute value"</code>. All
         attributes with an invalid (non-alphanumeric) name will be
         stripped.<br>
-        <br>
+        <br>        
         Be aware that every comment and also the possibly present
         DOCTYPE declaration will be stripped from the markup. Also,
         most of tag's internal whitespace will be trimmed. This
@@ -923,7 +903,7 @@ ad_proc ad_parse_html_attributes_upvar {
 
         @param marker Root element use to enforce a single root of the
                DOM tree.
-
+        
         @param dom When this flag is set, instead of returning markup,
         the proc will return the tDOM object built during the
         operation. Useful when the result should be used by tDOM
@@ -933,7 +913,7 @@ ad_proc ad_parse_html_attributes_upvar {
         specified
 
         @author Antonio Pisano
-
+        
     } {
         if {[catch {package require struct}]} {
             error "Package struct non found on the system"
@@ -941,10 +921,10 @@ ad_proc ad_parse_html_attributes_upvar {
         if {[catch {package require htmlparse}]} {
             error "Package htmlparse non found on the system"
         }
-
+        
         set tree [::struct::tree]
 
-
+        
         catch {::htmlparse::tags destroy}
 
         ::struct::stack ::htmlparse::tags
@@ -960,17 +940,17 @@ ad_proc ad_parse_html_attributes_upvar {
         }
 
         ::htmlparse::tags destroy
-
+        
 
         set lmarker "<$marker>"
         set rmarker "</$marker>"
         set doc [dom createDocument $marker]
         set root [$doc documentElement]
-
+        
         set queue {}
         lappend queue [list $root [$tree children [$tree children root]]]
         while {$queue ne {}} {
-            lassign [lindex $queue 0] domparent treechildren
+            lassign [lindex $queue 0] domparent treechildren            
             set queue [lrange $queue 1 end]
 
             foreach child $treechildren {
@@ -1001,7 +981,7 @@ ad_proc ad_parse_html_attributes_upvar {
                         if {[string is alnum -strict $attname]} {
                             $el setAttribute $attname $attvalue
                         }
-
+                        
                         set data [string range $data [string length $m] end]
                     }
                 }
@@ -1021,10 +1001,10 @@ ad_proc ad_parse_html_attributes_upvar {
             return $doc
         } else {
             set html [$doc asHTML]
-            $doc delete
+            $doc delete            
             set html [string range $html [string length $lmarker] end-[string length $rmarker]]
         }
-
+        
         return [string trim $html]
     }
 
@@ -1033,7 +1013,7 @@ ad_proc ad_parse_html_attributes_upvar {
     # (e.g. forbid some tag/attribute like <script> etc). It has some
     # limitations that make non-trivial its introduction, therefore is
     # currently not used around.
-    ad_proc -public ad_dom_sanitize_html {
+    ad_proc ad_dom_sanitize_html {
         -html:required
         -allowed_tags
         -allowed_attributes
@@ -1048,44 +1028,40 @@ ad_proc ad_parse_html_attributes_upvar {
     } {
 
         Sanitizes HTML by specified criteria, basically removing
-        unallowed tags and attributes, JavaScript or outer references
+        unallowed tags and attributes, javascript or outer references
         into page URLs. When desired, this proc can act also as just a
         validator in order to enforce some markup policies.
 
         @param html the markup to be checked.
-
+        
         @param allowed_tags list of tags we allow in the markup.
-
+        
         @param allowed_attributes list of attributes we allow in the
         markup.
-
+        
         @param allowed_protocols list of attributes we allow into
         links
-
+        
         @param unallowed_tags list of tags we don't allow in the
         markup.
-
+        
         @param unallowed_attributes list of attributes we don't allow
         in the markup.
-
+        
         @param unallowed_protocols list of protocols we don't allow in
-        the markup. Protocol-relative URLs are allowed, but only if
-        proc is called from a connection thread, as we need to
-        determine our current connection protocol.
-
+        the markup.
+        
         @param no_js this flag decides whether every script tag,
         inline event handlers and the javascript: pseudo-protocol
         should be stripped from the markup.
-
-        @param no_outer_urls this flag tells the proc to remove every
-        reference to external addresses. Proc will try to distinguish
-        between external URLs and fine fully specified internal
-        ones. Acceptable URLs will be transformed in absolute local
-        references, others will be just stripped together with the
-        attribute. Absolute URLs referring to our host are allowed,
-        but require the proc being called from a connection thread in
-        order to determine the proper current url.
-
+        
+        @param no_outer_urls this flag tells the proc to remove
+        every reference to external addresses. Proc will try to
+        distinguish between external URLs and fine fully specified
+        internal ones. Acceptable URLs will be transformed in absolute
+        local references, others will be just stripped togheter with
+        the attribute.
+        
         @param validate This flag will avoid the creation of the
         stripped markup and just report whether the original one
         respects all the specified requirements.
@@ -1101,11 +1077,11 @@ ad_proc ad_parse_html_attributes_upvar {
         -validate flag is specified
 
         @author Antonio Pisano
-
+        
     } {
         ## Allowed/Unallowed tags come from the user or default to
         ## those specified in the parameters
-
+        
         array set allowed_tag {}
         if {![info exists allowed_tags]} {
             # Use the antispam tags for this package instance and whatever is on the kernel.
@@ -1134,21 +1110,21 @@ ad_proc ad_parse_html_attributes_upvar {
         foreach tag $allowed_tags {
             set allowed_tag([string tolower $tag]) 1
         }
-
+        
         if {"*" in $allowed_attributes} {
             set allowed_attributes "*"
         }
         foreach attribute $allowed_attributes {
             set allowed_attribute([string tolower $attribute]) 1
         }
-
+        
         if {"*" in $allowed_protocols} {
             set allowed_protocols "*"
         }
         foreach protocol $allowed_protocols {
             set allowed_protocol([string tolower $protocol]) 1
         }
-
+        
         array set unallowed_tag {}
         if {![info exists unallowed_tags]} {
             set unallowed_tags {}
@@ -1165,10 +1141,10 @@ ad_proc ad_parse_html_attributes_upvar {
         }
 
         # TODO: consider default unallowed stuff to come from a parameter
-
+        
         if {$no_js_p} {
             lappend unallowed_tags "script"
-            lappend unallowed_attributes {*}{
+            lappend unallowed_attributes {*}{                
                 onafterprint onbeforeprint onbeforeunload onerror
                 onhashchange onload onmessage onoffline ononline
                 onpagehide onpageshow onpopstate onresize onstorage
@@ -1192,7 +1168,7 @@ ad_proc ad_parse_html_attributes_upvar {
         foreach tag $unallowed_tags {
             set unallowed_tag([string tolower $tag]) 1
         }
-
+        
         foreach attribute $unallowed_attributes {
             set unallowed_attribute([string tolower $attribute]) 1
         }
@@ -1201,70 +1177,59 @@ ad_proc ad_parse_html_attributes_upvar {
         }
 
         ##
+
+        
         # root of the document must be unique, this will enforce it by
         # wrapping html in an auxiliary root element
         set lmarker "<root>"
         set rmarker "</root>"
-
-        try {
+        
+        if {[catch {
             dom parse -html "${lmarker}${html}${rmarker}" doc
-
-        } on error {errorMsg} {
-            if {$fix_p} {
-                try {
+        } errmsg]} {
+            if {!$fix_p ||
+                [catch {
                     set doc [ad_dom_fix_html -html $html -dom]
-                } on error {errorMsg} {
-                    ad_log error "Fixing of the document failed. Reported error: $errorMsg"
-                    return [expr {$validate_p ? 0 : ""}]
-                }
-            } else {
-                ad_log error "Parsing of the document failed. Reported error: $errorMsg"
+                } errmsg]} {
+                ad_log error "Parsing of the document failed. Reported error: $errmsg"
                 return [expr {$validate_p ? 0 : ""}]
             }
         }
-
+        
         $doc documentElement root
+        
+        set driver_info [util_driver_info]
+        set driver_prot [dict get $driver_info proto]
+        set driver_host [dict get $driver_info hostname]
+        set driver_port [dict get $driver_info port]
 
-        # Some sanitizing requires information that is available only
-        # from a connection thread such as our local address and
-        # current protocol.
-        if {[ns_conn isconnected]} {
-            set driver_info [util_driver_info]
-            set driver_prot [dict get $driver_info proto]
-            set driver_host [dict get $driver_info hostname]
-            set driver_port [dict get $driver_info port]
+        ## create a regex clause of possible addresses referring to
+        ## this system
+        set our_locations {}
 
-            ## create a regex clause of possible addresses referring to
-            ## this system
-            set our_locations [list]
+        # location from conf files
+        set location [util::join_location \
+                          -proto    $driver_prot \
+                          -hostname $driver_host \
+                          -port     $driver_port]
+        set our_location($location) 1
+        regsub {^\w+://} $location {//} location
+        set our_location($location) 1
 
-            # location from conf files
-            set configured_location [util::join_location \
-                                         -proto    $driver_prot \
-                                         -hostname $driver_host \
-                                         -port     $driver_port]
-            lappend our_locations $configured_location
-            regsub {^\w+://} $configured_location {//} no_proto_location
-            lappend our_locations $no_proto_location
+        # location from connection
+        set location [ad_conn location]
+        set our_location($location) 1                
+        regsub {^\w+://} $location {//} location
+        set our_location($location) 1
+        
+        set our_locations [join [array names our_location] |]
+        ##
 
-            # location from connection
-            set conn_location [ad_conn location]
-            lappend our_locations $conn_location
-            regsub {^\w+://} $conn_location {//} no_proto_location
-            lappend our_locations $no_proto_location
-
-            set our_locations [join $our_locations |]
-            ##
-        } else {
-            set our_locations ""
-            set driver_prot ""
-        }
-
-        set queue [$root childNodes]
+        set queue [$root childNodes]        
         while {$queue ne {}} {
             set node [lindex $queue 0]
             set queue [lrange $queue 1 end]
-
+            
             # skip all non-element nodes
             if {$node eq "" || [$node nodeType] ne "ELEMENT_NODE"} continue
 
@@ -1276,11 +1241,11 @@ ad_proc ad_parse_html_attributes_upvar {
                 if {$validate_p} {return 0} else {$node delete}
                 continue
             }
-
+            
             # tag itself is allowed, we can inspect its children
             lappend queue {*}[$node childNodes]
 
-            # 2: check tag contains only allowed attributes
+            # 2: check tag contains only allowed attributes            
             foreach att [$node attributes] {
                 set att [string tolower $att]
                 if {[info exists unallowed_attribute($att)] ||
@@ -1289,27 +1254,25 @@ ad_proc ad_parse_html_attributes_upvar {
                     if {$validate_p} {return 0} else {$node removeAttribute $att}
                     continue
                 }
-
-                # 3: check for any attribute that could contain a URL
+                
+                # 3: check for any attribute that could contain a url
                 # whether this is acceptable
-                switch -- $att {
-                    "href" - "src" - "content" - "action" {
+                switch $att {
+                    "href" - "src" - "content" - "action" {                        
                         set url [string trim [$node getAttribute $att ""]]
                         if {$url eq ""} continue
-
+                        
                         set prot ""
-
-                        set parsed_url [ns_parseurl $url]
-                        # attribute is a URL including the protocol
-                        set proto [expr {[dict exists $parsed_url proto] ? [dict get $parsed_url proto] : ""}]
-                        if {$proto ne ""} {
+                        
+                        # attribute is a full URL
+                        if {[regexp {^(\w+:)?//(.*)} $url match prot loc]} {
                             if {$no_outer_urls_p} {
-                                # no external URLs allowed: we still
-                                # want to allow fully specified URLs
+                                # no external urls allowed: we still
+                                # want to allow fully specified urls
                                 # that refer to this server, but we'll
                                 # transform them in a local absolute
                                 # reference. For all others, attribute
-                                # will be just removed.
+                                # will be just removed.                                
                                 # - This is ok, points to our system...
                                 if {[regsub ^($our_locations) $url {} url]} {
                                     set url /[string trimleft $url "/"]
@@ -1321,22 +1284,21 @@ ad_proc ad_parse_html_attributes_upvar {
                                     continue
                                 }
                             }
+                            # this was likely a protocol-relative url
+                            if {$prot eq ""} {
+                                set prot $driver_prot
+                            }
                         }
 
-                        # to check for allowed protocols we need to
-                        # treat URLs without one (e.g. relative or
-                        # protocol-relative URLs) as using our same
-                        # protocol
-                        if {$proto eq ""} {
-                            set proto $driver_prot
-                        }
-
-                        # check if protocol is allowed
-                        if {[info exists unallowed_protocol($proto)] ||
-                            ($allowed_protocols ne "*" && ![info exists allowed_protocol($proto)])} {
-                            # invalid attribute!
-                            if {$validate_p} {return 0} else {$node removeAttribute $att}
-                            continue
+                        # regexp is for stuff like 'javascript:' pseudoprotocol, that is not really a url
+                        if {$prot ne "" || [regexp {^(\w+):.*$} $url match prot]} {
+                            # check if protocol is allowed
+                            if {[info exists unallowed_protocol($prot)] ||
+                                ($allowed_protocols ne "*" && ![info exists allowed_protocol($prot)])} {
+                                # invalid attribute!
+                                if {$validate_p} {return 0} else {$node removeAttribute $att}
+                                continue
+                            }
                         }
                     }
                 }
@@ -1346,9 +1308,9 @@ ad_proc ad_parse_html_attributes_upvar {
         if {$validate_p} {
             $doc delete
             return 1
-        } else {
+        } else {            
             set html [$root asHTML]
-            $doc delete
+            $doc delete            
             # remove auxiliary root element from output
             set html [string range $html [string length $lmarker] end-[string length $rmarker]]
             set html [string trim $html]
@@ -1356,29 +1318,6 @@ ad_proc ad_parse_html_attributes_upvar {
         }
     }
 
-    ad_proc -public ad_js_escape {
-        string
-    } {
-        Return supplied string with invalid javascript characters
-        property escaped. This makes possible to use the string safely
-        inside javascript code.
-
-        @author Antonio Pisano
-    } {
-        string map [list \n \\n \b \\b \f \\f \r \\r \t \\t \v \\v \" {\"} ' {\'}] $string
-
-        # Escape quotes and backslashes (non greedy)
-        #regsub -all {.??([^\\])?('|\"|\\)} $string {\1\\\2} string
-        # Escape characters are replaced with their escape sequence
-        #regsub -all {\b} $string {\\b} string
-        #regsub -all {\f} $string {\\f} string
-        #regsub -all {\n} $string {\\n} string
-        #regsub -all {\r} $string {\\r} string
-        #regsub -all {\t} $string {\\t} string
-        #regsub -all {\v} $string {\\v} string
-
-        #return $string
-    }
 
     ####################
     #
@@ -1394,7 +1333,8 @@ ad_proc ad_parse_html_attributes_upvar {
     } {
         Returns a best-guess plain text version of an HTML fragment.
         Parses the HTML and does some simple formatting. The parser and
-        formatting is pretty stupid, but it's better than nothing.
+        formatting
+        is pretty stupid, but it's better than nothing.
 
         @param maxlen the line length you want your output wrapped to.
         @param showtags causes any unknown (and uninterpreted) tags to get shown in the output.
@@ -1467,11 +1407,9 @@ ad_proc ad_parse_html_attributes_upvar {
             set count 0
             while 1 {
                 if {[incr count] > 3000 } {
-                    # JCD: the programming bug is that an unmatched <
-                    # in the input runs off forever looking for its
-                    # closing > and in some long text like program
-                    # listings you can have lots of quotes before you
-                    # find that >
+                    # JCD: the programming bug is that an unmatched < in the input runs off forever looking for
+                    # it's closing > and in some long text like program listings you can have lots of quotes
+                    # before you find that >
                     error "There appears to be a programming bug in ad_html_to_text: We've entered an infinite loop."
                 }
                 # Find the positions of the first quote, apostrophe and greater-than sign.
@@ -1501,8 +1439,7 @@ ad_proc ad_parse_html_attributes_upvar {
                 }
                 set string_delimiter [string index $html $string_delimiter_idx]
 
-                # If the greater than sign appears before any of the
-                # string delimters, we've found the tag end.
+                # If the greater than sign appears before any of the string delimters, we've found the tag end.
                 if { $gt_idx < $string_delimiter_idx || $string_delimiter_idx == -1 } {
                     # we found the tag end
                     set i $gt_idx
@@ -1562,9 +1499,7 @@ ad_proc ad_parse_html_attributes_upvar {
                     a {
                         if { !$no_format_p } {
                             if { $slash eq ""} {
-                                if { [info exists attribute_array(href)]
-                                     && [string index $attribute_array(href) 0] ni {"#" ""}
-                                 } {
+                                if { [info exists attribute_array(href)] } {
                                     if { [info exists attribute_array(title)] } {
                                         set title ": '$attribute_array(title)'"
                                     } else {
@@ -1621,16 +1556,12 @@ ad_proc ad_parse_html_attributes_upvar {
                                 lappend img_info "'$attribute_array(alt)'"
                             }
                             if { [info exists attribute_array(src)] } {
-                                if {[string match "data:*" $attribute_array(src)]} {
-                                    lappend img_info "data:..."
-                                } else {
-                                    lappend img_info $attribute_array(src)
-                                }
+                                lappend img_info $attribute_array(src)
                             }
                             if { [llength $img_info] == 0 } {
                                 ad_html_to_text_put_text output {[IMAGE]}
                             } else {
-                                ad_html_to_text_put_text output "\[IMAGE: [join $img_info " "]\]"
+                                ad_html_to_text_put_text output "\[IMAGE: [join $img_info " "] \]"
                             }
                         }
                     }
@@ -1775,61 +1706,37 @@ ad_proc ad_parse_html_attributes_upvar {
             set output(space) 1
         }
 
+        # If there's a blockquote in the beginning of the text, we wouldn't have caught it before
+        if { $output(text) eq "" } {
+            append output(text) [string repeat {    } $output(blockquote)]
+        }
 
-        if {1} {
-            # If there's a blockquote in the beginning of the text, we wouldn't have caught it before
-            if { $output(text) eq "" } {
-                append output(text) [string repeat {    } $output(blockquote)]
-            }
+        # Now output the text.
+        while { [regexp {^( +|\s|\S+)(.*)$} $text match word text] } {
 
-            # Now output the text.
-            while { [regexp {^( +|\s|\S+)(.*)$} $text match word text] } {
+            # convert &nbsp;'s
+            # We do this now, so that they're displayed, but not treated, whitespace.
+            regsub -all {&nbsp;} $word { } word
 
-                # convert &nbsp;'s
-                # We do this now, so that they're displayed, but not treated, whitespace.
-                regsub -all {&nbsp;} $word { } word
-
-                set wordlen [string length $word]
-                switch -glob -- $word {
-                    " *" {
-                        append output(text) "$word"
-                        incr output(linelen) $wordlen
-                    }
-                    "\n" {
-                        if { $output(text) ne "" } {
-                            ad_html_to_text_put_newline output
-                        }
-                    }
-                    default {
-                        if { $output(linelen) + $wordlen > $output(maxlen) && $output(maxlen) != 0 } {
-                            ad_html_to_text_put_newline output
-                        }
-                        append output(text) "$word"
-                        incr output(linelen) $wordlen
+            set wordlen [string length $word]
+            switch -glob -- $word {
+                " *" {
+                    append output(text) "$word"
+                    incr output(linelen) $wordlen
+                }
+                "\n" {
+                    if { $output(text) ne "" } {
+                        ad_html_to_text_put_newline output
                     }
                 }
+                default {
+                    if { $output(linelen) + $wordlen > $output(maxlen) && $output(maxlen) != 0 } {
+                        ad_html_to_text_put_newline output
+                    }
+                    append output(text) "$word"
+                    incr output(linelen) $wordlen
+                }
             }
-        } else {
-            #
-            # This is an experimental version that requires a version
-            # of NaviServer supporting the "-offset" argument. So it
-            # is deactivated for the time being for public use.
-            #
-            set plain [ns_reflow_text \
-                           -offset $output(linelen) \
-                           -width $output(maxlen) \
-                           $text]
-            set lastNewLine [string last \n $plain]
-            #ns_log notice "ns_reflow_text -width $output(maxlen) <$text>\ntext: $text\nplain $plain"
-            if {$lastNewLine == -1} {
-                incr output(linelen) [string length $plain]
-            } else {
-                set output(linelen) [expr {[string length $plain] - $lastNewLine}]
-            }
-            set plain [join [split $plain \n] \n[string repeat {    } $output(blockquote)]]
-            #ns_log notice "plain\n$plain"
-            #ns_log notice "blockquote $output(blockquote) linelen $output(linelen) maxlen $output(maxlen)"
-            append output(text) $plain
         }
     }
 
@@ -1845,7 +1752,7 @@ ad_proc ad_parse_html_attributes_upvar {
 
         <p>
 
-        This proc is more suitable for pretty-printing that its
+        This proc is more suitable for pretty-printing that it's
         sister-proc, <a href="/api-doc/proc-view?proc=util_expand_entities_ie_style"><code>util_expand_entities_ie_style</code></a>.
         The two differences are that this one is more strict: it requires
         proper entities i.e., both opening ampersand and closing semicolon,
@@ -1879,7 +1786,7 @@ ad_proc ad_parse_html_attributes_upvar {
 
         <p>
 
-        Unlike its sister proc, <a href="/api-doc/proc-view?proc=util_expand_entities"><code>util_expand_entities</code></a>,
+        Unlike it's sister proc, <a href="/api-doc/proc-view?proc=util_expand_entities"><code>util_expand_entities</code></a>,
         it also expands numeric entities (#999 or #xff style).
 
         @author Lars Pind (lars@pinds.com)
@@ -1943,85 +1850,52 @@ return $html
 #
 ####################
 
-if {[info commands ns_reflow_text] eq ""} {
-    #
-    # Define compatibility function for those implementations, that do
-    # not have the built-in version of NaviServer
-    #
-    ad_proc ns_reflow_text {{-width 80} {-prefix ""} {-offset 0} input} {
 
-        Reflow a plain text to the given width and prefix every line
-        optionally wiith the provided string. If offset is used, the
-        function can be used when e.g. appending the result to some
-        constant prefix or when the reflow happens incrementally.
-
-    } {
-
-        if {$offset > 0} {
-            set input [string repeat X $offset]$input
-        }
-
-        set result_rows [list]
-        set start_of_line_index 0
-        while 1 {
-            set this_line [string range $input $start_of_line_index [expr {$start_of_line_index + $width - 1}]]
-            if { $this_line eq "" } {
-                set result [join $result_rows "\n"]
-                break
-            }
-            set first_new_line_pos [string first "\n" $this_line]
-            if { $first_new_line_pos != -1 } {
-                # there is a newline
-                lappend result_rows [string range $input $start_of_line_index \
-                                         [expr {$start_of_line_index + $first_new_line_pos - 1}]]
-                set start_of_line_index [expr {$start_of_line_index + $first_new_line_pos + 1}]
-                continue
-            }
-            if { $start_of_line_index + $width + 1 >= [string length $input] } {
-                # we're on the last line and it is < width so just return it
-                lappend result_rows $this_line
-                break
-            }
-            set last_space_pos [string last " " $this_line]
-            if { $last_space_pos == -1 } {
-                # no space found!  Try the first space in the whole rest of the string
-                set next_space_pos [string first " " [string range $input $start_of_line_index end]]
-                set next_newline_pos [string first "\n" [string range $input $start_of_line_index end]]
-                if {$next_space_pos == -1} {
-                    set last_space_pos $next_newline_pos
-                } elseif {$next_space_pos < $next_newline_pos} {
-                    set last_space_pos $next_space_pos
-                } else {
-                    set last_space_pos $next_newline_pos
-                }
-                if { $last_space_pos == -1 } {
-                    # didn't find any more whitespace, append the whole thing as a line
-                    lappend result_rows [string range $input $start_of_line_index end]
-                    break
-                }
-            }
-            # OK, we have a last space pos of some sort
-            set real_index_of_space [expr {$start_of_line_index + $last_space_pos}]
-            lappend result_rows [string range $input $start_of_line_index $real_index_of_space-1]
-            set start_of_line_index [expr {$start_of_line_index + $last_space_pos + 1}]
-        }
-
-        set result [join $result_rows "\n$prefix"]
-        if {$offset > 0} {
-            set result [string range $result $offset end]
-        }
-
-        return $prefix$result
-    }
-}
-
-
-ad_proc -deprecated wrap_string {input {width 80}} {
+ad_proc wrap_string {input {threshold 80}} {
     wraps a string to be no wider than 80 columns by inserting line breaks
-
-    @see ns_reflow_text
 } {
-    return [ns_reflow_text -width $width -prefix "" $input]
+    set result_rows [list]
+    set start_of_line_index 0
+    while 1 {
+        set this_line [string range $input $start_of_line_index [expr {$start_of_line_index + $threshold - 1}]]
+        if { $this_line eq "" } {
+            return [join $result_rows "\n"]
+        }
+        set first_new_line_pos [string first "\n" $this_line]
+        if { $first_new_line_pos != -1 } {
+            # there is a newline
+            lappend result_rows [string range $input $start_of_line_index [expr {$start_of_line_index + $first_new_line_pos - 1}]]
+            set start_of_line_index [expr {$start_of_line_index + $first_new_line_pos + 1}]
+            continue
+        }
+        if { $start_of_line_index + $threshold + 1 >= [string length $input] } {
+            # we're on the last line and it is < threshold so just return it
+            lappend result_rows $this_line
+            return [join $result_rows "\n"]
+        }
+        set last_space_pos [string last " " $this_line]
+        if { $last_space_pos == -1 } {
+            # no space found!  Try the first space in the whole rest of the string
+            set next_space_pos [string first " " [string range $input $start_of_line_index end]]
+            set next_newline_pos [string first "\n" [string range $input $start_of_line_index end]]
+            if {$next_space_pos == -1} {
+                set last_space_pos $next_newline_pos
+            } elseif {$next_space_pos < $next_newline_pos} {
+                set last_space_pos $next_space_pos
+            } else {
+                set last_space_pos $next_newline_pos
+            }
+            if { $last_space_pos == -1 } {
+                # didn't find any more whitespace, append the whole thing as a line
+                lappend result_rows [string range $input $start_of_line_index end]
+                return [join $result_rows "\n"]
+            }
+        }
+        # OK, we have a last space pos of some sort
+        set real_index_of_space [expr {$start_of_line_index + $last_space_pos}]
+        lappend result_rows [string range $input $start_of_line_index $real_index_of_space-1]
+        set start_of_line_index [expr {$start_of_line_index + $last_space_pos + 1}]
+    }
 }
 
 
@@ -2033,13 +1907,13 @@ ad_proc -deprecated wrap_string {input {width 80}} {
 #
 ####################
 
-ad_proc -public ad_html_text_convertible_p {
+ad_proc -public ad_html_text_convertable_p {
     -from
     -to
 } {
     Returns true of ad_html_text_convert can handle the given from and to mime types.
 } {
-    set valid_froms { text/enhanced text/markdown text/plain text/fixed-width text/html text/xml }
+    set valid_froms { text/enhanced text/plain text/fixed-width text/html text/xml }
     set valid_tos { text/plain text/html }
     # Validate procedure input
     set from [ad_decode $from html text/html text text/plain plain text/plain pre text/plain $from]
@@ -2089,7 +1963,6 @@ ad_proc -public ad_html_text_convert {
     <ul>
     <li>text/plain</li>
     <li>text/enhanced</li>
-    <li>text/markdown</li>
     <li>text/fixed-width</li>
     <li>text/html</li>
     </ul>
@@ -2114,7 +1987,7 @@ ad_proc -public ad_html_text_convert {
     @creation-date 19 July 2000
 } {
     # DRB: Modified this to accept mime types (text/plain or
-    # text/html).  Simplifies things when providing confirmation pages
+    # text/html).  Simplies things when providing confirmation pages
     # for input destined for the content repository ...
 
     if { $text eq "" } {
@@ -2125,14 +1998,14 @@ ad_proc -public ad_html_text_convert {
     set from [ad_decode $from html text/html text text/plain plain text/plain pre text/plain $from]
     set to   [ad_decode $to   html text/html text text/plain plain text/plain pre text/plain $to]
 
-    if { ![ad_html_text_convertible_p -from $from -to $to] } {
+    if { ![ad_html_text_convertable_p -from $from -to $to] } {
         error "Illegal mime types for conversion - from: $from to: $to"
     }
 
     # Do the conversion
-    switch -- $from {
+    switch $from {
         text/enhanced {
-            switch -- $to {
+            switch $to {
                 text/html {
                     set text [ad_enhanced_text_to_html $text]
                 }
@@ -2141,81 +2014,28 @@ ad_proc -public ad_html_text_convert {
                 }
             }
         }
-        text/markdown {
-            package require Markdown
-            switch -- $to {
-                text/html {
-                    regsub -all \r\n $text \n text
-                    #
-                    # Try syntax highlighting just when target is text/html
-                    #
-                    if {[info commands ::Markdown::register] ne ""} {
-                        #
-                        # We can register a converter
-                        #
-                        ::Markdown::register tcl ::apidoc::tclcode_to_html
-                    }
-
-                    set text [Markdown::convert $text]
-
-                    if {[info commands ::Markdown::get_lang_counter] ne ""} {
-
-                        set d [::Markdown::get_lang_counter]
-                        if {$d ne ""} {
-                            template::head::add_style -style $::apidoc::style
-
-                            if {0} {
-                                template::head::add_css \
-                                    -href //cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css
-                                template::head::add_javascript \
-                                    -src "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"
-                                security::csp::require script-src cdnjs.cloudflare.com
-                                security::csp::require style-src cdnjs.cloudflare.com
-
-                                template::add_body_script -script "hljs.initHighlightingOnLoad();"
-                                #
-                                # In case we have Tcl, load the extra lang
-                                # support which is not included in the
-                                # default package.
-                                #
-                                if {[dict get $d tcl]} {
-                                    template::head::add_javascript \
-                                        -src "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/tcl.min.js"
-                                }
-                            }
-                            ::Markdown::reset_lang_counter
-                        }
-                    }
-                }
-                text/plain {
-                    regsub -all \r\n $text \n text
-                    set htmlText [Markdown::convert $text]
-                    set text [ad_html_to_text -maxlen $maxlen -- $htmlText]
-                }
-            }
-        }
         text/plain {
-            switch -- $to {
+            switch $to {
                 text/html {
                     set text [ad_text_to_html -- $text]
                 }
                 text/plain {
-                    set text [ns_reflow_text -width $maxlen -- $text]
+                    set text [wrap_string $text $maxlen]
                 }
             }
         }
         text/fixed-width {
-            switch -- $to {
+            switch $to {
                 text/html {
                     set text "<pre>[ad_text_to_html -no_lines -- $text]</pre>"
                 }
                 text/plain {
-                    set text [ns_reflow_text -width $maxlen -- $text]
+                    set text [wrap_string $text $maxlen]
                 }
             }
         }
         text/html {
-            switch -- $to {
+            switch $to {
                 text/html {
                     # Handled below
                 }
@@ -2225,19 +2045,19 @@ ad_proc -public ad_html_text_convert {
             }
         }
         text/xml {
-            switch -- $to {
+            switch $to {
                 text/html {
                     set text "<pre>[ad_text_to_html -no_lines -- $text]</pre>"
                 }
                 text/plain {
-                    set text [ns_reflow_text -width $maxlen -- $text]
+                    set text [wrap_string $text $maxlen]
                 }
             }
         }
     }
 
     # Handle closing of HTML tags, truncation
-    switch -- $to {
+    switch $to {
         text/html {
             set text [util_close_html_tags $text $truncate_len $truncate_len $ellipsis $more]
         }
@@ -2352,30 +2172,31 @@ ad_proc -public string_truncate {
     {-len 200}
     {-ellipsis "..."}
     {-more ""}
-    {-equal:boolean}
     string
 } {
-    Truncates a string to len characters adding the string provided in
-    the ellipsis parameter if the string was truncated.
+    Truncates a string to len characters (defaults to the
+                                          parameter TruncateDescriptionLength), adding the string provided in the ellipsis parameter if the
+    string was truncated. If format is html (default), any open
+    HTML tags are closed. Otherwise, it's converted to text using
+    ad_html_to_text.
 
-    The length of the resulting string, including the ellipsis, is
-    guaranteed to be shorter or equal than the len specified.
+    The length of the resulting string, including the ellipsis, is guaranteed to be within the len specified.
 
     Should always be called as string_truncate [-flags ...] -- string
-    since otherwise strings which start with a - will treated as
-    switches, and will cause an error.
+    since otherwise strings which start with a - will treated as switches, and will cause an error.
 
     @param len       The length to truncate to. If zero, no truncation will occur.
 
     @param ellipsis  This will get put at the end of the truncated string, if the string was truncated.
-                     However, this counts towards the total string length, so that the returned string
-                     including ellipsis is guaranteed to be shorter or equal than the 'len' provided.
+    However, this counts towards the total string length, so that the returned string
+    including ellipsis is guaranteed to be shorter than the 'len' provided.
 
     @param more      This will get put at the end of the truncated string, if the string was truncated.
 
     @param string    The string to truncate.
 
-    @return The truncated string
+    @return The truncated string, with HTML tags cloosed or
+    converted to text, depending on format.
 
     @author Lars Pind (lars@pinds.com)
     @creation-date September 8, 2002
@@ -2384,68 +2205,111 @@ ad_proc -public string_truncate {
         set end_index [expr {$len-[string length $ellipsis]-1}]
 
         # Back up to the nearest whitespace
-        if {[regexp -indices {\s\S*$} [string range $string 0 [expr {$end_index+1}]] match]} {
-            set last_space [lindex $match 0]
-        } else {
-            set last_space -1
+        if { ![string is space [string index $string $end_index+1]] } {
+            while { $end_index >= 0 && ![string is space [string index $string $end_index]] } {
+                incr end_index -1
+            }
         }
+
         # If that leaves us with an empty string, then ignore
         # whitespace and just truncate mid-word
-        set end_index [expr {$last_space > 0 ? $last_space : $end_index}]
+        if { $end_index == -1 } {
+            set end_index [expr {$len - [string length $ellipsis] - 1}]
+        }
 
         # Chop off extra whitespace at the end
-        set string [string trimright [string range $string 0 $end_index]]${ellipsis}${more}
+        set string [string trimright [string range $string 0 $end_index]]
+
+        append string $ellipsis $more
     }
 
     return $string
 }
 
-ad_proc -public ad_pad {
-    -left:boolean
-    -right:boolean
-    string
-    length
-    padstring
+
+
+####################
+#
+# Legacy stuff
+#
+####################
+
+
+ad_proc -deprecated util_striphtml {html} {
+    Deprecated. Use ad_html_to_text instead.
+
+    @see ad_html_to_text
 } {
-    Tcl implementation of the pad string function found in many DBMSs.
-    
-    One of the directional flags -left or -right must be specified and
-    will dictate whether this will be a lpad or a rpad.
+    return [ad_html_to_text -- $html]
+}
 
-    @param left text will be appended left of the original string.
-    @param right text will be appended right of the original string.
 
-    @arg string String to be padded.
+ad_proc -deprecated util_convert_plaintext_to_html { raw_string } {
 
-    @arg length length this string will be after padding. If string
-                this long or longer, will be truncated. The provided
-                value must be an integer > 0.
+    Almost everything this proc does can be accomplished with the <a
+    href="/api-doc/proc-view?proc=ad_text_to_html"><code>ad_text_to_html</code></a>.
+    Use that proc instead.
 
-    @arg padstring string that will be repeated until length of
-                   supplied string is equal or greather than length.
+    <p>
 
-    @return padded string
+    Only difference is that ad_text_to_html doesn't check
+    to see if the plaintext might in fact be HTML already by
+    mistake. But we usually don't want that anyway,
+    because maybe the user wanted a &lt;p&gt; tag in his
+    plaintext. We'd rather let the user change our
+    opinion about the text, e.g. html_p = 't'.
+
+    @see ad_text_to_html
 } {
-    if {!($left_p ^ $right_p)} {
-        error "Please specify single flag -left or -right"
-    }
-    if {$length < 1 || ![string is integer -strict $length]} {
-        error "length ($length) must be an integer > 0"
-    }
-
-    set slength [string length $string]
-    set padlength [string length $padstring]
-    set repetitions [expr {int(($length - $slength) / $padlength) + 1}]
-    set appended [string repeat $padstring $repetitions]
-    incr length -1
-    
-    if {$left_p} {
-        set string [string range $appended$string end-$length end]
+    if { [regexp -nocase {<p>} $raw_string] || [regexp -nocase {<br>} $raw_string] } {
+        # user was already trying to do this as HTML
+        return $raw_string
     } else {
-        set string [string range $string$appended 0 $length]
+        return [ad_text_to_html -no_links -- $raw_string]
     }
+}
 
-    return $string
+ad_proc -deprecated util_maybe_convert_to_html {raw_string html_p} {
+
+    This proc is deprecated. Use <a
+    href="/api-doc/proc-view?proc=ad_convert_to_html"><code>ad_convert_to_html</code></a>
+    instead.
+
+    @see ad_convert_to_html
+
+}  {
+    if { $html_p == "t" } {
+        return $raw_string
+    } else {
+        return [ad_text_to_html $raw_string]
+    }
+}
+
+ad_proc -deprecated -warn util_quotehtml { arg } {
+    This proc does exactly the same as <a href="/api-doc/proc-view?proc=ad_quotehtml"><code>ad_quotehtml</code></a>.
+    Use that instead. This one will be deleted eventually.
+
+    @see ad_quotehtml
+} {
+    return [ns_quotehtml $arg]
+}
+
+ad_proc -deprecated util_quote_double_quotes {arg} {
+    This proc does exactly the same as <a href="/api-doc/proc-view?proc=ad_quotehtml"><code>ad_quotehtml</code></a>.
+    Use that instead. This one will be deleted eventually.
+
+    @see ad_quotehtml
+} {
+    return [ns_quotehtml $arg]
+}
+
+ad_proc -deprecated philg_quote_double_quotes {arg} {
+    This proc does exactly the same as <a href="/api-doc/proc-view?proc=ad_quotehtml"><code>ad_quotehtml</code></a>.
+    Use that instead. This one will be deleted eventually.
+
+    @see ad_quotehtml
+} {
+    return [ns_quotehtml $arg]
 }
 
 # Local variables:

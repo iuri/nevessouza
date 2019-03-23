@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Rob Denison (rob@thaum.net)
     @creation-date 2003-12-08
-    @cvs-id $Id: messages-table.tcl,v 1.6 2018/04/07 19:07:31 gustafn Exp $
+    @cvs-id $Id: messages-table.tcl,v 1.4.2.1 2015/09/12 11:06:24 gustafn Exp $
 
 }
 
@@ -28,7 +28,7 @@ template::list::create -name results -multirow messages -no_data "#forums.No_Mes
     }
 }
 
-if {[info exists alt_template] && $alt_template ne ""} {
+if {([info exists alt_template] && $alt_template ne "")} {
   ad_return_template $alt_template
 }
 

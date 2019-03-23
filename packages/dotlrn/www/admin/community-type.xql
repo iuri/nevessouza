@@ -3,16 +3,10 @@
 <!-- packages/dotlrn/www/admin/community-type.xql -->
 <!-- @author Roel Canicula (roelmc@aristoi.biz) -->
 <!-- @creation-date 2004-06-26 -->
-<!-- @cvs-id $Id: community-type.xql,v 1.3 2018/08/15 17:02:02 gustafn Exp $ -->
+<!-- @arch-tag: d8764f8e-748c-466d-8abf-07d58d03327d -->
+<!-- @cvs-id $Id: community-type.xql,v 1.1 2004/07/28 07:24:12 roelc Exp $ -->
 
 <queryset>
-
-  <fullquery name="community_type_exists">
-    <querytext>
-      select 1 from dotlrn_community_types
-      where community_type = :community_type
-    </querytext>
-  </fullquery>
 
   <fullquery name="get_community_type">
     <querytext>

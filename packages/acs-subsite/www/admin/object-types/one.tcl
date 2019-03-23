@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author Yonantan Feldman (yon@arsdigita.com)
     @creation-date August 13, 2000
-    @cvs-id $Id: one.tcl,v 1.13 2018/04/07 19:30:45 gustafn Exp $
+    @cvs-id $Id: one.tcl,v 1.11.2.1 2015/09/10 08:21:43 gustafn Exp $
 
 } {
     object_type:notnull
@@ -20,7 +20,7 @@ if { ![db_0or1row object_type {}] } {
 set page_title "Details for type $pretty_name"
 set context [list [list index "Object Type Index"] "Details for type $pretty_name"]
 
-set page [acs_object_type_hierarchy -object_type $object_type]
+set page "[acs_object_type_hierarchy -object_type $object_type]"
 
 append page [subst {
 <p>
@@ -96,7 +96,7 @@ $body
 "
     }
 
-if { $table_name ne "" } {
+if { ([info exists table_name] && $table_name ne "") } {
 
     set body [db_string table_comment {} -default ""]
 

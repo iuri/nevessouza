@@ -8,13 +8,13 @@
     <singleton-p>t</singleton-p>
     
     <version name="2.6.0" url="http://openacs.org/repository/download/apm/chat-portlet-2.6.0.apm">
-        <owner url="http://openacs.org">OpenACS</owner>
+        <owner url="http://opeancs.org">OpenACS</owner>
         <release-date>2017-08-06</release-date>
         <vendor url="http://openacs.org">OpenACS</vendor>
 
         <provides url="chat-portlet" version="2.6.0"/>
-        <requires url="dotlrn" version="2.10.0d0"/>
-        <requires url="new-portal" version="2.10.0d0"/>
+        <requires url="dotlrn" version="2.9.1"/>
+        <requires url="new-portal" version="2.9.1"/>
         <requires url="chat" version="5.0"/>
 
     </version>

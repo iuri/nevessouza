@@ -20,7 +20,7 @@ ad_page_contract {
     @creation-date 2002-02-10
     @param source_community_id The community_id for the source community.  The members of the source community will be added to the target community the user selects.
     @param referer The url for the administration page of the source community.
-    @cvs-id $Id: community-members-add-to-community.tcl,v 1.9 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: community-members-add-to-community.tcl,v 1.6.4.2 2017/04/21 20:45:16 gustafn Exp $
 } -query {
     source_community_id:integer
     referer 
@@ -94,12 +94,12 @@ if {[form is_valid select_community]} {
                             if {[dotlrn_community::member_p $community_id $user_id]} {
                                 # assume this was a double click
                                 ad_returnredirect $referer
+                                ad_script_abort
                             } else {
                                 ns_log Error "community-members-add-to_community.tcl failed: $errmsg"
-                                #ReturnHeaders
+                                ReturnHeaders
                                 ad_return_error "[_ dotlrn.lt_Error_adding_user_to_]"  "[_ dotlrn.lt_An_error_occurred_whil]"
                             }
-                            ad_script_abort
                         }
                     } else {
                         # they are already there and awaiting approval, so just approve them.

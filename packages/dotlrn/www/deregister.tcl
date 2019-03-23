@@ -20,7 +20,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-10-06
-    @cvs-id $Id: deregister.tcl,v 1.14 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: deregister.tcl,v 1.10.4.3 2017/04/21 20:45:16 gustafn Exp $
 } -query {
     {user_id:multiple,integer ""}
     {community_id:integer ""}
@@ -34,7 +34,7 @@ ad_page_contract {
 # The parameter "user_id" was kept so that other entry points (both current
 # and those that might occur in the future from OpenACS and other changes)
 # wouldn't break.  This does have the unfortunate consequence that the name
-# user_id is not intuitive when it is a list of many user_ids. (teadams@alum.mit.edu)
+# user_id is not intuative when it is a list of many user_ids. (teadams@alum.mit.edu)
 
 auth::require_login
 
@@ -72,7 +72,7 @@ foreach member_id $user_id {
 }
 
 ad_returnredirect $referer
-ad_script_abort
+
 
 # Local variables:
 #    mode: tcl

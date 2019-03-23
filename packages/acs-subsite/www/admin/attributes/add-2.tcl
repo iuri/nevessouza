@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Tue Nov  7 12:14:42 2000
-    @cvs-id $Id: add-2.tcl,v 1.8 2018/01/19 14:09:48 gustafn Exp $
+    @cvs-id $Id: add-2.tcl,v 1.6.2.3 2016/05/20 20:02:44 gustafn Exp $
 
 } {
     object_type:notnull,trim
@@ -63,7 +63,6 @@ if {$datatype eq "enumeration"} {
 } else {
     ad_returnredirect $return_url
 }
-ad_script_abort
 
 
 # Local variables:

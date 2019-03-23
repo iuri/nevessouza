@@ -3,7 +3,7 @@ ad_page_contract {
     Lets user select a category to map a subtree.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: tree-map.tcl,v 1.12 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     tree_id:naturalnum,notnull
     {locale ""}

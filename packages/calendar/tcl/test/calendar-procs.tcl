@@ -3,7 +3,7 @@ ad_library {
 
     @author Simon Carstensen
     @creation-date 15 November 2003
-    @cvs-id $Id: calendar-procs.tcl,v 1.3 2017/08/07 23:48:05 gustafn Exp $
+    @cvs-id $Id: calendar-procs.tcl,v 1.2.18.1 2015/09/10 08:30:14 gustafn Exp $
 }
 
 

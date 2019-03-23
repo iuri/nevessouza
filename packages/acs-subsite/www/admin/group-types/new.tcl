@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author rhs@mit.edu
     @creation-date 2000-12-04
-    @cvs-id $Id: new.tcl,v 1.7 2018/01/19 14:09:48 gustafn Exp $
+    @cvs-id $Id: new.tcl,v 1.5.6.3 2016/01/02 12:42:04 gustafn Exp $
 } {
     { object_type:trim "" }
     { pretty_name:trim "" }
@@ -91,7 +91,7 @@ if { [template::form is_valid group_type] } {
         group_type::new -group_type $object_type -supertype $supertype $pretty_name $pretty_plural
     }
     ad_returnredirect ""
-    ad_script_abort
+    return 
 }
 
 ad_return_template

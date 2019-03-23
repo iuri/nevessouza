@@ -13,7 +13,7 @@ determine whether the user is allowed to take the
 assessment.</span><ul>
 <li><span class="context">Is the user allowed to take the survey at
 all (acs_permission check)</span></li><li><span class="context">Are all conditions for the taking of the
-assessment fulfilled</span></li><li><span class="context">Is there still a try for the user
+assessment fullfilled</span></li><li><span class="context">Is there still a try for the user
 left</span></li>
 </ul>
 </li><li><span class="context">Starttime of the response will be
@@ -24,7 +24,7 @@ user for anwering.</span></li>
 assessment will vary:</span>
 <ul>
 <li><span class="context">If all answers have to be submited
-separately, a submit button will be shown next to each answer. If
+seperatly, a submit button will be shown next to each answer. If
 the user hits the submit button next to the question the answer
 will be stored in the response.</span></li><li><span class="context">Else the normal section view will be
 displayed with a submit button at the end of the
@@ -43,7 +43,7 @@ question).</span></li><li><span class="context">Display a finish test button at 
 of the page to "hand the test to the TA" if this is
 allowed</span></li><li><span class="context">Allow for chancellation of the test with
 a chancel button. The result will not be stored but the test will
-be marked as taken.</span></li><li><span class="context">If immediate answer validation (a.k.a..
+be marked as taken.</span></li><li><span class="context">If immediate answer validation (aka.
 ad_form check) for a question is true, check the answer if it is
 valid, otherwise notify the user that it is not and do not store
 the result.</span></li>
@@ -68,8 +68,8 @@ file upload with an "I certify this test and state it is
 mine" checkbox. This will be stored in addition to the
 test.</span></li><li><span class="context">Notifications shall be send to the admin,
 staff and respondee.</span></li><li><span class="context">If we shall display the results to the
-respondee immediately after finishing the assessment, show it to
-him / her. Display the comments along depending on the
+respondee immediatly after finishing the assessment, show it to him
+/ her. Display the comments along depending on the
 settings.</span></li><li><span class="context">If we have a special score, show this
 result to the user (e.g. if 90% means "you are a dream
 husband", display this along with the 90%).</span></li><li><span class="context">Display a link with the possibility to
@@ -80,7 +80,7 @@ response.</span></li>
 various modes which he can select before the first section will be
 displayed.</span>
 <ul>
-<li><span class="context">Normal mode: The administrator is treated
+<li><span class="context">Normal mode: The adminsitrator is treated
 as a normal respondee, the response will be stored in the
 system.</span></li><li><span class="context">Test mode: The administrator sees the
 survey as a normal respondee, the response will not be stored in

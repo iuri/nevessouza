@@ -3,7 +3,7 @@
 --
 -- @author ddao@arsdigita.com
 -- @creation-date November 09, 2000
--- @cvs-id $Id: chat-create.sql,v 1.10 2018/07/12 12:43:09 antoniop Exp $
+-- @cvs-id $Id: chat-create.sql,v 1.8.2.6 2017/04/21 20:21:49 gustafn Exp $
 --
 
 
@@ -76,8 +76,8 @@ AS 'declare
           ''Chat Room'',  -- pretty_name
           ''Chat Rooms'', -- pretty_plural
           ''acs_object'', -- supertype
-          ''chat_rooms'', -- table_name
-          ''room_id'',    -- id_column
+          ''CHAT_ROOMS'', -- table_name
+          ''ROOM_ID'',    -- id_column
           null,           -- package_name
           ''f'',          -- abstract_p
           null,           -- type_extension_table
@@ -229,8 +229,8 @@ AS 'declare
           ''Chat Transcript'',  -- pretty_name
           ''Chat Transcripts'', -- pretty_plural
           ''acs_object'',       -- supertype
-          ''chat_transcripts'', -- table_name
-          ''transcript_id'',    -- id_column
+          ''CHAT_TRANSCRIPTS'', -- table_name
+          ''TRANSCRIPT_ID'',    -- id_column
           null,           -- package_name
           ''f'',          -- abstract_p
           null,           -- type_extension_table

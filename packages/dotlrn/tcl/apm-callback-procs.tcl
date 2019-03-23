@@ -8,7 +8,7 @@ ad_library {
 
      @creation-date July 2004
      @author  Hector Amado (hr_amado@galileo.edu)
-     @cvs-id $Id: apm-callback-procs.tcl,v 1.19 2018/07/10 16:08:28 antoniop Exp $
+     @cvs-id $Id: apm-callback-procs.tcl,v 1.13.2.2 2015/09/11 11:40:39 gustafn Exp $
 
 }
 
@@ -17,7 +17,7 @@ namespace eval dotlrn::apm {}
 
 ad_proc -private dotlrn::apm::after_install {
 } {
-    Create the new group, dotlrn-admin.
+  Create the new group, dotlrn-admin
 } {
 
     # Create a new group, dotlrn-admin
@@ -50,7 +50,7 @@ ad_proc -private dotlrn::apm::after_install {
 ad_proc -private dotlrn::apm::after_instantiate {
      -package_id:required
 } {
-    Grant permission, dotlrn-admin.
+      grant permission, dotlrn-admin
 } {
 
        set group_id [db_string group_id_from_name "
@@ -92,7 +92,7 @@ ad_proc -private dotlrn::apm::after_instantiate {
 
 ad_proc -private dotlrn::apm::before_uninstall {
 } {
-    Drop the group, dotlrn-admin.
+  Drop the group, dotlrn-admin
 } {
 
       set group_id [db_string group_id_from_name "
@@ -116,8 +116,6 @@ ad_proc -private dotlrn::apm::before_uninstall {
 ad_proc -public dotlrn::apm::after_upgrade {
     {-from_version_name:required}
     {-to_version_name:required}
-} {
-    after-upgrade callback.
 } {
      apm_upgrade_logic \
         -from_version_name $from_version_name \
@@ -191,7 +189,7 @@ ad_proc -public dotlrn::apm::after_upgrade {
                     -parameter "DefaultMaster" \
                     -value "/packages/dotlrn/www/dotlrn-master-custom"
                
-               # This fixes parameter resetting from dotlrn
+               # This fixes parameter reseting from dotlrn
                set community_level_p_param_id [db_string select_clevel_id { 
                                                   select parameter_id
                                                   from apm_parameters 
@@ -294,15 +292,6 @@ ad_proc -public dotlrn::apm::after_upgrade {
         2.5.0d3 2.5.0d4 {
             db_dml insert_group_rels {}
         }
-        2.10.0d1 2.10.0d2 {
-            set attribute_id [db_string get_attribute {
-                select attribute_id from acs_attributes
-                where object_type = 'dotlrn_member_rel'
-                and attribute_name = 'portal_id'} -default ""]
-            if {$attribute_id ne ""} {
-                attribute::delete $attribute_id
-            }
-        }            
     }
 }
 

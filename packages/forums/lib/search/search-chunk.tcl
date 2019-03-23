@@ -2,10 +2,9 @@ ad_page_contract {
 
     @author yon@openforce.net
     @creation-date 2002-07-01
-    @cvs-id $Id: search-chunk.tcl,v 1.14 2018/06/26 10:39:02 antoniop Exp $
+    @cvs-id $Id: search-chunk.tcl,v 1.9.2.9 2016/05/24 20:45:00 gustafn Exp $
 
 }
-
 set package_id [ad_conn package_id]
 set useScreenNameP [parameter::get -parameter "UseScreenNameP" -default 0]
 
@@ -34,29 +33,35 @@ if {$searchbox_p} {
             ad_script_abort
         }
 
-        if {$forum_id ne "" && ![string is integer -strict $forum_id]} {
-            ns_log warning "forum_id <$forum_id> is not an integer: probably a security check or an attempted injection"
-            set name forum_id
-            ad_page_contract_handle_datasource_error [_ acs-tcl.lt_name_is_not_an_intege]
-            ad_script_abort
+        set query search_all_forums
+        if {$forum_id ne ""} {
+            set query search_one_forum
+	    if {![string is integer -strict $forum_id]} {
+		ns_log warning "forum_id <$forum_id> is not an integer: probably a security check or an attempted injection"
+		set name forum_id
+                ad_page_contract_handle_datasource_error [_ acs-tcl.lt_name_is_not_an_intege]
+                ad_script_abort
+	    }
         }
-
-        set query "search_all_forums"
+        
         if { [parameter::get -parameter UseIntermediaForSearchP -default 0] } {
             append query "_intermedia"
         }
 
         set search_pattern "%${search_text}%"
-        db_multirow -extend { author posting_date_pretty } messages $query {} {
+        db_multirow -extend { author posting_date_pretty} messages $query {} {
             set posting_date_pretty [lc_time_fmt $posting_date_ansi "%x %X"]
-            set author [acs_user::get_element -user_id $user_id \
-                            -element [expr {$useScreenNameP ? "screen_name" : "name"}]]
+            if { $useScreenNameP } {
+                set author [db_string select_screen_name {select screen_name from users where user_id = :user_id}]
+            } else {
+                set author $user_name
+            }
         }
     } else {
         set messages:rowcount 0
     }
 
-    if {[info exists alt_template] && $alt_template ne ""} {
+    if {([info exists alt_template] && $alt_template ne "")} {
         ad_return_template $alt_template
     }
 }

@@ -5,7 +5,7 @@ ad_library {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date April 2002
-    @cvs-id $Id: site-node-object-map-procs.tcl,v 1.5 2017/08/07 23:48:00 gustafn Exp $
+    @cvs-id $Id: site-node-object-map-procs.tcl,v 1.4.12.1 2015/09/10 08:21:59 gustafn Exp $
 }
 
 namespace eval site_node_object_map {}

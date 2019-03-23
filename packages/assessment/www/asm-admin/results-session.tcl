@@ -3,8 +3,8 @@ ad_page_contract {
     Show the result of a session and provide links to edit the points.
 
     @author timo@timohentschel.de
-    @creation-date   2005-02-16
-    @cvs-id $Id: results-session.tcl,v 1.11 2018/06/29 17:27:18 hectorr Exp $ 
+    @date   2005-02-16
+    @cvs-id $Id: 
 } {
     session_id:naturalnum,notnull
 } -properties {

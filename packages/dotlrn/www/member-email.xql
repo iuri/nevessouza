@@ -3,7 +3,8 @@
 <!-- packages/dotlrn/www/member-email.xql -->
 <!-- @author Roel Canicula (roelmc@pldtdsl.net) -->
 <!-- @creation-date 2005-07-22 -->
-<!-- @cvs-id $Id: member-email.xql,v 1.3 2018/08/15 17:02:02 gustafn Exp $ -->
+<!-- @arch-tag: 168aeaa5-a52c-450f-9dbe-e436b14a91a7 -->
+<!-- @cvs-id $Id: member-email.xql,v 1.2 2006/08/08 21:26:24 donb Exp $ -->
 
 <queryset>
   <fullquery name="member_email">

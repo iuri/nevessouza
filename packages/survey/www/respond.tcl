@@ -7,7 +7,7 @@ ad_page_contract {
     @author philg@mit.edu
     @author nstrug@arsdigita.com
     @date   28th September 2000
-    @cvs-id $Id: respond.tcl,v 1.13 2018/04/26 08:56:38 hectorr Exp $
+    @cvs-id $Id: respond.tcl,v 1.10.2.1 2016/05/21 11:04:16 gustafn Exp $
 
 } {
     
@@ -36,7 +36,7 @@ ad_page_contract {
     set display_type $survey_info(display_type)
 
    if {$description_html_p != "t"} {
-       set description [ad_text_to_html -- $description]
+       set description [ad_text_to_html $description]
    } 
 
    if {($single_response_p=="t" && $editable_p=="f" && $number_of_responses>0) || ($single_response_p=="t" && $editable_p=="t" && $number_of_responses>0 && $response_id==0)} {
@@ -71,7 +71,7 @@ if {$editable_p == "t"} {
 set rownum 0
 # for double-click protection
 set new_response_id [db_nextval acs_object_id_seq]    
-set questions {}
+set questions [list]
 
 db_foreach survey_sections {} {
 

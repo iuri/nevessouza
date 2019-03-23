@@ -3,16 +3,15 @@ ad_page_contract {
 
 
     @author Peter Marklund
-    @cvs-id $Id: package-watch.tcl,v 1.5 2018/02/02 00:04:50 gustafn Exp $
+    @cvs-id $Id: package-watch.tcl,v 1.2.24.3 2016/05/20 19:52:59 gustafn Exp $
 } {
-    package_key:token
+    package_key
     {return_url:localurl "index"}
 } 
 
 apm_watch_all_files $package_key
 
 ad_returnredirect $return_url
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

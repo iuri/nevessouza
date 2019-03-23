@@ -7,7 +7,7 @@ ad_library {
     @author Roel Canicula (roel@solutiongrove.com)
     @creation-date 2006-02-23
     @arch-tag: 2cbd4146-c8f6-4ee7-946c-0c5d05378622
-    @cvs-id $Id: dotlrn-homework-procs.tcl,v 1.4 2018/07/09 15:53:19 antoniop Exp $
+    @cvs-id $Id: dotlrn-homework-procs.tcl,v 1.2.10.1 2015/09/11 11:40:57 gustafn Exp $
 }
 
 aa_register_case -cats { api } \
@@ -26,13 +26,6 @@ aa_register_case -cats { api } \
 			set params([lindex $param 0]) [lindex $param 1]
 		    }
 
-                    # portal element parameters might report a
-                    # package_id of 0... this would make much things
-                    # fail afterwards
-                    if {[apm_package_key_from_id $params(package_id)] eq ""} {
-                        aa_log "Element $element_id not associated with a valid package -> \$params(package_id) = $params(package_id). Skipping this test."
-                        continue
-                    }
 
 		    set test_package_id [ad_conn package_id]
 		    set package_id [site_node::closest_ancestor_package -url [site_node::get_url_from_object_id -object_id $params(package_id)] -package_key dotlrn]

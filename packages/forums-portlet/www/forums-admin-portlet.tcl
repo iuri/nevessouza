@@ -16,11 +16,11 @@
 
 ad_page_contract {
     The display logic for the forums admin portlet
-
+    
     @author Ben Adida (ben@openforce)
-    @cvs-id $Id: forums-admin-portlet.tcl,v 1.8 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: forums-admin-portlet.tcl,v 1.6.20.1 2015/09/12 11:06:32 gustafn Exp $
 } -properties {
-
+    
 }
 
 array set config $cf	

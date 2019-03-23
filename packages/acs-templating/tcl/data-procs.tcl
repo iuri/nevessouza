@@ -3,7 +3,7 @@ ad_library {
 
     @author Karl Goldstein    (karlg@arsdigita.com)
     
-    @cvs-id $Id: data-procs.tcl,v 1.23 2018/04/07 19:37:20 gustafn Exp $    
+    @cvs-id $Id: data-procs.tcl,v 1.18.2.3 2016/10/03 18:52:07 antoniop Exp $    
 }
 
 # Copyright (C) 1999-2000 ArsDigita Corporation
@@ -138,7 +138,7 @@ ad_proc -public template::data::validate::boolean {
   set result ""
   set value [::string tolower $value]
 
-  switch -- $value {
+  switch $value {
       0 -
       1 -
       f -
@@ -368,7 +368,7 @@ ad_proc -public template::data::validate::textdate {
     upvar 2 $message_ref message $value_ref textdate
     
     set error_msg [list]
-    if { [info exists textdate] && $textdate ne "" } {
+    if { ([info exists textdate] && $textdate ne "") } {
 	if { [regexp {^[0-9]{4}-[0-9]{2}-[0-9]{2}$} $textdate match] } {
 	    if { [catch { clock scan "${textdate}" }] } {
 		# the textdate is formatted properly the template::data::transform::textdate proc
@@ -416,7 +416,7 @@ ad_proc -public template::data::validate::search {
   should be on the element, not on the datatype.
 
   DRB: in practice a template form datatype is defined by the presence of a
-  validate procedure for that type.
+  validate procdure for that type.
 
   @param value_ref Reference variable to the submitted value
   @param message_ref Reference variable for returning an error message
@@ -430,7 +430,7 @@ ad_proc -public template::data::transform {
   type
   value_ref
 } {
-  Dispatch procedure for the transform method.  "transformation" in template
+  Dispatch procedure for the transform method.  "tranformation" in template
   systemspeak means to convert the submitted data to the custom datatype structure,
   usually a list for complex datatypes, just the value for simple datatypes.  The
   transform method is called after the datatype is validated.

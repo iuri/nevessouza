@@ -5,7 +5,7 @@ ad_page_contract {
     @param  assessment_id integer specifying assessment
 
     @author vinod@solutiongrove.com
-    @creation-date   January 15, 2007
+    @date   January 15, 2007
 
 } {
     assessment_id:naturalnum,notnull

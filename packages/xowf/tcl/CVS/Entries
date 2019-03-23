@@ -1,8 +1,8 @@
-/atjob-procs.tcl/1.8/Wed Oct 10 12:58:28 2018//Toacs-5-10
-/test-item-procs.tcl/1.7/Mon Apr 30 09:48:51 2018//Toacs-5-10
-/xowf-callback-procs.tcl/1.1/Wed Jan 31 14:03:45 2018//Toacs-5-10
-/xowf-form-field-procs.tcl/1.8/Wed Sep  5 18:22:32 2018//Toacs-5-10
-/xowf-includelet-procs.tcl/1.4/Wed Mar 21 20:01:42 2018//Toacs-5-10
-/xowf-init.tcl/1.3/Wed Jul 18 22:33:25 2018//Toacs-5-10
-/xowf-procs.tcl/1.28/Sun Jan 20 20:44:07 2019//Toacs-5-10
+/atjob-procs.tcl/1.3.2.8/Mon Mar 27 10:37:42 2017//Topenacs-5-9-compat
+/test-item-procs.tcl/1.2.2.7/Thu Jun 29 08:35:56 2017//Topenacs-5-9-compat
+/xowf-calllback-procs.tcl/1.2.2.2/Sat Jul  1 11:48:31 2017//Topenacs-5-9-compat
+/xowf-form-field-procs.tcl/1.2.2.6/Thu Jun 29 08:35:56 2017//Topenacs-5-9-compat
+/xowf-includelet-procs.tcl/1.2.2.2/Mon Dec  7 17:02:51 2015//Topenacs-5-9-compat
+/xowf-init.tcl/1.1.4.1/Thu Sep 10 08:10:47 2015//Topenacs-5-9-compat
+/xowf-procs.tcl/1.3.2.17/Wed May  3 07:12:52 2017//Topenacs-5-9-compat
 D

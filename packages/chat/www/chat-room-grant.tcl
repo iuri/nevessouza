@@ -1,8 +1,8 @@
 ad_page_contract {
-
+    
     @author David Dao (ddao@arsdigita.com)
     @creation-date November 16, 2000
-    @cvs-id $Id: chat-room-grant.tcl,v 1.5.2.1 2019/02/14 16:15:01 gustafn Exp $
+    @cvs-id $Id: chat-room-grant.tcl,v 1.2.22.1 2016/06/20 08:40:23 gustafn Exp $
 } {
     room_id:naturalnum,notnull
     pretty_name:trim,notnull
@@ -39,8 +39,3 @@ doc_body_append "
 
 [ad_footer]
 "
-# Local variables:
-#    mode: tcl
-#    tcl-indent-level: 2
-#    indent-tabs-mode: nil
-# End:

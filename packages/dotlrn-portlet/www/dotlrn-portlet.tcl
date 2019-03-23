@@ -20,7 +20,7 @@ ad_page_contract {
     The display logic for the dotrn (Group Info)  portlet
 
     @author Arjun Sanyal (arjun@openforce.net)
-    @cvs-id $Id: dotlrn-portlet.tcl,v 1.15 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: dotlrn-portlet.tcl,v 1.13.2.1 2015/09/11 11:41:00 gustafn Exp $
 }
 
 array set config $cf	

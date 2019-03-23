@@ -75,13 +75,9 @@ div.footer {
 .main-nav .navbar-nav > li > a:visited {
     color: #fff;
 }
-.main-nav .navbar-nav > li > a {
+.main-nav .navbar-nav > li > a { 
     color:#fff;
     padding:15px 13px;
-}
-.navbar-header a.navbar-brand div { 
-    color:#fff;
-    padding:12px 13px;
 }
 
 .main-nav .navbar-nav > li.active > a,
@@ -212,26 +208,6 @@ div#forum-thread div.dynexpanded p {
     margin-top: 10px;
     margin-bottom: 10px;
 }
-div#forum-thread blockquote {
-    font-size: 14px;
-    font-style: italic;
-}
 h2.forum-heading {
     margin:0;
-}
-div.portlet-wrapper {
-    #border: 1px solid #ddd;
-    #border-radius: 4px;
-    padding: 10px;
-}
-div.portlet {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-}
-.navbar-default .navbar-brand {
-    color: #fff;
-}
-.navbar-default .navbar-brand:hover {
-    color: #eee;
 }

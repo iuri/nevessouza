@@ -22,7 +22,7 @@ ad_library {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-02-13
-    @cvs-id $Id: spam-procs.tcl,v 1.13 2018/05/09 15:33:30 hectorr Exp $
+    @cvs-id $Id: spam-procs.tcl,v 1.10.2.3 2017/04/21 20:45:16 gustafn Exp $
 
 }
 

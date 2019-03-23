@@ -1,9 +1,9 @@
 ad_page_contract {
   Displays information about an ip address
 
-    @author Gustaf Neumann
+    @author Gustaf Neumann 
 
-    @cvs-id $Id: ip-info.tcl,v 1.4 2018/06/29 17:27:19 hectorr Exp $
+    @cvs-id $id$
 } -query {
     {ip}
 } -properties {

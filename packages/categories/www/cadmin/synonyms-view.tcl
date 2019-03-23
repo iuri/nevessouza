@@ -3,7 +3,7 @@ ad_page_contract {
     Displays list of synonyms of a category.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: synonyms-view.tcl,v 1.8 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     category_id:naturalnum,notnull
     tree_id:naturalnum,notnull

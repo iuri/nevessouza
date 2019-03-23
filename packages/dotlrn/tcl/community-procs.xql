@@ -4,9 +4,10 @@
 
     <fullquery name="dotlrn_community::membership_approve.select_rel_info">
         <querytext>
-          select rel_id from dotlrn_member_rels_full
-           where user_id      = :user_id
-             and community_id = :community_id
+            select *
+            from dotlrn_member_rels_full
+            where user_id = :user_id
+            and community_id = :community_id
         </querytext>
     </fullquery>
 
@@ -52,12 +53,40 @@
         </querytext>
     </fullquery>
 
-    <fullquery name="dotlrn_community::check_community_key_valid_p.collision_check">
+    <fullquery name="dotlrn_community::check_community_key_valid_p.collision_check_with_parent">
         <querytext>
-          select 1 from dual where exists (
-            select 1 from dotlrn_communities_all
-             where (:parent_community_id is null or parent_community_id = :parent_community_id)
-               and community_key = :community_key)
+            select count(*)
+            from dotlrn_communities_all
+            where :parent_community_id in (select dc.parent_community_id
+                                           from dotlrn_communities_all dc
+                                           where dc.community_key = :community_key)
+        </querytext>
+    </fullquery>
+
+
+    <fullquery name="dotlrn_community::check_community_key_valid_p.collision_check_simple">
+        <querytext>
+            select count(*) from dotlrn_communities_all where community_key = :community_key
+        </querytext>
+    </fullquery>
+
+    <fullquery name="dotlrn_community::get_type_node_id.select_node_id">
+        <querytext>
+            select node_id
+            from site_nodes
+            where object_id = (select package_id
+                               from dotlrn_community_types
+                               where community_type = :community_type)
+        </querytext>
+    </fullquery>
+
+    <fullquery name="dotlrn_community::get_community_node_id.select_node_id">
+        <querytext>
+            select node_id
+            from site_nodes
+            where object_id = (select package_id
+                               from dotlrn_communities
+                               where community_id = :community_id)
         </querytext>
     </fullquery>
 
@@ -170,7 +199,9 @@
 
     <fullquery name="dotlrn_community::member_p.select_count_membership">
         <querytext>
-            select 1 from dual where exists (select 1
+            select count(*)
+            from dual
+            where exists (select 1
                           from dotlrn_member_rels_approved
                           where community_id = :community_id
                           and user_id = :user_id)
@@ -179,7 +210,9 @@
 
     <fullquery name="dotlrn_community::member_pending_p.is_pending_membership">
         <querytext>
-            select 1 from dual where exists (select 1
+            select count(*)
+            from dual
+            where exists (select 1
                           from dotlrn_member_rels_full
                           where community_id = :community_id
                           and user_id = :user_id
@@ -243,7 +276,9 @@
 
     <fullquery name="dotlrn_community::has_subcommunity_p_not_cached.select_subcomm_check">
         <querytext>
-            select 1 from dual where exists (select 1
+            select 1
+            from dual
+            where exists (select 1
                           from dotlrn_communities
                           where parent_community_id = :community_id)
         </querytext>
@@ -254,7 +289,7 @@
             select community_id as subcomm_id
             from dotlrn_communities
             where parent_community_id = :community_id
-        order by pretty_name 
+	    order by pretty_name 
         </querytext>
     </fullquery>
 
@@ -440,6 +475,27 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="dotlrn_community::remove_applet.delete_applet_from_community">
+        <querytext>
+            delete
+            from dotlrn_community_applets 
+            where community_id = :community_id
+            and applet_id = :applet_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="dotlrn_community::list_applets.select_all_applets">
+        <querytext>
+            select impl_name
+            from acs_sc_impls,
+                 acs_sc_bindings,
+                 acs_sc_contracts
+            where acs_sc_impls.impl_id = acs_sc_bindings.impl_id
+            and acs_sc_contracts.contract_id = acs_sc_bindings.contract_id
+            and acs_sc_contracts.contract_name = 'dotlrn_applet'
+        </querytext>
+    </fullquery>
+
     <fullquery name="dotlrn_community::list_applets.select_community_applets">
         <querytext>
             select dotlrn_applets.applet_key
@@ -447,6 +503,14 @@
                  dotlrn_applets
             where dotlrn_community_applets.community_id = :community_id
             and dotlrn_community_applets.applet_id = dotlrn_applets.applet_id
+        </querytext>
+    </fullquery>
+
+    <fullquery name="dotlrn_community::list_active_applets.select_all_active_applets">
+        <querytext>
+            select applet_key
+            from dotlrn_applets
+            where active_p = 't'
         </querytext>
     </fullquery>
 
@@ -472,6 +536,14 @@
             and dotlrn_applets.applet_key = :applet_key
             and dotlrn_community_applets.active_p = 't'
             and dotlrn_applets.active_p = 't'
+        </querytext>
+    </fullquery>
+
+    <fullquery name="dotlrn_community::is_supertype.is_supertype">
+        <querytext>
+            select count(*)
+            from dotlrn_community_types
+            where supertype = :community_type
         </querytext>
     </fullquery>
 
@@ -586,14 +658,7 @@
         </querytext>
     </fullquery>
 
-    <fullquery name="dotlrn_community::assign_default_sitetemplate.affected_portals">
-      <querytext>
-        select 
-            portal_id 
-        from dotlrn_communities_all
-        </querytext>
-    </fullquery>
-    
+
     <fullquery name="dotlrn_community::get_site_template_id_not_cached.select_site_template_id">
         <querytext>
             select site_template_id
@@ -601,5 +666,14 @@
             where community_id = :community_id
         </querytext>
     </fullquery>
+
+   <fullquery name="dotlrn_community::get_dotlrn_master_not_cached.select_dotlrn_master">
+        <querytext>
+            select dst.site_master
+            from dotlrn_site_templates dst, dotlrn_communities_all dca
+            where dca.community_id = :community_id
+            and dca.site_template_id = dst.site_template_id
+        </querytext>
+   </fullquery>
 
 </queryset>

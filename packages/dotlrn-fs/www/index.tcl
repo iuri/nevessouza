@@ -22,7 +22,7 @@ ad_page_contract {
 
     @author <a href="mailto:yon@openforce.net">yon@openforce.net</a>
     @creation-date 2002-05-17
-    @cvs-id $Id: index.tcl,v 1.8 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: index.tcl,v 1.6.20.1 2015/09/11 11:40:57 gustafn Exp $
 
 } -query {
 } -properties {

@@ -4,7 +4,7 @@ ad_library {
 
     @creation-date 02 October 2000
     @author Bryan Quinn
-    @cvs-id $Id: utilities-init.tcl,v 1.10 2017/08/07 23:48:00 gustafn Exp $
+    @cvs-id $Id: utilities-init.tcl,v 1.9.8.1 2015/09/10 08:22:01 gustafn Exp $
 }
 
 # initialize the random number generator

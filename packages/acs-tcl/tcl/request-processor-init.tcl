@@ -4,7 +4,7 @@ ad_library {
 
     @creation-date 30 May 2000
     @author Jon Salz [jsalz@arsdigita.com]
-    @cvs-id $Id: request-processor-init.tcl,v 1.21 2018/05/09 15:33:29 hectorr Exp $
+    @cvs-id $Id: request-processor-init.tcl,v 1.17.2.6 2017/08/01 08:50:23 gustafn Exp $
 }
 
 #
@@ -122,7 +122,6 @@ ad_after_server_initialization filters_register {
     # that filters are registered in order of priority. AOLServer will
     # then run the filters in the order they were registered.
     set filters [lsort -integer -index 0 $filters]
-    ns_log notice "FILTERS [join $filters \n]"
     nsv_set rp_filters . $filters
 
     set filter_index 0

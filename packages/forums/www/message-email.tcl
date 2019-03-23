@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-28
-    @cvs-id $Id: message-email.tcl,v 1.19 2017/09/27 11:07:52 antoniop Exp $
+    @cvs-id $Id: message-email.tcl,v 1.17.2.2 2016/09/12 11:05:30 gustafn Exp $
 
 } {
     message_id:naturalnum,notnull
@@ -13,9 +13,10 @@ ad_page_contract {
 # require login to avoid abuse from spammers
 auth::require_login
 
+forum::security::require_read_message -message_id $message_id
+
 # Get the message information
 forum::message::get -message_id $message_id -array message
-forum::security::require_read_forum -forum_id $message(forum_id)
 set message(tree_level) 0
 
 form create message

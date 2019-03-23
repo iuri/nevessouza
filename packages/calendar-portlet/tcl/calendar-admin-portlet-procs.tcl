@@ -21,7 +21,7 @@ ad_library {
     @creation-date Jan 2002
     @author arjun@openforce.net
     @author ben@openforce.net
-    @cvs-id $Id: calendar-admin-portlet-procs.tcl,v 1.12 2018/07/10 15:52:04 antoniop Exp $
+    @cvs-id $Id: calendar-admin-portlet-procs.tcl,v 1.10.16.1 2015/09/10 08:30:16 gustafn Exp $
 }
 
 namespace eval calendar_admin_portlet {
@@ -38,14 +38,10 @@ namespace eval calendar_admin_portlet {
 
     ad_proc -public get_pretty_name {
     } {
-        Get portlet pretty name.
-    } {
         return "#calendar-portlet.admin_pretty_name#"
     }
 
     ad_proc -public link {
-    } {
-        Get portlet link (empty).
     } {
 	return ""
     }
@@ -54,7 +50,7 @@ namespace eval calendar_admin_portlet {
 	{-portal_id:required}
 	{-calendar_id:required}
     } {
-	Adds a admin calendar PE to the given portal.
+	Adds a admin calendar PE to the given portal
 
 	@param portal_id The page to add self to
 	@param calendar_id The new calendar_id to add
@@ -72,7 +68,7 @@ namespace eval calendar_admin_portlet {
     ad_proc -public remove_self_from_page {
 	portal_id
     } {
-        Removes a calendar admin PE.
+	  Removes a calendar admin PE
     } {
         portal::remove_element \
             -portal_id $portal_id \
@@ -82,7 +78,6 @@ namespace eval calendar_admin_portlet {
     ad_proc -public show {
 	 cf
     } {
-        Show calendar admin portlet.
     } {
         portal::show_proc_helper \
             -package_key [my_package_key] \

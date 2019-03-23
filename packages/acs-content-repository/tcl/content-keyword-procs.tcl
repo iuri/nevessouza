@@ -4,7 +4,8 @@ ad_library {
     
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2004-06-09
-    @cvs-id $Id: content-keyword-procs.tcl,v 1.6 2018/08/15 16:24:28 gustafn Exp $
+    @arch-tag: dc56be97-e611-4f34-a5b6-264b46a6ad7b
+    @cvs-id $Id: content-keyword-procs.tcl,v 1.5 2014/10/27 16:39:11 victorg Exp $
 }
 
 namespace eval ::content::keyword {}

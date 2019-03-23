@@ -37,7 +37,7 @@
 //    }
 //
 //
-// $Id: GD.php,v 1.2 2017/08/07 23:48:24 gustafn Exp $
+// $Id: GD.php,v 1.1.2.1 2016/01/03 20:48:36 gustafn Exp $
 //
 // Image Transformation interface using the GD library
 //

@@ -2,7 +2,7 @@
 --
 -- @author Gary Jin (gjin@arsdigita.com)
 -- @creation-date Nov 27, 2000
--- $Id: calendar-drop.sql,v 1.8 2017/09/04 08:10:38 gustafn Exp $
+-- $Id: calendar-drop.sql,v 1.7 2004/01/10 18:57:24 dirkg Exp $
 --
 -- @ported by Charles Mok (mok_cl@eelab.usyd.edu.au)
 
@@ -113,23 +113,24 @@ where 	privilege in (
 ------------------------------------------------
 
 DROP TABLE calendars;
-
-CREATE OR REPLACE FUNCTION inline_0 () RETURNS integer AS $$
-BEGIN
-	PERFORM acs_attribute__drop_attribute ('calendar','owner_id');
-	PERFORM acs_attribute__drop_attribute ('calendar','private_p');
-	DELETE FROM acs_objects WHERE object_type = 'calendar';
-	PERFORM acs_object_type__drop_type ('calendar', 'f');
+CREATE FUNCTION inline_0 ()
+RETURNS integer
+AS 'begin
+	PERFORM acs_attribute__drop_attribute (''calendar'',''owner_id'');
+	PERFORM acs_attribute__drop_attribute (''calendar'',''private_p'');
+	DELETE FROM acs_objects WHERE object_type = ''calendar'';
+	PERFORM acs_object_type__drop_type (''calendar'', ''f'');
 
 	return 0;
-END;
-$$ LANGUAGE plpgsql;
+    end;'
+LANGUAGE 'plpgsql';
 
 SELECT inline_0 ();
+
 DROP FUNCTION inline_0 ();
 
 
-DELETE FROM acs_objects WHERE object_type = 'calendar';
+DELETE FROM acs_objects WHERE object_type='calendar';
 
 DROP FUNCTION calendar__new (
        integer,            -- calendar.calendar_id%TYPE

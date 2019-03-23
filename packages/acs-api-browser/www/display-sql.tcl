@@ -13,15 +13,15 @@ ad_page_contract {
     2000 August 8 Updated for ACS4 packages - richardl@arsdigita.com.
 
     @param url The full relative path of the file to display the source for.
-    @param package_key:token The key of the package the file is part of.
+    @param package_key The key of the package the file is part of.
 
     @creation-date 12/19/98
     @author philg@mit.edu
-    @cvs-id $Id: display-sql.tcl,v 1.11 2018/05/09 15:33:28 hectorr Exp $
+    @cvs-id $Id: display-sql.tcl,v 1.5.2.2 2016/02/07 15:41:53 gustafn Exp $
 } {
     url:notnull
     { version_id:naturalnum "" }
-    { package_key:token ""}
+    { package_key ""}
 } -properties {
     title:onevalue
     context:onevalue
@@ -41,7 +41,7 @@ if {$version_id ne ""} {
 }
 lappend context [file tail $url]
 
-set title [file tail $url]
+set title "[file tail $url]"
 
 # This is normally a password-protected page, but to be safe let's
 # check the incoming URL for ".." to make sure that someone isn't
@@ -50,10 +50,9 @@ set title [file tail $url]
 # for example
 
 if { [string match "*..*" $url] || [string match "*..*" $package_key] } {
-    ad_return_warning \
-        "Can't back up beyond the pageroot" \
-        "You can't use display-sql.tcl to look at files underneath the pageroot."
-    ad_script_abort
+    ad_return_warning "Can't back up beyond the pageroot" "You can't use 
+    display-sql.tcl to look at files underneath the pageroot."
+    return
 }
 
 if { $package_key ne "" } {
@@ -66,20 +65,14 @@ if { $safe_p } {
     set sql ""
     set fn [acs_package_root_dir $package_key]/sql/$url
     if {[file readable $fn]} {
-	ad_try {
+	if {[catch {
 	    set f [open $fn]; set sql [read $f]; close $f
-	} on error {errorMsg} {
-	    ad_return_warning \
-                "Problem reading file" \
-                "There was a problem reading $url ($errorMsg)"
-            ad_script_abort
+	} errorMsg]} {
+	    ad_return_warning "Problem reading file" "There was a problem reading $url ($errorMsg)"
 	}
     }
 } else {
-    ad_return_warning \
-        "Invalid file location" \
-        "Can only display files in package or doc directory"
-    ad_script_abort
+    ad_return_warning "Invalid file location" "Can only display files in package or doc directory"
 }
 
 # Local variables:

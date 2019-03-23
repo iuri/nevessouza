@@ -2,7 +2,7 @@
 /**
  * Simple functions to access the flickr API (yes I know this is the "Classes" directory and this isn't a class).
  * @author $Author: gustafn $
- * @version $Id: Flickr.php,v 1.2 2017/08/07 23:48:24 gustafn Exp $
+ * @version $Id: Flickr.php,v 1.1.2.1 2016/01/03 20:48:36 gustafn Exp $
  * @package ImageManager
  */
  

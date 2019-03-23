@@ -19,7 +19,7 @@
 --
 -- @author Ben Adida (ben@openforce.net)
 -- @creation-date 2002-05-29
--- @version $Id: dotlrn-forums-create.sql,v 1.6 2017/08/07 23:48:10 gustafn Exp $
+-- @version $Id: dotlrn-forums-create.sql,v 1.5.2.1 2016/05/15 10:49:15 gustafn Exp $
 --
 -- ported to postgres by mohan pakkurti (mohan@pakkurti.com)
 -- 2002-07-12

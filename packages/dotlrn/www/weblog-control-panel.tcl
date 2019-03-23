@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author Caroline Meeks (cmeeks@mit.edu)
     @creation-date 2002-09-13
-    @cvs-id $Id: weblog-control-panel.tcl,v 1.7 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: weblog-control-panel.tcl,v 1.5.4.1 2015/09/11 11:40:48 gustafn Exp $
 }
 
 set user_id [auth::require_login]

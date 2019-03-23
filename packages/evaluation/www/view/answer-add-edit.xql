@@ -2,14 +2,6 @@
 
 <queryset>
 
-<fullquery name="compare_dates">      
-      <querytext>
-	
-	select 1 from evaluation_tasks  where task_id = :task_id and due_date < current_timestamp
-	
-      </querytext>
-</fullquery>
-  
 <fullquery name="lob_size">      
       <querytext>
 

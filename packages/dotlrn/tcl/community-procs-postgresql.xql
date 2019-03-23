@@ -31,6 +31,18 @@
         </querytext>
     </fullquery>
 
+    <fullquery name="dotlrn_community::new.create_community">
+        <querytext>
+                select dotlrn_community__new(
+                    :community_type,
+                    :name
+                    :pretty_name,
+                    :pretty_name,
+                    :description
+                );
+        </querytext>
+    </fullquery>
+
     <fullquery name="dotlrn_community::set_active_dates.set_active_dates">
         <querytext>
                 select dotlrn_community__set_active_dates(
@@ -38,6 +50,15 @@
                     to_date(:start_date, :date_format),
                     to_date(:end_date, :date_format)
                 );
+        </querytext>
+    </fullquery>
+
+    <fullquery name="dotlrn_community::get_url.select_node_url">
+        <querytext>
+            select site_node__url(node_id)
+            from site_nodes
+            where parent_id = :current_node_id
+            and object_id = :package_id
         </querytext>
     </fullquery>
 

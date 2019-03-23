@@ -6,7 +6,7 @@ ad_library {
     
     @author Dave Bauer (dave@thedesignexperience.org)
     @creation-date 2006-08-03
-    @cvs-id $Id: as-item-procs.tcl,v 1.5 2018/07/19 12:24:40 gustafn Exp $
+    @cvs-id $Id: as-item-procs.tcl,v 1.3.10.1 2015/09/10 08:28:00 gustafn Exp $
 }
 
 aa_register_case as_item_new {
@@ -23,7 +23,7 @@ aa_register_case as_item_new {
                                -label $folder_name \
                                -description $folder_name]
             aa_true "Folder_id is not null '${folder_id}'" \
-                {$folder_id ne ""}
+                [expr {$folder_id ne ""}]
             content::folder::register_content_type \
                 -folder_id $folder_id \
                 -content_type as_items
@@ -42,10 +42,10 @@ aa_register_case as_item_new {
             }
             set content [db_string q "select content from cr_revisions where revision_id=:as_item_rev_id"]
             aa_true "Long title successfully entered" \
-                {[string range $long_text 0 999] eq $title}
-            aa_true "Long question successfully entered" {$content eq $long_text}
+                [expr {[string range $long_text 0 999] eq $title}]
+            aa_true "Long question successfully entered" [expr {$content eq $long_text}]
             aa_true "Mime type is text/html" \
-                {$mime_type eq "text/html"}
+                [expr {$mime_type eq "text/html"}]
 
 
 	    aa_log "Test item::edit"
@@ -54,15 +54,15 @@ aa_register_case as_item_new {
             aa_true "Item created" [db_0or1row q "select title,mime_type from cr_revisions where revision_id=:new_item_rev_id"]
             set content [db_string q "select content from cr_revisions where revision_id=:new_item_rev_id"]
             aa_true "Long title successfully entered" \
-                {[string range $long_text 0 999] eq $title}
-            aa_true "Long question successfully entered" {$content eq $long_text}
+                [expr {[string range $long_text 0 999] eq $title}]
+            aa_true "Long question successfully entered" [expr {$content eq $long_text}]
 	    aa_log "Test item::new_revision"
 	    set new_rev_rev_id [as::item::new_revision -as_item_id $new_item_rev_id]
             aa_true "Item created" [db_0or1row q "select title,mime_type from cr_revisions where revision_id=:new_rev_rev_id"]
             set content [db_string q "select content from cr_revisions where revision_id=:new_rev_rev_id"]
             aa_true "Long title successfully entered" \
-                {[string range $long_text 0 999] eq $title}
-            aa_true "Long question successfully entered" {$content eq $long_text}
+                [expr {[string range $long_text 0 999] eq $title}]
+            aa_true "Long question successfully entered" [expr {$content eq $long_text}]
 
 	    aa_log "Test item::copy"
 	    set copy_rev_id [as::item::copy \
@@ -71,8 +71,8 @@ aa_register_case as_item_new {
             aa_true "Item created" [db_0or1row q "select title,mime_type from cr_revisions where revision_id=:copy_rev_id"]
             set content [db_string q "select content from cr_revisions where revision_id=:copy_rev_id"]
             aa_true "Long title successfully entered" \
-                {[string range $long_text 0 999] eq $title}
-            aa_true "Long question successfully entered" {$content eq $long_text}
+                [expr {[string range $long_text 0 999] eq $title}]
+            aa_true "Long question successfully entered" [expr {$content eq $long_text}]
 	    
 	}
 }

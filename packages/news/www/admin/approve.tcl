@@ -7,12 +7,12 @@ ad_page_contract {
 
     @author Stefan Deusch (stefan@arsdigita.com)
     @creation-date 2000-12-20
-    @cvs-id $Id: approve.tcl,v 1.10 2018/02/02 00:17:02 gustafn Exp $
+    @cvs-id $Id: approve.tcl,v 1.7.4.2 2016/01/02 20:34:50 gustafn Exp $
 
 } {
     n_items:notnull
-    {revision_id:integer ""}
-    {return_url:localurl ""}
+    {revision_id: ""}
+    {return_url: ""}
 } -properties {
     
     items:multirow
@@ -30,7 +30,7 @@ set context [list $title]
 
 # pre-set date widgets with defaults
 set active_days [parameter::get -parameter ActiveDays -default 14]
-set proj_archival_date [clock format [clock scan "$active_days days"] -format %Y-%m-%d]
+set proj_archival_date [db_string week {}]
 set publish_date_select [dt_widget_datetime -default now publish_date days]
 set archive_date_select [dt_widget_datetime -default $proj_archival_date archive_date days]
 
@@ -62,6 +62,13 @@ db_multirow items item_list "
 
 
 set hidden_vars [export_vars -form {return_url}]
+
+ad_return_template
+
+
+
+
+
 
 
 # Local variables:

@@ -20,7 +20,7 @@ ad_page_contract {
 
     @author Arjun Sanyal
     @creation-date 9/28/2001
-    @cvs-id $Id: portal-config-2.tcl,v 1.9 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: portal-config-2.tcl,v 1.6.8.1 2015/09/12 11:06:39 gustafn Exp $
 } { }
 
 set form [ns_getform]
@@ -31,7 +31,7 @@ set anchor [ns_set get $form anchor]
 portal::configure_dispatch -portal_id $portal_id -form $form
 
 ad_returnredirect "portal-config?portal_id=$portal_id&referer=$return_url#$anchor"
-ad_script_abort
+
 
 # Local variables:
 #    mode: tcl

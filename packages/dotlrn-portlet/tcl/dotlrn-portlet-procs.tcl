@@ -23,7 +23,7 @@ ad_library {
 
     @creation-date September 30 2001
     @author arjun@openforce.net
-    @cvs-id $Id: dotlrn-portlet-procs.tcl,v 1.40 2018/07/11 08:40:09 antoniop Exp $
+    @cvs-id $Id: dotlrn-portlet-procs.tcl,v 1.37.2.1 2015/09/11 11:41:00 gustafn Exp $
 
 }
 
@@ -41,15 +41,11 @@ namespace eval dotlrn_portlet {
 
     ad_proc -public get_pretty_name {
     } {
-        Get the pretty name.
-    } {
         # get the param from the dotlrn package
 	return [dotlrn::parameter -name subcommunities_pretty_plural]
     }
 
     ad_proc -public link {
-    } {
-        Get the link. This is currently empty.
     } {
 	return ""
     }
@@ -58,7 +54,7 @@ namespace eval dotlrn_portlet {
 	{-portal_id:required}
 	{-community_id:required}
     } {
-	Adds a dotlrn PE to the given communities's portal.
+	Adds a dotlrn PE to the given communities's portal
 
 	@param portal_id
 	@param community_id
@@ -68,7 +64,7 @@ namespace eval dotlrn_portlet {
         set force_region [parameter::get_from_package_key \
                               -package_key [my_package_key] \
                               -parameter "dotlrn_portlet_force_region"
-                         ]
+        ]
 
         set element_id [portal::add_element_parameters \
                             -portal_id $portal_id \
@@ -77,7 +73,7 @@ namespace eval dotlrn_portlet {
                             -force_region $force_region \
                             -key "community_id" \
                             -value $community_id
-                       ]
+        ]
 
 	return $element_id
     }
@@ -94,9 +90,8 @@ namespace eval dotlrn_portlet {
     }
 
     ad_proc -public show {
-        cf
+	 cf
     } {
-        Show the dotlrn portlet.
     } {
         portal::show_proc_helper \
             -package_key [my_package_key] \
@@ -110,7 +105,7 @@ namespace eval dotlrn_portlet {
         that need to verify a dotlrn-portlet parameter.
         This prevents bad users to access protected pages.
 
-        
+ 
         @author Hector Amado (hr_amado@galileo.edu)
         @creation-date 2004-06-22
 
@@ -120,69 +115,75 @@ namespace eval dotlrn_portlet {
             "cenrollment" {
 		if { ![parameter::get_from_package_key -package_key dotlrn-portlet -parameter AllowChangeEnrollmentPolicy] } {
 		    if { ![dotlrn::admin_p] } {  
-                        ns_log notice "user has tried to see    without permission"
-                        ad_return_forbidden \
-                            "Permission Denied"\
-                            "<p>You don't have permission to see this page.</p>"
-                        ad_script_abort
+                ns_log notice "user has tried to see    without permission"
+                ad_return_forbidden \
+                   "Permission Denied"\
+                   "<p>
+                     You don't have permission to see this page.
+                    </p>"
 		    }
                 }
 	    }
             "managemembership" {
                 if { ![parameter::get_from_package_key -package_key dotlrn-portlet -parameter AllowManageMembership] } {
-                    if { ![dotlrn::admin_p] } {
-                        ns_log notice "user has tried to see /dotlrn/www/members  without permission"
-                        ad_return_forbidden \
-                            "Permission Denied"\
-                            "<p>You don't have permission to see this page.</p>"
-                        ad_script_abort
-                    }
-                }
+     	      if { ![dotlrn::admin_p] } {
+                ns_log notice "user has tried to see /dotlrn/www/members  without permission"
+                ad_return_forbidden \
+                   "Permission Denied"\
+                   "<p>
+                     You don't have permission to see this page.
+                    </p>"
+              }
+             }
 	    }
             "cplayout" {
                 if { ![parameter::get_from_package_key -package_key dotlrn-portlet -parameter AllowCustomizePortalLayout] } {
-                    if { ![dotlrn::admin_p] } {
-                        ns_log notice "user has tried to see /dotlrn/www/one-community-portal-configure  without permission"
-                        ad_return_forbidden \
-                            "Permission Denied"\
-                            "<p>You don't have permission to see this page.</p>"
-                        ad_script_abort
-                    }
-                }
+                	 if { ![dotlrn::admin_p] } {
+                ns_log notice "user has tried to see /dotlrn/www/one-community-portal-configure  without permission"
+                ad_return_forbidden \
+                   "Permission Denied"\
+                   "<p>
+                     You don't have permission to see this page.
+                    </p>"
+	       }
+             }
 	    }
             "guestuser" { 
                 if { ![parameter::get_from_package_key -package_key dotlrn-portlet -parameter AllowCreateGuestUsersInCommunity] } {
-                    if { ![dotlrn::admin_p] } {
-                        ns_log notice "user has tried to see /dotlrn/www/user-add  without permission"
-                        ad_return_forbidden \
-                            "Permission Denied"\
-                            "<p>You don't have permission to see this page.</p>"
-                        ad_script_abort
-                    }
-                }
+                	 if { ![dotlrn::admin_p] } {
+                ns_log notice "user has tried to see /dotlrn/www/user-add  without permission"
+                ad_return_forbidden \
+                   "Permission Denied"\
+                   "<p>
+                     You don't have permission to see this page.
+                    </p>"
+	       }
+             }
 	    }
             "limiteduser" {
                 if { ![parameter::get_from_package_key -package_key dotlrn-portlet -parameter AllowCreateLimitedUsersInCommunity] } {
-                    if { ![dotlrn::admin_p] } {
-                        ns_log notice "user has tried to see /dotlrn/www/user-add  without permission"
-                        ad_return_forbidden \
-                            "Permission Denied"\
-                            "<p>You don't have permission to see this page.</p>"
-                        ad_script_abort
-                    }
-                }
-            }
+     	                 if { ![dotlrn::admin_p] } {
+                ns_log notice "user has tried to see /dotlrn/www/user-add  without permission"
+                ad_return_forbidden \
+                   "Permission Denied"\
+                   "<p>
+                     You don't have permission to see this page.
+                    </p>"
+	       }
+             }
+           }
 	    "manageapplets" {
-                if { ![parameter::get_from_package_key -package_key dotlrn-portlet -parameter AllowManageApplets] } {
-                    if { ![dotlrn::admin_p] } {
-                        ns_log notice "user has tried to see /dotlrn/www/applets  without permission"
-                        ad_return_forbidden \
-                            "Permission Denied"\
-                            "<p>You don't have permission to see this page.</p>"
-                        ad_script_abort
-                    }
-                }
-            }
+              if { ![parameter::get_from_package_key -package_key dotlrn-portlet -parameter AllowManageApplets] } {
+     	                 if { ![dotlrn::admin_p] } {
+                ns_log notice "user has tried to see /dotlrn/www/applets  without permission"
+                ad_return_forbidden \
+                   "Permission Denied"\
+                   "<p>
+                     You don't have permission to see this page.
+                    </p>"
+	       }
+             }
+          }
 	}
     }
 }

@@ -14,7 +14,6 @@ ad_page_contract {
 
 
 ad_returnredirect forum-view?forum_id=$forum_id
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

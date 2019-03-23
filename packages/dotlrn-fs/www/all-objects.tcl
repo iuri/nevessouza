@@ -23,7 +23,7 @@ ad_page_contract {
 
     @author <a href="mailto:yon@openforce.net">yon@openforce.net</a>
     @creation-date 2002-04-25
-    @cvs-id $Id: all-objects.tcl,v 1.18 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: all-objects.tcl,v 1.16.2.3 2017/02/02 14:18:02 gustafn Exp $
 
 } -query {
     {n_past_days:integer 999999}

@@ -6,10 +6,7 @@ ad_library {
     @creation-date 2005-03-11
 }
 
-aa_register_case \
-    -cats {api smoke} \
-    -procs {ad_proc callback} \
-    ad_proc_create_callback {
+aa_register_case -cats {api smoke} ad_proc_create_callback {
 
     Tests the creation of a callback and an implementation with 
     some forced error cases.
@@ -28,12 +25,12 @@ aa_register_case \
     ad_proc -callback a_callback { -arg1 arg2 } { this is a test callback } -
     set callback_procs [info commands ::callback::a_callback::*]
     aa_true "creation of a valid callback contract with '-' body" \
-        {"::callback::a_callback::contract" in $callback_procs}
+        [expr {"::callback::a_callback::contract" in $callback_procs}]
 
     ad_proc -callback a_callback_2 { arg1 arg2 } { this is a test callback } {}
     set callback_procs [info commands ::callback::a_callback_2::*]
     aa_true "creation of a valid callback contract with no body" \
-        {"::callback::a_callback_2::contract" in $callback_procs}
+        [expr {"::callback::a_callback_2::contract" in $callback_procs}]
 
     aa_true "throw error for missing -callback on implementation definition" \
         [catch {
@@ -51,7 +48,7 @@ aa_register_case \
     }
     set impl_procs [info commands ::callback::a_callback::impl::*]
     aa_true "creation of a valid callback implementation" \
-        {"::callback::a_callback::impl::an_impl" in $impl_procs}
+        [expr {"::callback::a_callback::impl::an_impl" in $impl_procs}]
 }
 
 ad_proc -callback a_callback {
@@ -94,16 +91,13 @@ ad_proc -callback a_callback -impl fail_impl {} {
         error "should fail"
 }
 
-ad_proc -private EvilCallback {} {
+ad_proc EvilCallback {} {
     This is a test callback implementation that should not be invoked.
 } {
         error "Should not be invoked"
 }
 
-aa_register_case \
-    -cats {api smoke} \
-    -procs {callback} \
-    ad_proc_fire_callback {
+aa_register_case -cats {api smoke} ad_proc_fire_callback {
 
     Tests a callback with two implementations .
 
@@ -112,24 +106,24 @@ aa_register_case \
         [catch {callback c_callback bar} error]
 
     aa_true "callback returns empty list with no implementations" \
-        {[llength [callback b_callback -arg1 foo bar]] == 0}
+        [expr {[llength [callback b_callback -arg1 foo bar]] == 0}]
 
     set foo(test) 2
 
     aa_true "callback returns value for each defined callback and catches the error callback" \
-        {[llength [callback -catch a_callback -arg1 foo bar]] == 2}
+        [expr {[llength [callback -catch a_callback -arg1 foo bar]] == 2}]
 
     aa_true "callback returns correct value for specified implementation" \
-        {[callback -impl an_impl1 a_callback -arg1 foo bar] == 1}
+        [expr {[callback -impl an_impl1 a_callback -arg1 foo bar] == 1}]
 
     aa_true "callback returns correct value for an array ref" \
-        {[callback -impl an_impl2 a_callback -arg1 foo bar] == 2}
+        [expr {[callback -impl an_impl2 a_callback -arg1 foo bar] == 2}]
 
     aa_true "callback works with {} args" \
-        {[callback -impl an_impl2 a_callback -arg1 {} {}] == {}}
+        [expr {[callback -impl an_impl2 a_callback -arg1 {} {}] == {}}]
 
     aa_true "callback errors with missing arg" \
-        {[catch {callback -impl an_impl2 a_callback -arg1 foo} err] == 1}
+        [expr {[catch {callback -impl an_impl2 a_callback -arg1 foo} err] == 1}]
 
     aa_true "throws error for invalid arguments with implementations" \
         [catch {callback a_callback bar} error]

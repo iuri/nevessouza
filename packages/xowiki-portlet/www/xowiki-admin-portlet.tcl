@@ -1,9 +1,9 @@
 ad_page_contract {
     The display logic for the xowiki admin portlet
-
+    
     @author Michael Totschnig
     @author Gustaf Neumann
-    @cvs-id $Id: xowiki-admin-portlet.tcl,v 1.10 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: xowiki-admin-portlet.tcl,v 1.7.2.1 2016/05/21 11:09:28 gustafn Exp $
 } {
   package_id:naturalnum,optional
   template_portal_id:naturalnum,optional
@@ -11,7 +11,7 @@ ad_page_contract {
   return_url:localurl,optional
 }
 
-if {[info exists package_id] && $package_id ne ""} {
+if {([info exists package_id] && $package_id ne "")} {
   set xowiki_package_id $package_id
 } elseif {[info exists cf]} {
   array set config $cf
@@ -24,11 +24,11 @@ if {[info exists package_id] && $package_id ne ""} {
 ::xowiki::Package initialize -package_id $xowiki_package_id
 set applet_url [::$xowiki_package_id package_url]
 
-if {![info exists template_portal_id] || $template_portal_id eq ""} {
+if {(![info exists template_portal_id] || $template_portal_id eq "")} {
   set template_portal_id [dotlrn_community::get_portal_id]
 }
   
-if {![info exists referer] && [info exists return_url] && $return_url ne ""} {
+if {![info exists referer] && ([info exists return_url] && $return_url ne "")} {
   set referer $return_url
 }
   

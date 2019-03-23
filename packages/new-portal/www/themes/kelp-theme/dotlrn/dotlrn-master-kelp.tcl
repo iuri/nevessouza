@@ -15,32 +15,32 @@
 #
 # /www/dotlrn-master.tcl
 #
-# This is the "default-master" template for dotlrn sites.
+# This is the "default-master" template for dotlrn sites. 
 #
 # Instructions:
 #
-# 1. Put this file and its .adp file into the server's /www directory.
+# 1. Put this file and it's .adp file into the server's /www directory.
 # That's the one with the "default-master" Tcl and adp files. You don't
 # have to edit or remove the "default-master" files, since they will be
 # ignored by the next step.
 # 
-# 2. Change the "Main Site"'s "DefaultMaster" parameter
+# 2. Change the "Main Site"'s "DefaultMaster" parameter 
 # from "/www/default-master" to "/www/dotlrn-master"
 # at http://yoursite.com/admin/site-map
 #
-# This tells OpenACS to use these files instead of the "default-master"
+# This tells OpenACS to to use these files instead of the "default-master"
 #
-# 3. Edit these files to change the look of the site including the banner
+# 3. Edit these files to chage the look of the site including the banner
 # at the top of the page, the title of the pages, the fonts of the portlets, etc.
 #
 # WARNING: All current portlet themes (table, deco, nada, etc) depend on some
-# of the CSS defined below. Be careful when you edit the CSS below,
+# of the CSS defined below. Be careful when you edit the CSS below, 
 # and check how themes use it.
 #
 #
 # Author: Arjun Sanyal (arjun@openforce.net), yon@openforce.net
 #
-# $Id: dotlrn-master-kelp.tcl,v 1.11 2018/07/11 20:45:30 hectorr Exp $
+# $Id: dotlrn-master-kelp.tcl,v 1.6.2.3 2017/06/30 17:51:56 gustafn Exp $
 
 set user_id [ad_conn user_id] 
 set community_id [dotlrn_community::get_community_id]
@@ -69,17 +69,29 @@ set extra_spaces "<img src=\"/resources/dotlrn/spacer.gif\" border=0 width=15>"
 set td_align "align=\"center\" valign=\"top\""
 
 
-set have_comm_id_p [expr {$community_id ne ""}]
+if {$community_id ne ""} {
+    set have_comm_id_p 1
+} else {
+    set have_comm_id_p 0
+}
+
 
 
 # navbar vars
-set show_navbar_p [expr {([info exists no_navbar_p] && $no_navbar_p ne "") && $no_navbar_p ? 0 : 1}]
+set show_navbar_p 1
+if {([info exists no_navbar_p] && $no_navbar_p ne "") && $no_navbar_p} {
+    set show_navbar_p 0
+} 
 
 if {![info exists link_all]} {
     set link_all 0
 }
 
-set link [expr {[info exists return_url] ? $return_url : [ad_conn -get extra_url]}]
+if {![info exists return_url]} {
+    set link [ad_conn -get extra_url]
+} else {
+    set link $return_url
+}
 
 if {![info exists link_control_panel]} {
     set link_control_panel 1
@@ -101,7 +113,13 @@ if {$have_comm_id_p} {
     set text [dotlrn_community::get_community_header_name $community_id] 
     set link [dotlrn_community::get_community_url $community_id]
     set admin_p [dotlrn::user_can_admin_community_p -user_id $user_id -community_id $community_id]
-    
+
+   if { $show_navbar_p } {
+         set make_navbar_p 1
+    } else {
+	set make_navbar_p 0
+
+    }
 } elseif {[parameter::get -parameter community_type_level_p] == 1} {
     set control_panel_text "Administer"
 
@@ -111,6 +129,12 @@ if {$have_comm_id_p} {
     # in a community type
     set text \
             [dotlrn_community::get_community_type_name [dotlrn_community::get_community_type]]
+    
+   if {$show_navbar_p} {
+	set make_navbar_p 1
+    } else {
+	set make_navbar_p 0
+    }
 
 } else {
     # we could be anywhere (maybe under /dotlrn, maybe not)
@@ -118,17 +142,30 @@ if {$have_comm_id_p} {
     set link "[dotlrn::get_url]/"
     set community_id ""
     set text ""
+    set make_navbar_p 1
+    if {$show_navbar_p} {
+    } else {
+    set make_navbar_p 0
+    }
 }
 
 # Set up some basic stuff
 set user_id [ad_conn user_id]
-set username [expr {[ad_conn untrusted_user_id] ? [acs_user::get_element -user_id [ad_conn untrusted_user_id] -element name] : ""}]
+if { [ad_conn untrusted_user_id] == 0 } {
+    set user_name {}
+} else {
+    set user_name [acs_user::get_element -user_id [ad_conn untrusted_user_id] -element name]
+}
 
-if {![info exists title] || $title eq ""} {
+if {(![info exists title] || $title eq "")} {
     set title [ad_system_name]
 }
 
-set parent_comm_p [expr {[dotlrn_community::get_parent_community_id -package_id [ad_conn package_id] ne ""]}]
+if {[dotlrn_community::get_parent_community_id -package_id [ad_conn package_id] eq ""]} {
+    set parent_comm_p 0
+} else {
+    set parent_comm_p 1
+}
 
 set community_id [dotlrn_community::get_community_id]
 
@@ -169,8 +206,19 @@ if {$community_id ne ""} {
 	}
     }
   
-    # font hack
-    set community_header_font [dotlrn_community::get_attribute \
+    # DRB: default logo for dotlrn is a JPEG provided by Collaboraid.  This can
+    # be replaced by custom gifs if preferred (as is done by SloanSpace)
+
+    if { [file exists "$header_img_file-$scope_name.jpg"] } {
+        set header_img_url "$header_img_url-$scope_name.jpg"
+    } elseif { [file exists "$header_img_file-$scope_name.gif"] } {
+        set header_img_url "$header_img_url-$scope_name.gif"
+    }
+  
+   # set header_img_url "$header_img_url-$scope_name.gif"
+
+   # font hack
+   set community_header_font [dotlrn_community::get_attribute \
         -community_id $community_id \
         -attribute_name header_font
     ]
@@ -197,15 +245,11 @@ if {$community_id ne ""} {
     ]
 
     if {$header_logo_item_id ne ""} {
+
 	# Need filename
         set header_img_url "[dotlrn_community::get_community_url $community_id]/file-storage/download/?version_id=$header_logo_item_id" 
-    } elseif { [file exists "$header_img_file-$scope_name.jpg"] } {
-        # DRB: default logo for dotlrn is a JPEG provided by Collaboraid.  This can
-        # be replaced by custom gifs if preferred (as is done by SloanSpace)
-        set header_img_url "$header_img_url-$scope_name.jpg"
-    } elseif { [file exists "$header_img_file-$scope_name.gif"] } {
-        set header_img_url "$header_img_url-$scope_name.gif"
-    }	
+    }
+	
    
     set header_logo_alt_text [dotlrn_community::get_attribute \
         -community_id $community_id \
@@ -241,8 +285,13 @@ if {$community_id ne ""} {
     set text ""
 }
 
-if { $show_navbar_p } {
-    set extra_spaces {<img src="/resources/dotlrn/spacer.gif" border="0" width="15">}
+if { $make_navbar_p } {
+    if {$link_control_panel} {
+	set link_control_panel 1
+    } else {
+	set link_control_panel 0
+    }
+    set extra_spaces "<img src=\"/resources/dotlrn/spacer.gif\" border=0 width=15>"    
     set navbar [dotlrn::portal_navbar \
         -user_id $user_id \
         -link_control_panel $link_control_panel \
@@ -252,7 +301,7 @@ if { $show_navbar_p } {
         -link_all $link_all
     ]
 } else {
-    set navbar {<br>}
+    set navbar "<br>"
 }
 
 
@@ -267,13 +316,17 @@ set ds_enabled_p [parameter::get_from_package_key \
     -default 0
 ]
 
-set ds_link [expr {$ds_enabled_p ? [ds_link] : ""}]
+if {$ds_enabled_p} {
+    set ds_link [ds_link]
+} else {
+    set ds_link {}
+}
 
 set change_locale_url [export_vars -base /acs-lang { { package_id "[ad_conn package_id]" } }]
 
 # Hack for title and context bar outside of dotlrn
 
-set in_dotlrn_p [expr {[string match "[dotlrn::get_url]/*" [ad_conn url]]}]
+set in_dotlrn_p [expr [string match "[dotlrn::get_url]/*" [ad_conn url]]]
 
 if { [info exists context] } {
     set context_bar [eval ad_context_bar $context]

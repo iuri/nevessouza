@@ -1,10 +1,13 @@
+# 
+
 ad_page_contract {
     
     Change the dotlrn site template for a given user or community
     
     @author Victor Guerra (guerra@galileo.edu)
     @creation-date 2005-05-25
-    @cvs-id $Id: change-site-template.tcl,v 1.5 2018/08/15 16:43:08 gustafn Exp $
+    @arch-tag: 71db35e8-e432-49b0-900c-6d8a5cdbdb16
+    @cvs-id $Id: change-site-template.tcl,v 1.3.4.1 2015/09/11 11:40:41 gustafn Exp $
 } {
     referer:notnull
 } -properties {

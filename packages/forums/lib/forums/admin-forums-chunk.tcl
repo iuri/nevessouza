@@ -4,7 +4,7 @@ ad_page_contract {
 
     @author Ben Adida (ben@openforce.net)
     @creation-date 2002-05-24
-    @cvs-id $Id: admin-forums-chunk.tcl,v 1.8 2018/04/07 19:07:31 gustafn Exp $
+    @cvs-id $Id: admin-forums-chunk.tcl,v 1.5.2.2 2015/09/12 11:06:21 gustafn Exp $
 
 }
 set subsite_url [subsite::get_element -element url -notrailing]
@@ -33,7 +33,7 @@ template::list::create \
             label "Enabled"
             html { align center }
             display_template {
-                <if @forums.enabled_p;literal@ true>
+                <if @forums.enabled_p@ true>
                   <a href="@forums.disable_url@" title="Disable forum @forums.name@"><img src="/resources/acs-subsite/checkboxchecked.gif" height="13" width="13" style="background-color: white;" alt="\#forums.disable\#"></a>
                 </if>
                 <else>
@@ -68,7 +68,7 @@ db_multirow -extend {
     set disable_url [export_vars -base "forum-disable" { forum_id }]
 }
 
-if {[info exists alt_template] && $alt_template ne ""} {
+if {([info exists alt_template] && $alt_template ne "")} {
   ad_return_template $alt_template
 }
 

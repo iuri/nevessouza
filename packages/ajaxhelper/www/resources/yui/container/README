@@ -182,7 +182,7 @@ Added the following features:
 
 + Dialog instances are now able to upload files should the Dialog instance's 
   form contain <input type="file"/> elements.  PLEASE NOTE: If a Dialog 
-  instance will be handling asynchronous file uploads, its "callback" property 
+  instance will be handling asyncronous file uploads, its "callback" property 
   will need to be setup with an "upload" handler rather than the standard 
   "success" and, or "failure" handlers.  For more information, see the 
   Connection Manager documenation on file uploads:

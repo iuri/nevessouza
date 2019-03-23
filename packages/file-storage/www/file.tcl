@@ -3,7 +3,7 @@ ad_page_contract {
 
     @author Kevin Scaldeferri (kevin@arsdigita.com)
     @creation-date 7 Nov 2000
-    @cvs-id $Id: file.tcl,v 1.39 2018/06/28 12:30:28 hectorr Exp $
+    @cvs-id $Id: file.tcl,v 1.35.2.7 2017/05/03 18:18:15 antoniop Exp $
 } {
     file_id:naturalnum,notnull
     {show_all_versions_p:boolean,notnull "f"}
@@ -34,36 +34,19 @@ set context [fs_context_bar_list $file_id]
 
 set show_administer_permissions_link_p [parameter::get -parameter "ShowAdministerPermissionsLinkP"]
 set root_folder_id [fs::get_root_folder]
-db_1row file_info {
-        select (select creation_user from acs_objects
-                 where object_id = f.object_id) as creation_user,
-               name as title,
-               parent_id,
-               coalesce(url,file_upload_name) as name,
-               live_revision
-	from   fs_objects f
-	where  f.object_id = :file_id
-}
-
-set write_p  [permission::permission_p -party_id $user_id -object_id $file_id -privilege "write"]
-set delete_p [permission::permission_p -party_id $user_id -object_id $file_id -privilege "delete"]
-set admin_p  [permission::permission_p -party_id $user_id -object_id $file_id -privilege "admin"]
-
-set owner [person::name -person_id $creation_user]
-
-set file_url [content::item::get_path -item_id $file_id \
-                  -root_folder_id $root_folder_id]
+db_1row file_info ""
 
 # get folder id so we can implement a back link
-set folder_id [content::item::get_parent_folder -item_id $file_id]
+set folder_id [db_string get_folder {}]
 set folder_write_p [permission::permission_p -object_id $folder_id -privilege write]
 
 set folder_view_url [export_vars -base index {folder_id}]
 
+# We use the new db_map here
 if { $show_all_versions_p } {
-    set show_versions ""
+    set show_versions [db_map show_all_versions]
 } else {
-    set show_versions "and r.revision_id = i.live_revision"
+    set show_versions [db_map show_live_version]
 }
 
 set not_show_all_versions_p [expr {!$show_all_versions_p}]
@@ -72,7 +55,12 @@ set show_versions_url [export_vars -base file {file_id {show_all_versions_p $not
 set return_url [export_vars -base [ad_conn url] file_id]
 
 set categories_p [parameter::get -parameter CategoriesP -package_id [ad_conn package_id] -default 0]
-set rename_name [expr { $categories_p ? [_ file-storage.Edit_File] : [_ file-storage.Rename_File]}]
+if { $categories_p } {
+    set rename_name [_ file-storage.Edit_File]
+} else {
+    set rename_name [_ file-storage.Rename_File]
+}
+
 
 set actions {}
 

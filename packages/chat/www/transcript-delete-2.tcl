@@ -4,10 +4,12 @@ ad_page_contract {
 } {
     room_id:naturalnum,notnull
     transcript_id:naturalnum,notnull
-
+    
 }
 
 permission::require_permission -object_id $transcript_id -privilege chat_transcript_delete
+
+
 
 if { [catch {chat_transcript_delete $transcript_id} errmsg] } {
     ad_return_complaint 1 "[_ chat.Delete_transcript_failed]: $errmsg"
@@ -15,9 +17,3 @@ if { [catch {chat_transcript_delete $transcript_id} errmsg] } {
 }
 
 ad_returnredirect "room?room_id=$room_id"
-
-# Local variables:
-#    mode: tcl
-#    tcl-indent-level: 4
-#    indent-tabs-mode: nil
-# End:

@@ -20,7 +20,7 @@ ad_library {
 
     @author ben@openforce.net
     @author arjun@openforce.net
-    @cvs-id $Id: navigation-procs.tcl,v 1.31 2018/04/30 09:14:23 gustafn Exp $
+    @cvs-id $Id: navigation-procs.tcl,v 1.28.2.2 2017/04/21 20:45:16 gustafn Exp $
 
 }
 
@@ -88,14 +88,14 @@ namespace eval dotlrn {
             }
     
             if { [llength $application_admin_context] > 0 } {
-                lappend application_context {*}$application_admin_context
+                set application_context [concat $application_context $application_admin_context] 
             }
     
             if { $context ne "" } {
-                lappend application_context {*}$context
+                set application_context [concat $application_context $context]
             } else {
                 # Make last entry be just the label
-                lset application_context end [lindex $application_context end 1]
+                set application_context [lreplace $application_context end end [lindex $application_context end 1]]
             }
         } else {
             set application_context [list]
@@ -283,7 +283,7 @@ namespace eval dotlrn {
 	 }
 
         #
-        # Common code for the behavior of the control panel link (class administration
+        # Common code for the the behavior of the control panel link (class administration
         # or my account)
         #
 

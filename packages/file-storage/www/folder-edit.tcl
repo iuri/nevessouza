@@ -3,7 +3,7 @@ ad_page_contract {
 
     @author Andrew Grumet (aegrumet@alum.mit.edu)
     @creation-date 24 Jun 2002
-    @cvs-id $Id: folder-edit.tcl,v 1.9 2018/01/18 15:29:14 trenner Exp $
+    @cvs-id $Id: folder-edit.tcl,v 1.5.2.1 2015/09/12 11:06:19 gustafn Exp $
 } {
     folder_id:naturalnum,notnull
 } -validate {
@@ -26,13 +26,7 @@ set context_bar [fs_context_bar_list -final "[_ file-storage.Edit]" $folder_id]
 set submit_label [_ file-storage.Save]
 
 ad_form -export folder_id -form {
-    {folder_name:text(text)
-        {label "\#file-storage.Folder_Name\#"}
-    }
-    {description:text(textarea),optional
-        {label \#file-storage.Description\#}
-        {html "rows 5 cols 35"}
-    }
+    {folder_name:text(text) {label "\#file-storage.Folder_Name\#"}}
 }
 
 
@@ -46,32 +40,26 @@ if { [parameter::get -parameter CategoriesP -package_id $package_id -default 0] 
 
 
 ad_form -extend -form {
-    {submit:text(submit) {label $submit_label}}    
+    {submit:text(submit) {label $submit_label}}
 } -on_request {
-    content::item::get -item_id $folder_id -array folder
-    set folder_name $folder(label)
-    set description $folder(description)
+    set folder_name [fs_get_folder_name $folder_id]
 } -on_submit {
 
-    db_transaction {
-        content::folder::update -folder_id $folder_id \
-            -attributes [list \
-                             [list label $folder_name] \
-                             [list description $description]]
-        
-        if { [parameter::get -parameter CategoriesP -package_id $package_id -default 0] } {
-            category::map_object -remove_old -object_id $folder_id [category::ad_form::get_categories \
-                                                                        -container_object_id $package_id \
-                                                                        -element_name category_id]
-        }        
+    db_exec_plsql folder_rename {}
 
-        callback fs::folder_edit -package_id [ad_conn package_id] -folder_id $folder_id
+    if { [parameter::get -parameter CategoriesP -package_id $package_id -default 0] } {
+	category::map_object -remove_old -object_id $folder_id [category::ad_form::get_categories \
+								       -container_object_id $package_id \
+								       -element_name category_id]
     }
+
+    callback fs::folder_edit -package_id [ad_conn package_id] -folder_id $folder_id
 
 } -after_submit {
     ad_returnredirect "?folder_id=$folder_id"
-    ad_script_abort
 }
+
+ad_return_template
 
 # Local variables:
 #    mode: tcl

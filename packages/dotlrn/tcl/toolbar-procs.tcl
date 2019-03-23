@@ -20,7 +20,7 @@ ad_library {
 
     @author Enrique Catalan (quio@galileo.edu)
     @creation-date 2004-11-10
-    @cvs-id $Id: toolbar-procs.tcl,v 1.5 2017/08/07 23:48:09 gustafn Exp $
+    @cvs-id $Id: toolbar-procs.tcl,v 1.4.2.1 2015/09/11 11:40:40 gustafn Exp $
 }
 
 namespace eval dotlrn_toolbar {

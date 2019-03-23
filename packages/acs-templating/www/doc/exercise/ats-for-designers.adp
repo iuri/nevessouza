@@ -57,7 +57,7 @@ and compare the html script that you see there with the final
 user-viewed page, <code><a href="list-and-var-sample.acs">list-and-var-sample.acs</a></code>.
 Almost every .acs page the user sees is supported by one .tcl file
 which supplies the data to be shown, and one .adp file specifying
-the format of its presentation. Compare what you see in
+the format of it&#39;s presentation. Compare what you see in
 <code>list-and-var-sample.acs</code> with its supporting .adp file
 and make note of the textual and structural differences between the
 two, specifically:</p>
@@ -73,8 +73,7 @@ block of <code>list-and-var-sample.adp</code>; here,
 appearing once in the .adp file, are cycled repeatedly to show
 multiple sets of information when displayed in
 <code>list-and-var-sample.acs</code>; example:
-<blockquote><pre><code>
-    &lt;multiple name="<em>your_multirow</em>"&gt;
+<blockquote><pre><code>    &lt;multiple name="<em>your_multirow</em>"&gt;
     &lt;tr&gt;&lt;td&gt;\@<em>your_multirow</em>.first_names\@ \@<em>your_multirow</em>.last_name\@ &lt;/td&gt; &lt;/tr&gt;
     &lt;/multiple&gt;
     </code></pre></blockquote>
@@ -123,7 +122,7 @@ presentation. The <a href="../tags/if">&lt;if&gt;</a> and
 &lt;else&gt; tags allow you to alter the format of your page to
 accommodate data changes. The function of &lt;if&gt; is
 straightforward enough: given a condition -- such as \@x\@ equals 5
--- all the text/html/dynamic data between the opening and
+-- all the text/html/dynamic data between the the opening and
 closing &lt;if&gt; tags will be displayed if and only if \@x\@ does
 in fact equal 5. A complete listing of currently supported
 conditions and some brief explanatory notes can be found <a href="../tags/if">here</a>. Also, a few more things to keep in
@@ -198,7 +197,8 @@ same name as a variable declared within the slave section&#39;s
 <p>Now that the secrets of &lt;master&gt; and &lt;slave&gt; have
 been revealed, it&#39;s time to put a little of your newfound
 knowledge to use. Open up <a href="form-sample.acs"><code>form-sample.adp</code></a>, a standalone,
-independently formatted html page, and enslave it to the mastery of your personal web page. It would also be nice if you were to
+independently formatted html page, and enslave it to the mastery of
+of your personal web page. It would also be nice if you were to
 label the newly inserted form with some slave-specific title.</p>
 <p>
 <strong>Exercise Four: The functions of
@@ -280,7 +280,7 @@ white, or some other color scheme of your preference</li><li>use the <code>start
 book listing begins at a rownumber determined by the Tcl file code
 (check the .dat page)</li><li>add navigation links to the address book so that users can move
 forward or back between row listings, or jump to the beginning or
-end of their address book</li><li style="list-style: none; display: inline"><ul>
+end of their address book</li><li style="list-style: none"><ul>
 <li>each link should set the url variable that determines the first
 row of the set to be displayed</li><li>the links should only appear when necessary, that is, a link
 pointing towards the next set of rows should not appear if the user

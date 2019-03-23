@@ -5,7 +5,7 @@ ad_page_contract {
     @author Lars Pind (lars@collaboraid.biz)
 
     @creation-date 26 October 2001
-    @cvs-id $Id: package-list.tcl,v 1.14 2018/11/28 11:06:33 antoniop Exp $
+    @cvs-id $Id: package-list.tcl,v 1.12.2.1 2015/09/10 08:21:29 gustafn Exp $
 } {
     locale
 } -properties {
@@ -90,7 +90,7 @@ set search_locales [list \
                         [list "Current locale - [lang::util::get_label $current_locale]" $current_locale] \
                         [list "Master locale - [lang::util::get_label $default_locale]" $default_locale]]
 
-ad_form -has_submit 1 -name search -action message-search -form {
+ad_form -name search -action message-search -form {
     {locale:text(hidden) {value $locale}}
 }
 

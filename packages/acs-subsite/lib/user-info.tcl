@@ -1,34 +1,30 @@
-ad_include_contract {
-    Show information of a user as a form
-
-    @param user_id        show user of this user_id. Use current user, if no user_id is provided
-    @param return_url     return to this URL when DONE.
-    @param edit_p         show form in edit mode, when set to true
-    @param show_groups_p  does currently nothing
-    @param message        passed as a hidden form field. No idea why.
-} {
-    {user_id:naturalnum ""}
-    {return_url:localurl ""}
-    {edit_p:boolean false}    
-    {show_groups_p:boolean false}
-    {message:optional}
-}
+#
+# Expects: 
+#  user_id:naturalnum,optional
+#  return_url:optional
+#  edit_p:optional
+#  message:optional
+#  show_groups_p:optional
 
 auth::require_login -account_status closed
 
-if { $user_id eq "" } {
+if { (![info exists user_id] || $user_id eq "") } {
     set user_id [ad_conn untrusted_user_id]
 } elseif { $user_id != [auth::get_user_id -account_status closed] } {
     permission::require_permission -object_id $user_id -privilege admin
 }
 
-if { $return_url eq "" } {
+if { (![info exists return_url] || $return_url eq "") } {
     set return_url [ad_conn url]
+}
+
+if { (![info exists show_groups_p] || $show_groups_p eq "") } {
+    set show_groups_p 0
 }
 
 set action_url "[subsite::get_element -element url]user/basic-info-update"
 
-acs_user::get -user_id $user_id -array user
+acs_user::get -user_id $user_id -array user -include_bio
 
 set authority_name [auth::authority::get_element -authority_id $user(authority_id) -element pretty_name]
 
@@ -48,7 +44,7 @@ foreach elm $read_only_elements {
 set edit_mode_p [expr {[form::get_action user_info] ne ""}]
 
 set form_mode display
-if { $edit_p } {
+if { [info exists edit_p] && $edit_p eq "1" } {
     set form_mode edit
 }
 
@@ -156,7 +152,7 @@ foreach elm $form_elms {
 }
 set focus "user_info.$first_element"
 
-#
+# 
 ad_form -extend -name user_info -form $elms_list -on_request {
     foreach var { authority_id first_names last_name email username screen_name url bio } {
         set $var $user($var)
@@ -189,7 +185,7 @@ ad_form -extend -name user_info -form $elms_list -on_request {
 
 
     # Handle authentication problems
-    switch -- $result(update_status) {
+    switch $result(update_status) {
         ok {
             # Updating locale/tz data
             if { [info exists site_wide_locale] } {
@@ -202,7 +198,7 @@ ad_form -extend -name user_info -form $elms_list -on_request {
             if { [llength $result(element_messages)] == 0 } {
                 form set_error user_info $first_element $result(update_message)
             }
-
+                
             # Element messages
             foreach { elm_name elm_error } $result(element_messages) {
                 form set_error user_info $elm_name $elm_error
@@ -210,12 +206,12 @@ ad_form -extend -name user_info -form $elms_list -on_request {
             break
         }
     }
-
+ 
 } -after_submit {
     if {[ad_conn account_status] eq "closed"} {
         auth::verify_account_status
     }
-
+    
     ad_returnredirect $return_url
     ad_script_abort
 }
@@ -224,7 +220,7 @@ ad_form -extend -name user_info -form $elms_list -on_request {
 if { ![form is_valid user_info] } {
     element set_properties user_info email \
         -display_value "<a href=\"mailto:[element get_value user_info email]\">[element get_value user_info email]</a>"
-
+    
     set url [element get_value user_info url]
     if {   ![string match -nocase "http://*" $url]
         && ![string match -nocase "https://*" $url]
@@ -232,8 +228,8 @@ if { ![form is_valid user_info] } {
         element set_properties user_info url \
             -display_value "<a href=\"http://$url\">$url</a>"
     } else {
-        element set_properties user_info url -display_value \
-            "<a href=\"$url\">$url</a>"
+	element set_properties user_info url -display_value \
+		"<a href=\"$url\">$url</a>"
     }
 }
 

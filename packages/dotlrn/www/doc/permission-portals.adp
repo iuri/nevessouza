@@ -10,11 +10,11 @@ aggregate data from disparate sources, shown as "boxes" on the page,
 and allow these sources to be added, removed, and altered in various
 ways. Permissioning issues arise frequently: "Is a student allowed to
 remove the "Class Announcements" element of her portal?" is an example
-of a permissioning issue.
+of a permissioning issue. 
 <P>
 In general the system of permissions should be simple enough for the
-users to understand, but flexible enough to support all of the
-required features.
+users to understand, but flexible enought to support all of the
+required features. 
 <P>
 Also, the scope of this document is the permissions system related to
 the portal-based parts of dotLRN, for more documentation on the
@@ -27,7 +27,7 @@ to the point specified by a class administrator. In the example given
 above, a class administrator could "lock" the "Class Announcements"
 element in student's personal portals so they would not have the power
 to remove it or alter its position. In this case, the administrator
-would have control over <strong>more than one</strong> portal, i.e. her
+would have contol over <strong>more than one</strong> portal, i.e. her
 own personal portal and a "default" portal that is "cloned", including
 the "lock", to create each student's portal when she registers for the
 class.
@@ -56,7 +56,7 @@ destroy portals for scenarios such as the one given above.
 <li>Granted to: Admin users who have CREATE
 </ul>
 
-<h2>Portal-level Permissions for Non-Admin Users</h2>
+<h2>Portal-level Permissons for Non-Admin Users</h2>
 
 These permissions are at the level of individual portals for users
 such as students.
@@ -80,7 +80,7 @@ such as students.
 permissions that a non-admin user will have, other than "READ". 
 </ul>
 
-<h2>Portal-level Permissions for Admin Users</h2>
+<h2>Portal-level Permissons for Admin Users</h2>
 
 Admin users with the CREATE permission will be granted the following
 permisson on the newly created portal.

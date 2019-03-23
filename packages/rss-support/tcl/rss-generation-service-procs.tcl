@@ -5,7 +5,7 @@ ad_library {
     @author aegrumet@alum.mit.edu
 
     @creation-date Fri Oct 26 11:43:26 2001
-    @cvs-id $Id: rss-generation-service-procs.tcl,v 1.22 2017/08/07 23:48:29 gustafn Exp $
+    @cvs-id $Id: rss-generation-service-procs.tcl,v 1.21.2.2 2015/10/20 08:19:14 gustafn Exp $
 }
 
 ad_proc -private rss_gen_service {} {

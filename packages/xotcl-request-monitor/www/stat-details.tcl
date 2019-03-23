@@ -1,9 +1,9 @@
 ad_page_contract {
-    Displays call statistics
+    Displays last requests of a user
 
-    @author Gustaf Neumann
+    @author Gustaf Neumann 
 
-    @cvs-id $Id: stat-details.tcl,v 1.13 2018/08/04 18:55:48 gustafn Exp $
+    @cvs-id $id: whos-online.tcl,v 1.1.1.1 2004/03/16 16:11:51 nsadmin exp $
 } -query {
     {all:optional 0}
     {with_param:optional 1}
@@ -16,14 +16,6 @@ ad_page_contract {
 }
 set title "Url Statistics"
 set context [list "Url Statistics"]
-
-set admin_p [acs_user::site_wide_admin_p]
-if {!$admin_p} {
-  ad_return_warning "Insufficient Permissions" \
-      "Only side wide admins are allowed to view this page!"
-  ad_script_abort
-}
-
 set hide_patterns [parameter::get -parameter hide-requests -default {*.css}]
 array set apps {
   calendar 1 acs-templating 1 forums 1 file-storage 1 one-community 1 
@@ -49,7 +41,7 @@ set total_avg [expr {$total_cnt>0 ? $total/($total_cnt*1000.0) : "0" }]
 set full_stat [list]
 if {$with_param == 0} {
   # without parameter
-  # add up same URLs
+  # add up same urls
   array unset aggr_stat
   foreach l $stat {
     lassign $l url time cnt
@@ -125,9 +117,9 @@ set show_all_tooltip(1) "Show all values"
 set not_all [expr {!$all}]
 
 set with_param_label(1) "Without parameter"
-set with_param_tooltip(1) "Statistics without parameters"
+set with_param_tooltip(1) "Statistics without paramters"
 set with_param_label(0) "With parameter"
-set with_param_tooltip(0) "Statistics with parameters"
+set with_param_tooltip(0) "Statistics with paramters"
 set not_with_param [expr {!$with_param}]
 
 set with_apps_label(1) "With communities"

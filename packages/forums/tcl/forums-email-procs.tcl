@@ -4,7 +4,7 @@ ad_library {
 
     @creation-date 2002-05-17
     @author Ben Adida <ben@openforce.biz>
-    @cvs-id $Id: forums-email-procs.tcl,v 1.6 2017/08/07 23:48:11 gustafn Exp $
+    @cvs-id $Id: forums-email-procs.tcl,v 1.5.2.1 2015/09/12 11:06:26 gustafn Exp $
 
 }
 

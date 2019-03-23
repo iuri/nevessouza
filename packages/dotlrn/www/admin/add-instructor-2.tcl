@@ -19,7 +19,7 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date Jan 10, 2002
-    @cvs-id $Id: add-instructor-2.tcl,v 1.13 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: add-instructor-2.tcl,v 1.11.2.1 2015/09/11 11:40:48 gustafn Exp $
 } -query {
     community_id:naturalnum,notnull
     {search_text ""}

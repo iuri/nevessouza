@@ -26,7 +26,7 @@ Assessment package, it seems likely that in some applications,
 users would indeed want to designate a single "live"
 version, while in many others, they wouldn&#39;t. </p><p>Attributes of Assessments will include those previously included
 in Surveys plus some others:</p><ul>
-<li>assessment_id</li><li>cr:name - a curt name appropriate for URLs<br>
+<li>assessment_id</li><li>cr:name - a curt name appropriate for urls<br>
 </li><li>cr:title - a formal title to use in page layouts etc</li><li>creator_id - Who is the "main" author and creator of
 this assessment</li><li>cr:description - text that can appear in introductory web
 pages</li><li>instructions - text that explains any specific steps the
@@ -41,7 +41,7 @@ shall still be possible to see the user that have not finished the
 survey though.</span></span></li><li><span class="context"><span class="reg">secure_access_p - The
 assessment can only be taken if a secure connection (https) is
 used.</span></span></li><li><span class="context"><span class="reg">reuse_responses_p - If
-yes, the system will look for previous responses to the
+yes, the system will look for previous responses to the the
 questions and prefill the last answer the respondee has given in
 the assessment form of the respondee</span></span></li><li><span class="context"><span class="reg">show_item_name_p - If
 yes, the respondee will see the name of the item in addition to the
@@ -54,7 +54,7 @@ you page is there. Otherwise the return_url should be set in the
 thank you page context, so we can have a "continue"
 URL.</li><li>start_time - At what time shall the assessment become available
 to the users (remark: It will only become available to the users
-who have at least the "respond" privilege.</li><li>end_time - At what time the assessment becomes unavailable.
+who have at least the "respond" priviledge.</li><li>end_time - At what time the assessment becomes unavailable.
 This is a hard date, any response given after this time will be
 discarded.</li><li>number_tries - Number of times a respondee can answer the
 assessment</li><li>wait_between_tries - Number of minutes a respondee has to wait
@@ -65,7 +65,7 @@ shall be displayed to the respondee (All, none, correct,
 incorrect). Correct and Incorrect will only show the feedback_text
 if the response was correct or incorrect.</li><li><span class="context"><span class="reg"><span class="reg">section_navigation - How shall the navigation
 happen<br>
-</span></span></span></li><li style="list-style: none; display: inline"><ul>
+</span></span></span></li><li style="list-style: none"><ul>
 <li><span class="context"><span class="reg"><span class="reg">default path - Order given by the relationship between
 assessment and section (the order value in cr_rels, if this is
 used).<br>
@@ -81,15 +81,15 @@ within a department) they are covered in the
 as_assessment_styles:</li>
 </ul>
 <ul>
-<li style="list-style: none; display: inline">
+<li style="list-style: none">
 <ul>
 <li>custom_header - Custom header (and footer) that will be
-displayed the respondee when answering an assessment.
+displayed the the respondee when answering an assessment.
 Possibility to include system variables (e.g. first name).<br>
 </li><li>custom_footer<br>
 </li><li>form_template - Style (form_template) that will be used for
-this assessment. You can either select an existing one or upload a
-new style as well as edit the currently chosen one (no datamodell
+this assesment. You can either select an existing one or upload a
+new style as well as edit the currently choosen one (no datamodell
 but UI thought).<br>
 </li><li>
 <span class="context"><span class="reg">progress_bar: What kind
@@ -101,7 +101,7 @@ These options allow the respondee to select between different
 presentation styles. At least one of the checkboxes mentioned below
 has to be selected.</span></span><ul>
 <li><span class="context">All questions at once</span></li><li><span class="context">One question per page. If you have
-selected respondee may not edit their responses, it will not be
+selected respondee may not edit their reponses, it will not be
 possible for them to go back and choose another answer to that
 question.</span></li><li><span class="context">Sectioned</span></li>
 </ul>
@@ -111,7 +111,7 @@ shareable_p boolean. As with Items and Sections, we instead will
 use the acs permission system:</p><ul>
 <li>Read: An assessment author (who is granted this permission) can
 reuse this assessment (NB: Usually the original author has admin
-privileges.)</li><li>Write: Author can reuse and change this assessment.</li><li>Admin: Author can reuse, change and give permission on this
+priviledges.)</li><li>Write: Author can reuse and change this assessment.</li><li>Admin: Author can reuse, change and give permission on this
 assessment</li><li>Respond: The user can respond to the survey.<br>
 </li>
 </ul>
@@ -142,7 +142,7 @@ shareable_p boolean. As with Items and Assessments, we instead will
 use the acs permission system:</p><ul>
 <li>Read: A section author (who is granted this permission) can
 reuse this section (NB: Usually the original author has admin
-privileges.)</li><li>Write: Author can reuse and change this section.</li><li>Admin: Author can reuse, change and give permission on this
+priviledges.)</li><li>Write: Author can reuse and change this section.</li><li>Admin: Author can reuse, change and give permission on this
 section</li>
 </ul>
 </li><li>Section Display Types (as_section_display_types) define types

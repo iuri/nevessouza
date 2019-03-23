@@ -19,7 +19,7 @@ ad_page_contract {
     Place elements in a portal template.
 
     @author Arjun Sanyal (arjun@openforce.net)
-    @cvs-id $Id: template-place-element.tcl,v 1.14 2018/06/29 17:27:19 hectorr Exp $
+    @cvs_id $Id: template-place-element.tcl,v 1.12.4.1 2015/09/12 11:06:39 gustafn Exp $
 } -properties {
     region:onevalue
     action_string:onevalue

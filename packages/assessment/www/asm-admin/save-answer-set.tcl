@@ -2,7 +2,7 @@ ad_page_contract {
     Form to add the choice data of a multiple choice item.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: save-answer-set.tcl,v 1.5 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     assessment_id:naturalnum,notnull
     as_item_id:naturalnum,notnull

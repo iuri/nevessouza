@@ -2,7 +2,7 @@ ad_page_contract {
     Confirmation form to copy an item of a section.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: item-copy.tcl,v 1.8 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     assessment_id:naturalnum,notnull
     section_id:naturalnum,notnull

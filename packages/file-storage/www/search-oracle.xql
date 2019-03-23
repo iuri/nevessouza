@@ -3,7 +3,7 @@
 <queryset>
    <rdbms><type>oracle</type><version>8.1.6</version></rdbms>
 
-<fullquery name="get_ids_and_titles">      
+<fullquery name="results">      
       <querytext>
       
     	select item_id as file_id,

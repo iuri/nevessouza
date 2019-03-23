@@ -11,7 +11,7 @@ ad_page_contract {
     @author Bryan Quinn (bquinn@arsdigita.com)
     @author Richard Li (richardl@arsdigita.com)
     @creation-date Mon Oct  9 15:19:31 2000
-    @cvs-id $Id: index.tcl,v 1.32.2.1 2019/02/14 10:02:36 gustafn Exp $
+    @cvs-id $Id: index.tcl,v 1.30.2.8 2017/04/22 18:26:04 gustafn Exp $
 } {
 
 }
@@ -37,7 +37,7 @@ this page to access the running web server.
     ns_shutdown
   } else {
     install_return 200 "Error" "
-The installation program has encountered an error.  Please drop your OpenACS tablespace
+The installation program has encounted an error.  Please drop your OpenACS tablespace
 and the OpenACS username, recreate them, and try again.  You can log this as a bug
 using the <a href=\"http://openacs.org/bugtracker/openacs\">OpenACS Bug Tracker</a>. 
 "
@@ -80,7 +80,7 @@ application after the basic OpenACS tookit has been installed.
         append body [subst {<p>
 For more information about the $acs_application(pretty_name) application visit the
 <a href="[ns_quotehtml $acs_application(home)]">$acs_application(pretty_name) home page</a>
-	}]
+	}
     }
 } else {
     set acs_application(name) openacs

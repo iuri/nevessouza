@@ -2,7 +2,7 @@ ad_page_contract {
 
     @author Rafael Schloming (rhs@mit.edu)
     @creation-date 2000-09-09
-    @cvs-id $Id: new.tcl,v 1.12 2018/04/07 17:31:59 gustafn Exp $
+    @cvs-id $Id: new.tcl,v 1.7.2.2 2015/09/18 07:27:48 gustafn Exp $
 
 } {
     parent_id:naturalnum,notnull
@@ -22,7 +22,7 @@ ad_page_contract {
         }
     }
     node_type_ck -requires node_type:notnull {
-        switch -- $node_type {
+        switch $node_type {
             folder {
                 set directory_p t
                 set pattern_p t
@@ -59,15 +59,13 @@ db_transaction {
         <blockquote><pre>
                 [ns_quotehtml $errmsg]
         </pre></blockquote>"
-    ad_script_abort
 }
 
-if {$parent_id ni $expand} {
+if {[lsearch $expand $parent_id] == -1} {
     lappend expand $parent_id
 }
 
 ad_returnredirect [export_vars -base . {expand:multiple root_id}]
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

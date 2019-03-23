@@ -6,8 +6,8 @@ ad_page_contract {
     @param  section_id list of integers specifying sections
 
     @author timo@timohentschel.de
-    @creation-date   2004-12-08
-    @cvs-id $Id: catalog-section-add.tcl,v 1.7 2018/06/29 17:27:18 hectorr Exp $ 
+    @date   2004-12-08
+    @cvs-id $Id: 
 } {
     assessment_id:naturalnum,notnull
     after:integer

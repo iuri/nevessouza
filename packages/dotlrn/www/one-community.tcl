@@ -21,7 +21,7 @@ ad_page_contract {
     @author yon (yon@openforce.net)
     @author arjun (arjun@openforce.net)
     @creation-date 2001-10-04
-    @cvs-id $Id: one-community.tcl,v 1.38 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: one-community.tcl,v 1.36.8.2 2017/01/26 08:53:27 gustafn Exp $
 } -query {
     {page_num:naturalnum,notnull 0}
 }

@@ -8,7 +8,7 @@ ad_library {
     @author Gary Jin (gjin@arsdigita.com)
     @author Ben Adida (ben@openforce.net)
     @creation-date Dec 14, 2000
-    @cvs-id $Id: calendar-procs.tcl,v 1.39 2018/06/28 14:58:16 hectorr Exp $
+    @cvs-id $Id: calendar-procs.tcl,v 1.34.2.3 2017/06/30 17:42:16 gustafn Exp $
 
 }
 
@@ -22,23 +22,23 @@ ad_proc calendar::make_datetime {
     given a date, and a time, construct the proper date string
     to be imported into oracle. (yyyy-mm-dd hh24:mi format)s
 } {
-
+    
     # MUST CONVERT TO ARRAYS! (ben)
     array set event_date_arr $event_date
     if {$event_time ne ""} {
         array set event_time_arr $event_time
     }
-
-    # extract from even-date
+    
+    # extract from even-date 
     set year   $event_date_arr(year)
     set day    $event_date_arr(day)
     set month  $event_date_arr(month)
-
+    
     if {$event_time ne ""} {
         # extract from event_time
         set hours $event_time_arr(hours)
         set minutes $event_time_arr(minutes)
-
+        
         # AM/PM? (ben - OpenACS fix)
         if {[info exists event_time_arr(ampm)]} {
             if {$event_time_arr(ampm)} {
@@ -53,20 +53,20 @@ ad_proc calendar::make_datetime {
                 }
             }
         }
-
+        
         if {$hours < 10} {
             set hours "0$hours"
         }
     }
-
+    
     if {$month < 10} {
-        set month "0$month"
+	set month "0$month"
     }
-
+    
     if {$day < 10} {
-        set day "0$day"
+	set day "0$day"
     }
-
+    
     if {$event_time eq ""} {
         return "$year-$month-$day"
     } else {
@@ -75,48 +75,48 @@ ad_proc calendar::make_datetime {
 }
 
 ad_proc calendar::create { owner_id
-                          private_p
-                          {calendar_name ""}
+                          private_p          
+                          {calendar_name ""}       
 } {
     create a new calendar
     private_p is default to true since the default
-    calendar is a private calendar
+    calendar is a private calendar 
 } {
 
     # find out configuration info
     set package_id [ad_conn package_id]
     set creation_ip [ad_conn "peeraddr"]
     set creation_user [ad_conn "user_id"]
-
+    
     # BMA:FIXME: this needs to be fixed a LOT more, but for now we patch the obvious
     if {$creation_user == 0} {
         set creation_user $owner_id
     }
 
     set calendar_id [db_exec_plsql create_new_calendar {
-        begin
-        :1 := calendar.new(
-          owner_id      => :owner_id,
-          private_p     => :private_p,
-          calendar_name => :calendar_name,
-          package_id    => :package_id,
-          creation_user => :creation_user,
-          creation_ip   => :creation_ip
-        );
-        end;
+	begin
+	:1 := calendar.new(
+	  owner_id      => :owner_id,
+	  private_p     => :private_p,
+	  calendar_name => :calendar_name,
+	  package_id    => :package_id,
+	  creation_user => :creation_user,
+	  creation_ip   => :creation_ip
+	);	
+	end;
     }
     ]
     #removing inherited permissions
     permission::set_not_inherit -object_id $calendar_id
-
+    
     return $calendar_id
-
+    
 }
 
 ad_proc -public calendar::assign_permissions { calendar_id
                                       party_id
                                       cal_privilege
-                                      {revoke ""}
+                                      {revoke ""}                        
 } {
     given a calendar_id, party_id and a permission
     this proc will assign the permission to the party
@@ -124,46 +124,46 @@ ad_proc -public calendar::assign_permissions { calendar_id
 
     public, private, calendar_read, calendar_write, calendar_delete
 
-    if the revoke is set, then the given permission will
+    if the revoke is set, then the given permission will 
     be removed for the party
 
 } {
-    # default privilege is being able to read
+    # default privilege is being able to read 
 
     # if the permission is public, oassign the magic object
     # and set permission to read
 
     if {$cal_privilege eq "public"} {
-
+	
         set party_id [acs_magic_object "the_public"]
-        set cal_privilege "calendar_read"
+	set cal_privilege "calendar_read"
     } elseif {$cal_privilege eq "private"} {
-        set cal_privilege "calendar_read"
-    }
+	set cal_privilege "calendar_read"
+    } 
 
     if { $revoke eq "" } {
-        # grant the permissions
+	# grant the permissions
         permission::grant -object_id $calendar_id -party_id $party_id -privilege $cal_privilege
     } elseif {$revoke eq "revoke"} {
-        # revoke the permissions
+	# revoke the permissions
         permission::revoke -object_id $calendar_id -party_id $party_id -privilege $cal_privilege
-    }
+    }    
 }
 
-ad_proc -public calendar::have_private_p {
-    {-return_id 0}
+ad_proc -public calendar::have_private_p { 
+    {-return_id 0} 
     {-calendar_id_list {}}
     {-party_id party_id }
 } {
     Check to see if the user has a private calendar.
     When the provided -return_id is 1, then proc will return the calendar_id
 
-    @param calendar_id_list If you supply the calendar_id_list, then we'll only search
+    @param calendar_id_list If you supply the calendar_id_list, then we'll only search 
     for a personal calendar among the calendars supplied here.
 } {
     # Check whether the user is logged in at all
     if {!$party_id} {
-        return -1
+	return -1
     }
 
     if { [llength $calendar_id_list] > 0 } {
@@ -171,18 +171,18 @@ ad_proc -public calendar::have_private_p {
     } else {
         set result [db_string get_calendar_info {} -default 0]
     }
-
+    
     if { $result ne "0" } {
 
-        if {$return_id eq "1"} {
-            return $result
-        } else {
-            return 1
-        }
-
+	if {$return_id eq "1"} {
+	    return $result
+	} else {
+	    return 1
+	}
+ 
     } else {
-
-        return 0
+	
+	return 0
     }
 }
 
@@ -193,7 +193,7 @@ ad_proc -public calendar::name { calendar_id } {
     return [db_string get_calendar_name {} -default ""]
 }
 
-
+                          
 ad_proc -public calendar::get_month_multirow_information {
     {-current_day:required}
     {-today_julian_date:required}
@@ -206,7 +206,7 @@ ad_proc -public calendar::get_month_multirow_information {
     set last_day_of_week [expr {[expr {$first_day_of_week + 6}] % 7}]
 
     if {$current_day == $today_julian_date} {
-        set today_p t
+        set today_p t 
     } else {
         set today_p f
     }
@@ -232,9 +232,9 @@ ad_proc -public calendar::from_sql_datetime {
     {-sql_date:required}
     {-format:required}
 } {
-
+    
 } {
-    # for now, we recognize only "YYYY-MM-DD" "HH12:MIam" and "HH24:MI".
+    # for now, we recognize only "YYYY-MM-DD" "HH12:MIam" and "HH24:MI". 
     set date [template::util::date::create]
 
     switch -exact -- $format {
@@ -249,10 +249,10 @@ ad_proc -public calendar::from_sql_datetime {
 
         {HH12:MIam} {
             regexp {([0-9]*):([0-9]*) *([aApP][mM])} $sql_date all hours minutes ampm
-
+            
             set date [template::util::date::set_property format $date {HH12:MI am}]
             set date [template::util::date::set_property hours $date $hours]
-            set date [template::util::date::set_property minutes $date $minutes]
+            set date [template::util::date::set_property minutes $date $minutes]                
             set date [template::util::date::set_property ampm $date [string tolower $ampm]]
         }
 
@@ -311,8 +311,6 @@ ad_proc -public calendar::calendar_list {
     {-user_id ""}
     {-privilege ""}
 } {
-    @return a list of calendars
-} {
     # If no user_id
     if {$user_id eq ""} {
         set user_id [ad_conn user_id]
@@ -321,7 +319,7 @@ ad_proc -public calendar::calendar_list {
     if {$package_id eq ""} {
         set package_id [ad_conn package_id]
     }
-
+    
     set permissions_clause {}
     if { $privilege ne "" } {
         set permissions_clause [db_map permissions_clause]
@@ -333,9 +331,6 @@ ad_proc -public calendar::calendar_list {
 ad_proc -public calendar::adjust_date {
     {-date ""}
     {-julian_date ""}
-} {
-    @return the date if it is provided. Otherwise, the julian date in ANSI
-            format, if provided, or the system date.
 } {
     if {$date eq ""} {
         if {$julian_date ne ""} {
@@ -354,10 +349,6 @@ ad_proc -public calendar::new {
     {-calendar_name:required}
     {-package_id ""}
 } {
-    Create a new calendar
-
-    @return the new calendar_id
-} {
     if { $package_id eq "" } {
         set package_id [ad_conn package_id]
     }
@@ -370,12 +361,12 @@ ad_proc -public calendar::new {
     return $calendar_id
 }
 
-ad_proc -public calendar::personal_p {
+ad_proc -public calendar::personal_p { 
     {-calendar_id:required}
     {-user_id ""}
 } {
-    @return true (1) if this is the user's personal calendar, false (0) otherwise.
-
+    Returns true (1) if this is the user's personal calendar, false (0) otherwise.
+    
     @param user_id The user whose calendar you want to check
 } {
     if { $user_id eq "" } {
@@ -386,22 +377,19 @@ ad_proc -public calendar::personal_p {
         return 1
     } else {
         return 0
-    }
+    } 
 }
 
 ad_proc -public calendar::get {
     {-calendar_id:required}
-    {-array}
+    {-array:required}
 } {
     Get calendar info
 } {
-    if {[info exists array]} {
-        upvar 1 $array row
-    }
+    upvar 1 $array row
     db_1row select_calendar {} -column_array row
-    return [array get row]
 }
-
+    
 
 ad_proc -public calendar::delete {
     {-calendar_id:required}
@@ -440,20 +428,16 @@ ad_proc -public calendar::item_type_delete {
     {-calendar_id:required}
     {-item_type_id:required}
 } {
-    Delete an item type
-} {
     db_transaction {
         # Remove the mappings for all events
         db_dml reset_item_types {}
-
+        
         # Remove the item type
         db_dml delete_item_type {}
     }
 }
 
 ad_proc -public calendar::attachments_enabled_p {} {
-    @return 1 if the attachments are enabled, otherwise 0.
-} {
     set package_id [site_node_apm_integration::child_package_exists_p \
         -package_key attachments
     ]
@@ -478,16 +462,17 @@ ad_proc -private calendar::compare_day_items_by_current_hour {a b} {
         return 1
     } elseif {$a_criterium < $b_criterium} {
         return -1
-    }
+    } 
     return 0
 }
 
 ad_proc -public calendar::do_notifications {
     {-mode:required}
     {-cal_item_id:required}
+    {-url ""}
+    {-package_id ""}
 } {
-    Perform the notifications
-} {
+    ns_log Notice "Running calendar:do_notifications"
     # Select all the important information
     calendar::item::get -cal_item_id $cal_item_id -array cal_item
 
@@ -505,8 +490,10 @@ ad_proc -public calendar::do_notifications {
     set calendar_id $cal_item(calendar_id)
     set time_p $cal_item(time_p)
 
-    set url "[ad_url][ad_conn package_url]"
-
+    if {$url eq ""} {
+        set url "[ad_url][ad_conn package_url]"
+    }
+    
     set new_content ""
     append new_content "[_ calendar.Calendar]:  <a href=\"[ns_quotehtml $url]\">[ad_conn instance_name]</a><br>\n"
     append new_content "[_ calendar.Calendar_Item]: <a href=\"[ns_quotehtml ${url}cal-item-view?cal_item_id=$cal_item_id]\">$cal_item(name)</a><br>\n"
@@ -526,26 +513,30 @@ ad_proc -public calendar::do_notifications {
     # send text for now.
     set new_content [ad_html_to_text -- $new_content]
 
-    # Do the notification for the calendar
+    if {$package_id eq ""} {
+        set package_id [ad_conn package_id] 
+    }
+    
+    # Do the notification for the forum
     notification::new \
         -type_id [notification::type::get_type_id \
         -short_name calendar_notif] \
-        -object_id [ad_conn package_id] \
+        -object_id $package_id \
         -response_id $cal_item(cal_item_id) \
         -notif_subject "$mode [_ calendar.Calendar_Item]: $cal_item(name)" \
         -notif_text $new_content
-
+    
 }
-
+    
 
 ad_proc -public calendar::notification::get_url {
     object_id
 } {
-    @return a full URL to the object_id
+    Returns a full URL to the object_id
 } {
     return [site_node::get_url_from_object_id -object_id $object_id]
 }
-
+    
 
 
 # Local variables:

@@ -21,7 +21,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2002-02-14
-    @cvs-id $Id: users-deactivate.tcl,v 1.8 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: users-deactivate.tcl,v 1.6.10.1 2015/09/11 11:40:54 gustafn Exp $
 } -query {
     users
     {referer "users-search"}

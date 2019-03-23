@@ -5,7 +5,7 @@ ad_page_contract {
     using list template, ad_dimensional and paginator.
 
     @author Timo Hentschel (timo@timohentschel.de)
-    @cvs-id $Id: categories-browse.tcl,v 1.14 2018/06/29 17:27:18 hectorr Exp $
+    @cvs-id $Id:
 } {
     tree_ids:integer,multiple
     {category_ids:integer,multiple,optional ""}

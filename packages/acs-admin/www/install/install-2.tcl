@@ -1,7 +1,7 @@
 ad_page_contract {
     Install packages - dependency check
 } {
-    package_key:token,multiple
+    package_key:multiple
     {repository_url ""}
 }
 
@@ -36,7 +36,7 @@ while 1 {
 			  -package_keys $install_pkgs]
     array set failed $result(failed)
 
-    switch -- $result(status) {
+    switch $result(status) {
 	ok {
 	    set continue_url [export_vars -base "install-3" { repository_url }]
 	    set page_title "Confirm"

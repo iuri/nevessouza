@@ -23,10 +23,7 @@ ad_library {
 
 namespace eval dotlrn_applet {
 
-    ad_proc -public get_url {
-    } {
-        Get base applets URL.
-    } {
+    ad_proc -public get_url {} {
         # MAJOR FIXME NOW
         return "[dotlrn::get_url]/applets"
     }
@@ -34,30 +31,22 @@ namespace eval dotlrn_applet {
     ad_proc -public get_applet_url {
         {-applet_key:required}
     } {
-        Get applet url.
-    } {
         set applets_node_id [site_node::get_node_id -url [get_url]]
         return [site_node::get_children -package_key $applet_key -node_id $applets_node_id]
     }
 
-    ad_proc -public is_initialized {
-    } {
-        Return whether a site node exists under our applets url.
-    } {
+    ad_proc -public is_initalized {} {
         return [site_node::exists_p -url "[get_url]/"]
     }
 
-    ad_proc -public init {
-    } {
-        Create a new site note for our applets under the dotLRN one.
-    } {
+    ad_proc -public init {} {
         site_node::new -name applets -parent_id [dotlrn::get_node_id]
     }
 
     ad_proc -public applet_exists_p {
         {-applet_key:required}
     } {
-        Check whether "applet_key" is a real dotLRN applet.
+        check whether "applet_key" is a real dotLRN applet
     } {
         return [db_string select_applet_exists_p {}]
     }
@@ -83,8 +72,8 @@ namespace eval dotlrn_applet {
     ad_proc -public get_applet_id_from_key {
         {-applet_key:required}
     } {
-        Get the id of the dotlrn applet from the applet key or the null
-        string if the key dosent exist.
+        get the id of the dotlrn applet from the applet key or the null
+        string if the key dosent exist
     } {
         return [db_string select {} -default ""]
     }
@@ -93,8 +82,6 @@ namespace eval dotlrn_applet {
         {-package_key:required}
         {-url ""}
         {-pretty_name ""}
-    } {
-        Mount a package under applets site node.
     } {
         if {$url eq ""} {
             set url $package_key
@@ -116,20 +103,18 @@ namespace eval dotlrn_applet {
     ad_proc -public get_applet_url {
         {applet_key:required}
     } {
-        Get the applet's URL (empty).
+        get the applet's url
     } {
     }
 
     ad_proc -public list_applets {} {
-        List the applet_keys for all dotlrn applets.
+        list the applet_keys for all dotlrn applets
     } {
-        ::dotlrn::dotlrn_cache eval applets_list {
-            dotlrn_applet::list_applets_not_cached
-        }                
+        return [util_memoize {dotlrn_applet::list_applets_not_cached}]
     }
 
     ad_proc -private list_applets_not_cached {} {
-        List the applet_keys for all dotlrn applets.
+        list the applet_keys for all dotlrn applets
     } {
         return [db_list select_dotlrn_applets {}]
     }
@@ -137,13 +122,17 @@ namespace eval dotlrn_applet {
     ad_proc -public is_applet_mounted {
         {-applet_key:required}
     } {
-        Is the applet specified mounted.
+        is the applet specified mounted
     } {
-        return [expr { [llength [site_node::get_package_url -package_key [get_package_key -applet_key $applet_key]]] > 0 }]
+        if { [llength [site_node::get_package_url -package_key [get_package_key -applet_key $applet_key]]] > 0 } {
+            return 1
+        } else {
+            return 0
+        }
     }
 
     ad_proc -public list_mounted_applets {} {
-        List all applets that are mounted.
+        list all applets that are mounted
     } {
         set applets [list]
 
@@ -159,17 +148,15 @@ namespace eval dotlrn_applet {
     ad_proc -public get_package_key {
         {-applet_key:required}
     } {
-        Get the package key associated with the given applet.
+        get the package key associated with the given applet
     } {
-        ::dotlrn::dotlrn_cache eval applet-package_key-$applet_key {
-            dotlrn_applet::get_package_key_not_cached -applet_key $applet_key
-        }  
+        return [util_memoize "dotlrn_applet::get_package_key_not_cached -applet_key $applet_key"]
     }
 
     ad_proc -private get_package_key_not_cached {
         {-applet_key:required}
     } {
-        Get the package key associated with the given applet.
+        get the package key associated with the given applet
     } {
         return [db_string select_package_key_from_applet_key {} -default ""]
     }
@@ -177,8 +164,6 @@ namespace eval dotlrn_applet {
     ad_proc -public dispatch {
         {-op:required}
         {-list_args {}}
-    } {
-        Dispatch an operation with its arguments on every dotLRN applet.
     } {
         foreach applet [list_applets] {
             applet_call $applet $op $list_args
@@ -190,7 +175,7 @@ namespace eval dotlrn_applet {
         op
         {list_args {}}
     } {
-        Call a particular applet op.
+        call a particular applet op
     } {
         acs_sc::invoke -contract dotlrn_applet -operation $op -call_args $list_args -impl $applet_key
     }

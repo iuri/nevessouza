@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Tue Jan  2 12:28:33 2001
-    @cvs-id $Id: rel-type-remove-2.tcl,v 1.6 2018/01/19 14:09:48 gustafn Exp $
+    @cvs-id $Id: rel-type-remove-2.tcl,v 1.4.2.3 2016/05/20 20:02:44 gustafn Exp $
 
 } {
     group_rel_id:naturalnum,notnull
@@ -69,7 +69,6 @@ if { $return_url eq "" } {
 }
 
 ad_returnredirect $return_url
-ad_script_abort
 
 # Local variables:
 #    mode: tcl

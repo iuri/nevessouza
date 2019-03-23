@@ -3,7 +3,7 @@ ad_page_contract {
 } {
     {pattern_type "contain"}
     pattern
-    {full:boolean,notnull "f"}
+    {full "f"}
 }
 
 set page_title "Search"

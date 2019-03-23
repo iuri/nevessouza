@@ -20,7 +20,7 @@ ad_library {
 
     @author ben@openforce.net
     @creation-date 2001-08-18
-    @cvs-id $Id: dotlrn-init.tcl,v 1.47 2018/09/21 14:19:14 hectorr Exp $
+    @cvs-id $Id: dotlrn-init.tcl,v 1.41.2.1 2015/09/11 11:40:39 gustafn Exp $
 
 }
 
@@ -28,36 +28,6 @@ ns_log notice "dotlrn-init: starting..."
 
 # if installed
 if {[dotlrn::is_instantiated]} {
-
-    #
-    # Create the caches. The sizes can be
-    # tailored in the config file like the following:
-    #
-    # ns_section ns/server/${server}/acs/dotlrn
-    #   ns_param DotlrnCache                 2000000
-    #   ns_param DotlrnCommunityCache        2000000
-    #   ns_param DotlrnUserCache             2000000
-    #
-    # dotlrn-cache: general purpose cache
-    ::acs::Cache create ::dotlrn::dotlrn_cache \
-       -package_key dotlrn \
-       -parameter DotlrnCache \
-       -default_size 2000000
-
-    # dotlrn-user_cache: user specific stuff
-    ::acs::KeyPartitionedCache create ::dotlrn::dotlrn_user_cache \
-       -package_key dotlrn \
-       -parameter DotlrnUserCache \
-       -default_size 2000000
-
-    # dotlrn_community_cache: holds community specific stuff like
-    # "package_id", "name", "portal_id" etc
-    ::acs::KeyPartitionedCache create ::dotlrn::dotlrn_community_cache \
-       -package_key dotlrn \
-       -parameter DotlrnCommunityCache \
-       -default_size 2000000
-
-
 
     set package_id [dotlrn::get_package_id]
 
@@ -73,7 +43,7 @@ if {[dotlrn::is_instantiated]} {
     if {[apm_num_instances $portal_package_key] == 0} {
         ns_log notice "dotlrn-init: $portal_package_key being automounted at /$portal_mount_point"
         dotlrn::mount_package \
-            -parent_node_id [site_node::get_node_id -url /] \
+            -parent_node_id [site_node_id "/"] \
             -package_key $portal_package_key \
             -url $portal_mount_point \
             -directory_p t
@@ -98,7 +68,7 @@ if {[dotlrn::is_instantiated]} {
 
         # this may seems strange, but init the applets first
         # initialize the applets subsystem (ooh, I'm using big words - ben)
-        if {![dotlrn_applet::is_initialized]} { dotlrn_applet::init }
+        if {![dotlrn_applet::is_initalized]} { dotlrn_applet::init }
 
         # We go through all Applets and make sure they are added.
 
@@ -106,7 +76,7 @@ if {[dotlrn::is_instantiated]} {
         # init of each applet NOTE: this applet_add proc _must_ be able to be
         # called repeatedly since this script is eval'd at every server startup
         foreach applet [db_list select_not_installed_applets {}] {
-            if {[catch {dotlrn_applet::applet_call $applet AddApplet [list]} errMsg]} {
+            if {[catch {dotlrn_applet::applet_call $applet AddApplet [list]} errMsg]} { 
                 ns_log warning "dotlrn-init: AddApplet $applet failed\n$errMsg"
             }
         }
@@ -135,6 +105,7 @@ if {[dotlrn::is_instantiated]} {
     }
     ns_log notice "dotlrn-init: done"
 }
+
 
 # Local variables:
 #    mode: tcl

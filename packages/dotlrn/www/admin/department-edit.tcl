@@ -19,7 +19,7 @@ ad_page_contract {
 
     @author yon (yon@openforce.net)
     @creation-date 2001-03-14
-    @cvs-id $Id: department-edit.tcl,v 1.15 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: department-edit.tcl,v 1.13.8.1 2015/09/11 11:40:51 gustafn Exp $
 } -query {
     department_key:notnull
     {referer "departments"}

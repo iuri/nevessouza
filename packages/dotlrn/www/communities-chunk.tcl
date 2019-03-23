@@ -19,11 +19,11 @@
 ad_page_contract {
     @author yon (yon@openforce.net)
     @creation-date Dec 07, 2001
-    @cvs-id $Id: communities-chunk.tcl,v 1.17 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: communities-chunk.tcl,v 1.13.4.1 2015/09/11 11:40:41 gustafn Exp $
 } -query {
     {filter "select_all_memberships"}
 } -properties {
-    communities_p:onevalue
+    n_communities:onevalue
     communities:multirow
 }
 
@@ -33,12 +33,11 @@ if {![info exists community_type]} {
 
 set user_id [ad_conn user_id]
 
-set communities_p [db_string communities_p {
-    select exists (
-                   select 1 from dotlrn_communities_not_closed
-                   where (:community_type is null or community_type = :community_type)
-                   ) from dual
-}]
+if {$community_type ne ""} {
+    set n_communities [db_string select_all_communities_count_by_type {}]
+} else {
+    set n_communities [db_string select_all_communities_count {}]
+}
 
 set filter_bar [ad_dimensional [list [list filter "[_ dotlrn.Memberships_1]" select_all_memberships \
         {
@@ -46,9 +45,14 @@ set filter_bar [ad_dimensional [list [list filter "[_ dotlrn.Memberships_1]" sel
             {select_all_non_memberships join {}}
         }]]]
 
-db_multirow -extend {query url referer} communities $filter {} {
-    set referer "./"
-    set url [dotlrn_community::get_community_url $community_id]
+if {$community_type ne ""} {
+    append filter "_by_type"
+}
+
+db_multirow -extend {query referer} communities $filter {} {
+    if {(![info exists referer] || $referer eq "")} {
+	set referer "./"
+    }
     set query $filter
 }
 
@@ -64,7 +68,7 @@ template::list::create \
 	member_p {
 	    label "\#dotlrn.Actions\#"
 	    display_template {
-		<if @communities.member_p;literal@ false>
+		<if @communities.member_p@ eq 0>
 		   <center>
 		   <include src="/packages/dotlrn/www/register-link" url="register?community_id=@communities.community_id@&referer=@communities.referer@">
                    </center>
@@ -77,6 +81,9 @@ template::list::create \
 	    }
 	}
     } 
+
+ad_return_template
+
 
 # Local variables:
 #    mode: tcl

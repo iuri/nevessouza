@@ -13,7 +13,7 @@ ad_page_contract {
     @param   edited_response_id  id of the response we are editing
     @author  teadams@alum.mit.edu
     @date    1 April 2003
-    @cvs-id $Id: process-response.tcl,v 1.7 2017/08/07 23:48:29 gustafn Exp $
+    @cvs-id $Id: process-response.tcl,v 1.6.2.2 2017/06/30 17:55:10 gustafn Exp $
 } {
   survey_id:naturalnum,notnull
   section_id:naturalnum,notnull

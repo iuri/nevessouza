@@ -1,10 +1,10 @@
 <if @categories_p;literal@ true>
-  <if @category_links@ ne "">
+  <if @category_links@>
     <p>#file-storage.Categories#: @category_links;noquote@</p>
   </if>
 </if>
 
-<listtemplate name="contents_@folder_id;literal@"></listtemplate>
+<listtemplate name="contents_@folder_id@"></listtemplate>
 
 <if @content_size_total@ gt 0>
   <p>

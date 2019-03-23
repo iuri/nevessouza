@@ -4,7 +4,7 @@
 
 <!-- @author Dave Bauer (dave@thedesignexperience.org) -->
 <!-- @creation-date 2004-05-09 -->
-<!-- @cvs-id $Id: move-oracle.xql,v 1.9 2017/11/03 15:58:29 antoniop Exp $ -->
+<!-- @cvs-id $Id: move-oracle.xql,v 1.8 2008/12/09 09:02:31 gustafn Exp $ -->
 
 <queryset>
   
@@ -20,6 +20,30 @@
       from fs_objects fs
       where fs.object_id in ([template::util::tcl_to_sql_list $object_id])
 	order by move_p
+    </querytext>
+  </fullquery>
+
+  <fullquery name="copy_item">
+    <querytext>
+      begin
+      :1 := file_storage.copy_file(
+           :object_id,
+           :folder_id,
+	   :user_id,
+           :peer_addr
+      );
+      end;
+    </querytext>
+  </fullquery>
+
+  <fullquery name="move_item">
+    <querytext>
+	begin
+      	content_item.move(
+           :object_id,
+           :folder_id
+      );
+	end;
     </querytext>
   </fullquery>
 

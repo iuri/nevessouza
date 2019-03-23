@@ -505,7 +505,7 @@ where permissions can be set for different parties</p>
 party/groups/person to the entire calendar</p>
 <p>
 <strong>40.10.30</strong> Cal Admin can also add new user
-party/groups/person to individual calendar items</p>
+party/groups/person to indivdual calendar items</p>
 <p><strong>40.20 Calendar Items Administration</strong></p>
 <p>
 <strong>40.20.10</strong> Provides the funcationality to delete,
@@ -552,8 +552,8 @@ HTML for the calendar navigation.</p>
 <strong>50.20.70</strong> Provide a function to generate the
 HTML for the complete calendar.</p>
 <h3>VII. Revision History</h3>
-<table cellspacing="2" cellpadding="2" width="90%" bgcolor="#EFEFEF"><caption>
-<br><table>
+<br>
+<table cellspacing="2" cellpadding="2" width="90%" bgcolor="#EFEFEF">
 <tr bgcolor="#E0E0E0">
 <th width="10%">Document Revision #</th><th width="50%">Action Taken, Notes</th><th>When?</th><th>By Whom?</th>
 </tr><tr>
@@ -573,8 +573,9 @@ corrections.</td><td>2000/12/04</td><td>Gary Jin</td>
 </tr><tr>
 <td>0.7</td><td>Further Revisions</td><td>2000/12/06</td><td>Joshua Finkler and Gary Jin</td>
 </tr>
-</table><hr><address>
+</table>
+<hr>
+<address>
 <a href="mailto:gjin\@arsdigita.com">gjin\@arsdigita.com</a>
 and <a href="mailto:smeeks\@arsdigita.com">smeeks\@arsdigita.com</a>
 </address>
-</caption></table>

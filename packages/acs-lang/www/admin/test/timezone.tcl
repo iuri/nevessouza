@@ -5,7 +5,7 @@ ad_page_contract {
 
     @author John Lowry (lowry@ardigita.com)
     @creation-date 29 September 2000
-    @cvs-id $Id: timezone.tcl,v 1.4 2017/11/16 13:15:33 antoniop Exp $
+    @cvs-id $Id: timezone.tcl,v 1.2.12.1 2015/09/10 08:21:30 gustafn Exp $
 } { }
 
 set title "Test acs-lang package timezones"
@@ -29,7 +29,7 @@ set tz_sql "SELECT tz as timezone
 db_multirow tz_results lang_tz_get_data $tz_sql
 
 # Test 4 checks that we can convert from local time to UTC
-db_1row lang_system_time_select {}
+db_1row lang_system_time_select "SELECT to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') AS system_time FROM dual"
 
 set NYC_time [lc_time_utc_to_local $system_time "America/New_York"]
 set NYC_utc_time [lc_time_local_to_utc $NYC_time "America/New_York"]

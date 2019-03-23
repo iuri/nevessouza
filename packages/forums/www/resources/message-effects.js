@@ -2,7 +2,7 @@
 - Script for collapse or expand the parent message and all his childs
 - It uses the scriptaculous libraries for the effects
 
-Author: Veronica De La Cruz
+Autor: Veronica De La Cruz
 
 */
 

@@ -5,7 +5,7 @@ ad_page_contract {
     Page to view one news item in an arbitrary revision
     @author Stefan Deusch (stefan@arsdigita.com)
     @creation-date 2000-12-20
-    @cvs-id $Id: revision.tcl,v 1.14 2018/01/20 22:43:23 gustafn Exp $
+    @cvs-id $Id: revision.tcl,v 1.12.2.1 2015/09/12 11:06:44 gustafn Exp $
     
 } {
 
@@ -44,7 +44,6 @@ if { $item_exist_p } {
     
 } else {
     ad_return_complaint 1 [_ news.lt_Could_not_find_corres]
-    ad_script_abort
 }
 
 ad_return_template

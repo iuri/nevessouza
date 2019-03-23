@@ -6,7 +6,7 @@ ad_page_contract {
 
     @author Bruno Mattarollo <bruno.mattarollo@ams.greenpeace.org>
     @creation-date 19 march 2002
-    @cvs-id $Id: locale-delete.tcl,v 1.9 2018/04/07 19:48:03 gustafn Exp $
+    @cvs-id $Id: locale-delete.tcl,v 1.7.2.1 2015/09/10 08:21:28 gustafn Exp $
 } {
     locale
     confirm_p:boolean,optional
@@ -27,9 +27,8 @@ set context [list $page_title]
 set form_export_vars [export_vars -form { locale {confirm_p 1} }]
 
 
-if { [info exists confirm_p] && $confirm_p ne ""
-     && [template::util::is_true $confirm_p]
- } {
+if { ([info exists confirm_p] && $confirm_p ne "") && [template::util::is_true $confirm_p] } {
+
     db_transaction {
 
         db_dml delete_messages { delete from lang_messages where locale = :locale }

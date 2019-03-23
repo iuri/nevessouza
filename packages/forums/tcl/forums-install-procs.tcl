@@ -3,7 +3,7 @@ ad_library {
 
     @creation-date 2004-04-01
     @author Jeff Davis davis@xarg.net
-    @cvs-id $Id: forums-install-procs.tcl,v 1.10 2017/08/07 23:48:11 gustafn Exp $
+    @cvs-id $Id: forums-install-procs.tcl,v 1.9.6.1 2015/09/12 11:06:26 gustafn Exp $
 }
 
 namespace eval forum::install {}

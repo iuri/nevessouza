@@ -3,7 +3,8 @@
 <!-- packages/dotlrn/www/admin/community-types.xql -->
 <!-- @author Roel Canicula (roelmc@aristoi.biz) -->
 <!-- @creation-date 2004-06-26 -->
-<!-- @cvs-id $Id: community-types.xql,v 1.2 2018/08/15 17:02:02 gustafn Exp $ -->
+<!-- @arch-tag: 4e729d57-1511-466a-a3a1-67a6f77feb41 -->
+<!-- @cvs-id $Id: community-types.xql,v 1.1 2004/07/28 07:23:44 roelc Exp $ -->
 
 <queryset>
   

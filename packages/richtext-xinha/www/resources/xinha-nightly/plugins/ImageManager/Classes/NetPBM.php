@@ -24,7 +24,7 @@
 // | Authors: Peter Bowyer <peter@mapledesign.co.uk>                      |
 // +----------------------------------------------------------------------+
 //
-// $Id: NetPBM.php,v 1.2 2017/08/07 23:48:24 gustafn Exp $
+// $Id: NetPBM.php,v 1.1.2.1 2016/01/03 20:48:37 gustafn Exp $
 //
 // Image Transformation interface using command line NetPBM
 

@@ -6,7 +6,7 @@
 
     <p>part of <a href="../">dotLRN</a></p>
 
-    <p><small>Last updated: $Date: 2018/07/03 18:19:14 $</small></p>
+    <p><small>Last updated: $Date: 2016/06/22 08:25:00 $</small></p>
 
     <h2>Contents</h2>
 
@@ -115,7 +115,7 @@
 
   <h2>Install dotLRN on your system</h2>
   <p>
-     Go to the &quot;Site Wide Administration&quot; on your system
+     Go the the &quot;Site Wide Administration&quot; on your system
      at <a href="/acs-admin">/acs-admin/</a> and hit the
      &quot;Install software&quot; link, then the "Install from local" one 
 	 and finally choose "Service" type. After the installer loads, you

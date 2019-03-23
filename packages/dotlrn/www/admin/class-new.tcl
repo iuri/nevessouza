@@ -20,7 +20,7 @@ ad_page_contract {
     @author Ben Adida (ben@openforce.net)
     @author yon (yon@openforce.net)
     @creation-date 2001-08-20
-    @cvs-id $Id: class-new.tcl,v 1.22 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: class-new.tcl,v 1.20.4.1 2015/09/11 11:40:50 gustafn Exp $
 } -query {
     {department_key ""}
     {referer classes}

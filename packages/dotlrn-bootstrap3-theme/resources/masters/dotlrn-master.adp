@@ -32,7 +32,7 @@
         </if>
     </div>
   
-    <if @user_messages:rowcount;literal@ gt 0>
+    <if @user_messages:rowcount@ gt 0>
         <div id="alert-message">
             <multiple name="user_messages">
                 <div class="alert">

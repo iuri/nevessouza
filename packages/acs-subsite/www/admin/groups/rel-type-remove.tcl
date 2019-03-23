@@ -7,7 +7,7 @@ ad_page_contract {
 
     @author mbryzek@arsdigita.com
     @creation-date Tue Jan  2 12:23:02 2001
-    @cvs-id $Id: rel-type-remove.tcl,v 1.8 2018/06/20 08:35:45 antoniop Exp $
+    @cvs-id $Id: rel-type-remove.tcl,v 1.5.2.4 2016/05/20 20:02:44 gustafn Exp $
 
 } {
     group_rel_id:naturalnum,notnull
@@ -19,27 +19,17 @@ ad_page_contract {
     export_vars:onevalue
 }
 
-if { ![db_0or1row select_info {
-    select g.rel_type,
-           g.group_id,
-           (select group_name from groups
-             where group_id = g.group_id) as group_name,
-           t.pretty_name as rel_pretty_name
-      from acs_object_types t, group_rels g
-     where g.group_rel_id = :group_rel_id
-       and t.object_type = g.rel_type    
-}] } {
+if { ![db_0or1row select_info {}] } {
     ad_return_error "Relation already removed." "Please back up and reload"
-    ad_script_abort
+    return
 }
 
 permission::require_permission -object_id $group_id -privilege admin
 
 set export_vars [export_vars -form {group_rel_id return_url}]
-set context [list \
-                 [list "[ad_conn package_url]admin/groups/" "Groups"] \
-                 [list [export_vars -base one {group_id}] "One group"] \
-                 "Remove relation type"]
+set context [list [list "[ad_conn package_url]admin/groups/" "Groups"] [list [export_vars -base one {group_id}] "One group"] "Remove relation type"]
+
+ad_return_template
 
 # Local variables:
 #    mode: tcl

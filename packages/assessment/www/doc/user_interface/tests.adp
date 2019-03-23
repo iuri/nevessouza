@@ -2,10 +2,10 @@
 <property name="context">{/doc/assessment {Assessment}} {Tests}</property>
 <property name="doc(title)">Tests</property>
 <master>
-<!-- START HEADER --><span class="context"><span class="reg">A
-test is a special kind of accessment that allows the
-respondee&#39;s answers to be rated immediately. Unless otherwise
-stated, all pages described are admin viewable only.</span></span>
+<!-- START HEADER --><span class="context"><span class="reg">A test
+is a special kind of accessment that allows the respondee&#39;s
+answers to be rated immediatly. Unless otherwise stated, all pages
+described are admin viewable only.</span></span>
 <ul>
 <li>
 <span class="context">Settings</span><ul>
@@ -27,13 +27,13 @@ given</span></li><li><span class="context">Points. The number of Points the
 respondee has gotten for the answer</span></li><li><span class="context">Evaluation comment. The evaluation
 comment given by the evaluator</span></li><li><span class="context">Correct Answer. The correct answer of the
 question</span></li><li><span class="context">Feedback. The feedback that is stored
-with the given answer</span></li><li><span class="context">Feedback for question. The feedback that
+with the given answer</span></li><li><span class="context">Feeback for question. The feedback that
 is stored with the question</span></li><li><span class="context">Total result. The total result of the
 test (at the buttoms)</span></li>
 </ul>
-</li><li><span class="context">Submit each answer separately: boolean
+</li><li><span class="context">Submit each answer seperatly: boolean
 (yes/no). Does the user have to submit each answer
-separately.</span></li><li><span class="context">Answer changeable: boolean (yes/no). Can
+seperatly.</span></li><li><span class="context">Answer changeable: boolean (yes/no). Can
 the user change a submitted answer.</span></li><li><span class="context">Finish button: boolean (yes/no). Allow
 the respondee to finish the test early, despite not having answered
 all the questions. The respondee will not have the option to go
@@ -56,7 +56,7 @@ test</span></li><li>
 have to store the time needed for a try)</span></li><li><span class="context">Status. Status of the try (not finished,
 finished, auto-graded, manually graded)</span></li><li><span class="context">Link to evaluate single response (human
 grading in test-processing.html)</span></li><li><span class="context">The try that is used for scoring the
-respondee is displayed with a green background. If we take the
+respondee is diplayed with a green background. If we take the
 median of all tries, mark all of them green.</span></li>
 </ul>
 </li><li><span class="context">Furthermore links to details about the
@@ -72,7 +72,7 @@ it can.</span></li><li><span class="context">The results of this auto-grading ar
 displayed in the evaluation table for the admin (see test
 specifications)</span></li><li><span class="context">The test result is stored in the scoring
 system.</span></li><li><span class="context">Staff can manually Human Grade the test.
-This is mandatory for open questions for the test to be completely
+This is mandatory for open questions for the test to be completly
 graded.</span></li><li><span class="context">The result of the human grading
 overwrites the auto grading in the scoring system.</span></li>
 </ol>
@@ -110,11 +110,11 @@ less then -100%.</span></li>
 </li><li>
 <span class="context">Matching question</span><ul>
 <li><span class="context">All or nothing: User get&#39;s 100% if
-all matches are correct, 0% otherwise.</span></li><li><span class="context">Equally weighted: Each match is worth
+all matches are correct, 0% otherwise.</span></li><li><span class="context">Equally weigthed: Each match is worth
 100/{number of matches} percent. Each correct match will give the
 according percentage and the end result will be the sum of all
 correct matches.</span></li><li><span class="context">Allow negative: If we have equally
-weighted matches, each correct match adds the match percentage (see
+weigthed matches, each correct match adds the match percentage (see
 above) to the total. Each wrong match distracts the match
 percentage from the total.</span></li><li><span class="context">Obviously it is only possible to get up
 to 100% and not less than -100%.</span></li>
@@ -125,7 +125,8 @@ to 100% and not less than -100%.</span></li>
 are selected.</span></li><li>
 <span class="context">The response is matched with each of the
 possible answers</span><ul>
-<li><span class="context">Equals: Only award the percentage if the strings match exactly (case senstivity depends on the setting
+<li><span class="context">Equals: Only award the percentage if the
+the strings match exactly (case senstivity depends on the setting
 for the question).</span></li><li><span class="context">Contains: If the answer contains exactly
 the string, points are granted. If you want to give percentages for
 multiple words, add another answer to the answerbox (so instead of
@@ -141,7 +142,7 @@ negative percentage can be the result.</span></li>
 </li>
 </ul>
 <span class="context">Human grading will display all the questions
-and answers of response along with the possibility to reevaluate
+and answers of response along with the possibility to reevalutate
 the points and give comments. The header will display the following
 information:</span>
 <ul>
@@ -175,7 +176,7 @@ whether the respondee has answered correct or wrong for this option
 (if he picked an option that he should not have picked, this option
 will get a wrong in front).</span></li><li><span class="context">Matching question: The item on the left
 side and the picked item are displayed in a connecting manner. A
-correct / wrong statement will be added depending whether the
+correct / wrong statment will be added depending whether the
 displayed (and responded) match is correct.</span></li><li><span class="context">Open Question: The answer is displayed as
 written by the user. Furthermore the correct answer is displayed as
 well. This should allow the TA to easily come to a conclusion

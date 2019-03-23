@@ -19,7 +19,7 @@
 ad_page_contract {
     @author Caroline Meeks (caroline@meekshome.com)
     @creation-date November 19, 2002
-    @cvs-id $Id: guest-toggle.tcl,v 1.8 2018/06/29 17:27:19 hectorr Exp $
+    @version $Id: guest-toggle.tcl,v 1.4.10.2 2017/01/26 11:46:02 gustafn Exp $
 } -query {
     user_id:naturalnum,notnull
     guest_p:boolean
@@ -34,13 +34,11 @@ dotlrn_privacy::set_user_guest_p \
         -user_id $user_id \
         -value $guest_p
 
-#
-# Flush all permission checks pertaining to this user.
-#
-permission::cache_flush -party_id $user_id
 
+util_memoize_flush_regexp  $user_id
 ad_returnredirect $referer
-ad_script_abort
+
+
 
 # Local variables:
 #    mode: tcl
