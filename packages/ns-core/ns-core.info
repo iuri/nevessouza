@@ -9,13 +9,13 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>f</inherit-templates-p>
     
-    <version name="0.1d" url="http://openacs.org/repository/download/apm/ns-core-0.1d.apm">
+    <version name="0.2d" url="http://openacs.org/repository/download/apm/ns-core-0.2d.apm">
         <owner url="mailto:iuri@iurix.com">Iuri Sampaio</owner>
         <summary>NevesSouza core package</summary>
         <description format="text/html">NevesSouza core package</description>
         <maturity>0</maturity>
 
-        <provides url="ns-core" version="0.1d"/>
+        <provides url="ns-core" version="0.2d"/>
 
         <callbacks>
         </callbacks>

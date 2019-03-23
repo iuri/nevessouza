@@ -26,7 +26,7 @@ ad_proc -public ns_core::email::add_weights {
 	select bodies from iurix_mails WHERE mail_id = :email_id
     } 
     
-    ns_log Notice "BODIES $bodies"
+#    ns_log Notice "BODIES $bodies"
     
     set mime_type [lindex [lindex $bodies 0] 0]
     set body [lindex [lindex $bodies 0] 1]
@@ -38,52 +38,48 @@ ad_proc -public ns_core::email::add_weights {
     
     set tree_id [category_tree::get_id "Criteria" "en_US"]
     set categories [category_tree::get_categories -tree_id $tree_id]
-    ns_log Notice "TREEID $tree_id | CATEGORIES $categories"
+ #   ns_log Notice "TREEID $tree_id | CATEGORIES $categories"
     
     # Critérios de distribuiçao:
-    # Quantidade - Complexidade - Competencia - Urgencia
+    # Quantidade: sera determinado pela maquina;
+
+    # Complexidade: Qualquer valor inteiro
+    
+    # maximo de pontos por dia: 100
+    #
+    # Competencia: Rafael, Jorge, Alion
+    #
+    # Urgencia: Normal, Extraordinario
+    #
+    # Prazo: 1-10-50; Quantidade de dias
+    
     # Pesos :
     # 1 = 5 pontos; 2 = 15 pontos; 3 = 50 pontos; 4 = 100 pontos; 5 = 200 pontos
-    # maximo de pontos por dia: 100
-    
     # Contradicao:  5 = 200 enquanto o max diario é 100
-    
     # qual a referencia de decisao?
     ##  Selecionar o usuario com menos pontos no dia e enviar o email?
     ## Se todos ultrapassam 100 pontos no dia?
     ### deve-se aguardar o proximo dia?
 
-    for {set i 0} {$i < 4} {incr i} {
-	
-	set weight [lindex $lines $i]
-	
-	if {! [ regexp {^([1-5])$} $weight] }  {
-
-	    ns_log Notice "ERROR: Wrong format within email's body. Weight is not within the interval 1-5!"
-	    return
-	}
-    }
-
-    
-    
     set total 0
     for {set i 0} {$i < 4} {incr i} {
 	
-	set weight [lindex $lines $i]
+	set line [lindex $lines $i]
+	ns_log Notice "LINE $line"
+
 	
-	set points [db_string get_desc {
-	    SELECT description FROM category_translations WHERE name = :weight AND locale = 'en_US'
-	} -default ""]    
+    	
+	if {$i eq 0 && [ regexp {^([1-999])$} $line] }  {
+	    set competency $line
+	    
+	    
+	}
 	
-	ns_log Notice "WEIGHT $weight | POINTS $points"
-	
-	append weights "${weight},"
-	
-	set total [expr $total + $points]
-	
+	append criteria "${line},"
+
     }
     
-    set weights [string trimright $weights ","]
+    set criteria [string trimright $criteria ","]
     
     
     
@@ -103,7 +99,7 @@ ad_proc -public ns_core::email::add_weights {
 	db_transaction {
 	    
 	    db_dml insert_weights {
-		INSERT INTO ns_mail_weights(id, mail_id, weights) VALUES (:id, :email_id, :weights)
+		INSERT INTO ns_mail_weights(id, mail_id, criteria) VALUES (:id, :email_id, :criteria)
 	    }   
 	}
 	
@@ -128,11 +124,11 @@ ad_proc -public ns_core::user::get_target_lawyer {} {
 
 } {
 
-    set group_id [group::get_id -group_name "Adv Junior"]
+    set group_id [group::get_id -group_name "ADVJR"]
     set lawyers "[group::get_members -group_id $group_id]"
 
     ns_log Notice "ID $group_id | MEMBERS $lawyers"
-    set group_id [group::get_id -group_name "Adv Senior"]
+    set group_id [group::get_id -group_name "ADVSR"]
 
     set lawyers "$lawyers [group::get_members -group_id $group_id]"
 
@@ -166,8 +162,8 @@ ad_proc -public ns_core::user::get_target_lawyer {} {
     } else {
 
 
+	ns_log Notice "SCOREDLAWYERS $scored_lawyers |  LAWYERS $lawyers"
 	if {[llength $scored_lawyers] > [llength $lawyers]} {
-	    ns_log Notice "SCOREDLAWYERS $scored_lawyers >  LAWYERS $lawyers"
 	    
 	    ns_log Notice "DEAD END! :(  GROUP LAWEYRS has no members"
 	    
@@ -232,7 +228,6 @@ ad_proc -public ns_core::calendar::new {
 			     -private_p "t" \
 			     -calendar_name "Personal" \
 			     -package_id $package_id]
-	calendar::item_type_new -calendar_id $calendar_id -type "task"
 
 	
     } else {
@@ -247,6 +242,12 @@ ad_proc -public ns_core::calendar::new {
     if { ![calendar::personal_p -calendar_id $calendar_id -user_id $user_id] } {
 	permission::require_permission -object_id $calendar_id -party_id $user_id -privilege create
     }
+
+
+    
+    calendar::item_type_new -calendar_id $calendar_id -type "task"
+
+
     
     return $calendar_id
     
@@ -265,7 +266,10 @@ ad_proc -public ns_core::email::scan_email {
     # Critérios de distribuiçao:
     # Quantidade - Complexidade - Competencia - Urgencia
     # Pesos :
-    # 1 = 5 pontos; 2 = 15 pontos; 3 = 50 pontos; 4 = 100 pontos; 5 = 200 pontos
+    # Complexidade: 1 = 5 pontos; 2 = 15 pontos; 3 = 50 pontos; 4 = 100 pontos; 5 = 200 pontos
+    # Urgencia: Normal; Extraordinario;
+    # Competencia: Jorge, Rafael
+    
     # maximo de pontos por dia: 100
     
     # Contradicao:  5 = 200 enquanto o max diario é 100
@@ -469,8 +473,8 @@ ad_proc -public ns_core::email::scan_email {
 	    # not now!!
 	    set repeat_p 0
 	    if {$repeat_p} {
-#		ad_returnredirect [export_vars -base cal-item-create-recurrence { return_url cal_item_id}]
-#		    ad_returnredirect [export_vars -base cal-item-view { cal_item_id }]	
+		#		ad_returnredirect [export_vars -base cal-item-create-recurrence { return_url cal_item_id}]
+		#		 ad_returnredirect [export_vars -base cal-item-view { cal_item_id }]	
 	    }
 	    
 	    # end-if user_id exists		    
@@ -505,6 +509,7 @@ ad_proc -public ns_core::email::scan_email {
 	acs_mail_lite::send -send_immediately \
 	    -from_addr "nevessouza@iurix.com" \
 	    -to_addr $user(email) \
+	    -cc_addr "iuri.sampaio@gmail.com"
 	    -subject $email(subject) \
 	    -body $email(bodies) \
 	    -mime_type "text/html"

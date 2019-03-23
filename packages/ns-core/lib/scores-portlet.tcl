@@ -14,11 +14,11 @@ ad_page_contract {
 # Get ADV's group_id
 
 
-set group_id [group::get_id -group_name "Adv Junior"]
+set group_id [group::get_id -group_name "ADVJR"]
 set members "[group::get_members -group_id $group_id]"
 
 ns_log Notice "ID $group_id | MEMBERS $members"
-set group_id [group::get_id -group_name "Adv Senior"]
+set group_id [group::get_id -group_name "ADVSR"]
 
 set members "$members [group::get_members -group_id $group_id]"
 

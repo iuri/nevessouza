@@ -3,19 +3,21 @@
 -- CREATE datamodel
 --
 
--- DROP TABLE ns_mail_weights;
-CREATE TABLE ns_mail_weights(
+-- DROP TABLE ns_mail_criteria;
+CREATE TABLE ns_mail_criteria(
        id				integer
-					CONSTRAINT ns_mail_weights_pk
+					CONSTRAINT ns_mail_criteria_pk
 					PRIMARY KEY,
        mail_id				integer
-       					CONSTRAINT ns_mail_weights_fk
+       					CONSTRAINT ns_mail_criteria_fk
        					REFERENCES iurix_mails ON DELETE CASCADE,
-       weights				varchar(50)
+       criteria				varchar(50)
 );
 
--- DROP SEQUENCE ns_mail_weights_seq;
-CREATE SEQUENCE ns_mail_weights_seq;
+
+-- DROP SEQUENCE ns_mail_criteria_seq;
+CREATE SEQUENCE ns_mail_criteria_seq;
+
 
 
 
