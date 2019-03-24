@@ -11,11 +11,130 @@ namespace eval ns_core {}
 namespace eval ns_core::email {}
 namespace eval ns_core::user {}
 
-ad_proc -public ns_core::email::add_weights {
+
+namespace eval ns_core::calendar {}
+
+
+
+
+
+
+
+ad_proc -public ns_core::calendar::calendar_item_new {
+    {-user_id}
+    {-mail_id}
+    {-score}
+} {
+    
+    
+    ###
+    # New calendar item
+    ###
+    
+    # Based on the score we define activity schedule. Points are converted in Time as 100 points means 1 day of work.
+    # Dia util e dia corrido
+	# Difinir paraterizacao
+    # Parameter quantuidade de pontos por dia. Ex. 100 p/d
+    #ns_core::calendar::cal_item_new -score $score -user_id $target_lawyer
+    #Ratio of score and time to define how many hours per day a lawyer have to work in a task, based on the score of the ask.
+    
+} {
+    
+    
+    
+    set calendar_id [ns_core::calendar::new -user_id $user_id]
+    
+    ns_log Notice "CALENDAR ID $calendar_id"
+    
+    # DEfines start and end date (task deadline) based on the quantity of points (score) of the user (lawyer)
+    set param1 [parameter::get_global_value -package_key "ns-core" -parameter "TotalScoreDaily" -default ""]
+    
+    ns_log Notice "$param1"
+    
+    
+    # 100 per day means 100 per 24 hours, which  means 100 per 24X60 minutes
+    # 24h ??  I'd define that a day has 8 hours.
+    
+    
+    set start_date [db_string select_datetime {SELECT now() FROM dual} ]
+    ns_log Notice "START DATE $start_date "
+    #set end_date [db_string select_datetime {SELECT now() + INTERVAL '1 day'   FROM dual} ]
+    #ns_log Notice "END DATE $end_date "
+    
+    set param2 [parameter::get_global_value -package_key "ns-core" -parameter "WorkingHoursDaily" -default "8"]
+    
+    
+    
+    
+    ns_log Notice "$param2 PRAM2"
+    set no_days [expr $score / $param2]
+    ns_log Notice "NODAYS $no_days"
+    
+    set end_date [db_string select_datetime "SELECT now() + INTERVAL '$no_days days'  FROM dual" ]
+    ns_log Notice "END DATE $end_date "
+    
+    # END start and end dates
+    
+    # To support green calendar
+    # set date [split $date "-"]
+    # lappend date ""
+    # lappend date ""
+    # lappend date ""
+    # lappend date "YYYY MM DD"
+    #set date [calendar::to_sql_datetime -date $date -time ""]	
+    
+    #set date "[template::util::date::get_property year $date] [template::util::date::get_property month $date] [template::util::date::get_property day $date]"
+    
+    #set start_date [calendar::to_sql_datetime -date $date -time $start_time -time_p $time_p]
+    #set end_date [calendar::to_sql_datetime -date $end_date -time $end_time -time_p $time_p]
+    
+    # Retrieves calendar types and assigns "task" as item_type
+    set item_types [calendar::get_item_types -calendar_id $calendar_id]
+    ns_log Notice "ITEM TYPES $item_types"
+    
+    foreach type $item_types {
+	if {[lindex $type 0] eq "task" } {
+	    set item_type_id [lindex $type 1]
+	}
+	ns_log Notice "$type"
+    }
+    ns_log Notice "$item_type_id"
+    
+    if { ![calendar::personal_p -calendar_id $calendar_id -user_id $user_id] } {
+	permission::require_permission -party_id $user_id -object_id $calendar_id -privilege create
+	
+	
+    }
+    
+    
+    ix_mail::get -mail_id $mail_id -array email
+    
+    set cal_item_id [calendar::item::new \
+			 -start_date $start_date \
+			 -end_date $end_date \
+			 -name $email(subject) \
+			 -description $email(bodies) \
+			 -calendar_id $calendar_id \
+			 -item_type_id $item_type_id \
+			 -creation_user $user_id]
+    
+    
+    ns_log Notice "NEW CAL-ITEM $cal_item_id"
+    
+ 
+}
+
+
+
+
+
+
+
+ad_proc -public ns_core::email::add_criteria {
     {-email_id:required}
 } {
 
-    It saves weights from emails
+    It saves criteria, which exists in the emails 
 
     @param email_id
 } {
@@ -47,11 +166,11 @@ ad_proc -public ns_core::email::add_weights {
     
     # maximo de pontos por dia: 100
     #
-    # Competencia: Rafael, Jorge, Alion
-    #
     # Urgencia: Normal, Extraordinario
     #
     # Prazo: 1-10-50; Quantidade de dias
+    #
+    # Competencia: Rafael, Jorge, Alion
     
     # Pesos :
     # 1 = 5 pontos; 2 = 15 pontos; 3 = 50 pontos; 4 = 100 pontos; 5 = 200 pontos
@@ -61,6 +180,23 @@ ad_proc -public ns_core::email::add_weights {
     ## Se todos ultrapassam 100 pontos no dia?
     ### deve-se aguardar o proximo dia?
 
+    # Melhor distribuir alternadamente e tambem adotar os criterior.
+    ## Ex.  1 email 1,2,3,1  e outro email 2,1,3,1 com pontuacao muito baixa nao deve ser enviados para o mesmo advogado (enviar alternadamente)
+
+
+    # Observacoes
+    ## Achei o limite de 100 pontos diarios muito baixo. Esta coerente?
+    ## Sugiro paramtetrizarmos os criterios para torna-los facilmente modificaveis.
+    
+
+
+
+
+
+
+
+
+    
     set total 0
     for {set i 0} {$i < 4} {incr i} {
 	
@@ -71,11 +207,11 @@ ad_proc -public ns_core::email::add_weights {
     	
 	if {$i eq 0 && [ regexp {^([1-999])$} $line] }  {
 	    set competency $line
-	    
-	    
+	    	    
 	}
 	
 	append criteria "${line},"
+	    
 
     }
     
@@ -86,20 +222,20 @@ ad_proc -public ns_core::email::add_weights {
     
     
     if {![db_0or1row exists_mail_p {
-	SELECT id FROM ns_mail_weights WHERE mail_id = :email_id
+	SELECT id FROM ns_mail_criteria WHERE mail_id = :email_id
     }] } {
 	
-	ns_log Notice "INSETRT MAIL WEIGHTS"
+	ns_log Notice "INSETRT MAIL CRITERIA"
 	
-	set id [db_nextval ns_mail_weights_seq]
+	set id [db_nextval ns_mail_criteria_seq]
 	
-	ns_log Notice "ID $id | MAILID $email_id | WEIGHTS $weights | TOTAL $total"
+	ns_log Notice "ID $id | MAILID $email_id | CRITERIA $criteria | TOTAL $total"
 	
-	# To save mail weights for tracking purposes 
+	# To save mail criteria for tracking purposes 
 	db_transaction {
 	    
-	    db_dml insert_weights {
-		INSERT INTO ns_mail_weights(id, mail_id, criteria) VALUES (:id, :email_id, :criteria)
+	    db_dml insert_criteria {
+		INSERT INTO ns_mail_criteria(id, mail_id, criteria) VALUES (:id, :email_id, :criteria)
 	    }   
 	}
 	
@@ -262,79 +398,73 @@ ad_proc -public ns_core::email::scan_email {
     
     It scans email's body, searching, registering and distributing the email to the lawyers, based on defined criteria 
     Specification
-
-    # Critérios de distribuiçao:
-    # Quantidade - Complexidade - Competencia - Urgencia
-    # Pesos :
-    # Complexidade: 1 = 5 pontos; 2 = 15 pontos; 3 = 50 pontos; 4 = 100 pontos; 5 = 200 pontos
-    # Urgencia: Normal; Extraordinario;
-    # Competencia: Jorge, Rafael
-    
-    # maximo de pontos por dia: 100
-    
-    # Contradicao:  5 = 200 enquanto o max diario é 100
-    
-    # qual a referencia de decisao?
-    ##  Selecionar o usuario com menos pontos no dia e enviar o email?
-    ## Se todos ultrapassam 100 pontos no dia?
-    ### deve-se aguardar o proximo dia?
-
-    # Melhor distribuir alternadamente e tambem adotar os criterior.
-    ## Ex.  1 email 1,2,3,1  e outro email 2,1,3,1 com pontuacao muito baixa nao deve ser enviados para o mesmo advogado (enviar alternadamente)
-
-
-    # Observacoes
-    ## Achei o limite de 100 pontos diarios muito baixo. Esta coerente?
-    ## Sugiro paramtetrizarmos os criterios para torna-los facilmente modificaveis.
-    
     
 } {
 
     ns_log Notice "Running ns_core::scan_email $mail_id"
 
-
     set email_id $mail_id
     
-    ns_core::email::add_weights -email_id $email_id
-     
+    ns_core::email::add_criteria -email_id $email_id
+
+    ns_log Notice "CRITERIA ADDED"
      
     set score 0
-    set weights [db_string select_weights {
-	SELECT weights FROM ns_mail_weights WHERE mail_id = :email_id
+    set criteria [db_string select_criteria {
+	SELECT criteria FROM ns_mail_criteria WHERE mail_id = :email_id
     } -default ""]
     
-    ns_log notice "WEIGHTS $weights"
-    
-    foreach weight [split $weights  ","] {
+    ns_log notice "CRITERIA $criteria"
+
+    set complx [lindex [split $criteria ","] 0]
+    set urgc [lindex [split $criteria ","] 1]
+    set days [lindex [split $criteria ","] 2]
+    set comptc [lindex [split $criteria ","] 3]
+    foreach c [split $criteria ","] {
 	
-	set points [db_string get_desc {
-	    SELECT description FROM category_translations WHERE name = :weight AND locale = 'en_US'
-	} -default ""]    
-	
-	ns_log Notice "WEIGHT $weight | POINTS $points"
-	
-	append weights "${weight},"
-	
-	set score [expr $score + $points]
+    }
+
+    ns_log Notice "CRITERIA $complx | $urgc $days $comptc"
+
+    ##
+    # if compt the lawyer's name is defined, then its distribution is alread addressed. Otherwise, it isn't defined already then it runs auto distribution, a new record
+    ##
+
+    if {[exists_and_not_null comptc] } {	    
+    	set target_lawyer [db_string select_user_id {
+	    SELECT user_id FROM cc_users WHERE lower(first_names) = lower(:comptc)
+	    
+	} -default ""]
 	
     }
     
-    #    ns_log Notice "SCORE $score"
+    if {![exists_and_not_null target_lawyer]} {
+	set target_lawyer [ns_core::user::get_target_lawyer ]
+    }
     
-    
-    # if the final lawyer isn't scored already then it creates a new record
-
-    set target_lawyer [ns_core::user::get_target_lawyer ]
     ns_log Notice "TARGET LAWYER $target_lawyer"
     
-    if {[info exists target_lawyer]} {
+    if {[exists_and_not_null target_lawyer]} {
+
+
+	    
+	#   ns_log Notice "UPDATE USER $target_lawyer TO score table"
+	if {$urgc eq "extra"} {
+	    set urgc 2
+	} else {
+	    set urgc 1	
+	}
+	
+	set score [expr $complx * $days * $urgc]
+	ns_log Notice "SCORE $score ****"
+	
+	
+	
 	if {[db_0or1row select_user {
 	    SELECT user_id FROM ns_user_score
 	    WHERE user_id = :target_lawyer
 	    AND creation_date::date = now()::date
 	}] } {
-	    
-	 #   ns_log Notice "UPDATE USER $target_lawyer TO score table"
 	    
 	    db_transaction {
 		db_dml update_score {
@@ -360,143 +490,19 @@ ad_proc -public ns_core::email::scan_email {
 	
 	
 	acs_user::get -user_id $target_lawyer -array user
-	
 	# ns_log Notice "[parray user]"
 	
-	ix_mail::get -mail_id $email_id -array email
-	
+	ix_mail::get -mail_id $email_id -array email	
 	#ns_log Notice "[parray email]"
 
 
 
-	###
-	# New calendar item
-	###
-	
-	# Based on the score we define activity schedule. Points are converted in Time as 100 points means 1 day of work.
-	# Dia util e dia corrido
-	# Difinir paraterizacao
-	# Parameter quantuidade de pontos por dia. Ex. 100 p/d
-	#ns_core::calendar::cal_item_new -score $score -user_id $target_lawyer
-	#Ratio of score and time to define how many hours per day a lawyer have to work in a task, based on the score of the ask.
-	
 
-	# IF user_id exists
-	if {[db_0or1row select_user {
-	    SELECT user_id FROM users WHERE user_id = :target_lawyer
-	} ] } {
-	    set calendar_id [ns_core::calendar::new -user_id $target_lawyer]
-	    
-	    ns_log Notice "CALENDAR ID $calendar_id"
-	    
-	    
-	    
-
-	    # DEfines start and end date (task deadline) based on the quantity of points (score) of the user (lawyer)
-	    set param1 [parameter::get_global_value -package_key "ns-core" -parameter "TotalScoreDaily" -default ""]
-	    
-	    ns_log Notice "$param1"
-	    
-
-	    # 100 per day means 100 per 24 hours, which  means 100 per 24X60 minutes
-	    # 24h ??  I'd define that a day has 8 hours.
-
-
-	    set start_date [db_string select_datetime {SELECT now() FROM dual} ]
-	    ns_log Notice "START DATE $start_date "
-	    #set end_date [db_string select_datetime {SELECT now() + INTERVAL '1 day'   FROM dual} ]
-	    #ns_log Notice "END DATE $end_date "
-
-	    set param2 [parameter::get_global_value -package_key "ns-core" -parameter "WorkingHoursDaily" -default "8"]
-	    ns_log Notice "$param2 PRAM2"
-	    set no_days [expr $score / $param2]
-	    ns_log Notice "NODAYS $no_days"
-
-	    set end_date [db_string select_datetime "SELECT now() + INTERVAL '$no_days days'  FROM dual" ]
-	    ns_log Notice "END DATE $end_date "
-
-	    
-	    # END start and end dates
+	ns_core::calendar::calendar_item_new -user_id $target_lawyer -mail_id $email_id -score $days
 
 
 
 	
-	    # To support green calendar
-	    # set date [split $date "-"]
-	    # lappend date ""
-	    # lappend date ""
-	    # lappend date ""
-	    # lappend date "YYYY MM DD"
-	    #set date [calendar::to_sql_datetime -date $date -time ""]	
-	    
-	    #set date "[template::util::date::get_property year $date] [template::util::date::get_property month $date] [template::util::date::get_property day $date]"
-	    
-	    #set start_date [calendar::to_sql_datetime -date $date -time $start_time -time_p $time_p]
-	    #set end_date [calendar::to_sql_datetime -date $end_date -time $end_time -time_p $time_p]
-
-
-
-
-
-	    # Retrieves calendar types and assigns "task" as item_type
-	    set item_types [calendar::get_item_types -calendar_id $calendar_id]
-	    ns_log Notice "ITEM TYPES $item_types"
-
-	    foreach type $item_types {
-		if {[lindex $type 0] eq "task" } {
-		    set item_type_id [lindex $type 1]
-		}
-		ns_log Notice "$type"
-	    }
-	    ns_log Notice "$item_type_id"
-
-	    
-	    
-
-	    
-	    if { ![calendar::personal_p -calendar_id $calendar_id -user_id $target_lawyer] } {
-		permission::require_permission -party_id $target_lawyer -object_id $calendar_id -privilege create
-	    }
-	    
-	    set cal_item_id [calendar::item::new \
-				 -start_date $start_date \
-				 -end_date $end_date \
-				 -name $email(subject) \
-				 -description $email(bodies) \
-				 -calendar_id $calendar_id \
-				 -item_type_id $item_type_id \
-				 -creation_user $target_lawyer]
-	    
-
-	    ns_log Notice "NEW CAL-ITEM $cal_item_id"
-	    
-	    # not now!!
-	    set repeat_p 0
-	    if {$repeat_p} {
-		#		ad_returnredirect [export_vars -base cal-item-create-recurrence { return_url cal_item_id}]
-		#		 ad_returnredirect [export_vars -base cal-item-view { cal_item_id }]	
-	    }
-	    
-	    # end-if user_id exists		    
-	}
-
-
-
-
-
-
-	
-
-
-
-	###
-	# END new calendar item
-	###
-
-
-
-
-
 	# TARGET shouldn't received the same email someone has forwarded to nevessouza
 	# IT should receives a ontification from the system within email's content.
 	
@@ -508,10 +514,9 @@ ad_proc -public ns_core::email::scan_email {
 	
 	acs_mail_lite::send -send_immediately \
 	    -from_addr "nevessouza@iurix.com" \
-	    -to_addr $user(email) \
-	    -cc_addr "iuri.sampaio@gmail.com"
+	    -to_addr iuri.sampaio@gmail.com \
 	    -subject $email(subject) \
-	    -body $email(bodies) \
+	    -body "email(bodies)" \
 	    -mime_type "text/html"
 	
 	
