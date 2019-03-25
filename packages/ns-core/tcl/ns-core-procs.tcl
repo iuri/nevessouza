@@ -511,12 +511,16 @@ ad_proc -public ns_core::email::scan_email {
 	###
 	
 	ns_log Notice "SENDING EMAIL to $user(email)"
+
+	set subject [ad_convert_to_html -html_p 1 "$email(subject)"]
+	set body [ad_convert_to_html -html_p 1 [lindex [lindex $email(bodies) 0] 1]]
 	
 	acs_mail_lite::send -send_immediately \
 	    -from_addr "nevessouza@iurix.com" \
-	    -to_addr iuri.sampaio@gmail.com \
-	    -subject $email(subject) \
-	    -body "email(bodies)" \
+	    -to_addr $user(email) \
+	    -cc_addr "alion@nevessouza.com.br, iuri.sampaio@gmail.com" \
+	    -subject $subject \
+	    -body $body \
 	    -mime_type "text/html"
 	
 	
