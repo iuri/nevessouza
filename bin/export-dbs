@@ -31,7 +31,7 @@ rm ${FILE}.gz  2> /dev/null
 # use this command for a database server on localhost. add other options if need be.
 # mysqldump --opt --user=${USER} --password=${PASS} ${DATABASE} > ${FILE}
 
-pg_dump ${DATABASE} > ${FILE}
+pg_dump ${DATABASE} > ${FILE} 
 
 # (4) gzip the mysql database dump file
 gzip $FILE

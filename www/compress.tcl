@@ -1,43 +1,59 @@
 ad_page_contract {}
 
-
-
 ad_proc -public compress {
     {-str ""}
 } {
     Compresses string
 } {
-    set i 1
+
+    ns_log Notice "INPUT STR $str"
     set result ""
+    set total 1
+    set c ""
     
-
-    set aux [lindex $str 0]
-    
-    ns_log Notice "INPUT $str | AUX $aux | COUNTER $i"
-
-    foreach c [split $str ""] {
-	ns_log Notice "$aux | $i "
-	
-	if {$aux ne $c} {
-	    append result "$c$i"
-	    set i 0
+    for {set i 0} {$i < [llength [split $str ""]]} {incr i} {
+	if {$c ne "" && [lindex [split $str ""] $i] ne $c && $i ne 0} {
 	    
+	    append result "${c}${total}"
+	    set c [lindex [split $str ""] $i]
+	    set total 0
 	}
-		
-	incr i
-	set aux $c
-
+	incr total
+	set c [lindex [split $str ""] $i]
     }
 
-    ns_log Notice "RESULT $result"
+    append result "${c}${total}"
+    
+    ns_log Notice "OUTPUT RESULT $result"
     return $result
 }
 
+ad_proc -public decompress {
+    {-str ""}
+} {
+    Decompresses string
+} {
+    # regular expersion where numbers 0-9 is the parter
+    ns_log Notice "INPUT STR $str"
+    set result ""
 
+    set numbers [regexp -all -inline -- {[0-9]+} $str]
+    ns_log Notice "NUMBERS $numbers"
+    
+    set chars [regexp -all -inline -- {[a-z]+} $str]
+    ns_log Notice "CHAARS $chars"
+    set i 0
+    foreach c $chars {
+	for {set j 0} {$j < [lindex $numbers $i]} {incr j} {
+	    append result $c
+	}
+	incr i		       
+    } 
 
-compress -str "aaaabbb"
-
-
+    ns_log Notice "OUTPUT RESULT $result"
+    
+    return $result    
+}
 
 ad_proc -private compress_not_cached  {
     {-str ""}
@@ -56,29 +72,6 @@ ad_proc -private compress_not_cached  {
     return $result
 }
 
-
-
-ad_proc -public  decompress {
-    {-str ""}
-} {
-    Decompresses string
-} {
-
-    
-    foreach {i c} $str {
-
-	for {[$i 0} {$i llength } {
-	    ns_log Notice "
-	}
-	
-
-    }
-
-
-    return $result
-}
-
-
 ad_proc -public  decompress_not_cached {
     {-str ""}
 } {
@@ -86,12 +79,18 @@ ad_proc -public  decompress_not_cached {
 } {
 
     while $str ne "" {
-	
-
-
+       
     }
 
 
     return $result
 }
+
+
+
+# Compress string
+compress -str "aaaabbb"
+
+# decompress string
+decompress -str "a44b6"
 
