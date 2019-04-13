@@ -28,4 +28,37 @@ Note that content revisions and content items inherit separately from the root o
 Also important to note is the relationship between custom content types and the rest of the object model. You define new content types as subtypes of Content Revision, not of Content Item. This is because new content types are characterized by their attributes, which are stored at the revision level to make changes easy to audit. Custom content types typically do not require additional unaudited attributes or methods beyond those already provided by the Content Item type. It is thereful almost never necessary to create a custom subtype of Content Item itself.
 
 
+```
 
+public abstract	class object {
+    public integer object_id = 0;
+    public string name() {
+	     return "Object Name:" + this.objectName;
+    }
+}
+
+public abstract class content_keyword : object {
+}
+
+public abstract class content_item : object {
+}
+
+public abstract class content_revision : object {
+}
+
+public abstract class content_folder : content_item {
+}
+
+public abstract class content_template : content_item {
+}
+
+public abstract class content_symlink : content_item {
+}
+
+public abstract class content_extlink : content_item {
+}
+
+public abstract class custom_content_types : content_item {
+}
+
+```
