@@ -4,11 +4,11 @@ Going further on OOJS, I still don’t see too much applicability, implementing 
 
 My scenario is TCL-TK and XoTCL (OO) as technologies for the backend. The web server and the framework OpenACS are written in TCL-TK, and PostgreSQL is the DB, that contains plsql functions in the database layer. 
 
-Thus, there’s no much need for OOJS, except if I split the backend in 2. Similarly to what I’ve done already, having a WebService, written in TCL (JSON or XML-RPC), connecting the frontend (i.e. Wordpress/CpdeIgniter/CakePHP/Drupal/… ) and the backend in implemented in TCL again 
+Thus, there’s no much need for OOJS, except if I split the backend in 2. Similarly to what I’ve done already, with Wordpress/CpdeIgniter/CakePHP/Drupal/… ), having a WebService written in TCL (JSON or XML-RPC), connecting frontend and backend implemented in TCL too. 
 
 So, all those PHP framework could be replaced by a OOJS application handled by NodeJS.
 
-Otherwise, I'd end writing a new interface to PGSQL, between NodeJS and PostgreSQL, and then OpenACS would be removed from the scenario. 
+Furthemore, I found myself writing in JS a new interface to PGSQL, between NodeJS and PostgreSQL, and then OpenACS would be removed from the scenario. 
 
 In fact, I’ve been writing a few objects in OOJS, referenced by OpenACs data models cr_items and cr_revisions.
 
