@@ -91,8 +91,8 @@ ad_proc -public  decompress_not_cached {
 
 
 # Compress string
-set result [compress -str $str]
+#set result [compress -str $str]
 
 # decompress string
-#decompress -str "a44b6"
+set result [decompress -str $str]
 
