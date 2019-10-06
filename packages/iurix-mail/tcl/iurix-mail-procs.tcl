@@ -404,8 +404,63 @@ ad_proc -public ix_mail::email::new {
 	    }
 	}
 
+
+
+	
+	
+	ns_log Notice "ADD blogentry  *****"
+	if {$from eq "iuri@iurix.com"} {
+	    #set title [lindex [split [lindex $subject 0] "***"] 0]
+	    #set title_url [lindex [split [lindex $subject 0] "***"] 3]
+	    set title [lindex $subject 0]
+	    set title_url [lindex [split [lindex [split [lindex [lindex $bodies 0] 1] " "] 0] "\n"] 0]
+	    #set creation_ip [lindex [lindex [lindex $headers 0] 1] 0]
+	    set creation_ip "127.0.0.1"
+	    
+	    set content [lindex [lindex $bodies 1] 1]
+	    
+	    set content [string_truncate -len "31000" -ellipsis "..." -more "</body></html>" $content ]
+	    #      	set content [ad_html_text_convert -from "text/html" -to "text/html" -maxlen "10000" -truncate_len "10000" -ellipsis "." -more "</body></html>" $content] 
+	    ns_log Notice "$content"
+	    
+	    
+	    ns_log Notice "-entry_id [db_nextval \"acs_object_id_seq\"] \n
+            -package_id [apm_package_id_from_key \"lars-blogger\"] \n
+            -title $title \n
+            -title_url $title_url \n
+            -content $content \n
+            -content_format  [lindex [lindex $bodies 1] 0] \n
+            -entry_date $date \n
+            -draft_p f \n
+	    -creation_user $user_id \n
+	    -creation_ip 1270101010"
+	    
+	    
+	    ns_log Notice "CONTENT LENGTH [string length $content] "
+	    
+	    set blog_enabled_p [parameter::get_global_value -parameter "BlogEntryCreateEnabledP" -package_key "iurix-mail" -default 0]
+	    
+	    ns_log Notice "BLOGENABLEDP $blog_enabled_p"
+	    if {$blog_enabled_p eq 1} {
+		# Add email as blog entry
+		lars_blogger::entry::new \
+		    -entry_id [db_nextval "acs_object_id_seq"] \
+		    -package_id [apm_package_id_from_key "lars-blogger"] \
+		    -title $subject \
+		    -title_url $title_url \
+		    -content $content \
+		    -content_format [lindex [lindex $bodies 1] 0] \
+		    -entry_date [template::util::date::now] \
+		    -draft_p "f" \
+		    -creation_user $user_id \
+		    -creation_ip $creation_ip
+		
+	    }
+	}
+	
+	
 	ns_log Notice "BEFORE SCAN email"
-	ns_core::email::scan_email -mail_id $mail_revision_id
+	#ns_core::email::scan_email -mail_id $mail_revision_id
 
 	
 	return $mail_revision_id

@@ -20,7 +20,7 @@
         <callbacks>
         </callbacks>
         <parameters>
-        <!-- No version parameters -->
+            <parameter scope="global" datatype="number"  min_n_values="1"  max_n_values="1"  name="BlogEntryCreateEnabledP"  default="0" description="Whether 0 or 1, to disable or enabled feature to add blog entry from email"/>
         </parameters>
 
     </version>
